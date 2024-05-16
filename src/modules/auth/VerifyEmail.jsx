@@ -5,8 +5,7 @@ import { Formik, Form } from "formik";
 
 const VerifyEmail = () => {
   const initalValues = {
-    password: "",
-    confirm_Password: "",
+    verificationCode: "",
   };
   return (
     <>
@@ -15,7 +14,7 @@ const VerifyEmail = () => {
           <Components.Feature.Heading className="primary mb_primary">
             Verify your Email
           </Components.Feature.Heading>
-          <Components.Feature.Text className="primary--light">
+          <Components.Feature.Text className="primary--light mb_Tertiary">
             We sent you a six digit confirmation code to example@gmail.com.
             Please enter it below to confirm your email address.
           </Components.Feature.Text>
@@ -25,7 +24,7 @@ const VerifyEmail = () => {
             initialValues={initalValues}
             validateOnMount
             validationSchema={
-              data.validation.validationAuth.validationSetPassword
+              data.validation.validationAuth.validationVerificationCode
             }
             onSubmit={(values, { resetForm }) => {
               console.log(values);
@@ -35,13 +34,10 @@ const VerifyEmail = () => {
             {(formik) => (
               <Form>
                 <Components.Feature.FormInput
-                  name="password"
-                  label="Email"
-                  place="Enter your email"
+                  name="verificationCode"
+                  label="Verification Code"
+                  place="Enter 6-digit code"
                 />
-                {/* <Components.Feature.Button className="primary">
-                  Continue
-                </Components.Feature.Button> */}
               </Form>
             )}
           </Formik>

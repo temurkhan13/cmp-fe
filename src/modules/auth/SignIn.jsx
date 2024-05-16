@@ -74,9 +74,11 @@ const SignIn = () => {
                   </div>
                   <Link to="forgot-password">Forgot Password?</Link>
                 </section>
-                <Components.Feature.Button className="primary">
-                  Log In
-                </Components.Feature.Button>
+                <Link to="/choose-plain">
+                  <Components.Feature.Button className="primary">
+                    Log In
+                  </Components.Feature.Button>
+                </Link>
               </Form>
             )}
           </Formik>

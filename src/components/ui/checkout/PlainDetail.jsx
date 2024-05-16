@@ -1,0 +1,59 @@
+import React from "react";
+import Components from "../..";
+import { IoMdArrowBack } from "react-icons/io";
+
+const PlainDetail = () => {
+  const goBack = () => {
+    window.history.back();
+  };
+
+  return (
+    <>
+      <div className="plainDetail">
+        <Components.Feature.Button
+          onClick={goBack}
+          className="back mb_Tertiary"
+        >
+          <IoMdArrowBack />
+          Back
+        </Components.Feature.Button>
+        <header>
+          <Components.Feature.Heading className="secondry mb_Primary">
+            Subscription To Membership Plan
+          </Components.Feature.Heading>
+          <Components.Feature.Text className="primary--gray">
+            Lorem ipsum dolor sit amet consectetur. Eget imperdiet eu enim
+            lobortis sed.
+          </Components.Feature.Text>
+        </header>
+        <div className="mbt_Tertiary">
+          <Components.Feature.Text className="main--bold">
+            Membership Plan (Pro)
+          </Components.Feature.Text>
+          <Components.Feature.Text className="primary--gray-bold">
+            <span>$79.99</span>
+            /month
+          </Components.Feature.Text>
+        </div>
+        <section>
+          <Components.Feature.Text className="primary--gray-bold">
+            Sales Tax
+          </Components.Feature.Text>
+          <Components.Feature.Text className="primary-dark">
+            $1.10 USD
+          </Components.Feature.Text>
+        </section>
+        <blockquote>
+          <Components.Feature.Text className="primary--gray-bold">
+            Total Due Today
+          </Components.Feature.Text>
+          <Components.Feature.Text className="titory--bold">
+            $80.10 USD
+          </Components.Feature.Text>
+        </blockquote>
+      </div>
+    </>
+  );
+};
+
+export default PlainDetail;

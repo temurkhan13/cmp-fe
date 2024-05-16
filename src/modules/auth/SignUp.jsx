@@ -57,10 +57,13 @@ const SignUp = () => {
                 name="email"
                 label="Email"
                 place="Enter your email"
+              
               />
-              <Components.Feature.Button className="primary">
-                Continue
-              </Components.Feature.Button>
+              <Link to="/set-password">
+                <Components.Feature.Button className="primary">
+                  Continue
+                </Components.Feature.Button>
+              </Link>
             </Form>
           )}
         </Formik>
