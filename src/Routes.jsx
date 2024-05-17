@@ -1,9 +1,9 @@
-import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthLayout } from "./layout";
 import Components from "./components";
 import data from "./data";
+import Layout from "./modules/dashboard/Layout";
 
 const Routess = () => {
   return (
@@ -16,6 +16,7 @@ const Routess = () => {
               <Route path={el.path} element={<el.element />} key={uuidv4()} />
             ))}
           </Route>
+          <Route path="/dashboard" element={<Layout />} />
         </Routes>
       </Router>
     </>
