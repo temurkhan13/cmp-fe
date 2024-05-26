@@ -1,4 +1,5 @@
 import FolderIcon from "../../assets/dashboard/folderIcon.png";
+import styles from "../../style/dashboard/dashboard.module.scss";
 
 const FolderStructure = () => {
   const folders = [
@@ -9,26 +10,32 @@ const FolderStructure = () => {
     { name: "folder1" },
     { name: "folder1" },
     { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
+    { name: "folder1" },
   ];
 
   return (
-    <section className="assistant">
-      <div
-        style={{
-          display: "flex",
-          textAlign: "center",
-          justifyContent: "space-between",
-          margin: "0 20px",
-          fontSize: "18px",
-          lineHeight: "24px",
-          letterSpacing: "0.12px",
-          fontWeight: 600,
-          color: "rgba(10, 10, 10, 0.68)",
-          fontFamily: "Poppins",
-          borderBottom: "1px solid lightgray",
-          padding: "10px 0",
-        }}
-      >
+    <section className={styles.assistant}>
+      <div className={styles.heading}>
         <p>Folders</p>
         <p
           style={{
@@ -40,25 +47,9 @@ const FolderStructure = () => {
         </p>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          textAlign: "center",
-          margin: "40px 0",
-        }}
-      >
+      <div className={styles.fileContainer}>
         {folders.map(({ name }, index) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              textAlign: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <div key={index} className={styles.files}>
             <img
               src={FolderIcon}
               alt=""

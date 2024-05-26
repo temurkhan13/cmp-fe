@@ -1,4 +1,3 @@
-import React from "react";
 import Components from "../components";
 import { Outlet } from "react-router-dom";
 import assets from "../assets";

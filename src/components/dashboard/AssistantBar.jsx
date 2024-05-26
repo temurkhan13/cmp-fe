@@ -9,13 +9,13 @@ import { SlArrowRight } from "react-icons/sl";
 import { SlArrowLeft } from "react-icons/sl";
 import { CgMenuGridR } from "react-icons/cg";
 import StartIcon from "../../assets/dashboard/StarICon.png";
+import styles from "../../style/dashboard/dashboard.module.scss";
 
 const AssistantBar = () => {
   return (
     <>
-      <main className="main">
+      <main className={styles.main}>
         <RxCross1
-          className="RxCross1"
           style={{
             borderRadius: "30px",
             position: "absolute",
@@ -25,20 +25,15 @@ const AssistantBar = () => {
           }}
         />
         <input type="text" placeholder="Enter a prompt to generate new file" />
-        <button className="assbtn">
+
+        <button className={styles.assbtn}>
           <img src={StartIcon} alt="StartIcon" />
           Generate
         </button>
       </main>
 
-      <section className="generate">
-        <div
-          style={{
-            margin: "10px 20px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+      <section className={styles.generate}>
+        <div className={styles.Container}>
           <div
             style={{
               display: "flex",
@@ -46,13 +41,13 @@ const AssistantBar = () => {
               justifyContent: "center",
             }}
           >
-            <button className="arrowBtn">
+            <button className={styles.arrowBtn}>
               <SlArrowLeft />
             </button>
-            <button className="arrowBtn">
+            <button className={styles.arrowBtn}>
               <SlArrowRight />
             </button>
-            <p className="assistantHeading">AI Assistant</p>
+            <p className={styles.assistantHeading}>AI Assistant</p>
           </div>
 
           <div
@@ -99,7 +94,7 @@ const AssistantBar = () => {
               {/* <MdOutlineKeyboardArrowDown /> */}
             </div>
             <div>
-              <button className="assbtnAss">
+              <button className={styles.assbtnAss}>
                 {/* <CgMenuGridR/> */}
                 <TiPlus />
                 New Assistant

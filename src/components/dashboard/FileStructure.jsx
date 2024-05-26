@@ -1,9 +1,70 @@
 import fileIcon from "../../assets/dashboard/fileIcon.png";
+import styles from "../../style/dashboard/dashboard.module.scss";
 
 const FileStructure = () => {
   const files = [
     {
-      icon: fileIcon, // Corrected from 'icone' to 'icon'
+      icon: fileIcon,
+      name: "Testing1",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing2",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing3",
+    },
+    {
+      icon: fileIcon,
+      name: "Assistant",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing5",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing1",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing2",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing3",
+    },
+    {
+      icon: fileIcon,
+      name: "Assistant",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing5",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing1",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing2",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing3",
+    },
+    {
+      icon: fileIcon,
+      name: "Assistant",
+    },
+    {
+      icon: fileIcon,
+      name: "Testing5",
+    },
+    {
+      icon: fileIcon,
       name: "Testing1",
     },
     {
@@ -45,25 +106,9 @@ const FileStructure = () => {
   ];
 
   return (
-    <section className="foldersFiles">
-      <div
-        style={{
-          display: "flex",
-          textAlign: "center",
-          justifyContent: "space-between",
-          margin: "0 20px",
-          fontSize: "18px",
-          lineHeight: "24px",
-          letterSpacing: "0.12px",
-          fontWeight: 600,
-          color: "rgba(10, 10, 10, 0.68)",
-          fontFamily: "Poppins",
-          borderBottom: "1px solid lightgray",
-          borderTop: "1px solid lightgray",
-          padding: "10px 0",
-        }}
-      >
-        <p>Files</p>
+    <section className={styles.foldersFiles}>
+      <div className={styles.Heading}>
+        <p>Yesterday</p>
         <p
           style={{
             fontWeight: "normal",
@@ -74,31 +119,15 @@ const FileStructure = () => {
         </p>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          textAlign: "center",
-          margin: "40px 0",
-        }}
-      >
+      <div className={styles.filesContainer}>
         {files.map(({ name, icon }, index) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              textAlign: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <div key={index} className={styles.files}>
             <img
               src={icon}
               alt=""
               style={{
                 width: "50px",
-                height: "65px", // Added 'px' to height
+                height: "65px",
               }}
             />
             <p>{name}</p>
