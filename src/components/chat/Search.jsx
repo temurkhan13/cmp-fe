@@ -2,9 +2,10 @@ import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
-import styles from "../../style/chatHeader.module.scss";
+import styles from "../../style/chat/chatHeader.module.scss";
+import PropTypes from "prop-types";
 
-const Search = () => {
+const Search = ({ closeButton }) => {
   return (
     <div className={styles.dropdownContent}>
       <div className={styles.subSearchBar}>
@@ -19,6 +20,7 @@ const Search = () => {
             right: 10,
             fontSize: "30px",
           }}
+          onClick={closeButton}
         />
       </div>
       <hr />
@@ -40,6 +42,10 @@ const Search = () => {
       </div>
     </div>
   );
+};
+
+Search.propTypes = {
+  closeButton: PropTypes.func.isRequired,
 };
 
 export default Search;

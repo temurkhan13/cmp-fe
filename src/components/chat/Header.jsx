@@ -1,17 +1,18 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
-import styles from "../../style/chatHeader.module.scss";
+
+// styling
+import styles from "../../style/chat/chatHeader.module.scss";
+
+// react-icons
 import { IoSearchOutline } from "react-icons/io5";
-import { GoCommentDiscussion } from "react-icons/go";
 import { HiUser, HiOutlineDotsHorizontal } from "react-icons/hi";
-import { BiSolidSave } from "react-icons/bi";
 import { RiUserSharedLine } from "react-icons/ri";
+
+// images
 import Sidebar from "../../assets/dashboard/sidebarLogo.png";
 import UserProfilePic from "../../assets/chat/user.png";
 import Search from "./Search";
-import Comment from "./Comment";
 import MultiUser from "./MultiUser";
-import Save from "./Save";
 import Dots from "./Dots";
 
 const Header = () => {
@@ -22,31 +23,25 @@ const Header = () => {
     setActiveComponent(activeComponent === component ? null : component);
   };
 
+  const handleDeactivateComponent = () => {
+    setActiveComponent(null);
+  };
+
   const IconMap = [
     {
       icon: IoSearchOutline,
       name: "Search",
-      component: <Search />,
-    },
-    {
-      icon: GoCommentDiscussion,
-      name: "Comment",
-      component: <Comment />,
+      component: <Search closeButton={() => handleDeactivateComponent()} />,
     },
     {
       icon: HiUser,
       name: "MultiUser",
-      component: <MultiUser />,
-    },
-    {
-      icon: BiSolidSave,
-      name: "Save",
-      component: <Save />,
+      component: <MultiUser closeButton={() => handleDeactivateComponent()} />,
     },
     {
       icon: HiOutlineDotsHorizontal,
       name: "Dots",
-      component: <Dots />,
+      component: <Dots closeButton={() => handleDeactivateComponent()} />,
     },
   ];
 
@@ -97,10 +92,6 @@ const Header = () => {
       </div>
     </header>
   );
-};
-
-Header.propTypes = {
-  onToggleChatHistory: PropTypes.func.isRequired,
 };
 
 export default Header;

@@ -1,16 +1,27 @@
+import { useState } from "react";
+import ChatHistory from "../../../components/chat/ChatHistory";
+import ChatMessage from "../../../components/chat/ChatMessage";
+import ChatMenu from "../../../components/chat/ChatMenu";
 import Header from "../../../components/chat/Header";
-import ChatMessages from "../../../components/chat/ChatMessages";
-import ChatLayout from "../../../layout/ChatLayout";
+import "../../../style/chat/Chat.scss";
 
-const Chat = () => {
+const App = () => {
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const toggleHistoryOpen = () => {
+    setIsHistoryOpen(!isHistoryOpen);
+  };
+
   return (
     <>
       <Header />
-      <ChatLayout>
-        <ChatMessages />
-      </ChatLayout>
+      <div className={`MainChat ${isHistoryOpen ? "history-open" : ""}`}>
+        <ChatHistory isOpen={isHistoryOpen} toggleOpen={toggleHistoryOpen} />
+        <ChatMessage />
+        <ChatMenu />
+      </div>
     </>
   );
 };
 
-export default Chat;
+export default App;

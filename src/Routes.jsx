@@ -5,7 +5,6 @@ import Components from "./components";
 import data from "./data";
 import Chat from "./modules/AiAssistant/chat/Chat";
 
-// import Dashboard from "./modules/AiAssistant/dashboard/pages/Dashboard";
 import AiAssistant from "./modules/AiAssistant/dashboard/pages/AiAssistant";
 import MyAssistant from "./modules/AiAssistant/dashboard/pages/MyAssistant";
 import DigitalPlaybook from "./modules/AiAssistant/dashboard/pages/DigitalPlaybook";

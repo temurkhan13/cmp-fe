@@ -2,14 +2,16 @@ import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
-import styles from "../../style/chatHeader.module.scss";
+import styles from "../../style/chat/chatHeader.module.scss";
+import PropTypes from "prop-types";
 
-const Dots = () => {
+const Dots = ({ closeButton }) => {
   return (
     <div className={styles.dropdownContent}>
       <div className={styles.subSearchBar}>
         <input type="text" placeholder="Search" />
         <IoMdClose
+          onClick={closeButton}
           style={{
             background: "lightgray",
             padding: "7px",
@@ -40,6 +42,10 @@ const Dots = () => {
       </div>
     </div>
   );
+};
+
+Dots.propTypes = {
+  closeButton: PropTypes.func.isRequired,
 };
 
 export default Dots;

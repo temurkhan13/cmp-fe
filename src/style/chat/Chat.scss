@@ -1,0 +1,15 @@
+.MainChat {
+  display: flex;
+  height: 87vh;
+  transition: all 0.5s;
+
+  &.history-open .chat-message {
+    margin-left: 300px;
+  }
+
+  .chat-history-container {
+    .chat-history {
+      width: 300px;
+    }
+  }
+}
