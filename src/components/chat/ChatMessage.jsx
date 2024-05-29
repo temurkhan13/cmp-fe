@@ -10,6 +10,13 @@ import AiPic from "../../assets/dashboard/sidebarLogo.png";
 import { Example } from "../../utils";
 import fileIcon from "../../assets/dashboard/fileIcon.png";
 import TonePopup from "./TonePopup";
+import { ScaleLoader } from "react-spinners";
+
+// hooks
+import useGrammarFix from "../../hooks/useGrammarFix";
+import useSummarize from "../../hooks/useSummarize";
+import useImproveWriting from "../../hooks/useImproveWriting";
+import useChangeTone from "../../hooks/useChangeTone";
 
 const ChatMessage = () => {
   const [file, setFile] = useState([]);
@@ -18,11 +25,15 @@ const ChatMessage = () => {
   const [chat, setChat] = useState(DummyChat);
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
-  // const [selectedTone, setSelectedTone] = useState("");
-  const [setSelectedTone] = useState("");
+  const [selectedTone, setSelectedTone] = useState("");
   const [responseLength, setResponseLength] = useState("");
-  // const [askAi, setAskAI] = useState("");
-  const [setAskAI] = useState("");
+  const [askAi, setAskAI] = useState("");
+  const [loading, setLoading] = useState(false);
+  // custom hooks
+  const { fixedGrammer, fixGrammar } = useGrammarFix();
+  const { writing, improveWriting } = useImproveWriting();
+  const { summary, summarize } = useSummarize();
+  const { changetoneText, ChangeToneFun } = useChangeTone();
 
   // upload files
   const handleFileChange = (e) => {
@@ -48,15 +59,42 @@ const ChatMessage = () => {
   };
 
   // popup change Tone
-  const HandleAskAi = (value) => {
-    setAskAI(value);
-    console.log("selected ASi ai value", value);
-    console.log("HandleASk Ai");
+  const HandleAskAi = async (value) => {
+    try {
+      setLoading(true);
+      setAskAI(value);
+      console.log("selected ASi value", value);
+
+      if (value === "Fix Spelling & Grammar") {
+        await fixGrammar(selectedText);
+        applyFixedText(fixedGrammer);
+        //
+      } else if (value === "Improve Writing") {
+        await improveWriting(selectedText);
+        applyFixedText(writing);
+        //
+      } else if (value === "Summarize") {
+        await summarize(selectedText);
+        applyFixedText(summary);
+      }
+    } catch (error) {
+      console.error("Error occurred while processing AI request:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const applyFixedText = (newText) => {
+    const updatedChat = chat.map((message) => ({
+      ...message,
+      content: message.content.replace(selectedText, newText),
+    }));
+    setChat(updatedChat);
+    setPopupVisible(false);
   };
 
   const handleTextSelect = () => {
     const selection = window.getSelection();
-    console.log("secletion", selection);
     const selectedText = selection.toString().trim();
     console.log("selectedText", selectedText);
     setSelectedText(selectedText);
@@ -70,26 +108,16 @@ const ChatMessage = () => {
 
     setSelectedTone(tone);
 
-    if (selectedText) {
-      const response = await fetch("/api/change-tone", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: selectedText, tone }),
-      });
-
-      const data = await response.json();
-      if (!data) {
-        console.error("Empty JSON response received");
-        return;
+    if (selectedText && tone) {
+      setLoading(true);
+      try {
+        await ChangeToneFun(selectedText, tone);
+        applyFixedText(changetoneText);
+      } catch (error) {
+        console.error("Error occurred while changing tone:", error);
+      } finally {
+        setLoading(false);
       }
-      const newText = data.text;
-
-      const updatedChat = chat.map((message) => ({
-        ...message,
-        content: message.content.replace(selectedText, newText),
-      }));
-      setChat(updatedChat);
-      setPopupVisible(false);
     }
   };
 
@@ -111,6 +139,10 @@ const ChatMessage = () => {
 
   return (
     <div className="chat-message-wrapper">
+      <div className="spinner" style={{ display: loading ? "flex" : "none" }}>
+        <ScaleLoader color={"#000000"} loading={loading} size={150} />
+      </div>
+
       <div className="chat-message">
         <input
           type="file"

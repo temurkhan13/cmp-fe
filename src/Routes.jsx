@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthLayout } from "./layout";
 import Components from "./components";
 import data from "./data";
-import Chat from "./modules/AiAssistant/chat/Chat";
+import AssistantChat from "./modules/AiAssistant/Assistantchat/Chat";
+import AssessmentChat from "./modules/Assessment/AssessmentChat/Chat";
 
 import AiAssistant from "./modules/AiAssistant/dashboard/pages/AiAssistant";
 import MyAssistant from "./modules/AiAssistant/dashboard/pages/MyAssistant";
@@ -38,7 +39,8 @@ const Routess = () => {
           <Route path="/dashboard/HelpCenter" element={<HelpCenter />} />
           <Route path="/dashboard/feedback" element={<Feedback />} />
           <Route path="/dashboard/Trash" element={<Trash />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/assistant-chat" element={<AssistantChat />} />
+          <Route path="/assessment-chat" element={<AssessmentChat />} />
         </Routes>
       </Router>
     </>

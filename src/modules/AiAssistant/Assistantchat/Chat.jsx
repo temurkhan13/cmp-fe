@@ -5,7 +5,7 @@ import ChatMenu from "../../../components/chat/ChatMenu";
 import Header from "../../../components/chat/Header";
 import "../../../style/chat/Chat.scss";
 
-const App = () => {
+const Chat = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const toggleHistoryOpen = () => {
@@ -24,4 +24,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Chat;

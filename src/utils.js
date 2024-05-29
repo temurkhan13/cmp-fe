@@ -150,7 +150,7 @@ export const Examples = [
 
 
 export const DummyChat = [
-  { id: 1, role: "user", content: "Hello!" },
+  { id: 1, role: "user", content: "Hello hwo aer ouy!" },
   {
     id: 2,
     role: "response",
