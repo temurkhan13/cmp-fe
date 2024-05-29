@@ -1,8 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AuthLayout } from "./layout";
+// import { AuthLayout } from "./layout";
 import Components from "./components";
-import data from "./data";
+// import data from "./data";
 import AssistantChat from "./modules/AiAssistant/Assistantchat/Chat";
 import AssessmentChat from "./modules/Assessment/AssessmentChat/Chat";
 
@@ -27,7 +27,7 @@ const Routess = () => {
               <Route path={el.path} element={<el.element />} key={uuidv4()} />
             ))}
           </Route> */}
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/dashboard/Sidebar" element={<Sidebar />} />
           <Route path="/dashboard/AiAssistant" element={<AiAssistant />} />
           <Route path="/dashboard/MyAssistant" element={<MyAssistant />} />
