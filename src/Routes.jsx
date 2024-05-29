@@ -22,11 +22,11 @@ const Routess = () => {
       <Router>
         <Components.Feature.ScrollToTop />
         <Routes>
-          <Route path="" element={<AuthLayout />}>
+          {/* <Route path="" element={<AuthLayout />}>
             {data.routes.authRoutesData.map((el) => (
               <Route path={el.path} element={<el.element />} key={uuidv4()} />
             ))}
-          </Route>
+          </Route> */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/Sidebar" element={<Sidebar />} />
           <Route path="/dashboard/AiAssistant" element={<AiAssistant />} />
