@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import apiClient from '../api/axios';
 
-const useSummarize = () => {
+const useComprehensive = () => {
   const [error, setError] = useState(null);
 
-  const summarize = async (inputText) => {
+  const comprehensiveWriting = async (inputText) => {
     try {
-      const response = await apiClient.post("/chat/summarize", {
+      const response = await apiClient.post("/chat/comprehensive", {
         message: inputText,
       });
-      console.log("Summary -> ",response.data.message)
+      console.log("setCmpWriting -> ",response.data.message)
       setError(null);
       return response.data.message
     } catch (error) {
@@ -17,7 +17,7 @@ const useSummarize = () => {
     }
   };
 
-  return {  error, summarize };
+  return {error, comprehensiveWriting };
 };
 
-export default useSummarize;
+export default useComprehensive;

@@ -2,7 +2,6 @@ import { useState } from "react";
 import apiClient from "../api/axios";
 
 const useLonger = () => {
-  const [longestText, setLongestText] = useState("");
   const [error, setError] = useState(null);
 
   const LongText = async (inputText) => {
@@ -11,15 +10,14 @@ const useLonger = () => {
         message: inputText,
       });
       console.log("long test ", response.data.message);
-      setLongestText(response.data.message);
       setError(null);
+      return response.data.message;
     } catch (error) {
       setError("Failed to improve writing. Please try again.");
-      setLongestText("");
     }
   };
 
-  return { longestText, error, LongText };
+  return { error, LongText };
 };
 
 export default useLonger;

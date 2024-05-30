@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import "../../style/chat/ChatMessage.scss";
-import { DummyChat } from "../../utils";
 import { LuPencil } from "react-icons/lu";
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from "react-icons/fa";
 import { IoAttach } from "react-icons/io5";
@@ -13,117 +12,216 @@ import TonePopup from "./TonePopup";
 import { ScaleLoader } from "react-spinners";
 
 // hooks
+
+// ASk-Ai
 import useGrammarFix from "../../hooks/useGrammarFix";
 import useSummarize from "../../hooks/useSummarize";
 import useImproveWriting from "../../hooks/useImproveWriting";
+
+// change Tone
 import useChangeTone from "../../hooks/useChangeTone";
+
+// response length
+import useComprehensive from "../../hooks/useComprehensive";
+import useAuto from "../../hooks/useAuto";
+import useShorter from "../../hooks/useShorter";
+import useLonger from "../../hooks/useLonger";
+
+// chat upload pdf & text
+import useChat from "../../hooks/useChat";
 
 const ChatMessage = () => {
   const [file, setFile] = useState([]);
   const [text, setText] = useState("");
   //
-  const [chat, setChat] = useState(DummyChat);
+  const [chat, setChat] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
   const [selectedTone, setSelectedTone] = useState("");
   const [responseLength, setResponseLength] = useState("");
   const [askAi, setAskAI] = useState("");
   const [loading, setLoading] = useState(false);
+
   // custom hooks
-  const { fixedGrammer, fixGrammar } = useGrammarFix();
-  const { writing, improveWriting } = useImproveWriting();
-  const { summary, summarize } = useSummarize();
-  const { changetoneText, ChangeToneFun } = useChangeTone();
+  const { fixGrammar } = useGrammarFix();
+  const { improveWriting } = useImproveWriting();
+  const { summarize } = useSummarize();
+  const { ChangeToneFun } = useChangeTone();
+  const { comprehensiveWriting } = useComprehensive();
+  const { autoWritingFnc } = useAuto();
+  const { shortText } = useShorter();
+  const { LongText } = useLonger();
+  const { chatWithdoc } = useChat();
 
   // upload files
+  // uncomment part is for uploading multiple doc
   const handleFileChange = (e) => {
-    const uploadedFiles = Array.from(e.target.files);
-    setFile((prevFiles) => [...prevFiles, ...uploadedFiles]);
+    setFile(e.target.files[0]);
+    // const uploadedFiles = Array.from(e.target.files);
+    // setFile((prevFiles) => [...prevFiles, ...uploadedFiles]);
   };
 
+  // handle drop_&_drop
+  // uncomment part is for uploading multiple doc
   const handleDrop = (e) => {
     e.preventDefault();
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    setFile((prevFiles) => [...prevFiles, ...droppedFiles]);
+    // const droppedFiles = Array.from(e.dataTransfer.files);
+    // setFile((prevFiles) => [...prevFiles, ...droppedFiles]);
+    setFile(e.dataTransfer.files[0]);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
-  const handleSendMessage = () => {
+  // send chat
+  const handleSendMessage = async () => {
     console.log("Text:", text);
     console.log("Uploaded File:", file);
-    setFile([]);
-    setText("");
-  };
 
-  // popup change Tone
-  const HandleAskAi = async (value) => {
+    // set user chat
+    if (!text && !file) return;
+    // setChat((prevChat) => [...prevChat, { role: "user", content: text }]);
+    if (text) {
+      setChat((prevChat) => [
+        ...prevChat,
+        {
+          role: "user",
+          content: text || null,
+          // file: file ? URL.createObjectURL(file) : null,
+          // fileName: file ? file.name : null,
+        },
+      ]);
+    } else {
+      setChat((prevChat) => [
+        ...prevChat,
+        {
+          role: "user",
+          // content: text || null,
+          file: file ? URL.createObjectURL(file) : null,
+          fileName: file ? file.name : null,
+        },
+      ]);
+    }
+
+    setLoading(true);
     try {
-      setLoading(true);
-      setAskAI(value);
-      console.log("selected ASi value", value);
-
-      if (value === "Fix Spelling & Grammar") {
-        await fixGrammar(selectedText);
-        applyFixedText(fixedGrammer);
-        //
-      } else if (value === "Improve Writing") {
-        await improveWriting(selectedText);
-        applyFixedText(writing);
-        //
-      } else if (value === "Summarize") {
-        await summarize(selectedText);
-        applyFixedText(summary);
+      const response = await chatWithdoc(text, file);
+      if (response) {
+        // set AI chat
+        setChat((prevChat) => [...prevChat, { role: "ai", content: response }]);
       }
+
+      // setFile([]);
+      setFile(null); // Reset the file state
+    document.getElementById("file-input").value = "";
+      setText("");
     } catch (error) {
-      console.error("Error occurred while processing AI request:", error);
+      console.log(error.message);
     } finally {
       setLoading(false);
     }
   };
 
+  // Ask-Ai
+  const HandleAskAi = async (value) => {
+    try {
+      setLoading(true);
+      setAskAI(value);
+
+        if (value === "Fix Spelling & Grammar") {
+          const responseGrammar = await fixGrammar(selectedText);
+          applyFixedText(responseGrammar);
+          //
+        } else if (value === "Improve Writing") {
+          const responseWriting = await improveWriting(selectedText);
+          applyFixedText(responseWriting);
+          //
+        } else if (value === "Summarize") {
+          const responseSummary = await summarize(selectedText);
+          applyFixedText(responseSummary);
+        }
+    } catch (error) {
+      console.error("Asi AI", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // replace selected text chat
   const applyFixedText = (newText) => {
-    const updatedChat = chat.map((message) => ({
-      ...message,
-      content: message.content.replace(selectedText, newText),
-    }));
+
+    // updated
+    const updatedChat = chat.map((message) => {
+      if (message.content) {
+        return {
+          ...message,
+          content: message.content.replace(selectedText, newText),
+        };
+      }
+      return message;
+    });
+
+   
     setChat(updatedChat);
     setPopupVisible(false);
   };
 
+  // select the text from chat
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-    console.log("selectedText", selectedText);
     setSelectedText(selectedText);
     setPopupVisible(!!selectedText);
   };
 
+  // handle Tone change
   const handleToneChange = async (tone) => {
-    console.log("selectedTone", tone);
-    console.log("selectedText", selectedText);
-    console.log("selectedresponseLength", responseLength);
-
     setSelectedTone(tone);
-
-    if (selectedText && tone) {
+    // if (selectedText && tone) {
       setLoading(true);
       try {
-        await ChangeToneFun(selectedText, tone);
-        applyFixedText(changetoneText);
+        const response = await ChangeToneFun(selectedText, tone);
+        applyFixedText(response);
       } catch (error) {
         console.error("Error occurred while changing tone:", error);
       } finally {
         setLoading(false);
       }
-    }
+    // }
   };
 
-  const handleResponseLengthChange = (ResponseSelectedValue) => {
-    console.log("response length", ResponseSelectedValue);
+  // handle Response length
+  const handleResponseLengthChange = async (value) => {
+    console.log("response length", value);
     setResponseLength(length);
+
+    // if (value) {
+      setLoading(true);
+      try {
+        if (value === "Auto") {
+          const responseAuto = await autoWritingFnc(selectedText);
+          applyFixedText(responseAuto);
+          //
+        } else if (value === "Small") {
+          const responseSmall = await shortText(selectedText);
+          applyFixedText(responseSmall);
+          //
+        } else if (value === "Medium") {
+          const responseMedium = await LongText(selectedText);
+          applyFixedText(responseMedium);
+          //
+        } else if (value === "Comprehensive") {
+          const responseComp = await comprehensiveWriting(selectedText);
+          applyFixedText(responseComp);
+          //
+        }
+      } catch (error) {
+        console.error("Error occurred while changing tone:", error);
+      } finally {
+        setLoading(false);
+      }
+    // }
   };
 
   const handleClosePopup = () => {
@@ -152,7 +250,7 @@ const ChatMessage = () => {
           multiple
         />
 
-        {DummyChat.length > 0 ? (
+        {chat.length > 0 ? (
           <div>
             {popupVisible && (
               <TonePopup
@@ -163,7 +261,7 @@ const ChatMessage = () => {
               />
             )}
 
-            {DummyChat.map((item, index) => (
+            {chat.map((item, index) => (
               <div key={index}>
                 <div>
                   {item.role === "user" ? (
@@ -173,7 +271,21 @@ const ChatMessage = () => {
                       </div>
                       <div>
                         <p className="Heading">You</p>
-                        <div className="msg">{item.content}</div>
+                        {/* <div className="msg">{item.content}</div> */}
+                        {item.content && (
+                          <div className="msg">{item.content}</div>
+                        )}
+                        {item.file && (
+                          <div className="file-preview">
+                            <a
+                              href={item.file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {item.fileName}
+                            </a>
+                          </div>
+                        )}
                         <div>
                           <LuPencil />
                         </div>
@@ -246,7 +358,9 @@ const ChatMessage = () => {
       <div className="Message_container">
         <div>
           <label htmlFor="file-input" className="file-upload-text">
-            {file ? file.map((f) => f.name).join(", ") : ""}
+            {/* {file ? file.map((f) => f.name).join(", ") : ""} */}
+            {/* {file.name} */}
+            {file ? file.name : ""}
           </label>
         </div>
         <div className="input-container">

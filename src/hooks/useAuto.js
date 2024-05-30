@@ -1,23 +1,23 @@
 import { useState } from "react";
 import apiClient from "../api/axios";
 
-const useImproveWriting = () => {
+const useAuto = () => {
   const [error, setError] = useState(null);
 
-  const improveWriting = async (inputText) => {
+  const autoWritingFnc = async (inputText) => {
     try {
-      const response = await apiClient.post("/chat/imporve-writing", {
+      const response = await apiClient.post("/chat/auto", {
         message: inputText,
       });
-      console.log("setWriting -> ", response.data.message);
       setError(null);
       return response.data.message;
     } catch (error) {
+      console.log("error", error.message);
       setError("Failed to summarize text. Please try again.");
     }
   };
 
-  return { error, improveWriting };
+  return { error, autoWritingFnc };
 };
 
-export default useImproveWriting;
+export default useAuto;

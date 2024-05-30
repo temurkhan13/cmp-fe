@@ -1,36 +1,34 @@
 import { useState } from "react";
-import axios from "axios";
+import apiClient from "../api/axios";
 
 const useChat = () => {
-  const [chatResponse, setChatResponse] = useState("");
   const [error, setError] = useState(null);
 
   const chatWithdoc = async (inputText, file = null) => {
     try {
+      // formdata append
       const formData = new FormData();
       formData.append("message", inputText);
 
       if (file) {
-        formData.append("file", file);
+        formData.append("pdfPath", file);
       }
 
-      const response = await axios.post("/chat/change-tone", formData, {
+      const response = await apiClient.post("/chat/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
       console.log("chatWithApi response", response.data.message);
-      setChatResponse(response.data.message);
       setError(null);
+      return response.data.message;
     } catch (error) {
       console.error("Error in chatWithApi", error);
       setError("Failed to process your request. Please try again.");
-      setChatResponse("");
     }
   };
 
-  return { chatResponse, error, chatWithdoc };
+  return { error, chatWithdoc };
 };
 
 export default useChat;
