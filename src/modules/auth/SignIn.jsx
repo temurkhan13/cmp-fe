@@ -3,11 +3,19 @@ import assets from "../../assets";
 import data from "../../data";
 import { Formik, Form } from "formik";
 import { Link } from "react-router-dom";
+import useLogin from "../../hooks/useLogin";
 
 const SignIn = () => {
+  const { login, loading, error } = useLogin();
   const initalValues = {
     email: "",
     password: "",
+  };
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const { email, password } = values;
+    await login(email, password);
+    setSubmitting(false);
   };
 
   return (
@@ -47,10 +55,7 @@ const SignIn = () => {
             initialValues={initalValues}
             validateOnMount
             validationSchema={data.validation.validationAuth.validationSignIn}
-            onSubmit={(values, { resetForm }) => {
-              console.log(values);
-              resetForm();
-            }}
+            onSubmit={handleSubmit}
           >
             {(formik) => (
               <Form>
@@ -63,6 +68,7 @@ const SignIn = () => {
                   name="password"
                   label="Password"
                   place="Enter password"
+                  type="password"
                 />
                 <section className="signIn_remember  mb_Tertiary">
                   <div>
@@ -73,18 +79,32 @@ const SignIn = () => {
                   </div>
                   <Link to="/set-password">Forgot Password?</Link>
                 </section>
-                <Link to="/choose-plain">
-                  <Components.Feature.Button className="primary">
-                    Log In
-                  </Components.Feature.Button>
-                </Link>
+                <Components.Feature.Button
+                  className="primary"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? "Logging In..." : "Log In"}
+                </Components.Feature.Button>
+                {error && (
+                  <div
+                    style={{
+                      color: "red",
+                      display: "flex",
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {error}
+                  </div>
+                )}
               </Form>
             )}
           </Formik>
         </section>
         <center>
           <Components.Feature.Text className="primary m_1">
-            Don’t have an account? <Link to="sign-up">Sign Up</Link>
+            Don’t have an account? <Link to="/sign-up">Sign Up</Link>
           </Components.Feature.Text>
         </center>
       </Components.Feature.Container>

@@ -1,14 +1,24 @@
-import React from "react";
 import Components from "../../components";
 import data from "../../data";
 import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SetPassword = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const email = location.state?.email; 
+
   const initalValues = {
     password: "",
     confirmPassword: "",
   };
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(false);
+    navigate("/verify-email", { state: { ...values, email } });
+  };
+
+  
   return (
     <Components.Feature.Container className="auth signIn">
       <header>
@@ -26,10 +36,7 @@ const SetPassword = () => {
           validationSchema={
             data.validation.validationAuth.validationSetPassword
           }
-          onSubmit={(values, { resetForm }) => {
-            console.log(values);
-            resetForm();
-          }}
+          onSubmit={handleSubmit}
         >
           {(formik) => (
             <Form>
@@ -43,11 +50,9 @@ const SetPassword = () => {
                 label="Confirm Password"
                 place="Confirm password"
               />
-              <Link to="/verify-email">
-                <Components.Feature.Button className="primary">
+                <Components.Feature.Button className="primary" type="submit">
                   Continue
                 </Components.Feature.Button>
-              </Link>
             </Form>
           )}
         </Formik>

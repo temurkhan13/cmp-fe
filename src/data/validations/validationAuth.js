@@ -25,7 +25,7 @@ const validationSignUp = Yup.object({
 const validationSetPassword = Yup.object({
   password,
   confirmPassword,
-});
+});     
 
 const validationAuth = {
   validationSignIn,

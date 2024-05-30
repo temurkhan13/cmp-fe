@@ -1,13 +1,20 @@
-import React from "react";
 import Components from "../../components";
 import assets from "../../assets";
 import data from "../../data";
 import { Formik, Form } from "formik";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const initalValues = {
     email: "",
+  };
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const { email } = values;
+    setSubmitting(false);
+    navigate("/set-password",{ state:{ email }});
   };
 
   return (
@@ -46,10 +53,7 @@ const SignUp = () => {
           initialValues={initalValues}
           validateOnMount
           validationSchema={data.validation.validationAuth.validationSignUp}
-          onSubmit={(values, { resetForm }) => {
-            console.log(values);
-            resetForm();
-          }}
+          onSubmit={handleSubmit}
         >
           {(formik) => (
             <Form>
@@ -57,13 +61,10 @@ const SignUp = () => {
                 name="email"
                 label="Email"
                 place="Enter your email"
-              
               />
-              <Link to="/set-password">
-                <Components.Feature.Button className="primary">
-                  Continue
-                </Components.Feature.Button>
-              </Link>
+              <Components.Feature.Button className="primary" type="submit">
+                Continue
+              </Components.Feature.Button>
             </Form>
           )}
         </Formik>
