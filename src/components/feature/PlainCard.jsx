@@ -32,7 +32,6 @@ const PlainCard = (props) => {
             </Components.Feature.Button>
           </Link>
         </header>
-
         <section>
           <Components.Feature.Text className="main--bold">
             Includes

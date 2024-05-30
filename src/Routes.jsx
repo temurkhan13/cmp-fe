@@ -16,13 +16,11 @@ const Routess = () => {
               <Route path={el.path} element={<el.element />} key={uuidv4()} />
             ))}
           </Route>
-
           <Route path="" element={<PlainsLayout />}>
             {data.routes.plainRoutesData.map((el) => (
               <Route path={el.path} element={<el.element />} key={uuidv4()} />
             ))}
           </Route>
-
           {AiAssistantRoutes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element} />
           ))}

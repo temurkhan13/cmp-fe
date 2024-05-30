@@ -2,7 +2,6 @@ import Components from "../../components";
 import data from "../../data";
 import { Formik, Form } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-
 const SetPassword = () => {
   const location = useLocation();
   const navigate = useNavigate();
