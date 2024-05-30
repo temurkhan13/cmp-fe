@@ -1,4 +1,3 @@
-import React from "react";
 import Components from "../../components";
 import assets from "../../assets";
 import data from "../../data";
@@ -62,8 +61,8 @@ const SignIn = () => {
                 />
                 <Components.Feature.FormInput
                   name="password"
-                  label="Email"
-                  place="Enter your email"
+                  label="Password"
+                  place="Enter password"
                 />
                 <section className="signIn_remember  mb_Tertiary">
                   <div>
@@ -72,11 +71,13 @@ const SignIn = () => {
                       Remember Me
                     </Components.Feature.Text>
                   </div>
-                  <Link to="forgot-password">Forgot Password?</Link>
+                  <Link to="/set-password">Forgot Password?</Link>
                 </section>
-                <Components.Feature.Button className="primary">
-                  Log In
-                </Components.Feature.Button>
+                <Link to="/choose-plain">
+                  <Components.Feature.Button className="primary">
+                    Log In
+                  </Components.Feature.Button>
+                </Link>
               </Form>
             )}
           </Formik>

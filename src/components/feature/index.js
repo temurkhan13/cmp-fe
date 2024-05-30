@@ -6,4 +6,5 @@ export { default as FormInput } from "./FormInput";
 export { default as FromTextArea } from "./FormTextArea";
 export { default as FormInputWithDropDown } from "./FormInputWithDropDown";
 export { default as FileInput } from "./FileInput";
+export { default as PlainCard } from "./PlainCard";
 export { default as ScrollToTop } from "./ScrollToTop";

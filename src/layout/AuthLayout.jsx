@@ -1,20 +1,20 @@
-import Components from "../components";
 import { Outlet } from "react-router-dom";
 import assets from "../assets";
 
 const AuthLayout = () => {
+  const divStyle = {
+    backgroundImage: `url(${assets.auth.banner})`,
+  };
   return (
-    <Components.Feature.Container className="main">
-      <div className="authLayout">
-        <section>
+    <div className="authLayout">
+      <section>
+        <div>
           <img src={assets.common.logo} alt="logo" />
-          <section>
-            <Outlet />
-          </section>
-        </section>
-        <img src={assets.auth.banner} alt="banner" />
-      </div>
-    </Components.Feature.Container>
+          <Outlet />
+        </div>
+      </section>
+      <div style={divStyle}></div>
+    </div>
   );
 };
 

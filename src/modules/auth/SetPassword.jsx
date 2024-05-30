@@ -2,11 +2,12 @@ import React from "react";
 import Components from "../../components";
 import data from "../../data";
 import { Formik, Form } from "formik";
+import { Link } from "react-router-dom";
 
 const SetPassword = () => {
   const initalValues = {
     password: "",
-    confirm_Password: "",
+    confirmPassword: "",
   };
   return (
     <Components.Feature.Container className="auth signIn">
@@ -14,7 +15,7 @@ const SetPassword = () => {
         <Components.Feature.Heading className="primary mb_primary">
           Set Password
         </Components.Feature.Heading>
-        <Components.Feature.Text className="primary--light">
+        <Components.Feature.Text className="primary--light mb_Tertiary">
           Please enter the following information in order to sign up
         </Components.Feature.Text>
       </header>
@@ -34,17 +35,19 @@ const SetPassword = () => {
             <Form>
               <Components.Feature.FormInput
                 name="password"
-                label="Email"
-                place="Enter your email"
+                label="Password"
+                place="Enter password"
               />
               <Components.Feature.FormInput
-                name="confirm_Password"
-                label="Email"
-                place="Enter your email"
+                name="confirmPassword"
+                label="Confirm Password"
+                place="Confirm password"
               />
-              <Components.Feature.Button className="primary">
-                Continue
-              </Components.Feature.Button>
+              <Link to="/verify-email">
+                <Components.Feature.Button className="primary">
+                  Continue
+                </Components.Feature.Button>
+              </Link>
             </Form>
           )}
         </Formik>

@@ -36,83 +36,91 @@ const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const filteredData = dropDownData.filter((item) =>
-    item.toLowerCase().includes(inputValue.toLowerCase())
-  );
 
+  const filteredData = dropDownData.filter((item) => {
+    if (typeof inputValue === "number") {
+      return item.includes(inputValue.toString());
+    } else if (typeof inputValue === "string") {
+      return item.toLowerCase().includes(inputValue.toLowerCase());
+    }
+    return false;
+  });
   return (
-    <>
-      <div data-aos="fade-up" data-aos-duration={`600`}>
-        <div
-          className={`formInputWithDropDown ${
-            meta.touched && meta.error && "is-invalid"
+    <div
+      className={`formInputWithDropDown ${
+        meta.touched && meta.error && "is-invalid"
+      }`}
+      style={{ position: "relative" }}
+    >
+      <section data-aos="fade-up" data-aos-duration={`600`}>
+        <label
+          htmlFor={field.name}
+          className={`form-label ${
+            inputValue !== "" && "form-label-input-value"
           }`}
         >
-          <section>
-            <label
-              htmlFor={field.name}
-              className={`form-label ${
-                inputValue !== "" && "form-label-input-value"
-              }`}
-            >
-              {label}
-            </label>
+          {label}
+        </label>
 
-            <div
-              style={{ border: meta.touched && meta.error && "1px solid red" }}
-            >
-              <input
-                placeholder={place}
-                type="text"
-                className={`form-input ${className}   ${
-                  meta.touched && meta.error && "is-invalid"
-                }`}
-                {...field}
-                {...props}
-                autoComplete="off"
-                onChange={handleInputChange}
-                value={inputValue}
-              />
-              <div onClick={handleArrowClick}>
-                <IoIosArrowDown />
-              </div>
-            </div>
-            <blockquote>
-              <ErrorMessage
-                component="div"
-                name={field.name}
-                className="form-error"
-              />
-            </blockquote>
-          </section>
-          {showDropDown && (
-            <motion.div
-              initial={{ y: "-6rem", opacity: 0 }}
-              animate={{ y: "0rem", opacity: 1 }}
-              exit={{ opacity: 0 }}
-              ref={dropdownRef}
-              style={{ zIndex: 9999 }}
-            >
-              {filteredData.length > 0 ? (
-                <ul>
-                  {filteredData.map((item, index) => (
-                    <li key={index} onClick={() => handleItemClick(item)}>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <center>
-                  <Components.Feature.Text className="secondry">
-                    No match found
-                  </Components.Feature.Text>
-                </center>
-              )}
-            </motion.div>
-          )}
+        <div style={{ border: meta.touched && meta.error && "1px solid red" }}>
+          <input
+            placeholder={place}
+            type="text"
+            className={`form-input ${className}   ${
+              meta.touched && meta.error && "is-invalid"
+            }`}
+            {...field}
+            {...props}
+            autoComplete="off"
+            onChange={handleInputChange}
+            value={inputValue}
+          />
+          <motion.div
+            animate={
+              showDropDown
+                ? {
+                    rotate: -180,
+                  }
+                : { rotate: 0 }
+            }
+            onClick={handleArrowClick}
+          >
+            <IoIosArrowDown />
+          </motion.div>
         </div>
-      </div>
-    </>
+        <blockquote>
+          <ErrorMessage
+            component="div"
+            name={field.name}
+            className="form-error"
+          />
+        </blockquote>
+      </section>
+      {showDropDown && (
+        <motion.div
+          initial={{ y: "-6rem", opacity: 1 }}
+          animate={{ y: "0rem", opacity: 1 }}
+          exit={{ opacity: 1 }}
+          ref={dropdownRef}
+        >
+          {filteredData.length > 0 ? (
+            <ul>
+              {filteredData.map((item, index) => (
+                <li key={index} onClick={() => handleItemClick(item)}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <center>
+              <Components.Feature.Text className="secondry">
+                No match found
+              </Components.Feature.Text>
+            </center>
+          )}
+        </motion.div>
+      )}
+    </div>
   );
 };
 
