@@ -61,10 +61,12 @@ const SignUp = () => {
                 name="email"
                 label="Email"
                 place="Enter your email"
+              
               />
               <Components.Feature.Button className="primary" type="submit">
                 Continue
               </Components.Feature.Button>
+
             </Form>
           )}
         </Formik>
