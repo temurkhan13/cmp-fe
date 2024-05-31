@@ -25,6 +25,7 @@ const useLogin = () => {
       // apiClientForAll.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
       if (response) {
+        localStorage.setItem("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjU1ZjMyNDkyNTdlOGM4YjJhZTlmMTYiLCJpYXQiOjE3MTY5MDkzNzgsImV4cCI6MjY2MzYxNTc3OCwidHlwZSI6ImFjY2VzcyJ9.ynYDuVxg8glUhVg-n7JDcG56pUasOKSs2EDijHtTVuI")
         setSuccess(true);
         navigate("/choose-plain");
       }
