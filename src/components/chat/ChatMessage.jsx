@@ -51,7 +51,7 @@ const ChatMessage = () => {
   const { autoWritingFnc } = useAuto();
   const { shortText } = useShorter();
   const { LongText } = useLonger();
-  const { chatWithdoc } = useChat();
+  const { error, chatWithdoc } = useChat();
 
   // upload files
   // uncomment part is for uploading multiple doc
@@ -114,7 +114,7 @@ const ChatMessage = () => {
 
       // setFile([]);
       setFile(null); // Reset the file state
-    document.getElementById("file-input").value = "";
+      document.getElementById("file-input").value = "";
       setText("");
     } catch (error) {
       console.log(error.message);
@@ -129,18 +129,18 @@ const ChatMessage = () => {
       setLoading(true);
       setAskAI(value);
 
-        if (value === "Fix Spelling & Grammar") {
-          const responseGrammar = await fixGrammar(selectedText);
-          applyFixedText(responseGrammar);
-          //
-        } else if (value === "Improve Writing") {
-          const responseWriting = await improveWriting(selectedText);
-          applyFixedText(responseWriting);
-          //
-        } else if (value === "Summarize") {
-          const responseSummary = await summarize(selectedText);
-          applyFixedText(responseSummary);
-        }
+      if (value === "Fix Spelling & Grammar") {
+        const responseGrammar = await fixGrammar(selectedText);
+        applyFixedText(responseGrammar);
+        //
+      } else if (value === "Improve Writing") {
+        const responseWriting = await improveWriting(selectedText);
+        applyFixedText(responseWriting);
+        //
+      } else if (value === "Summarize") {
+        const responseSummary = await summarize(selectedText);
+        applyFixedText(responseSummary);
+      }
     } catch (error) {
       console.error("Asi AI", error);
     } finally {
@@ -150,7 +150,6 @@ const ChatMessage = () => {
 
   // replace selected text chat
   const applyFixedText = (newText) => {
-
     // updated
     const updatedChat = chat.map((message) => {
       if (message.content) {
@@ -162,7 +161,6 @@ const ChatMessage = () => {
       return message;
     });
 
-   
     setChat(updatedChat);
     setPopupVisible(false);
   };
@@ -179,15 +177,15 @@ const ChatMessage = () => {
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
     // if (selectedText && tone) {
-      setLoading(true);
-      try {
-        const response = await ChangeToneFun(selectedText, tone);
-        applyFixedText(response);
-      } catch (error) {
-        console.error("Error occurred while changing tone:", error);
-      } finally {
-        setLoading(false);
-      }
+    setLoading(true);
+    try {
+      const response = await ChangeToneFun(selectedText, tone);
+      applyFixedText(response);
+    } catch (error) {
+      console.error("Error occurred while changing tone:", error);
+    } finally {
+      setLoading(false);
+    }
     // }
   };
 
@@ -197,30 +195,30 @@ const ChatMessage = () => {
     setResponseLength(length);
 
     // if (value) {
-      setLoading(true);
-      try {
-        if (value === "Auto") {
-          const responseAuto = await autoWritingFnc(selectedText);
-          applyFixedText(responseAuto);
-          //
-        } else if (value === "Small") {
-          const responseSmall = await shortText(selectedText);
-          applyFixedText(responseSmall);
-          //
-        } else if (value === "Medium") {
-          const responseMedium = await LongText(selectedText);
-          applyFixedText(responseMedium);
-          //
-        } else if (value === "Comprehensive") {
-          const responseComp = await comprehensiveWriting(selectedText);
-          applyFixedText(responseComp);
-          //
-        }
-      } catch (error) {
-        console.error("Error occurred while changing tone:", error);
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    try {
+      if (value === "Auto") {
+        const responseAuto = await autoWritingFnc(selectedText);
+        applyFixedText(responseAuto);
+        //
+      } else if (value === "Small") {
+        const responseSmall = await shortText(selectedText);
+        applyFixedText(responseSmall);
+        //
+      } else if (value === "Medium") {
+        const responseMedium = await LongText(selectedText);
+        applyFixedText(responseMedium);
+        //
+      } else if (value === "Comprehensive") {
+        const responseComp = await comprehensiveWriting(selectedText);
+        applyFixedText(responseComp);
+        //
       }
+    } catch (error) {
+      console.error("Error occurred while changing tone:", error);
+    } finally {
+      setLoading(false);
+    }
     // }
   };
 
@@ -353,7 +351,11 @@ const ChatMessage = () => {
           </div>
         )}
       </div>
-
+      {error && (
+        <div className="error" style={{ color: "red" }}>
+          {error}
+        </div>
+      )}
       {/* input */}
       <div className="Message_container">
         <div>

@@ -14,8 +14,8 @@ const useExplain = () => {
       setExplainText(response.data.message);
       setError(null);
     } catch (error) {
-      console.log("check", error);
-      setError("Failed to fix grammar. Please try again.");
+      console.log("check", error.message);
+      setError(error.message);
       setExplainText("");
     }
   };

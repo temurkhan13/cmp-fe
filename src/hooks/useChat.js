@@ -23,8 +23,8 @@ const useChat = () => {
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.error("Error in chatWithApi", error);
-      setError("Failed to process your request. Please try again.");
+      // console.error("Error in chatWithApi", error.message);
+      setError(error.message);
     }
   };
 

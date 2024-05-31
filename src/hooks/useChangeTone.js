@@ -13,8 +13,8 @@ const useChangeTone = () => {
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log("check", error);
-      setError("Failed to fix grammar. Please try again.");
+      console.log("check", error.message);
+      setError(error.message);
     }
   };
 

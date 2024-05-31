@@ -13,7 +13,7 @@ const useAuto = () => {
       return response.data.message;
     } catch (error) {
       console.log("error", error.message);
-      setError("Failed to summarize text. Please try again.");
+      setError(error.message);
     }
   };
 

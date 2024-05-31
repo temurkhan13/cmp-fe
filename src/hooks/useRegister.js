@@ -27,7 +27,8 @@ const useRegister = () => {
       }
 
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.log(err.message)
+      setError(err.message);
     } finally {
       setLoading(false);
     }

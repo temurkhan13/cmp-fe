@@ -13,7 +13,8 @@ const useLonger = () => {
       setError(null);
       return response.data.message;
     } catch (error) {
-      setError("Failed to improve writing. Please try again.");
+      console.log(error.message)
+      setError(error.message);
     }
   };
 

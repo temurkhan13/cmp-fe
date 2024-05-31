@@ -1,6 +1,6 @@
 import { useState } from "react";
-import apiClient from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../api/auth";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -19,13 +19,18 @@ const useLogin = () => {
         email,
         password,
       });
-      console.log("login", response);
+
+      // For now we just set token this but in future we use setToken component in api
+      // const accessToken = response.data.tokens.access.token;
+      // apiClientForAll.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
       if (response) {
         setSuccess(true);
         navigate("/choose-plain");
       }
     } catch (err) {
-      setError(err.response ? err.response.data.message : err.message);
+      console.log(err.message);
+      setError(err.message);
     } finally {
       setLoading(false);
     }

@@ -13,7 +13,8 @@ const useComprehensive = () => {
       setError(null);
       return response.data.message
     } catch (error) {
-      setError("Failed to summarize text. Please try again.");
+      console.log(error.message)
+      setError(error.message);
     }
   };
 
