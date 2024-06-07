@@ -1,0 +1,28 @@
+//  Color
+$color_Primary: #0a0a0a;
+$color_Secondry: #0a0a0aad;
+$color_Tertiary: #0a0a0a75;
+$color_Gray: #6d7277;
+$color_BlueDark: #0b1444;
+$color_BlueLight: #0066ff;
+$color_NeonGreen: #b8f156;
+$color_error: rgba(255, 0, 0, 0.589);
+// Border Colors
+$border_color--primary: #d0d2d5;
+$border_color--secondry: #0a0a0a36;
+$border_color--tertiary: #0a0a0a1a;
+
+// Background Color
+$bg_gray--ligth: #ececec;
+$bg_light: #f9f9f9;
+$plainCard: #964dff;
+
+// Break Points For Responsive Mixin
+$mobile: 28em;
+$phone: 37.5em;
+$tab_Port: 43.75em;
+$tab_land: 50em;
+$lapTop_Small: 62.6em;
+$lapTop: 78.125em;
+$lapTop_Big: 84.375em;
+$big_Monitor: 87em;

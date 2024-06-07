@@ -1,0 +1,69 @@
+.plainCard {
+  padding: 3.2rem;
+  border: 1px solid $border_color--tertiary;
+  border-radius: 1.2rem;
+
+  & > header {
+    & > p {
+      & > span {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: $color_BlueLight;
+      }
+    }
+  }
+
+  & > section {
+    padding-top: 3.2rem;
+    border-top: 2px solid $border_color--tertiary;
+    & > p {
+      margin-bottom: 2rem;
+    }
+    & > div {
+      & > * {
+        &:not(:last-child) {
+          margin-bottom: 1.2rem;
+        }
+      }
+    }
+  }
+
+  &-item {
+    display: flex;
+    gap: 1.2rem;
+    & > * {
+      &:first-child {
+        & > * {
+          font-size: 1.7rem;
+          margin-top: 0.4rem;
+        }
+      }
+    }
+  }
+}
+
+#plainCard-active {
+  background-color: $plainCard;
+  color: white;
+  & > header {
+    & > p {
+      color: white;
+      & > span {
+        color: white;
+      }
+    }
+  }
+
+  & > section {
+    border-top: 2px solid #ffffff4f;
+    & > div {
+      & > div {
+        & > div {
+          & > p {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

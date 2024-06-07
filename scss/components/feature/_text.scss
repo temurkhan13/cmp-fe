@@ -1,0 +1,87 @@
+p {
+  letter-spacing: 0.24px;
+}
+
+.text {
+  &-main--bold {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 2.8rem;
+  }
+
+  &-primary {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: $color_Secondry;
+    font-size: 1.6rem;
+  }
+  &-primary-dark {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: $color_Primary;
+    font-size: 1.6rem;
+  }
+  &-primary--light {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: $color_Tertiary;
+  }
+  &-primary--gray {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: $color_Gray;
+  }
+  &-primary--gray-bold {
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 2.4rem;
+    color: $color_Gray;
+  }
+  &-secondry {
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 2.2rem;
+    color: $color_Secondry;
+  }
+  &-secondry--light {
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 2.2rem;
+    color: $color_Tertiary;
+  }
+  &-secondry--dark {
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 2.2rem;
+    color: $color_Primary;
+  }
+  &-secondry--dark-bold {
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 2.2rem;
+    color: $color_Primary;
+  }
+  // &-titory {
+  //   font-size: 1.8rem;
+  //   font-weight: 600;
+  //   line-height: 2.4rem;
+  //   color: $color_Primary;
+  // }
+  &-titory--bold {
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 2.4rem;
+    color: $color_Primary;
+  }
+
+  &-middium--light {
+    color: $color_Tertiary;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.8rem;
+  }
+}

@@ -1,0 +1,295 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.MainContainer {
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(211, 211, 211, 0.067);
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+
+    p {
+      font-family: Poppins;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 44px;
+      letter-spacing: 0.11999999731779099px;
+      text-align: left;
+    }
+    button {
+      width: 84px;
+      height: 43px;
+      padding: 10px 30px 10px 30px;
+      gap: 10px;
+      border-radius: 8px;
+      border: 1px solid black;
+      opacity: 0px;
+    }
+  }
+
+  .Container {
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    .StepContainer {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 30px 60px;
+
+      &:before {
+        content: "";
+        position: absolute;
+        background: lightgray;
+        height: 1px;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        background: black;
+        height: 1px;
+        width: var(--width);
+        top: 50%;
+        transition: 0.4s ease;
+        transform: translateY(-50%);
+        left: 0;
+      }
+
+      .StepWrapper {
+        position: relative;
+        z-index: 1;
+
+        .StepStyle {
+          width: 22px;
+          height: 22px;
+          border-radius: 30px;
+          background-color: #ffffff;
+          border: 1.5px solid #f3e7f3;
+          transition: 0.4s ease;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .ActiveStep {
+          border-color: #000000;
+        }
+
+        .CheckMark {
+          // font-size: 10px;
+          svg {
+            width: 22px;
+            height: 22px;
+          }
+        }
+
+        .StepCount {
+          font-size: 19px;
+          color: #4a154b;
+
+          @media (max-width: 600px) {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+  .ErrorMessage {
+    background: rgba(252, 93, 74, 0.1);
+    max-width: 785px;
+    display: flex;
+    margin: 20px auto;
+    padding: 12px;
+    text-align: left;
+    justify-content: space-between;
+    align-items: left;
+    border-radius: 5px;
+
+    svg {
+      font-size: 15px;
+    }
+    span:nth-child(1) {
+      svg {
+        color: red;
+      }
+    }
+    p {
+      //styleName: Regular/Regular;
+      font-family: Poppins;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      letter-spacing: 0.23999999463558197px;
+      text-align: left;
+    }
+  }
+
+  .Questionnaire {
+    display: flex;
+    flex-direction: column;
+    // align-items: flex-start;
+    align-items: center;
+    margin: 0 auto;
+    // background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 30px;
+    max-width: 796px;
+    max-height: 319px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    // border: 2px solid black;
+  }
+
+  .QuestionContainer {
+    // margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%; /* Set width to 100% */
+    p:nth-child(1) {
+      font-family: Poppins;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 18px;
+      letter-spacing: 0.11999999731779099px;
+      text-align: left;
+      color: rgba(10, 10, 10, 0.46);
+    }
+    p:nth-child(2) {
+      //styleName: Regular/Regular;
+      font-family: Poppins;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0.23999999463558197px;
+      text-align: left;
+      color: rgba(10, 10, 10, 1);
+      padding: 5px 0;
+    }
+  }
+
+  .InputStyle {
+    width: 100%; /* Set width to 100% */
+    padding: 10px;
+    border-radius: 7px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+
+  .ButtonsContainer {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    button {
+      display: flex;
+      padding: 0 15px;
+      height: 43px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid black;
+      outline: none;
+      opacity: 0px;
+      color: rgba(11, 20, 68, 1);
+      background-color: white;
+      svg {
+        font-size: 20px;
+      }
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:disabled {
+        background: lightgray;
+        color: #000000;
+        cursor: not-allowed;
+      }
+    }
+    .ButtonStyleNext {
+      background-color: rgba(195, 225, 29, 1);
+    }
+  }
+}
+.InitialContianer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  // height: 100vh; /* Full viewport height */
+  text-align: center;
+  // padding: 20px; /* Optional: for some padding around the edges */
+  box-sizing: border-box; /* Ensure padding does not affect the overall width/height */
+  max-width: 450px;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px; /* Space below the icon */
+}
+
+.iconContainer svg {
+  height: 60px;
+  width: 60px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+}
+
+.heading {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.12px;
+  margin-bottom: 10px; /* Space below the heading */
+}
+
+.subheading {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.24px;
+  margin-bottom: 20px; /* Space below the subheading */
+  text-align: center; /* Ensure subheading text is centered */
+}
+
+.InitialBtn {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.InitialBtn button {
+  font-size: 14px;
+  height: 43px;
+  width: 80px;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid black;
+  outline: none;
+  color: rgba(11, 20, 68, 1);
+  background-color: white;
+  cursor: pointer;
+  display: flex; /* Ensures button content is centered */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+.InitialBtn .ButtonStyleAss {
+  width: 140px;
+  background-color: rgba(195, 225, 29, 1);
+}

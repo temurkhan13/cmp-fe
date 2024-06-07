@@ -1,0 +1,19 @@
+.choosePlain {
+  & > center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    & > div {
+      background-color: $bg_light;
+      padding: 0.8rem;
+      border-radius: 0.8rem;
+      margin-top: 4rem;
+      & > * {
+        &:first-child {
+          margin-right: 1.2rem;
+        }
+      }
+    }
+  }
+}

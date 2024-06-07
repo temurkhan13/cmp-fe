@@ -1,0 +1,66 @@
+.assessmentList {
+  height: calc(100vh - 11.4rem);
+  box-shadow: 0px 4px 24px 0px hsla(0, 0%, 0%, 0.122);
+  border: 1px solid $border_color--tertiary;
+  border-radius: 1rem;
+  overflow-y: hidden;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 0.6rem;
+    display: none;
+  }
+  &::-webkit-scrollbar-track {
+    background: white;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    background: $border_color--secondry;
+    border-radius: 3rem;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #525151b4;
+  }
+  & > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.6rem;
+    border-bottom: 1px solid $border_color--tertiary;
+    & > span {
+      cursor: pointer;
+      background: #0000000d;
+      padding: 0.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      & > * {
+        font-size: 2rem;
+      }
+    }
+  }
+
+  // & > section {
+  //   & > div {
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: space-between;
+  //     padding: 1.85rem 1.6rem;
+  //     gap: 1rem;
+  //     transition: 0.3s ease-in-out;
+  //     &:hover {
+  //       background: #0000000d;
+  //     }
+  //     & > * {
+  //       &:last-child {
+  //         color: $color_BlueLight;
+  //         cursor: pointer;
+  //       }
+  //     }
+  //   }
+  // }
+}

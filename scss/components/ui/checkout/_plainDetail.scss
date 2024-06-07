@@ -1,0 +1,14 @@
+.plainDetail {
+  & > div,
+  section,
+  blockquote {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  & > section {
+    padding-bottom: 3.2rem;
+    margin-bottom: 3.2rem;
+    border-bottom: 1px solid $border_color--secondry;
+  }
+}

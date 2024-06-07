@@ -1,0 +1,15 @@
+.payWithCard {
+  border: 1px solid $border_color--tertiary;
+  border-radius: 1.6rem;
+  padding: 1.6rem;
+  &-form {
+    & > blockquote {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      & > div {
+        width: 50%;
+      }
+    }
+  }
+}

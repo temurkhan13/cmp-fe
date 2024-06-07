@@ -1,0 +1,16 @@
+@import "../../utils/mixins";
+
+.container {
+  width: 100%;
+  &-main {
+    @include respond(big-desktop) {
+      max-width: 145rem;
+      margin: auto;
+    }
+  }
+
+  &-auth {
+    max-width: 48rem;
+    margin: auto;
+  }
+}

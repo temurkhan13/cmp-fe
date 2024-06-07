@@ -1,0 +1,86 @@
+.formInputWithDropDown {
+  position: relative;
+  & > section {
+    margin-bottom: 2rem;
+    & > label {
+      font-size: 1.4rem;
+      font-weight: 400;
+      line-height: 2.2rem;
+      color: $color_Primary;
+    }
+
+    & > div {
+      margin-top: 0.8rem;
+      border: 1px solid $border_color--tertiary;
+      padding: 1.1rem 1.6rem;
+      border-radius: 0.8rem;
+      display: flex;
+      align-items: center;
+      & > input {
+        width: 100%;
+        background-color: transparent;
+        font-size: 1.4rem;
+        font-weight: 400;
+        letter-spacing: 0.24px;
+        line-height: 2.2rem;
+        border: none;
+        &:focus {
+          outline: none;
+        }
+      }
+      & > div {
+        display: flex;
+        align-items: center;
+        & > * {
+          cursor: pointer;
+          font-size: 2rem;
+          color: $color_Primary;
+        }
+      }
+    }
+
+    & > blockquote {
+      & > div {
+        margin-top: 0.3rem;
+        margin-left: 1.7rem;
+        color: $color_error;
+        font-size: 1.2rem;
+      }
+    }
+  }
+  & > div {
+    border: 1px solid $border_color--tertiary;
+    width: 100%;
+    border-radius: 0.6rem;
+    z-index: 999999999;
+    margin-top: -1.3rem;
+    position: absolute;
+    background-color: $bg_gray--ligth;
+
+    & > ul {
+      list-style: none;
+      padding: 1rem 0rem;
+      & > * {
+        &:not(:last-child) {
+          margin-bottom: 0.6rem;
+        }
+      }
+      & > li {
+        font-size: 1.4rem;
+        font-weight: 400;
+        line-height: 2.84rem;
+        letter-spacing: 1px;
+        cursor: pointer;
+        padding: 0rem 2rem;
+        transition: 0.3 ease-in-out;
+        &:hover {
+          background-color: white;
+        }
+      }
+    }
+
+    & > center {
+      margin: 5rem 0rem;
+    }
+  }
+}

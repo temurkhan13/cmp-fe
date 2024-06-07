@@ -1,0 +1,18 @@
+.assessmentChat {
+  & > section {
+    padding: 1.4rem 2.4rem;
+    display: flex;
+    gap: 2.8rem;
+    & > * {
+      &:first-child {
+        width: 55rem;
+      }
+      &:nth-child(2) {
+        width: 100%;
+      }
+      &:last-child {
+        width: 67.8rem;
+      }
+    }
+  }
+}

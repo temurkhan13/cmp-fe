@@ -1,0 +1,50 @@
+.authLayout {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  & > section {
+    padding: 2.4rem 6rem;
+    width: 45%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    @media only screen and (max-width: 900px) {
+      padding: 2rem 3rem;
+    }
+
+    @media only screen and (max-width: 700px) {
+      width: 100%;
+      height: auto;
+    }
+
+    & > div {
+      @media only screen and (max-width: 700px) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      & > img {
+        margin-bottom: 1rem;
+        @media only screen and (max-width: 700px) {
+          margin-bottom: 6rem;
+        }
+      }
+    }
+  }
+  & > div {
+    width: 55%;
+    height: 100vh;
+    position: fixed;
+    right: 0rem;
+    background-size: cover;
+    background-position: center center;
+
+    @media only screen and (max-width: 700px) {
+      display: none;
+    }
+  }
+}

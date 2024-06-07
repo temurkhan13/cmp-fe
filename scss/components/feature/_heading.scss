@@ -1,0 +1,59 @@
+h1 {
+  letter-spacing: 0.12px;
+}
+
+.heading- {
+  &primary {
+    font-size: 3.2rem;
+    font-weight: 600;
+    line-height: 4.4rem;
+    color: $color_Primary;
+  }
+  &secondry {
+    font-size: 2.4rem;
+    font-weight: 600;
+    line-height: 3.2rem;
+    color: $color_Primary;
+  }
+  // &secondry {
+  //   font-size: 4.8rem;
+  //   font-weight: 600;
+  //   line-height: 6.2rem;
+  //   letter-spacing: 1px;
+  //   @include respond(phone) {
+  //     font-size: 4rem;
+  //     line-height: 4.3rem;
+  //   }
+  // }
+  // &titory {
+  //   font-size: 3.2rem;
+  //   font-weight: 500;
+  //   line-height: 5.1rem;
+  //   letter-spacing: 1px;
+  // }
+  // &blogCardHeading {
+  //   font-size: 2.6rem;
+  //   font-weight: 500;
+  //   line-height: 4.16rem;
+  //   letter-spacing: 1px;
+  // }
+  // &policyHeading {
+  //   font-size: 2.8rem;
+  //   font-weight: 600;
+  //   line-height: 4.16rem;
+  //   letter-spacing: 1px;
+  // }
+  // &heroHeading {
+  //   font-size: 6.4rem;
+  //   font-weight: 600;
+  //   line-height: 8.32rem;
+  //   letter-spacing: 1px;
+  //   @include respond(phone) {
+  //     font-size: 5rem;
+  //     line-height: 6.32rem;
+  //   }
+  //   @include respond(mobile) {
+  //     font-size: 4.2rem;
+  //   }
+  // }
+}

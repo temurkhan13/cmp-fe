@@ -1,0 +1,23 @@
+.businessInfo {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  & > section {
+    padding: 1.6rem;
+    max-width: 56.8rem;
+    margin: auto;
+    border: 1px solid $border_color--tertiary;
+    border-radius: 1.6rem;
+    & > button {
+      margin-bottom: 1.2rem;
+    }
+  }
+  &-form {
+    & > blockquote {
+      display: flex;
+      gap: 2rem;
+      & > * {
+        width: 50%;
+      }
+    }
+  }
+}

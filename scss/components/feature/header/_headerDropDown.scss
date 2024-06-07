@@ -1,0 +1,28 @@
+.header-dropDown {
+  position: relative;
+  & > header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid $border_color--tertiary;
+    border-radius: 1.2rem;
+    padding: 0.6rem;
+    cursor: pointer;
+    & > * {
+      &:first-child {
+        height: 3.6rem;
+        width: 3.6rem;
+      }
+      &:last-child {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem 0.3rem;
+        & > * {
+          font-size: 2.5rem;
+          color: $color_Secondry;
+        }
+      }
+    }
+  }
+}
