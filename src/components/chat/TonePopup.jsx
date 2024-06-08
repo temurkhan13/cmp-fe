@@ -12,7 +12,7 @@ const TonePopup = ({ onToneChange, onResponseLengthChange, HandleAskAi, onClose 
   const handleOptionClick = () => {
     onClose(); // Close the popup when any option is clicked
   };
-
+  
   return (
     <div className="PopupBox">
       {!showAskAi ? (

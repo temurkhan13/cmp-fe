@@ -6,12 +6,14 @@
     & > * {
       &:first-child {
         width: 55rem;
+        max-width: 25rem;
       }
       &:nth-child(2) {
         width: 100%;
+        // background-color: aqua;
       }
-      &:last-child {
-        width: 67.8rem;
+      &:nth-child(3) {
+        // width: 67.8rem;
       }
     }
   }

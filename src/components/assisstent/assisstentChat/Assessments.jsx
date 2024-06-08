@@ -2,7 +2,7 @@ import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import Components from "../..";
 import data from "../../../data";
-//
+// 
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { RxTimer } from "react-icons/rx";
 import { FaFolderOpen } from "react-icons/fa";
@@ -10,7 +10,9 @@ import { BiSolidMessageAlt } from "react-icons/bi";
 import { FaBookmark } from "react-icons/fa";
 import { RiVideoFill } from "react-icons/ri";
 
-const Assessments = ({ onAssessmentSelect }) => {
+
+
+const Assessments = () => {
   const [showAssessmentList, setShowAssessmentList] = useState(false);
 
   const handleToggle = () => {
@@ -33,7 +35,6 @@ const Assessments = ({ onAssessmentSelect }) => {
             <Components.Feature.DropDownList
               name="Q&A Assessments"
               data={data.chat.assessmentQnaData}
-              onAssessmentClick={onAssessmentSelect}
             />
             <Components.Feature.DropDownList
               name="Survey"

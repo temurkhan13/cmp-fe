@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { RiSendPlane2Fill } from "react-icons/ri";
 import { IoMdAttach } from "react-icons/io";
 import Components from "../..";
+import PropTypes from "prop-types";
 
 const MessagesSection = (props) => {
   const messagesEndRef = useRef(null);
@@ -19,22 +20,29 @@ const MessagesSection = (props) => {
   return (
     <div className="messages-Section">
       <section>
-        {props.data.map((el) =>
-          el.file ? (
-            <Components.Feature.MessageItemFile
-              image={el.image}
-              name={el.name}
-              files={el.file}
-            />
-          ) : (
-            <Components.Feature.MessageItemText
-              image={el.image}
-              name={el.name}
-              text={el.text}
-            />
+        {props.selectedAssessment ? (
+          <Components.Feature.StartAssessmentPopup
+            data={props.selectedAssessment}
+          />
+        ) : (
+          props.data.map((el, index) =>
+            el.file ? (
+              <Components.Feature.MessageItemFile
+                key={index}
+                image={el.image}
+                name={el.name}
+                files={el.file}
+              />
+            ) : (
+              <Components.Feature.MessageItemText
+                key={index}
+                image={el.image}
+                name={el.name}
+                text={el.text}
+              />
+            )
           )
         )}
-
         <div ref={messagesEndRef} />
       </section>
       <div>
@@ -44,6 +52,17 @@ const MessagesSection = (props) => {
       </div>
     </div>
   );
+};
+
+MessagesSection.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      image: PropTypes.string,
+      name: PropTypes.string,
+      file: PropTypes.string, // Change this according to the actual type of 'file'
+      text: PropTypes.string,
+    })
+  ).isRequired,
 };
 
 export default MessagesSection;

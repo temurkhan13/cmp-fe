@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Routess from "./Routes";
 import Aos from "aos";
 

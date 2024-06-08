@@ -29,10 +29,12 @@ const DropDownList = (props) => {
           <section>
             {props.data.map((el, index) => (
               <motion.div
+                key={index}
                 initial={{ y: `${index + 5}rem`, opacity: 0 }}
                 animate={{ y: "0rem", opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
+                onClick={() => props.onAssessmentClick(el)}
               >
                 <Components.Feature.Text
                   style={{

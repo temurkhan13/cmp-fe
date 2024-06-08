@@ -1,10 +1,10 @@
-import React from "react";
 import Components from "..";
 import assets from "../../assets";
-import { FaRegQuestionCircle } from "react-icons/fa";
+// import { FaRegQuestionCircle } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { MdPeople } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
+import { FaUserPlus } from "react-icons/fa6";
 
 const Header = () => {
   return (
@@ -17,9 +17,9 @@ const Header = () => {
       </div>
       <section>
         <div>
-          <span>
+          {/* <span>
             <FaRegQuestionCircle />
-          </span>
+          </span> */}
           <span>
             <BiSearch />
           </span>
@@ -29,6 +29,10 @@ const Header = () => {
           <span>
             <BsThreeDots />
           </span>
+          <div className="shareBtn">
+            <FaUserPlus />
+            <span>Share</span>
+          </div>
         </div>
         <img src={assets.common.profile} alt="profile" />
       </section>
