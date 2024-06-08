@@ -1,15 +1,15 @@
-@import "./utils";
-@import "./layout";
-@import "./components/feature";
+@import './utils';
+@import './layout';
+@import './components/feature';
 
-@import "./modules/auth";
+@import './modules/auth';
 
 // UI components
-@import "./components/ui";
-@import "./components/common";
+@import './components/ui';
+@import './components/common';
 
 /////////
 /// Assessments Module
 
-@import "./modules/assessment/index";
-@import "./modules/assisstant/index";
+@import './modules/assessment/index';
+@import './modules/assisstant/index';

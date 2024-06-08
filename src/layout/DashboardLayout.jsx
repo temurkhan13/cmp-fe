@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../style/dashboard/dashboardLayout.scss";
+import "../../scss/modules/dashboard/dashboardLayout.scss";
 import PropTypes from "prop-types";
 import "boxicons/css/boxicons.min.css";
 import { CgMenuGridR } from "react-icons/cg";

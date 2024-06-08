@@ -1,6 +1,6 @@
 import { CiBellOn } from "react-icons/ci";
 import { IoSearch } from "react-icons/io5";
-import styles from "../../style/dashboard/dashboard.module.scss";
+import styles from "../../../scss/modules/dashboard/dashboard.module.scss";
 import User from "../../assets/chat/user.png"
 
 const Header = () => {
