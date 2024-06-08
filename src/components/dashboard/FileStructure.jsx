@@ -1,5 +1,5 @@
 import fileIcon from "../../assets/dashboard/fileIcon.png";
-// import styles from "../../style/dashboard/dashboard.module.scss";
+import styles from "../../style/dashboard/dashboard.module.scss";
 
 const FileStructure = () => {
   const files = [

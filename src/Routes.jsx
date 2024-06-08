@@ -21,33 +21,12 @@ const Routess = () => {
           {data.routes.assisstantRoutesData.map((el) => (
             <Route path={el.path} element={<el.element />} key={uuidv4()} />
           ))}
+          {data.routes.dashboardRoutesData.map((el) => (
+            <Route path={el.path} element={<el.element />} key={uuidv4()} />
+          ))}
         </Routes>
       </HashRouter>
     </>
   );
 };
 export default Routess;
-
-// dashboard
-// import AiAssistant from "./modules/AiAssistant/dashboard/pages/AiAssistant";
-// import MyAssistant from "./modules/AiAssistant/dashboard/pages/MyAssistant";
-// import DigitalPlaybook from "./modules/AiAssistant/dashboard/pages/DigitalPlaybook";
-// import PlanBilling from "./modules/AiAssistant/dashboard/pages/PlanBilling";
-// import HelpCenter from "./modules/AiAssistant/dashboard/pages/HelpCenter";
-// import Feedback from "./modules/AiAssistant/dashboard/pages/Feedback";
-// import Trash from "./modules/AiAssistant/dashboard/pages/Trash";
-// import Sidebar from "./layout/DashboardLayout";
-// import Dashboard from "./modules/AiAssistant/dashboard/pages/Dashboard";
-
-// <Route path="/dashboard" element={<Dashboard />} />
-// <Route path="/dashboard/Sidebar" element={<Sidebar />} />
-// <Route path="/dashboard/AiAssistant" element={<AiAssistant />} />
-// <Route path="/dashboard/MyAssistant" element={<MyAssistant />} />
-// <Route
-//   path="/dashboard/DigitalPlaybook"
-//   element={<DigitalPlaybook />}
-// />
-// <Route path="/dashboard/PlanBilling" element={<PlanBilling />} />
-// <Route path="/dashboard/HelpCenter" element={<HelpCenter />} />
-// <Route path="/dashboard/feedback" element={<Feedback />} />
-// <Route path="/dashboard/Trash" element={<Trash />} />

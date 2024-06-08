@@ -9,7 +9,7 @@ import { SlArrowRight } from "react-icons/sl";
 import { SlArrowLeft } from "react-icons/sl";
 import { CgMenuGridR } from "react-icons/cg";
 import StartIcon from "../../assets/dashboard/StarICon.png";
-// import styles from "../../style/dashboard/dashboard.module.scss";
+import styles from "../../style/dashboard/dashboard.module.scss";
 
 const AssistantBar = () => {
   return (

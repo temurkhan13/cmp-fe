@@ -1,5 +1,5 @@
 import FolderIcon from "../../assets/dashboard/folderIcon.png";
-// import styles from "../../style/dashboard/dashboard.module.scss";
+import styles from "../../style/dashboard/dashboard.module.scss";
 
 const FolderStructure = () => {
   const folders = [
