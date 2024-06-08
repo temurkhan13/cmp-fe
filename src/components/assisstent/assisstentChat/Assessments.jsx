@@ -1,16 +1,14 @@
-import { useState } from "react";
-import { RxCross2 } from "react-icons/rx";
-import Components from "../..";
-import data from "../../../data";
-// 
-import { FaRegQuestionCircle } from "react-icons/fa";
-import { RxTimer } from "react-icons/rx";
-import { FaFolderOpen } from "react-icons/fa";
-import { BiSolidMessageAlt } from "react-icons/bi";
-import { FaBookmark } from "react-icons/fa";
-import { RiVideoFill } from "react-icons/ri";
-
-
+import { useState } from 'react';
+import { RxCross2 } from 'react-icons/rx';
+import Components from '../..';
+import data from '../../../data';
+//
+import { FaRegQuestionCircle } from 'react-icons/fa';
+import { RxTimer } from 'react-icons/rx';
+import { FaFolderOpen } from 'react-icons/fa';
+import { BiSolidMessageAlt } from 'react-icons/bi';
+import { FaBookmark } from 'react-icons/fa';
+import { RiVideoFill } from 'react-icons/ri';
 
 const Assessments = () => {
   const [showAssessmentList, setShowAssessmentList] = useState(false);
@@ -75,7 +73,7 @@ const Assessments = () => {
 
       <style jsx>{`
         .assessmentList {
-          width: ${showAssessmentList ? "67.8rem" : "0"};
+          width: ${showAssessmentList ? '67.8rem' : '0'};
           transition: width 0.3s;
         }
         .iconSection {
