@@ -6,40 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import { TbExclamationCircle } from "react-icons/tb";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { FaEquals } from "react-icons/fa";
-
-const questions = [
-  {
-    id: 1,
-    question: "What is your favorite color?",
-    options: ["Red", "Blue", "Green", "Yellow", "Other"],
-  },
-  {
-    id: 2,
-    question: "What is your favorite animal?",
-    options: ["Dog", "Cat", "Bird", "Fish", "Other"],
-  },
-  {
-    id: 3,
-    question: "What is your favorite food?",
-    options: ["Pizza", "Burger", "Pasta", "Salad", "Other"],
-  },
-  {
-    id: 4,
-    question: "What is your favorite hobby?",
-    options: ["Reading", "Traveling", "Cooking", "Gaming", "Other"],
-  },
-  {
-    id: 5,
-    question: "What is your favorite food?",
-    options: ["Pizza", "Burger", "Pasta", "Salad", "Other"],
-  },
-  {
-    id: 6,
-    question: "What ",
-    options: ["Reading", "Traveling", "Cooking", "Gaming", "Other"],
-  },
-  // Add more questions as needed
-];
+import data from "../../data"
 
 const Questionnaire = () => {
   const [activeStep, setActiveStep] = useState(1);
@@ -62,7 +29,7 @@ const Questionnaire = () => {
     });
   };
 
-  const totalSteps = questions.length;
+  const totalSteps = data.questionnaire.Questions.length;
   const width = `${(100 / (totalSteps - 1)) * (activeStep - 1)}%`;
 
   return (
@@ -74,7 +41,7 @@ const Questionnaire = () => {
 
       <div className={styles.Container}>
         <div className={styles.StepContainer} style={{ "--width": width }}>
-          {questions.map((_, index) => (
+          {data.questionnaire.Questions.map((_, index) => (
             <div key={index} className={styles.StepWrapper}>
               <div
                 className={`${styles.StepStyle} ${
@@ -127,11 +94,11 @@ const Questionnaire = () => {
           <>
             <div className={styles.QuestionContainer}>
               <p>Organizational Change History</p>
-              <p>{questions[activeStep - 1].question}</p>
+              <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
               <select
-                name={`question-${questions[activeStep - 1].id}`}
+                name={`question-${data.questionnaire.Questions[activeStep - 1].id}`}
                 value={
-                  answers[`question-${questions[activeStep - 1].id}`] || ""
+                  answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`] || ""
                 }
                 onChange={handleSelectChange}
                 className={styles.InputStyle}
@@ -139,7 +106,7 @@ const Questionnaire = () => {
                 <option value="" disabled>
                   Select an option
                 </option>
-                {questions[activeStep - 1].options.map((option, index) => (
+                {data.questionnaire.Questions[activeStep - 1].options.map((option, index) => (
                   <option key={index} value={option}>
                     {option}
                   </option>
