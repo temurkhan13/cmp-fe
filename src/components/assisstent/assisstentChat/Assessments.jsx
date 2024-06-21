@@ -73,7 +73,7 @@ const Assessments = () => {
 
       <style jsx>{`
         .assessmentList {
-          width: ${showAssessmentList ? '67.8rem' : '0'};
+          width: ${showAssessmentList ? '30.8rem' : '0'};
           transition: width 0.3s;
         }
         .iconSection {

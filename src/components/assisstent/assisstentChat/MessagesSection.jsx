@@ -1,14 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { RiSendPlane2Fill } from "react-icons/ri";
-import { IoMdAttach } from "react-icons/io";
-import Components from "../..";
-import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
+import "../../../styles/chat/ChatMessage.scss";
 import { LuPencil } from "react-icons/lu";
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from "react-icons/fa";
-// chat upload pdf & text
-import useChat from "../../../hooks/useChat";
-import TonePopup from "../../chat/TonePopup";
-import assets from "../../../assets";
+import { IoAttach } from "react-icons/io5";
+import { IoSend } from "react-icons/io5";
+import UserPic from "../../../assets/chat/user.png";
+// import UserPic from "../../assets/chat/user.png";
+import AiPic from "../../../assets/dashboard/sidebarLogo.png";
+import { Example } from "../../../utils";
+import fileIcon from "../../../assets/dashboard/fileIcon.png";
+import TonePopup from "./TonePopup";
+import { ScaleLoader } from "react-spinners";
+
+// hooks
 
 // ASk-Ai
 import useGrammarFix from "../../../hooks/useGrammarFix";
@@ -23,14 +27,14 @@ import useComprehensive from "../../../hooks/useComprehensive";
 import useAuto from "../../../hooks/useAuto";
 import useShorter from "../../../hooks/useShorter";
 import useLonger from "../../../hooks/useLonger";
-import dummyChatData from "../../../data/chat/dummyChatData";
 
-const MessagesSection = (props) => {
-  const messagesEndRef = useRef(null);
+// chat upload pdf & text
+import useChat from "../../../hooks/useChat";
 
+const MessagesSection = () => {
   const [file, setFile] = useState([]);
   const [text, setText] = useState("");
-
+  //
   const [chat, setChat] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
@@ -38,8 +42,6 @@ const MessagesSection = (props) => {
   const [responseLength, setResponseLength] = useState("");
   const [askAi, setAskAI] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const { error, chatWithdoc } = useChat();
 
   // custom hooks
   const { fixGrammar } = useGrammarFix();
@@ -50,12 +52,7 @@ const MessagesSection = (props) => {
   const { autoWritingFnc } = useAuto();
   const { shortText } = useShorter();
   const { LongText } = useLonger();
-
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const { error, chatWithdoc } = useChat();
 
   // upload files
   // uncomment part is for uploading multiple doc
@@ -183,6 +180,8 @@ const MessagesSection = (props) => {
     // if (selectedText && tone) {
     setLoading(true);
     try {
+      console.log("HandleToen -> ",tone)
+      console.log("HandleToen selectedText -> ",selectedText)
       const response = await ChangeToneFun(selectedText, tone);
       applyFixedText(response);
     } catch (error) {
@@ -237,13 +236,13 @@ const MessagesSection = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [props.data]);
-
   return (
-    <div className="messages-Section">
-      <section>
+    <div className="chat-message-wrapper">
+      <div className="spinner" style={{ display: loading ? "flex" : "none" }}>
+        <ScaleLoader color={"#000000"} loading={loading} size={150} />
+      </div>
+
+      <div className="chat-message">
         <input
           type="file"
           id="file-input"
@@ -252,7 +251,7 @@ const MessagesSection = (props) => {
           multiple
         />
 
-        {props.data.length > 0 ? (
+        {chat.length > 0 ? (
           <div>
             {popupVisible && (
               <TonePopup
@@ -263,25 +262,28 @@ const MessagesSection = (props) => {
               />
             )}
 
-            {dummyChatData.map((item, index) => (
+            {chat.map((item, index) => (
               <div key={index}>
                 <div>
-                  {item.name === "You" ? (
+                  {item.role === "user" ? (
                     <div className="card">
                       <div>
-                        <img src={assets.common.profile} alt="avatar" />
+                        <img src={UserPic} alt="avatar" />
                       </div>
                       <div>
                         <p className="Heading">You</p>
-                        <div className="msg">{item.text}</div>
+                        {/* <div className="msg">{item.content}</div> */}
+                        {item.content && (
+                          <div className="msg">{item.content}</div>
+                        )}
                         {item.file && (
                           <div className="file-preview">
                             <a
-                              href={item.file.link}
+                              href={item.file}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {item.file.name} ({item.file.size})
+                              {item.fileName}
                             </a>
                           </div>
                         )}
@@ -293,23 +295,11 @@ const MessagesSection = (props) => {
                   ) : (
                     <div className="card">
                       <div>
-                        <img src={assets.common.icon} alt="avatar" />
+                        <img src={AiPic} alt="avatar" />
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg">{item.text}</div>
-                        {item.file &&
-                          item.file.map((fileItem, index) => (
-                            <div key={index} className="file-preview">
-                              <a
-                                href={fileItem.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {fileItem.name} ({fileItem.size})
-                              </a>
-                            </div>
-                          ))}
+                        <div className="msg">{item.content}</div>
                         <div>
                           <FaCopy />
                           <FaThumbsUp />
@@ -331,7 +321,7 @@ const MessagesSection = (props) => {
               onDragOver={handleDragOver}
             >
               <div className="file-upload-icon">
-                <img src={"fileIcon"} alt="" />
+                <img src={fileIcon} alt="" />
               </div>
 
               <div className="file-upload-text">Upload Your File</div>
@@ -355,7 +345,7 @@ const MessagesSection = (props) => {
             </div>
 
             <div className="data-map">
-              {props.assisstentDefaultQuestion.map(({ question }, index) => (
+              {Example.map(({ question }, index) => (
                 <div key={index} className="data-map-item">
                   {question}
                 </div>
@@ -363,30 +353,36 @@ const MessagesSection = (props) => {
             </div>
           </div>
         )}
-
-        <div ref={messagesEndRef} />
-      </section>
+      </div>
 
       {error && (
         <div className="error" style={{ color: "red" }}>
           {error}
         </div>
       )}
-
-      <div>
-        {/* <span htmlFor="file-input" className="file-upload-text"> */}
-        {/* {file ? file.map((f) => f.name).join(", ") : ""} */}
-        {/* {file.name} */}
-        {file ? file.name : ""}
-        {/* </span> */}
-        <input
-          type="text"
-          placeholder="Message ChangeAI"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        <IoMdAttach />
-        <RiSendPlane2Fill onClick={handleSendMessage} />
+      {/* input */}
+      <div className="Message_container">
+        <div>
+          <label htmlFor="file-input" className="file-upload-text">
+            {/* {file ? file.map((f) => f.name).join(", ") : ""} */}
+            {/* {file.name} */}
+            {file ? file.name : ""}
+          </label>
+        </div>
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Enter text here.."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <div className="icons">
+            <label htmlFor="file-input">
+              <IoAttach />
+            </label>
+            <IoSend onClick={handleSendMessage} />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,13 @@
   justify-content: space-between;
   padding: 1% 2%;
   height: 10vh;
+
+  // 
+  .recentFiles{
+    flex: 1;
+    background-color: aqua;
+  }
+  // 
   .SeachBar {
     width: 400px;
     height: 44px;

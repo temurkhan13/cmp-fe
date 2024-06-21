@@ -86,6 +86,7 @@ const DashboardLayout = ({ children }) => {
                 <p
                   style={{
                     fontSize: "20px",
+                    color:"black"
                   }}
                 >
                   ChangeAI
@@ -119,7 +120,7 @@ const DashboardLayout = ({ children }) => {
             >
               <li>
                 <a>
-                  <i>{Icon}</i>
+                  <i style={{color:"black"}}>{Icon}</i>
                   <span className="link_name">{name}</span>
                 </a>
                 <span className="tooltip">{name}</span>

@@ -12,7 +12,7 @@ const dashboardRoutesData = [
   },
   {
     title: "",
-    path: "/dashboard/digital-Playbook",
+    path: "/dashboard/DigitalPlaybook",
     element: Module.Dashboard.DigitalPlaybook,
   },
   {
@@ -22,7 +22,7 @@ const dashboardRoutesData = [
   },
   {
     title: "",
-    path: "/dashboard/help-center",
+    path: "/dashboard/HelpCenter",
     element: Module.Dashboard.HelpCenter,
   },
   {
@@ -32,7 +32,7 @@ const dashboardRoutesData = [
   },
   {
     title: "",
-    path: "/dashboard/Plan-Billing",
+    path: "/dashboard/PlanBilling",
     element: Module.Dashboard.PlanBilling,
   },
   {

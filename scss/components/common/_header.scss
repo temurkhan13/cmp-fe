@@ -28,9 +28,15 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        background-color: black;
+        transition: background-color 0.3s ease;
+
+        &.active {
+          background-color: $color_Primary;
+          color: $bg_light;
+        }
+
         & > * {
-          color: white;
+          // color: white;
           font-size: 2.6rem;
         }
       }
@@ -50,11 +56,39 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background-color: black;
+  background-color: $color_parentColor;
   gap: 5px;
 }
 
 .topbar > section > div .shareBtn > * {
-  color: white;
+  color: $color_Primary;
   font-size: 1.6rem;
 }
+
+// <div className="assessmentList">
+// <header>
+//   <Components.Feature.Text className="main--bold">
+//     Assessments
+//   </Components.Feature.Text>
+//   <span onClick={handleToggleAssessmentList}>
+//     <RxCross2 />
+//   </span>
+// </header>
+// <section>
+//   <Components.Feature.DropDownList
+//     name="Q&A Assessments"
+//     data={data.chat.assessmentQnaData}
+//     onAssessmentClick={onAssessmentSelect}
+//   />
+//   <Components.Feature.DropDownList
+//     name="Survey"
+//     data={data.chat.serverData}
+//     link={true}
+//   />
+//   <Components.Feature.DropDownList
+//     name="Checks / FAQs"
+//     data={data.chat.faqData}
+//     link={true}
+//   />
+// </section>
+// </div>

@@ -105,36 +105,7 @@ const dummyChatData = [
         size: "120 kb",
         link: assets.common.file,
       },
-      {
-        name: "Change vision/case for change.xls",
-        size: "120 kb",
-        link: assets.common.file,
-      },
-      {
-        name: "Change vision/case for change.xls",
-        size: "120 kb",
-        link: assets.common.file,
-      },
-      {
-        name: "Change vision/case for change.xls",
-        size: "120 kb",
-        link: assets.common.file,
-      },
-      {
-        name: "Change vision/case for change.xls",
-        size: "120 kb",
-        link: assets.common.file,
-      },
-      {
-        name: "Change vision/case for change.xls",
-        size: "120 kb",
-        link: assets.common.file,
-      },
-      {
-        name: "Change vision/case for change.xls",
-        size: "120 kb",
-        link: assets.common.file,
-      },
+     
     ],
   },
 ];
