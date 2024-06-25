@@ -27,8 +27,8 @@ const dashboardRoutesData = [
   },
   {
     title: "",
-    path: "/dashboard/myAssistant",
-    element: Module.Dashboard.MyAssistant,
+    path: "/dashboard/myAssessments",
+    element: Module.Dashboard.MyAssessments,
   },
   {
     title: "",

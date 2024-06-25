@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../api/auth";
+import apiClient from "../api/axios";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -19,16 +19,12 @@ const useLogin = () => {
         email,
         password,
       });
+      console.log("Response Login", response)
 
-      // For now we just set token this but in future we use setToken component in api
-      // const accessToken = response.data.tokens.access.token;
-      // apiClientForAll.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-
-      if (response) {
-        localStorage.setItem("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjU1ZjMyNDkyNTdlOGM4YjJhZTlmMTYiLCJpYXQiOjE3MTY5MDkzNzgsImV4cCI6MjY2MzYxNTc3OCwidHlwZSI6ImFjY2VzcyJ9.ynYDuVxg8glUhVg-n7JDcG56pUasOKSs2EDijHtTVuI")
-        setSuccess(true);
-        navigate("/choose-plain");
-      }
+      // if (response) {
+      //   setSuccess(true);
+      //   navigate("/choose-plain");
+      // }
     } catch (err) {
       console.log(err.message);
       setError(err.message);

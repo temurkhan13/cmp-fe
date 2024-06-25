@@ -1,14 +1,15 @@
-import React from "react";
-import Components from "../../components";
-import assets from "../../assets";
-import data from "../../data";
-import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
+import Components from '../../components';
+import assets from '../../assets';
+import data from '../../data';
+import { Formik, Form } from 'formik';
+import { Link } from 'react-router-dom';
+import useLogin from '../../hooks/useLogin';
 
 const SignIn = () => {
+  const { login, loading } = useLogin();
   const initalValues = {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   };
 
   return (
@@ -50,6 +51,7 @@ const SignIn = () => {
             validationSchema={data.validation.validationAuth.validationSignIn}
             onSubmit={(values, { resetForm }) => {
               console.log(values);
+              login(values.email, values.password);
               resetForm();
             }}
           >
@@ -58,12 +60,12 @@ const SignIn = () => {
                 <Components.Feature.FormInput
                   name="email"
                   label="Email"
-                  place="Enter your email"
+                  place="Enter email"
                 />
                 <Components.Feature.FormInput
                   name="password"
-                  label="Email"
-                  place="Enter your email"
+                  label="Password"
+                  place="Enter password"
                 />
                 <section className="signIn_remember  mb_Tertiary">
                   <div>
@@ -74,8 +76,12 @@ const SignIn = () => {
                   </div>
                   <Link to="forgot-password">Forgot Password?</Link>
                 </section>
-                <Components.Feature.Button className="primary">
-                  Log In
+                <Components.Feature.Button
+                  className="primary"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? 'Logging in...' : 'Log In'}
                 </Components.Feature.Button>
               </Form>
             )}
