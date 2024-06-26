@@ -7,7 +7,7 @@ const assessmentRoutesData = [
   },
   {
     title: "",
-    path: "/assessment/questionnaire",
+    path: "/questionnaire",
     element: Module.Assessment.Questionnaire,
   },
 ];

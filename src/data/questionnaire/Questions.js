@@ -1,35 +1,28 @@
 const Questions = [
-    {
-      id: 1,
-      question: "What is your favorite color?",
-      options: ["Red", "Blue", "Green", "Yellow", "Other"],
-    },
-    {
-      id: 2,
-      question: "What is your favorite animal?",
-      options: ["Dog", "Cat", "Bird", "Fish", "Other"],
-    },
-    {
-      id: 3,
-      question: "What is your favorite food?",
-      options: ["Pizza", "Burger", "Pasta", "Salad", "Other"],
-    },
-    {
-      id: 4,
-      question: "What is your favorite hobby?",
-      options: ["Reading", "Traveling", "Cooking", "Gaming", "Other"],
-    },
-    {
-      id: 5,
-      question: "What is your favorite food?",
-      options: ["Pizza", "Burger", "Pasta", "Salad", "Other"],
-    },
-    {
-      id: 6,
-      question: "What ",
-      options: ["Reading", "Traveling", "Cooking", "Gaming", "Other"],
-    },
-    // Add more questions as needed
-  ];
+  {
+    id: 1,
+    question: 'What is the current situation prompting the need for change?',
+  },
+  {
+    id: 2,
+    question:
+      'Who are the key stakeholders affected by this change, and what are their roles and interests?',
+  },
+  {
+    id: 3,
+    question:
+      'What are the expected benefits and desired outcomes of this change for your organization?',
+  },
+  {
+    id: 4,
+    question:
+      'What training and resources are needed to support stakeholders in adapting to the change?',
+  },
+  {
+    id: 5,
+    question:
+      'What potential risks and challenges do you anticipate with this change, and what strategies do you have in place to manage them along with what strategies do you have in your mind?',
+  },
+];
 
-  export default Questions;
+export default Questions;

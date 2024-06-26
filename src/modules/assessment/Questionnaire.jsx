@@ -6,15 +6,22 @@
 // import { TbExclamationCircle } from "react-icons/tb";
 // import { BsFillCheckCircleFill } from "react-icons/bs";
 // import { FaEquals } from "react-icons/fa";
-// import data from "../../data"
+// import data from "../../data";
 
 // const Questionnaire = () => {
 //   const [activeStep, setActiveStep] = useState(1);
 //   const [answers, setAnswers] = useState({});
 //   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+//   const [isSubmitted, setIsSubmitted] = useState(false);
 
 //   const nextStep = () => {
-//     setActiveStep(activeStep + 1);
+//     if (answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]) {
+//       if (activeStep === totalSteps) {
+//         setIsSubmitted(true);
+//       } else {
+//         setActiveStep(activeStep + 1);
+//       }
+//     }
 //   };
 
 //   const prevStep = () => {
@@ -45,10 +52,10 @@
 //             <div key={index} className={styles.StepWrapper}>
 //               <div
 //                 className={`${styles.StepStyle} ${
-//                   activeStep > index + 1 ? "completed" : ""
+//                   activeStep > index + 1 || isSubmitted ? "completed" : ""
 //                 }  ${activeStep === index + 1 ? styles.ActiveStep : ""}`}
 //               >
-//                 {activeStep > index + 1 ? (
+//                 {activeStep > index + 1 || isSubmitted ? (
 //                   <div className={styles.CheckMark}>
 //                     <BsFillCheckCircleFill />
 //                   </div>
@@ -74,80 +81,85 @@
 //         </span>
 //       </div>
 //       <div className={styles.Questionnaire}>
-//         {activeStep === totalSteps && (
-//           <div className={styles.InitialContianer}>
+//         {isSubmitted ? (
+//           <div className={styles.InitialContainer}>
 //             <div className={styles.iconContainer}>
 //               <BsFillCheckCircleFill />
 //             </div>
 //             <div className={styles.content}>
 //               <p className={styles.heading}>Questionnaire Submitted</p>
 //               <p className={styles.subheading}>
-//               You have successfully submitted your questionnaire.
+//                 You have successfully submitted your questionnaire.
 //               </p>
 //               <div className={styles.InitialBtn}>
 //                 <button className={styles.ButtonStyleAss}>Start Assessment</button>
 //               </div>
 //             </div>
 //           </div>
-//         )}
-//         {showQuestionnaire ? (
-//           <>
-//             <div className={styles.QuestionContainer}>
-//               <p>Organizational Change History</p>
-//               <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
-//               <select
-//                 name={`question-${data.questionnaire.Questions[activeStep - 1].id}`}
-//                 value={
-//                   answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`] || ""
-//                 }
-//                 onChange={handleSelectChange}
-//                 className={styles.InputStyle}
-//               >
-//                 <option value="" disabled>
-//                   Select an option
-//                 </option>
-//                 {data.questionnaire.Questions[activeStep - 1].options.map((option, index) => (
-//                   <option key={index} value={option}>
-//                     {option}
-//                   </option>
-//                 ))}
-//               </select>
-//             </div>
-
-//             <div className={styles.ButtonsContainer}>
-//               {activeStep > 1 && (
-//                 <button className={styles.ButtonStylePrev} onClick={prevStep}>
-//                   <MdKeyboardArrowLeft />
-//                   Previous
-//                 </button>
-//               )}
-//               <button className={styles.ButtonStyleNext} onClick={nextStep}>
-//                 Next <MdKeyboardArrowRight />
-//               </button>
-//             </div>
-//           </>
 //         ) : (
-//           <div className={styles.InitialContianer}>
-//             <div className={styles.iconContainer}>
-//               <FaEquals />
-//             </div>
-//             <div className={styles.content}>
-//               <p className={styles.heading}>User Qurstionnaire</p>
-//               <p className={styles.subheading}>
-//                 Complete this questionnaire to provide data for personalized
-//                 assessment insights.
-//               </p>
-//               <div className={styles.InitialBtn}>
-//                 <button className={styles.ButtonStyleNext}>Skip</button>
+//           showQuestionnaire ? (
+//             <>
+//               <div className={styles.QuestionContainer}>
+//                 <p>Organizational Change History</p>
+//                 <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
+//                 <select
+//                   name={`question-${data.questionnaire.Questions[activeStep - 1].id}`}
+//                   value={
+//                     answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`] || ""
+//                   }
+//                   onChange={handleSelectChange}
+//                   className={styles.InputStyle}
+//                 >
+//                   <option value="" disabled>
+//                     Select an option
+//                   </option>
+//                   {data.questionnaire.Questions[activeStep - 1].options.map((option, index) => (
+//                     <option key={index} value={option}>
+//                       {option}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               <div className={styles.ButtonsContainer}>
+//                 {activeStep > 1 && (
+//                   <button className={styles.ButtonStylePrev} onClick={prevStep}>
+//                     <MdKeyboardArrowLeft />
+//                     Previous
+//                   </button>
+//                 )}
 //                 <button
 //                   className={styles.ButtonStyleNext}
-//                   onClick={() => setShowQuestionnaire(true)}
+//                   onClick={nextStep}
+//                   disabled={!answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]}
 //                 >
-//                   Continue
+//                   Next <MdKeyboardArrowRight />
 //                 </button>
 //               </div>
+//             </>
+//           ) : (
+//             <div className={styles.InitialContainer}>
+//               <div className={styles.iconContainer}>
+//                 <FaEquals />
+//               </div>
+//               <div className={styles.content}>
+//                 <p className={styles.heading}>User Questionnaire</p>
+//                 <p className={styles.subheading}>
+//                   Complete this questionnaire to provide data for personalized
+//                   assessment insights.
+//                 </p>
+//                 <div className={styles.InitialBtn}>
+//                   <button className={styles.ButtonStyleNext}>Skip</button>
+//                   <button
+//                     className={styles.ButtonStyleNext}
+//                     onClick={() => setShowQuestionnaire(true)}
+//                   >
+//                     Continue
+//                   </button>
+//                 </div>
+//               </div>
 //             </div>
-//           </div>
+//           )
 //         )}
 //       </div>
 //     </div>
@@ -156,27 +168,51 @@
 
 // export default Questionnaire;
 
-
-import { useState } from "react";
-import styles from "../../../scss/modules/assessment/questionnaire.module.scss";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import { MdKeyboardArrowLeft } from "react-icons/md";
-import { IoMdClose } from "react-icons/io";
-import { TbExclamationCircle } from "react-icons/tb";
-import { BsFillCheckCircleFill } from "react-icons/bs";
-import { FaEquals } from "react-icons/fa";
-import data from "../../data";
+import { useState } from 'react';
+import styles from '../../../scss/modules/assessment/questionnaire.module.scss';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { IoMdClose } from 'react-icons/io';
+import { TbExclamationCircle } from 'react-icons/tb';
+import { BsFillCheckCircleFill } from 'react-icons/bs';
+import { FaEquals } from 'react-icons/fa';
+import data from '../../data';
+import { useNavigate } from 'react-router-dom';
 
 const Questionnaire = () => {
   const [activeStep, setActiveStep] = useState(1);
   const [answers, setAnswers] = useState({});
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [Questions, setQuestions] = useState("");
+  const navigate = useNavigate();
+  // var questionnaireString = '';
+
+  const logAnswers = () => {
+    let questionnaireString = '';
+
+    data.questionnaire.Questions.forEach((question, index) => {
+      const answer = answers[`question-${question.id}`] || 'No answer provided';
+      questionnaireString += `${index + 1}. ${
+        question.question
+      }\nAnswer: ${answer}\n`;
+      setQuestions(questionnaireString)
+    });
+
+    // console.log('----------', typeof(questionnaireString));
+  };
+  const HandleStart = () => {
+    console.log("fghjk")
+    navigate('/assessment/chat', { state: { Questions } });
+  };
 
   const nextStep = () => {
-    if (answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]) {
+    if (
+      answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]
+    ) {
       if (activeStep === totalSteps) {
         setIsSubmitted(true);
+        logAnswers();
       } else {
         setActiveStep(activeStep + 1);
       }
@@ -187,7 +223,7 @@ const Questionnaire = () => {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSelectChange = (event) => {
+  const handleTextareaChange = (event) => {
     const { name, value } = event.target;
     setAnswers({
       ...answers,
@@ -206,13 +242,13 @@ const Questionnaire = () => {
       </div>
 
       <div className={styles.Container}>
-        <div className={styles.StepContainer} style={{ "--width": width }}>
+        <div className={styles.StepContainer} style={{ '--width': width }}>
           {data.questionnaire.Questions.map((_, index) => (
             <div key={index} className={styles.StepWrapper}>
               <div
                 className={`${styles.StepStyle} ${
-                  activeStep > index + 1 || isSubmitted ? "completed" : ""
-                }  ${activeStep === index + 1 ? styles.ActiveStep : ""}`}
+                  activeStep > index + 1 || isSubmitted ? 'completed' : ''
+                }  ${activeStep === index + 1 ? styles.ActiveStep : ''}`}
               >
                 {activeStep > index + 1 || isSubmitted ? (
                   <div className={styles.CheckMark}>
@@ -251,74 +287,81 @@ const Questionnaire = () => {
                 You have successfully submitted your questionnaire.
               </p>
               <div className={styles.InitialBtn}>
-                <button className={styles.ButtonStyleAss}>Start Assessment</button>
+                <button
+                  className={styles.ButtonStyleAss}
+                  onClick={() => HandleStart()}
+                >
+                  Start Assessment
+                </button>
               </div>
             </div>
           </div>
-        ) : (
-          showQuestionnaire ? (
-            <>
-              <div className={styles.QuestionContainer}>
-                <p>Organizational Change History</p>
-                <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
-                <select
-                  name={`question-${data.questionnaire.Questions[activeStep - 1].id}`}
-                  value={
-                    answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`] || ""
-                  }
-                  onChange={handleSelectChange}
-                  className={styles.InputStyle}
-                >
-                  <option value="" disabled>
-                    Select an option
-                  </option>
-                  {data.questionnaire.Questions[activeStep - 1].options.map((option, index) => (
-                    <option key={index} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+        ) : showQuestionnaire ? (
+          <>
+            <div className={styles.QuestionContainer}>
+              <p>Organizational Change History</p>
+              <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
+              <textarea
+                name={`question-${
+                  data.questionnaire.Questions[activeStep - 1].id
+                }`}
+                value={
+                  answers[
+                    `question-${
+                      data.questionnaire.Questions[activeStep - 1].id
+                    }`
+                  ] || ''
+                }
+                onChange={handleTextareaChange}
+                className={styles.InputStyle}
+                style={{ height: '150px' }} // Adjust the height as needed
+              />
+            </div>
 
-              <div className={styles.ButtonsContainer}>
-                {activeStep > 1 && (
-                  <button className={styles.ButtonStylePrev} onClick={prevStep}>
-                    <MdKeyboardArrowLeft />
-                    Previous
-                  </button>
-                )}
+            <div className={styles.ButtonsContainer}>
+              {activeStep > 1 && (
+                <button className={styles.ButtonStylePrev} onClick={prevStep}>
+                  <MdKeyboardArrowLeft />
+                  Previous
+                </button>
+              )}
+              <button
+                className={styles.ButtonStyleNext}
+                onClick={nextStep}
+                disabled={
+                  !answers[
+                    `question-${
+                      data.questionnaire.Questions[activeStep - 1].id
+                    }`
+                  ]
+                }
+              >
+                Next <MdKeyboardArrowRight />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className={styles.InitialContainer}>
+            <div className={styles.iconContainer}>
+              <FaEquals />
+            </div>
+            <div className={styles.content}>
+              <p className={styles.heading}>User Questionnaire</p>
+              <p className={styles.subheading}>
+                Complete this questionnaire to provide data for personalized
+                assessment insights.
+              </p>
+              <div className={styles.InitialBtn}>
+                <button className={styles.ButtonStyleNext}>Skip</button>
                 <button
                   className={styles.ButtonStyleNext}
-                  onClick={nextStep}
-                  disabled={!answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]}
+                  onClick={() => setShowQuestionnaire(true)}
                 >
-                  Next <MdKeyboardArrowRight />
+                  Continue
                 </button>
               </div>
-            </>
-          ) : (
-            <div className={styles.InitialContainer}>
-              <div className={styles.iconContainer}>
-                <FaEquals />
-              </div>
-              <div className={styles.content}>
-                <p className={styles.heading}>User Questionnaire</p>
-                <p className={styles.subheading}>
-                  Complete this questionnaire to provide data for personalized
-                  assessment insights.
-                </p>
-                <div className={styles.InitialBtn}>
-                  <button className={styles.ButtonStyleNext}>Skip</button>
-                  <button
-                    className={styles.ButtonStyleNext}
-                    onClick={() => setShowQuestionnaire(true)}
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
             </div>
-          )
+          </div>
         )}
       </div>
     </div>

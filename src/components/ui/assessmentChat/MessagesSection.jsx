@@ -3,9 +3,12 @@ import { RiSendPlane2Fill } from "react-icons/ri";
 import { IoMdAttach } from "react-icons/io";
 import Components from "../..";
 import PropTypes from "prop-types";
+import { useLocation } from 'react-router-dom';
 
 const MessagesSection = (props) => {
   const messagesEndRef = useRef(null);
+  const location = useLocation();
+  const { Questions } = location.state || {};
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -19,6 +22,7 @@ const MessagesSection = (props) => {
 
   return (
     <div className="messages-Section">
+      <p>{Questions}</p>
       <section>
         {props.selectedAssessment ? (
           <Components.Feature.StartAssessmentPopup
