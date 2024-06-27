@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../api/axios";
+import axios from "axios";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const useLogin = () => {
     console.log("login", email, password);
 
     try {
-      const response = await apiClient.post("/auth/login", {
+      const response = await axios.post("http://139.59.4.99:3000/api/auth/login", {
         email,
         password,
       });

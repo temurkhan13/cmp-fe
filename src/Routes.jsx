@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthLayout } from './layout';
+import { AuthLayout, PlainsLayout } from './layout';
 import Components from './components';
 import data from './data';
 const Routess = () => {
@@ -14,6 +14,12 @@ const Routess = () => {
               <Route path={el.path} element={<el.element />} key={uuidv4()} />
             ))}
           </Route>
+          <Route path="" element={<PlainsLayout />}>
+            {data.routes.plainRoutesData.map((el) => (
+              <Route path={el.path} element={<el.element />} key={uuidv4()} />
+            ))}
+          </Route>
+
           {data.routes.assessmentRoutesData.map((el) => (
             <Route path={el.path} element={<el.element />} key={uuidv4()} />
           ))}

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import useLogin from '../../hooks/useLogin';
 
 const SignIn = () => {
-  const { login, loading } = useLogin();
+  const { login, loading, error } = useLogin();
   const initalValues = {
     email: '',
     password: '',
@@ -67,6 +67,7 @@ const SignIn = () => {
                   label="Password"
                   place="Enter password"
                 />
+                {error && (<p style={{color:"red"}}>{error}</p>)}
                 <section className="signIn_remember  mb_Tertiary">
                   <div>
                     <input type="checkbox" />

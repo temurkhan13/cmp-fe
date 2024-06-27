@@ -1,20 +1,32 @@
-import React from "react";
-import Components from "../../components";
-import data from "../../data";
-import { Formik, Form } from "formik";
+import Components from '../../components';
+import data from '../../data';
+import { Formik, Form } from 'formik';
+import { useLocation } from 'react-router-dom';
+import useRegister from '../../hooks/useRegister';
 
 const SetPassword = () => {
+  const location = useLocation();
+  const detailsBusinessInfo = location.state;
   const initalValues = {
-    password: "",
-    confirm_Password: "",
+    password: '',
+    confirmPassword: '',
   };
+  const { register, error, loading  } = useRegister();
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(false);
+    const allDetails = { ...detailsBusinessInfo, ...values };
+    await register(allDetails.email, values.password);
+    setSubmitting(false)
+  };
+
   return (
     <Components.Feature.Container className="auth signIn">
       <header>
         <Components.Feature.Heading className="primary mb_primary">
           Set Password
         </Components.Feature.Heading>
-        <Components.Feature.Text className="primary--light">
+        <Components.Feature.Text className="primary--light mb_Tertiary">
           Please enter the following information in order to sign up
         </Components.Feature.Text>
       </header>
@@ -25,25 +37,23 @@ const SetPassword = () => {
           validationSchema={
             data.validation.validationAuth.validationSetPassword
           }
-          onSubmit={(values, { resetForm }) => {
-            console.log(values);
-            resetForm();
-          }}
+          onSubmit={handleSubmit}
         >
           {(formik) => (
             <Form>
               <Components.Feature.FormInput
                 name="password"
-                label="Email"
-                place="Enter your email"
+                label="Password"
+                place="Enter password"
               />
               <Components.Feature.FormInput
-                name="confirm_Password"
-                label="Email"
-                place="Enter your email"
+                name="confirmPassword"
+                label="Confirm Password"
+                place="Confirm password"
               />
-              <Components.Feature.Button className="primary">
-                Continue
+              {error && <p style={{ color: 'red' }}>{error}</p>}
+              <Components.Feature.Button className="primary" type="submit" disabled={loading}>
+              {loading ? 'Loading...' : 'Continue'}
               </Components.Feature.Button>
             </Form>
           )}

@@ -1,17 +1,23 @@
-import React from "react";
-import Components from "../../components";
-import assets from "../../assets";
-import data from "../../data";
-import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
+import Components from '../../components';
+import assets from '../../assets';
+import data from '../../data';
+import { Formik, Form } from 'formik';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const initalValues = {
-    email: "",
+    email: '',
+  };
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(false);
+    navigate('/business-info', { state: { email: values.email } });
   };
 
   return (
-    <Components.Feature.Container className="auth signIn">
+    <Components.Feature.Container className="">
       <header>
         <Components.Feature.Heading className="primary mb_primary">
           Create Your Account
@@ -46,10 +52,7 @@ const SignUp = () => {
           initialValues={initalValues}
           validateOnMount
           validationSchema={data.validation.validationAuth.validationSignUp}
-          onSubmit={(values, { resetForm }) => {
-            console.log(values);
-            resetForm();
-          }}
+          onSubmit={handleSubmit}
         >
           {(formik) => (
             <Form>
@@ -58,7 +61,7 @@ const SignUp = () => {
                 label="Email"
                 place="Enter your email"
               />
-              <Components.Feature.Button className="primary">
+              <Components.Feature.Button className="primary" type="submit">
                 Continue
               </Components.Feature.Button>
             </Form>
