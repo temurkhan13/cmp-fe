@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
 import useRegister from '../../hooks/useRegister';
 
-const SetPassword = () => {
+const SetNewPassword = () => {
   const location = useLocation();
   const detailsBusinessInfo = location.state;
   const initalValues = {
@@ -25,10 +25,10 @@ const SetPassword = () => {
     <Components.Feature.Container className="auth signIn">
       <header>
         <Components.Feature.Heading className="primary mb_primary">
-          Set Password
+          Set New Password
         </Components.Feature.Heading>
         <Components.Feature.Text className="primary--light mb_Tertiary">
-          Please enter the following information in order to sign up
+          Please enter the following information in order to forgot password
         </Components.Feature.Text>
       </header>
       <section>
@@ -64,4 +64,4 @@ const SetPassword = () => {
   );
 };
 
-export default SetPassword;
+export default SetNewPassword;

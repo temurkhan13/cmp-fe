@@ -75,7 +75,7 @@ const SignIn = () => {
                       Remember Me
                     </Components.Feature.Text>
                   </div>
-                  <Link to="forgot-password">Forgot Password?</Link>
+                  <Link to="forgot-password/verification">Forgot Password?</Link>
                 </section>
                 <Components.Feature.Button
                   className="primary"

@@ -22,10 +22,10 @@ const useLogin = () => {
       });
       console.log("Response Login", response)
 
-      // if (response) {
-      //   setSuccess(true);
-      //   navigate("/choose-plain");
-      // }
+      if (response.data) {
+        setSuccess(true);
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.log(err.message);
       setError(err.message);

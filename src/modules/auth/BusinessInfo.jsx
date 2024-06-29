@@ -17,7 +17,7 @@ const BusinessInfo = () => {
     'FrontEnd Developer',
   ];
   const dummyIndustry = ['Design', 'Development', 'Quality'];
-  const dummyCompanySize = ['12', '11', '10', '6'];
+  const dummyCompanySize = ['12', '11', '10'];
   const initialValues = {
     name: '',
     lastName: '',
@@ -28,13 +28,11 @@ const BusinessInfo = () => {
     websiteURL: '',
     jobTitle: '',
   };
-
   const handleSubmit = (businessInfo, { resetForm }) => {
     dispatch(setBusinessInfo({ ...businessInfo }));
-    navigate('/set-password', { state: { email: email } });
+    navigate('/set-password', { state: { ...businessInfo, email } });
     resetForm();
   };
-
   return (
     <>
       <div className="businessInfo">

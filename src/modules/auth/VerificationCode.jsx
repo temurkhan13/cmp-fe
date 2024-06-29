@@ -3,9 +3,9 @@ import { Formik, Form } from 'formik';
 import useVerifyEmail from '../../hooks/useVerifyEmail';
 import { useLocation } from 'react-router-dom';
 
-const VerifyEmail = () => {
+const verification = () => {
   const location = useLocation();
-  const { email } = location.state;
+  // const { email } = location.state;
   const initialValues = { number: '' };
   const { verifyEmail, error } = useVerifyEmail();
 
@@ -16,7 +16,7 @@ const VerifyEmail = () => {
           Verify your Email
         </Components.Feature.Heading>
         <Components.Feature.Text className="primary--light">
-          We sent you a six-digit confirmation code to {email}. Please enter it
+          We sent you a six-digit confirmation code to . Please enter it
           below to confirm your email address.
         </Components.Feature.Text>
       </header>
@@ -78,4 +78,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default verification;
