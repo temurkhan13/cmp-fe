@@ -1,6 +1,6 @@
-import { useState } from "react";
-import Components from "../../components";
-import data from "../../data";
+import { useState } from 'react';
+import Components from '../../components';
+import data from '../../data';
 
 const Chat = () => {
   const [selectedAssessment, setSelectedAssessment] = useState(null);

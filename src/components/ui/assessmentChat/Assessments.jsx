@@ -157,10 +157,15 @@ import { FaBookmark } from 'react-icons/fa';
 import { RiVideoFill } from 'react-icons/ri';
 
 
-const Assessments = () => {
+const Assessments = ({onAssessmentSelect }) => {
   const [showAssessmentList, setShowAssessmentList] = useState(false);
   
 
+  const handleAssessmentClick = (item) => {
+    console.log('Clicked on:', item);
+    onAssessmentSelect(item); // Assuming this function handles selecting an assessment
+    setShowAssessmentList(false); // Close the assessment list after selecting an item
+  };
 
   const handleToggle = () => {
     setShowAssessmentList(!showAssessmentList);
@@ -182,6 +187,7 @@ const Assessments = () => {
             <Components.Feature.DropDownList
               name="Q&A Assessments"
               data={data.chat.assessmentQnaData}
+              onAssessmentClick={handleAssessmentClick}
             />
             <Components.Feature.DropDownList
               name="Survey"
