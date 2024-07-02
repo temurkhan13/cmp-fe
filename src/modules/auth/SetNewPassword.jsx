@@ -2,22 +2,19 @@ import Components from '../../components';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
-import useRegister from '../../hooks/useRegister';
-
+import useResetPassword from '../../hooks/useResetPassword';
 const SetNewPassword = () => {
   const location = useLocation();
-  const detailsBusinessInfo = location.state;
+  const {email, code} = location.state;
+  const {ResetPassword} = useResetPassword()
   const initalValues = {
     password: '',
     confirmPassword: '',
   };
-  const { register, error, loading  } = useRegister();
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    setSubmitting(false);
-
-    const allDetails = { ...detailsBusinessInfo, ...values };
-    await register(allDetails, values.password);
+    console.log("Set new password ----> ", email, code, values.password)
+    await ResetPassword(email,code,values)
     setSubmitting(false)
   };
 
@@ -52,9 +49,11 @@ const SetNewPassword = () => {
                 label="Confirm Password"
                 place="Confirm password"
               />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-              <Components.Feature.Button className="primary" type="submit" disabled={loading}>
-              {loading ? 'Loading...' : 'Continue'}
+              {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
+              {/*  disabled={loading} */}
+              <Components.Feature.Button className="primary" type="submit">
+              {/* {loading ? 'Loading...' : 'Continue'} */}
+              continue
               </Components.Feature.Button>
             </Form>
           )}

@@ -1,19 +1,18 @@
 import Components from '../../components';
-import assets from '../../assets';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import useForgotPassword from '../../hooks/useForgotPassword';
 
-const verification = () => {
-  const navigate = useNavigate();
-  const initalValues = {
+const Verification = () => {
+  const { forgotPassword, loading, error } = useForgotPassword();
+  const initialValues = {
     email: '',
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    await forgotPassword(values.email);
     setSubmitting(false);
-    navigate('/forgot-password/Code');
   };
 
   return (
@@ -28,7 +27,7 @@ const verification = () => {
       </header>
       <section>
         <Formik
-          initialValues={initalValues}
+          initialValues={initialValues}
           validateOnMount
           validationSchema={data.validation.validationAuth.validationSignUp}
           onSubmit={handleSubmit}
@@ -40,8 +39,9 @@ const verification = () => {
                 label="Email"
                 place="Enter your email"
               />
+              {error && <p style={{ color: 'red' }}>{error}</p>}
               <Components.Feature.Button className="primary" type="submit">
-                Continue
+                {loading ? <p>loading...</p> : <p> Continue</p>}
               </Components.Feature.Button>
             </Form>
           )}
@@ -57,4 +57,4 @@ const verification = () => {
   );
 };
 
-export default verification;
+export default Verification;

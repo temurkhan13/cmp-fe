@@ -8,6 +8,8 @@ import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import data from '../../data';
 import { useNavigate } from 'react-router-dom';
+import useInspire from '../../hooks/useInspire';
+import InpireMeIcon from "../../assets/inspireBtn.svg"
 
 const Questionnaire = () => {
   const [activeStep, setActiveStep] = useState(1);
@@ -16,28 +18,24 @@ const Questionnaire = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [Questions, setQuestions] = useState("");
   const navigate = useNavigate();
+  const { loading, handleInspire } = useInspire();
 
   const logAnswers = () => {
     let questionnaireString = '';
 
     data.questionnaire.Questions.forEach((question, index) => {
       const answer = answers[`question-${question.id}`] || 'No answer provided';
-      questionnaireString += `${index + 1}. ${
-        question.question
-      }\nAnswer: ${answer}\n`;
-      setQuestions(questionnaireString)
+      questionnaireString += `${index + 1}. ${question.question}\nAnswer: ${answer}\n`;
+      setQuestions(questionnaireString);
     });
-
   };
+
   const HandleStart = () => {
-    console.log("fghjk")
     navigate('/assessment/chat', { state: { Questions } });
   };
 
   const nextStep = () => {
-    if (
-      answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]
-    ) {
+    if (answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]) {
       if (activeStep === totalSteps) {
         setIsSubmitted(true);
         logAnswers();
@@ -56,6 +54,15 @@ const Questionnaire = () => {
     setAnswers({
       ...answers,
       [name]: value,
+    });
+  };
+
+  const handleInspireClick = async () => {
+    const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
+    const inspiredText = await handleInspire(answers[currentQuestionKey]);
+    setAnswers({
+      ...answers,
+      [currentQuestionKey]: inspiredText,
     });
   };
 
@@ -129,21 +136,33 @@ const Questionnaire = () => {
             <div className={styles.QuestionContainer}>
               <p>Organizational Change History</p>
               <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
-              <textarea
-                name={`question-${
-                  data.questionnaire.Questions[activeStep - 1].id
-                }`}
-                value={
-                  answers[
-                    `question-${
-                      data.questionnaire.Questions[activeStep - 1].id
-                    }`
-                  ] || ''
-                }
-                onChange={handleTextareaChange}
-                className={styles.InputStyle}
-                style={{ height: '150px' }} // Adjust the height as needed
-              />
+              <div style={{ position: 'relative' }}>
+                <textarea
+                  name={`question-${data.questionnaire.Questions[activeStep - 1].id}`}
+                  value={
+                    answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`] || ''
+                  }
+                  onChange={handleTextareaChange}
+                  className={styles.InputStyle}
+                  style={{ height: '150px' }} // Adjust the height as needed
+                />
+                <div style={{ position: 'absolute', bottom: '10px', right: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                  <img src={InpireMeIcon} alt="Inspire Me" onClick={handleInspireClick} />
+                  {loading && (
+                    <div
+                      style={{
+                        border: '2px solid rgba(0, 0, 0, 0.1)',
+                        borderTop: '2px solid #000',
+                        borderRadius: '50%',
+                        width: '16px',
+                        height: '16px',
+                        animation: 'spin 1s linear infinite',
+                        marginLeft: '8px'
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className={styles.ButtonsContainer}>
@@ -157,11 +176,7 @@ const Questionnaire = () => {
                 className={styles.ButtonStyleNext}
                 onClick={nextStep}
                 disabled={
-                  !answers[
-                    `question-${
-                      data.questionnaire.Questions[activeStep - 1].id
-                    }`
-                  ]
+                  !answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]
                 }
               >
                 Next <MdKeyboardArrowRight />

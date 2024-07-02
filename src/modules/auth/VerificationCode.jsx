@@ -5,10 +5,10 @@ import { useLocation } from 'react-router-dom';
 
 const verification = () => {
   const location = useLocation();
-  // const { email } = location.state;
+  const { email } = location.state;
   const initialValues = { number: '' };
   const { verifyEmail, error } = useVerifyEmail();
-
+  
   return (
     <Components.Feature.Container className="auth signIn">
       <header style={{ marginBottom: '10%' }}>
@@ -16,7 +16,7 @@ const verification = () => {
           Verify your Email
         </Components.Feature.Heading>
         <Components.Feature.Text className="primary--light">
-          We sent you a six-digit confirmation code to . Please enter it
+          We sent you a six-digit confirmation code to {email}. Please enter it
           below to confirm your email address.
         </Components.Feature.Text>
       </header>
@@ -31,10 +31,10 @@ const verification = () => {
         >
           {(formik) => (
             <Form>
-              <Components.Feature.VerifyCode
+              <Components.Feature.ForgotpasswordCode
                 name="number"
                 label="Verification Code"
-                place="Enter 6-digit code"
+                place="Enter 4-digit code"
                 handleVerification={verifyEmail}
               />
               {error && (

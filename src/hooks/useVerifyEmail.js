@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import axios from 'axios';
+// import apiClient from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const useVerifyEmail = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { email } = location.state;
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -11,13 +14,11 @@ const useVerifyEmail = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post(
-        'http://139.59.4.99:3000/api/auth/verification',
-        { code }
-      );
       setLoading(false);
-      if (response.data) {
-        navigate('/choose-plain');
+      if (code && email) {
+        navigate('/forgot-password/set-new-password', {
+          state: { email, code },
+        });
       }
     } catch (err) {
       setLoading(false);

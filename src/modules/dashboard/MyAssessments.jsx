@@ -216,8 +216,10 @@ import { FiPlus } from 'react-icons/fi';
 import { FaFileAlt, FaFolder } from 'react-icons/fa';
 import DashboardLayout from '../../layout/DashboardLayout';
 import Component from '../../components';
+import { useNavigate } from 'react-router-dom';
 
 const MyAssistant = () => {
+  const navigate = useNavigate()
   const [showAddDropdown, setShowAddDropdown] = useState(false);
   const addDropdownRef = useRef(null);
 
@@ -241,9 +243,9 @@ const MyAssistant = () => {
   const handleAddItemClick = (action) => {
     switch (action) {
       case 'New Assessment':
+        navigate('/questionnaire')
         break;
         case 'New Folder':
-          window.location.href = 'http://localhost:5173/questionnaire';
           break;
       default:
         setShowAddDropdown(false);

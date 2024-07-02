@@ -13,6 +13,7 @@ export { default as MessageItemFile } from "./MessageItemFile";
 export { default as DropDownList } from "./DropDownList";
 export { default as StartAssessmentPopup } from "./StartAssessmentPopup"
 export { default as PlainCard } from "./PlainCard";
+export { default as ForgotpasswordCode } from "./ForgotpasswordCode";
 
 // Header
 export { default as HeaderDropDown } from "./header/HeaderDropDown";

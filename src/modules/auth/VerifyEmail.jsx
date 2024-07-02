@@ -1,13 +1,13 @@
 import Components from '../../components';
 import { Formik, Form } from 'formik';
-import useVerifyEmail from '../../hooks/useVerifyEmail';
+import useVerfiyEmailSignUp from '../../hooks/useVerfiyEmailSignUp';
 import { useLocation } from 'react-router-dom';
 
 const VerifyEmail = () => {
   const location = useLocation();
   const { email } = location.state;
   const initialValues = { number: '' };
-  const { verifyEmail, error } = useVerifyEmail();
+  const { VerfiyEmailSignUp, error } = useVerfiyEmailSignUp();
 
   return (
     <Components.Feature.Container className="auth signIn">
@@ -35,7 +35,7 @@ const VerifyEmail = () => {
                 name="number"
                 label="Verification Code"
                 place="Enter 6-digit code"
-                handleVerification={verifyEmail}
+                handleVerification={VerfiyEmailSignUp}
               />
               {error && (
                 <div

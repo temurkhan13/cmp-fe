@@ -1,3 +1,71 @@
+// import Components from '../../components';
+// import data from '../../data';
+// import { Formik, Form } from 'formik';
+// import { useLocation } from 'react-router-dom';
+// import useRegister from '../../hooks/useRegister';
+
+// const SetPassword = () => {
+//   const location = useLocation();
+//   const detailsBusinessInfo = location.state;
+//   const initalValues = {
+//     password: '',
+//     confirmPassword: '',
+//   };
+//   const { register, error, loading  } = useRegister();
+
+//   const handleSubmit = async (values, { setSubmitting }) => {
+//     setSubmitting(false);
+
+//     const allDetails = { ...detailsBusinessInfo, ...values };
+//     await register(allDetails, values.password);
+//     setSubmitting(false)
+//   };
+
+//   return (
+//     <Components.Feature.Container className="auth signIn">
+//       <header>
+//         <Components.Feature.Heading className="primary mb_primary">
+//           Set Password
+//         </Components.Feature.Heading>
+//         <Components.Feature.Text className="primary--light mb_Tertiary">
+//           Please enter the following information in order to sign up
+//         </Components.Feature.Text>
+//       </header>
+//       <section>
+//         <Formik
+//           initialValues={initalValues}
+//           validateOnMount
+//           validationSchema={
+//             data.validation.validationAuth.validationSetPassword
+//           }
+//           onSubmit={handleSubmit}
+//         >
+//           {(formik) => (
+//             <Form>
+//               <Components.Feature.FormInput
+//                 name="password"
+//                 label="Password"
+//                 place="Enter password"
+//               />
+//               <Components.Feature.FormInput
+//                 name="confirmPassword"
+//                 label="Confirm Password"
+//                 place="Confirm password"
+//               />
+//               {error && <p style={{ color: 'red' }}>{error}</p>}
+//               <Components.Feature.Button className="primary" type="submit" disabled={loading}>
+//               {loading ? 'Loading...' : 'Continue'}
+//               </Components.Feature.Button>
+//             </Form>
+//           )}
+//         </Formik>
+//       </section>
+//     </Components.Feature.Container>
+//   );
+// };
+
+// export default SetPassword;
+
 import Components from '../../components';
 import data from '../../data';
 import { Formik, Form } from 'formik';
@@ -7,7 +75,7 @@ import useRegister from '../../hooks/useRegister';
 const SetPassword = () => {
   const location = useLocation();
   const detailsBusinessInfo = location.state;
-  const initalValues = {
+  const initialValues = {
     password: '',
     confirmPassword: '',
   };
@@ -15,10 +83,9 @@ const SetPassword = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(false);
-
     const allDetails = { ...detailsBusinessInfo, ...values };
     await register(allDetails, values.password);
-    setSubmitting(false)
+    setSubmitting(false);
   };
 
   return (
@@ -33,11 +100,9 @@ const SetPassword = () => {
       </header>
       <section>
         <Formik
-          initialValues={initalValues}
+          initialValues={initialValues}
           validateOnMount
-          validationSchema={
-            data.validation.validationAuth.validationSetPassword
-          }
+          validationSchema={data.validation.validationAuth.validationSetPassword}
           onSubmit={handleSubmit}
         >
           {(formik) => (
@@ -54,7 +119,7 @@ const SetPassword = () => {
               />
               {error && <p style={{ color: 'red' }}>{error}</p>}
               <Components.Feature.Button className="primary" type="submit" disabled={loading}>
-              {loading ? 'Loading...' : 'Continue'}
+                {loading ? 'Loading...' : 'Continue'}
               </Components.Feature.Button>
             </Form>
           )}
