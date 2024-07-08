@@ -11,6 +11,7 @@ import fileIcon from '../../../assets/dashboard/fileIcon.png';
 import TonePopup from '../../../components/assisstent/assisstentChat/TonePopup';
 import { ScaleLoader } from 'react-spinners';
 import { useLocation } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 // hooks
 
@@ -304,7 +305,7 @@ const MessagesSection = ({selectedAssessment}) => {
                       <div>
                         <p className="Heading">You</p>
                         {item.content && (
-                          <div className="msg">{item.content}</div>
+                          <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
                         )}
                         {item.file && (
                           <div className="file-preview">
@@ -329,7 +330,7 @@ const MessagesSection = ({selectedAssessment}) => {
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg">{item.content}</div>
+                        <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
                         <div>
                           <FaCopy />
                           <FaThumbsUp />

@@ -10,8 +10,9 @@ const VerifyCode = ({ label, place, className, handleVerification, ...props }) =
     setValue(newValue);
     helpers.setValue(newValue);
 
-    if (newValue.length === 6) {
-      handleVerification(newValue); 
+    // Check if newValue is exactly 6 digits to trigger verification
+    if (/^\d{6}$/.test(newValue)) {
+      handleVerification({ newValue }); // Send { "verificationCode": newValue }
     }
   };
 
@@ -23,6 +24,8 @@ const VerifyCode = ({ label, place, className, handleVerification, ...props }) =
       <input
         placeholder={place}
         type="text"
+        inputMode="numeric"
+        pattern="\d*"
         className={`form-input ${className} ${meta.touched && meta.error && "is-invalid"}`}
         {...field}
         autoComplete="off"

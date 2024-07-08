@@ -1,19 +1,35 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import apiClient from '../api/axios';
+import { setToken } from '../api/auth';
 
 const useVerifyEmail = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const verifyEmail = async (code) => {
     setLoading(true);
     setError(null);
+
+    // Retrieve the token from the location state
+    const token = location.state?.token;
+
+    
+    if (token) {
+      setToken(token);
+    } else {
+      setError('Token not found');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        'http://139.59.4.99:3000/api/auth/verification',
-        { code }
+
+      const response = await apiClient.post(
+        '/auth/verification',
+        {"verificationCode": parseInt( code.value.newValue) }
       );
       setLoading(false);
       if (response.data) {

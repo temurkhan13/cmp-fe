@@ -1,4 +1,4 @@
-import DashboardLayout from "../../layout/DashboardLayout";
+import DashboardLayout from "@layout/DashboardLayout";
 
 const AiAssistant = () => {
   return <DashboardLayout>AiAssistant</DashboardLayout>;

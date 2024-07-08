@@ -1,223 +1,16 @@
-// import DashboardLayout from '../../layout/DashboardLayout';
-// import Component from '../../components';
-// import { FiPlus } from 'react-icons/fi';
-// import { useState, useRef, useEffect } from 'react';
-// import { FaFileAlt, FaFolder } from 'react-icons/fa';
-
-// const MyAssistant = () => {
-//   const [showAddDropdown, setShowAddDropdown] = useState(false);
-//   const addDropdownRef = useRef(null);
-
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (
-//         addDropdownRef.current &&
-//         !addDropdownRef.current.contains(event.target)
-//       ) {
-//         setShowAddDropdown(false);
-//       }
-//     };
-
-//     document.addEventListener('mousedown', handleClickOutside);
-//     return () => {
-//       document.removeEventListener('mousedown', handleClickOutside);
-//     };
-//   }, []);
-
-//   const toggleAddDropdown = () => {
-//     setShowAddDropdown(!showAddDropdown);
-//   };
-
-//   const handleAddItemClick = (action) => {
-//     switch (action) {
-//       case 'New Assessment':
-//         history.push('/questionnaire');
-//         break;
-//       case 'New Folder':
-//         break;
-//       default:
-//         setShowAddDropdown(false);
-//     }
-//   };
-
-//   return (
-//     <DashboardLayout>
-//       <div style={styles.container}>
-//         <p style={styles.recentFilesText}>Recent Files</p>
-//         <div style={styles.recentFilesContainer}>
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//         </div>
-//       </div>
-
-//       <div style={styles.aiAssessmentContainer}>
-//         <div>
-//           <p style={styles.aiAssessmentText}>AI Assessment</p>
-//         </div>
-//         <div>
-//           <button style={styles.customizeButton}>
-//             <FiPlus /> Customize
-//           </button>
-//           <div
-//             ref={addDropdownRef}
-//             style={{ position: 'relative', display: 'inline-block' }}
-//           >
-//             <button style={styles.addButton} onClick={toggleAddDropdown}>
-//               <FiPlus /> Add New
-//             </button>
-//             {showAddDropdown && (
-//               <div style={styles.addDropdown}>
-//                 <p
-//                   style={styles.addDropdownItem}
-//                   onClick={() => handleAddItemClick('New Assessment')}
-//                 >
-//                   <FaFileAlt style={styles.dropdownIcon} /> New Assessment
-//                 </p>
-//                 <p
-//                   style={styles.addDropdownItem}
-//                   onClick={() => handleAddItemClick('New Folder')}
-//                 >
-//                   <FaFolder style={styles.dropdownIcon} /> New Folder
-//                 </p>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-
-//       <div style={styles.recentFolders}>
-//         <p style={styles.recentFilesText}>Folders</p>
-//         <div style={styles.folderContainer}>
-//           <Component.Dashboard.FolderCard />
-//           <Component.Dashboard.FolderCard />
-//           <Component.Dashboard.FolderCard />
-//           <Component.Dashboard.FolderCard />
-//           <Component.Dashboard.FolderCard />
-//         </div>
-//       </div>
-
-//       <div style={styles.fileContainer}>
-//         <p style={styles.recentFilesText}>Files</p>
-//         <div style={styles.recentFilesContainer}>
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//           <Component.Dashboard.RecentCard />
-//         </div>
-//       </div>
-//     </DashboardLayout>
-//   );
-// };
-
-// const styles = {
-//   container: {
-//     backgroundColor: 'rgba(249, 249, 249, 1)',
-//     padding: '1rem 2rem',
-//   },
-//   recentFilesText: {
-//     fontFamily: 'Poppins, sans-serif',
-//     fontWeight: '500',
-//     fontSize: '16px',
-//     lineHeight: '34px',
-//     letterSpacing: '0.12px',
-//   },
-//   recentFilesContainer: {
-//     display: 'flex',
-//     flexWrap: 'wrap',
-//     gap: '10px',
-//   },
-//   aiAssessmentContainer: {
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//     padding: '2rem',
-//     alignItems: 'center',
-//     // justifyContent: 'space-between',
-//     marginTop: '20px',
-//   },
-//   aiAssessmentText: {
-//     fontFamily: 'Poppins, sans-serif',
-//     fontWeight: '600',
-//     fontSize: '28px',
-//     lineHeight: '36px',
-//     letterSpacing: '0.12px',
-//   },
-//   customizeButton: {
-//     color: 'rgba(11, 20, 68, 1)',
-//     fontSize: '14px',
-//     lineHeight: '23px',
-//     letterSpacing: '0.12px',
-//     backgroundColor: 'white',
-//     borderRadius: '8px',
-//     padding: '10px 16px',
-//     border: '1px solid black',
-//   },
-//   addButton: {
-//     color: 'rgba(11, 20, 68, 1)',
-//     fontSize: '14px',
-//     lineHeight: '23px',
-//     letterSpacing: '0.12px',
-//     backgroundColor: 'rgba(195, 225, 29, 1)',
-//     borderRadius: '8px',
-//     padding: '10px 16px',
-//     border: 'none',
-//     marginLeft: '1rem',
-//   },
-//   recentFolders: {
-//     padding: '1rem 2rem',
-//   },
-//   folderContainer: {
-//     display: 'flex',
-//     flexWrap: 'wrap',
-//     gap: '10px',
-//   },
-//   fileContainer: {
-//     padding: '1rem 2rem',
-//   },
-//   addDropdown: {
-//     position: 'absolute',
-//     top: '100%',
-//     left: '0',
-//     backgroundColor: 'white',
-//     boxShadow: '0px 8px 16px rgba(10, 10, 10, 0.1)',
-//     borderRadius: '8px',
-//     zIndex: '100',
-//     minWidth: '150px',
-//     padding: '8px 0',
-//   },
-//   addDropdownItem: {
-//     display: 'flex',
-//     alignItems: 'center',
-//     padding: '8px 16px',
-//     cursor: 'pointer',
-//     transition: 'background-color 0.3s',
-//     fontFamily: 'Poppins, sans-serif',
-//     fontSize: '14px',
-//     color: 'rgba(10, 10, 10, 0.8)',
-//   },
-//   dropdownIcon: {
-//     marginRight: '8px',
-//   },
-//   '@media (max-width: 768px)': {
-//     folderContainer: {
-//       flexDirection: 'column',
-//       gap: '10px',
-//     },
-//   },
-// };
-
-// export default MyAssistant;
-
 import { useState, useRef, useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { FaFileAlt, FaFolder } from 'react-icons/fa';
-import DashboardLayout from '../../layout/DashboardLayout';
-import Component from '../../components';
+import DashboardLayout from '@layout/DashboardLayout';
+import Component from '@components';
+import '@styles/ChatFileManager.css';
+import useManagerChat from "@hooks/useManagerChat"; // Hooks for chat manager 
+import Switch from "react-switch";
 
 const MyAssistant = () => {
+  //const [ data, setData ] = useState({ folders: [] });
+  const { managerData, error, toggleMockData, moveChatToFolder, renameFolder, deleteFolder, downloadFolderAsZip, downloadChatAsPdf } = useManagerChat();
+  const [isLoading, setIsLoading] = useState(true);
   const [showAddDropdown, setShowAddDropdown] = useState(false);
   const addDropdownRef = useRef(null);
 
@@ -234,6 +27,44 @@ const MyAssistant = () => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   // Fetch initial data when component mounts
+  //   managerData()
+  //     .then(() => setIsLoading(false))
+  //     .catch((error) => {
+  //       console.error("Error fetching initial data:", error);
+  //       setIsLoading(false);
+  //     });
+  // }, []);
+
+  useEffect(() => {
+    //setIsLoading(false);
+    if (managerData) {
+      // Process managerData or update UI based on managerData
+      setIsLoading(false);
+    }
+  }, [managerData]);
+
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+
+  
+  // const fetchChats = async () => {
+  //   try {
+  //     const data = await managerData(); // Call the function returned by the hook
+  //     setData(data);
+  //   } catch (error) {
+  //     console.error('Error fetching chats:', error);
+  //   }
+  // };
+
   const toggleAddDropdown = () => {
     setShowAddDropdown(!showAddDropdown);
   };
@@ -241,10 +72,11 @@ const MyAssistant = () => {
   const handleAddItemClick = (action) => {
     switch (action) {
       case 'New Assessment':
+        window.location.href = 'http://localhost:5173/questionnaire';
         break;
-        case 'New Folder':
-          window.location.href = 'http://localhost:5173/questionnaire';
-          break;
+      case 'New Folder':
+        window.location.href = 'http://localhost:5173/questionnaire';
+        break;
       default:
         setShowAddDropdown(false);
     }
@@ -253,11 +85,40 @@ const MyAssistant = () => {
   return (
     <DashboardLayout>
       <div style={styles.container}>
+      <Switch
+  checked={true}
+  onChange={toggleMockData}
+  inputProps={{ 'aria-label': 'controlled' }}
+/>
+      <button onClick={toggleMockData}>Toggle Mock Data</button>;
         <div style={styles.section}>
           <p style={styles.sectionTitle}>Recent Files</p>
           <div style={styles.itemsContainer}>
-            <Component.Dashboard.RecentCard />
-            <Component.Dashboard.RecentCard />
+            <div className="chat-file-manager">
+              {managerData && managerData.folders.map(folder => (
+                <div className="folder" key={folder.id}>
+                  <div className="folder-name"><FaFolder /> {folder.name}</div>
+                  <div className="chats">
+                    {folder.chats.map(chat => (                      
+                      <div className="chat-file" key={chat.id}>
+                        <div className="chat-file-icon">📄</div> {/* Icon to represent file */}
+                        <div className="chat-file-title">{chat.title}</div>
+                        <div className="chat-file-preview">{chat.content.substring(0, 100)}...</div>
+                        
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {managerData && managerData.folders.map(folder =>(
+                <div key={folder.id}>
+                  {folder.chats.map(chat => (                   
+            <Component.Dashboard.RecentCard key={chat.id} chat={[folder.name, chat]} />
+            ))}
+                </div>
+            ))}
+            
             <Component.Dashboard.RecentCard />
             <Component.Dashboard.RecentCard />
           </div>
@@ -292,6 +153,9 @@ const MyAssistant = () => {
         <div style={styles.section}>
           <p style={styles.sectionTitle}>Folders</p>
           <div style={styles.itemsContainer}>
+          {managerData && managerData.folders.map(folder => (
+          <Component.Dashboard.FolderCard key={folder.id} folder={folder} />
+          ))}
             <Component.Dashboard.FolderCard />
             <Component.Dashboard.FolderCard />
             <Component.Dashboard.FolderCard />
@@ -375,8 +239,8 @@ const styles = {
   dropdown: {
     position: 'absolute',
     top: '100%',
-    left: 'auto', // to align it left
-    right: '0', // to prevent cutting off
+    left: 'auto',
+    right: '0',
     backgroundColor: 'white',
     boxShadow: '0px 8px 16px rgba(10, 10, 10, 0.1)',
     borderRadius: '8px',
@@ -403,9 +267,9 @@ const styles = {
       gap: '10px',
     },
     dropdown: {
-      right: '0', // Ensure it aligns within the screen
-      left: 'auto', // Align it on the left side of the button
-      minWidth: '100%', // Make it responsive
+      right: '0',
+      left: 'auto',
+      minWidth: '100%',
     },
   },
 };

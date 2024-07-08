@@ -1,24 +1,36 @@
-import assets from '../../assets';
+import assets from '@assets';
+import PropTypes from "prop-types";
 
-const RecentCard = () => {
+
+const RecentCard = ({ chat }) => {
+  if (!chat) {
+    return null; // Add a safeguard to handle if folder is not defined
+  }
+  //const { name, [id, title, content] } = chat;
+  const [folderName, chatData] = chat; // Destructure the chat prop
+
   return (
+    <div>
+    
     <div style={styles.cardContainer}>
+    
       <img
         src={assets.dashboard.RecentFile}
         alt="RecentFile"
         style={styles.image}
       />
+      <div  style={styles.image}>{chatData.content.substring(0, 120)}...</div>
       <div>
-        <p style={styles.fileName}>File Name</p>
+        <p style={styles.fileName}>{chatData.title}</p>
         <p style={styles.fileInfo}>
           in{' '}
           <span style={styles.folderName}>
-            Folder Name{' '}
+            {folderName}{' '}
           </span>
           Modified 2 days ago
         </p>
       </div>
-    </div>
+    </div></div>
   );
 };
 
@@ -55,4 +67,9 @@ const styles = {
   },
 };
 
+
+// Prop types validation
+RecentCard.propTypes = { 
+  chat: PropTypes.arrayOf(PropTypes.any).isRequired,
+};
 export default RecentCard;

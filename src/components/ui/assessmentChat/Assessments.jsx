@@ -237,17 +237,16 @@ const Assessments = ({onAssessmentSelect }) => {
         }
         .iconContainer {
           display: flex;
-          flex-direction: column;
-          gap: 1rem;
+          flex-direction: column;          
           border: 1px solid lightgray;
           border-radius: 5px;
           align-items: center;
-          justify-content: center;
           width: 35px;
-          height: 200px;
+          
         }
         .iconButton {
           display: flex;
+          margin: 1rem;
           align-items: center;
           justify-content: center;
           cursor: pointer;

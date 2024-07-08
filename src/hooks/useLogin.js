@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../api/axios";
 import axios from "axios";
+import { setToken } from "../api/axios"; // Import setToken to save the token in localStorage
+
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -16,16 +18,25 @@ const useLogin = () => {
     console.log("login", email, password);
 
     try {
-      const response = await axios.post("http://139.59.4.99:3000/api/auth/login", {
+      const response = await apiClient.post("/auth/login", {
         email,
         password,
       });
       console.log("Response Login", response)
 
+
       if (response.data) {
+        // Store the token in localStorage
+        setToken(response.data.tokens.access.token);
+        
         setSuccess(true);
         navigate("/dashboard");
       }
+
+      // if (response.data) {
+      //   setSuccess(true);
+      //   navigate("/dashboard");
+      // }
     } catch (err) {
       console.log(err.message);
       setError(err.message);

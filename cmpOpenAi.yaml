@@ -1,0 +1,609 @@
+openapi: 3.0.0
+info:
+  title: Change Management Plateform
+  description: >-
+    # 🚀 Get started here
+
+
+    This template guides you through CRUD operations (GET, POST, PUT, DELETE),
+    variables, and tests.
+
+
+    ## 🔖 **How to use this template**
+
+
+    #### **Step 1: Send requests**
+
+
+    RESTful APIs allow you to perform CRUD operations using the POST, GET, PUT,
+    and DELETE HTTP methods.
+
+
+    This collection contains each of these
+    [request](https://learning.postman.com/docs/sending-requests/requests/)
+    types. Open each request and click "Send" to see what happens.
+
+
+    #### **Step 2: View responses**
+
+
+    Observe the response tab for status code (200 OK), response time, and size.
+
+
+    #### **Step 3: Send new Body data**
+
+
+    Update or add new data in "Body" in the POST request. Typically, Body data
+    is also used in PUT request.
+
+
+    ```
+
+    {
+        "name": "Add your name in the body"
+    }
+
+     ```
+
+    #### **Step 4: Update the variable**
+
+
+    Variables enable you to store and reuse values in Postman. We have created a
+    [variable](https://learning.postman.com/docs/sending-requests/variables/)
+    called `base_url` with the sample request
+    [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me).
+    Replace it with your API endpoint to customize this collection.
+
+
+    #### **Step 5: Add tests in the "Tests" tab**
+
+
+    Tests help you confirm that your API is working as expected. You can write
+    test scripts in JavaScript and view the output in the "Test Results" tab.
+
+
+    <img
+    src="https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n">
+
+
+    ## 💪 Pro tips
+
+
+    - Use folders to group related requests and organize the collection.
+
+    - Add more
+    [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)
+    in "Tests" to verify if the API works as expected and execute workflows.
+        
+
+    ## 💡Related templates
+
+
+    [API testing
+    basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  
+
+    [API
+    documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  
+
+    [Authorization
+    methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+  - url: http://{{base_url}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Auth
+  - name: AI assistant
+  - name: AI Assessment
+paths:
+  /api/auth/:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: zainsoni99@gmail.com
+                password: password12@
+                firstName: zaini@gmail.com
+                lastName: zaini@gmail.com
+                industry: zaini@gmail.com
+                companyName: zaini@gmail.com
+                companySize: 8
+                webURL: zaini@gmail.com
+                jobTitle: zaini@gmail.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/verification:
+    post:
+      tags:
+        - Auth
+      summary: Verify Email
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                verificationCode: 560589
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/forgot/password:
+    post:
+      tags:
+        - Auth
+      summary: Forget Password
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: 560589
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/reset/password:
+    post:
+      tags:
+        - Auth
+      summary: Reset Password
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: zain@gmail.com
+                OTP: 560589
+                newPassword: password12@
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: dlinowe12@gmail.com
+                password: password12
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/:
+    get:
+      tags:
+        - Auth
+      summary: Get All Users
+      description: >-
+        This is a GET request and it is used to "get" data from an endpoint.
+        There is no request body for a GET request, but you can use query
+        parameters to help specify the resource you want data on (e.g., in this
+        request, we have `id=1`).
+
+
+        A successful GET response will have a `200 OK` status, and should
+        include some kind of response body - for example, HTML web content or
+        JSON data.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/auth/users/647f32504743d3582c8b278a:
+    get:
+      tags:
+        - Auth
+      summary: Get User
+      description: >-
+        This is a GET request and it is used to "get" data from an endpoint.
+        There is no request body for a GET request, but you can use query
+        parameters to help specify the resource you want data on (e.g., in this
+        request, we have `id=1`).
+
+
+        A successful GET response will have a `200 OK` status, and should
+        include some kind of response body - for example, HTML web content or
+        JSON data.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/users/647f32504743d3582c8b278a:
+    put:
+      tags:
+        - Auth
+      summary: Update User
+      description: >-
+        This is a PUT request and it is used to overwrite an existing piece of
+        data. For instance, after you create an entity with a POST request, you
+        may want to modify that later. You can do that using a PUT request. You
+        typically identify the entity being updated by including an identifier
+        in the URL (eg. `id=1`).
+
+
+        A successful PUT request typically returns a `200 OK`, `201 Created`, or
+        `204 No Content` response code.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: dlinowe88@gmail.com
+                password: password12
+                userName: George
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Auth
+      summary: Delete User
+      description: >-
+        This is a DELETE request, and it is used to delete data that was
+        previously created via a POST request. You typically identify the entity
+        being updated by including an identifier in the URL (eg. `id=1`).
+
+
+        A successful DELETE request typically returns a `200 OK`, `202
+        Accepted`, or `204 No Content` response code.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/:
+    post:
+      tags:
+        - AI assistant
+      summary: Chat
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                pdfPath:
+                  type: string
+                  format: binary
+                message:
+                  type: string
+                  example: tell me about this
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/change-tone:
+    post:
+      tags:
+        - AI assistant
+      summary: Change Tone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+                tone: funny
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/translate:
+    post:
+      tags:
+        - AI assistant
+      summary: Translate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+                language: Urdr
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/imporve-writing:
+    post:
+      tags:
+        - AI assistant
+      summary: Improve Writing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/grammar-fix:
+    post:
+      tags:
+        - AI assistant
+      summary: Fix Grammar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/short-text:
+    post:
+      tags:
+        - AI assistant
+      summary: Text Shorter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/long-text:
+    post:
+      tags:
+        - AI assistant
+      summary: Text Longer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/language-simplify:
+    post:
+      tags:
+        - AI assistant
+      summary: Language Simplify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/summarize:
+    post:
+      tags:
+        - AI assistant
+      summary: Summarize
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/explain:
+    post:
+      tags:
+        - AI assistant
+      summary: Explain
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/comprehensive:
+    post:
+      tags:
+        - AI assistant
+      summary: Comprehensive Text
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /chat/auto:
+    post:
+      tags:
+        - AI assistant
+      summary: Auto Text
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: Hello, how are you?
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/assessment/:
+    post:
+      tags:
+        - AI Assessment
+      summary: Assessment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: ''
+                history: []
+                generalInfo: ''
+                bussinessInfo: ''
+                assessmentName: Change Vision/Case for Change
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/assessment/inspire:
+    post:
+      tags:
+        - AI Assessment
+      summary: Inspire Me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                message: ''
+                generalInfo: ''
+                businessInfo: Change Vision / Case for Change Assessment
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /survey/:
+    post:
+      tags:
+        - AI Assessment
+      summary: Survey
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - AI Assessment
+      summary: Update Survey
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /assessment/:
+    patch:
+      tags:
+        - AI Assessment
+      summary: Update Assessment
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

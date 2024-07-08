@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
-import Components from '../..';
-import data from '../../../data';
+import Components from '@components';
+import data from '@data';
 //
-import { FaRegQuestionCircle } from 'react-icons/fa';
-import { RxTimer } from 'react-icons/rx';
-import { FaFolderOpen } from 'react-icons/fa';
-import { BiSolidMessageAlt } from 'react-icons/bi';
-import { FaBookmark } from 'react-icons/fa';
-import { RiVideoFill } from 'react-icons/ri';
+
+import { FaHistory } from "react-icons/fa";
+import { FaBookmark } from "react-icons/fa";
+import { GrGallery } from "react-icons/gr";
+import { GoCommentDiscussion } from "react-icons/go";
 
 const Assessments = () => {
   const [showAssessmentList, setShowAssessmentList] = useState(false);
@@ -51,23 +50,18 @@ const Assessments = () => {
       <section className="iconSection">
         <div className="iconContainer">
           <span onClick={handleToggle} className="iconButton">
-            <FaRegQuestionCircle className="icon" />
+            <FaHistory className="icon" />
           </span>
           <span onClick={handleToggle} className="iconButton">
-            <RxTimer className="icon" />
+            <GrGallery className="icon" />
           </span>
           <span onClick={handleToggle} className="iconButton">
-            <FaFolderOpen className="icon" />
-          </span>
-          <span onClick={handleToggle} className="iconButton">
-            <BiSolidMessageAlt className="icon" />
+            <GoCommentDiscussion className="icon" />
           </span>
           <span onClick={handleToggle} className="iconButton">
             <FaBookmark className="icon" />
           </span>
-          <span onClick={handleToggle} className="iconButton">
-            <RiVideoFill className="icon" />
-          </span>
+          
         </div>
       </section>
 
@@ -81,30 +75,31 @@ const Assessments = () => {
           flex-direction: column;
         }
         .iconContainer {
+          padding-top: 1rem;
+          padding-bottom: 1rem;
           display: flex;
           flex-direction: column;
           gap: 1rem;
           border: 1px solid lightgray;
-          border-radius: 5px;
+          border-radius: 10px;
           align-items: center;
           justify-content: center;
-          width: 35px;
-          height: 200px;
+          width: 3.5rem;
         }
         .iconButton {
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          width: 25px;
-          height: 25px;
-          background: black;
+          width: 2.7rem;
+          height: 2.7rem;
+          background: #d9d9d9;
           border-radius: 8px;
         }
         .icon {
-          width: 13px;
-          height: 13px;
-          color: white;
+          width: 1.8rem;
+          height: 1.8rem;
+          color: #595959;
         }
       `}</style>
     </>

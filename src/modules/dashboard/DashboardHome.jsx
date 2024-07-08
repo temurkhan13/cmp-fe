@@ -1,5 +1,5 @@
-import DashboardLayout from '../../layout/DashboardLayout';
-import Component from '../../components';
+import DashboardLayout from '@layout/DashboardLayout';
+import Component from '@components';
 
 const DashboardHome = () => {
   return (

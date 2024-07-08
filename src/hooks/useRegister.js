@@ -1,7 +1,8 @@
 import { useState } from 'react';
-// import apiClient from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { setToken } from '../api/auth';
+import apiClient from '../api/axios';
 
 const useRegister = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const useRegister = () => {
     setSuccess(false);
 
     try {
-      const response = await axios.post('http://139.59.4.99:3000/api/auth/', {
+      const response = await apiClient.post('/auth/', {
         email: allDetails.email,
         password: password,
         firstName: allDetails.name,
@@ -28,20 +29,22 @@ const useRegister = () => {
       });
       console.log('Registration successful:', response.data);
 
-      if (response.data) {
-        setSuccess(true);
-        navigate('/verify-email', { state: { email: allDetails.email } });
+      if (response.data && response.data.tokens && response.data.tokens.access) {
+        if (response.data) {
+          // Store the token in localStorage
+          localStorage.setItem('token', response.data.tokens.access.token);
+  
+          setSuccess(true);
+          navigate('/verify-email', { state: { email: allDetails.email } });
+        }
+        //const token = response.data.tokens.access.token;
+        //setToken(token);
+       // setSuccess(true);
+       // navigate('/verify-email', { state: { email: allDetails.email } });
       }
 
-      // setSuccess(true);
     } catch (err) {
-      // if (err || err.response.data) {
-      //   setError(err.response.data.message);
-      //   setError(err.response.message);
-      // }
-      setError(err.response.data.message);
-      // console.error('Registration error:', err.message);
-      // setError(err.message);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }

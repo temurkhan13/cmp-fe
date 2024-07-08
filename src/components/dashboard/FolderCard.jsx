@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
-import assets from '../../assets';
+import assets from '@assets';
 import {
   FaTrash,
   FaLink,
@@ -11,8 +11,23 @@ import {
 } from 'react-icons/fa';
 import TrashModal from './TrashModal'; // Adjust the import path as per your project structure
 import MoveToFolderModal from './MoveToTrash'; // Adjust the import path as per your project structure
+import PropTypes from "prop-types";
+import useManagerChat from '@hooks/useManagerChat';
+import { downloadChatAsPDF, downloadFolderAsZip } from '@utils/ExportAs';
 
-const FolderCard = () => {
+
+const FolderCard =  ({ folder }) => {
+  if (!folder) {
+    return null; // Add a safeguard to handle if folder is not defined
+  }
+  const { id, name } = folder;
+
+  const {moveChatToFolder, renameFolder, deleteFolder }= useManagerChat
+
+
+
+
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [showTrashModal, setShowTrashModal] = useState(false); // State for trash modal
   const [showMoveToFolderModal, setShowMoveToFolderModal] = useState(false); // State for move to folder modal
@@ -40,7 +55,13 @@ const FolderCard = () => {
       setShowTrashModal(true); // Open trash modal
     } else if (action === 'Move To Folder') {
       setShowMoveToFolderModal(true); // Open move to folder modal
-    } else {
+    }
+    else if (action === 'Downloads') {
+      downloadFolderAsZip(folder);
+      
+      //setShowMoveToFolderModal(true); // Open move to folder modal
+    }
+    else {
       console.log(action);
       setShowDropdown(false);
     }
@@ -61,14 +82,16 @@ const FolderCard = () => {
   };
 
   return (
+    <div>
+    
     <div style={styles.folder}>
-      <img src={assets.dashboard.FolderIcon} alt="FolderIcon" />
-      <div>
-        <p style={styles.folderHeading}>Folder Name</p>
+      <img src={assets.dashboard.FolderIcon} alt="FolderIcon"/>
+      <div >
+        <p style={styles.folderHeading}>{name}</p>
         <p style={styles.folderSubheading}>Modified 2 days ago</p>
       </div>
       <div style={styles.folderItems}>
-        <p style={styles.item}>3 Items</p>
+        <p style={styles.item}>{id} Items</p>
         <div ref={dropdownRef} style={{ position: 'relative' }}>
           <BsThreeDots onClick={toggleDropdown} style={{ cursor: 'pointer' }} />
           {showDropdown && (
@@ -95,7 +118,7 @@ const FolderCard = () => {
                 style={styles.dropdownItem}
                 onClick={() => handleItemClick('Downloads')}
               >
-                <FaDownload style={styles.dropdownIcon} /> Downloads
+                <FaDownload style={styles.dropdownIcon} /> Download As Zip
               </p>
               <p
                 style={styles.dropdownItem}
@@ -123,6 +146,7 @@ const FolderCard = () => {
         isOpen={showMoveToFolderModal}
         onClose={closeMoveToFolderModal}
       />
+    </div>
     </div>
   );
 };
@@ -195,4 +219,19 @@ const styles = {
   },
 };
 
+
+// Prop types validation
+FolderCard.propTypes = {
+  folder: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    chats: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        content: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
+};
 export default FolderCard;

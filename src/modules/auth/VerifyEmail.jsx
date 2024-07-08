@@ -35,7 +35,8 @@ const VerifyEmail = () => {
                 name="number"
                 label="Verification Code"
                 place="Enter 6-digit code"
-                handleVerification={verifyEmail}
+                handleVerification={(value) => verifyEmail({ value })}
+
               />
               {error && (
                 <div

@@ -1,35 +1,36 @@
 import { useState, useEffect } from "react";
-import "../../../styles/chat/ChatMessage.scss";
+import "@styles/chat/ChatMessage.scss";
 import { LuPencil } from "react-icons/lu";
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from "react-icons/fa";
 import { IoAttach } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
-import UserPic from "../../../assets/chat/user.png";
+import UserPic from "@assets/chat/user.png";
 // import UserPic from "../../assets/chat/user.png";
-import AiPic from "../../../assets/dashboard/sidebarLogo.png";
-import { Example } from "../../../utils";
-import fileIcon from "../../../assets/dashboard/fileIcon.png";
+import AiPic from "@assets/dashboard/sidebarLogo.png";
+import { Example } from "@utils";
+import fileIcon from "@assets/dashboard/fileIcon.png";
 import TonePopup from "./TonePopup";
 import { ScaleLoader } from "react-spinners";
+import ReactMarkdown from 'react-markdown';
 
 // hooks
 
 // ASk-Ai
-import useGrammarFix from "../../../hooks/useGrammarFix";
-import useSummarize from "../../../hooks/useSummarize";
-import useImproveWriting from "../../../hooks/useImproveWriting";
+import useGrammarFix from "@hooks/useGrammarFix";
+import useSummarize from "@hooks/useSummarize";
+import useImproveWriting from "@hooks/useImproveWriting";
 
 // change Tone
-import useChangeTone from "../../../hooks/useChangeTone";
+import useChangeTone from "@hooks/useChangeTone";
 
 // response length
-import useComprehensive from "../../../hooks/useComprehensive";
-import useAuto from "../../../hooks/useAuto";
-import useShorter from "../../../hooks/useShorter";
-import useLonger from "../../../hooks/useLonger";
+import useComprehensive from "@hooks/useComprehensive";
+import useAuto from "@hooks/useAuto";
+import useShorter from "@hooks/useShorter";
+import useLonger from "@hooks/useLonger";
 
 // chat upload pdf & text
-import useChat from "../../../hooks/useChat";
+import useChat from "@hooks/useChat";
 
 const MessagesSection = () => {
   const [file, setFile] = useState([]);
@@ -274,7 +275,7 @@ const MessagesSection = () => {
                         <p className="Heading">You</p>
                         {/* <div className="msg">{item.content}</div> */}
                         {item.content && (
-                          <div className="msg">{item.content}</div>
+                          <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
                         )}
                         {item.file && (
                           <div className="file-preview">
@@ -299,7 +300,7 @@ const MessagesSection = () => {
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg">{item.content}</div>
+                        <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
                         <div>
                           <FaCopy />
                           <FaThumbsUp />
