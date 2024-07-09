@@ -1,25 +1,67 @@
 import { useState } from 'react';
 import Components from '..';
 import assets from '../../assets';
-import Dropdown from 'react-multilevel-dropdown';
+
+import CustomDropdown from '../CustomDropdown/CustomDropdown';
+import UserDropdown from '../CustomDropdown/UserDropdown';
+import SearchDropdown from '../CustomDropdown/SearchDropdown';
+
 import { BiSearch } from 'react-icons/bi';
-import { MdPeople } from 'react-icons/md';
-import { BsThreeDots } from 'react-icons/bs';
 import { FaUserPlus } from 'react-icons/fa6';
-import { RiFolderTransferFill } from 'react-icons/ri';
-import { MdInsertLink } from 'react-icons/md';
-import { IoMdTrash } from 'react-icons/io';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import { IoIosCheckmark } from 'react-icons/io';
-import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
+
+const items = [
+  'Apple',
+  'Apricot',
+  'Avocado',
+  'Banana',
+  'Blackberry',
+  'Blueberry',
+  'Cantaloupe',
+  'Cherry',
+  'Clementine',
+  'Coconut',
+  'Cranberry',
+  'Date',
+  'Dragonfruit',
+  'Durian',
+  'Elderberry',
+  'Fig',
+  'Grape',
+  'Grapefruit',
+  'Guava',
+  'Honeydew',
+  'Kiwifruit',
+  'Kumquat',
+  'Lemon',
+  'Lime',
+  'Lychee',
+  'Mango',
+  'Nectarine',
+  'Orange',
+  'Papaya',
+  'Passionfruit',
+  'Peach',
+  'Pear',
+  'Pineapple',
+  'Plum',
+  'Pomegranate',
+  'Raspberry',
+  'Redcurrant',
+  'Satsuma',
+  'Strawberry',
+  'Tangerine',
+  'Watermelon',
+];
 
 const Header = () => {
   const [activeIcon, setActiveIcon] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleIconClick = (icon) => {
-    setActiveIcon(icon);
-    setShowDropdown(icon === 'dots' ? !showDropdown : false);
+    setActiveIcon(activeIcon === icon ? null : icon);
+  };
+
+  const handleClose = () => {
+    setActiveIcon(null);
   };
 
   return (
@@ -38,88 +80,27 @@ const Header = () => {
           >
             <BiSearch />
           </span>
-          <span
+          {activeIcon === 'search' && (
+            <SearchDropdown
+              title="Search"
+              items={items}
+              visible={activeIcon === 'search'}
+              onClose={handleClose}
+            />
+          )}
+          {/* <span
             className={activeIcon === 'people' ? 'active' : ''}
             onClick={() => handleIconClick('people')}
-          >
-            <MdPeople />
-          </span>
-          <Dropdown
-            title={<BsThreeDots fontSize={20} />}
-            className={activeIcon === 'dots' ? 'active' : ''}
-            onClick={() => handleIconClick('dots')}
-            icon={
-              <BsThreeDots
-                style={{
-                  color: activeIcon === 'dots' ? 'white' : 'black',
-                  fontSize: '2.8rem',
-                }}
-              />
-            }
-            style={
-              activeIcon === 'dots'
-                ? styles.dropdownBtnActive
-                : styles.dropdownBtn
-            }
-          >
-            <Dropdown.Item style={{ borderRadius: '0.5rem' }}>
-              <HiAdjustmentsHorizontal style={{ marginRight: '0.5rem' }} />
-              Customization
-              <MdOutlineKeyboardArrowRight
-                style={{ margin: 'auto', fontSize: '1.6rem' }}
-              />
-              <Dropdown.Submenu>
-                <Dropdown.Item>
-                  Change Tone
-                  <MdOutlineKeyboardArrowRight
-                    style={{ margin: 'auto', fontSize: '1.6rem' }}
-                  />
-                  <Dropdown.Submenu>
-                    <Dropdown.Item>
-                      Normal
-                      <IoIosCheckmark
-                        style={{ margin: 'auto', fontSize: '2rem' }}
-                      />
-                    </Dropdown.Item>
-                    <Dropdown.Item>Professional</Dropdown.Item>
-                    <Dropdown.Item>Casual</Dropdown.Item>
-                    <Dropdown.Item>Relax</Dropdown.Item>
-                    <Dropdown.Item>Friendly</Dropdown.Item>
-                    <Dropdown.Item>Straightforward</Dropdown.Item>
-                  </Dropdown.Submenu>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  Response Length
-                  <MdOutlineKeyboardArrowRight
-                    style={{ margin: 'auto', fontSize: '1.6rem' }}
-                  />
-                  <Dropdown.Submenu>
-                    <Dropdown.Item>
-                      Auto
-                      <IoIosCheckmark
-                        style={{ margin: 'auto', fontSize: '2rem' }}
-                      />
-                    </Dropdown.Item>
-                    <Dropdown.Item>Small</Dropdown.Item>
-                    <Dropdown.Item>Medium</Dropdown.Item>
-                    <Dropdown.Item>Comprehensive</Dropdown.Item>
-                  </Dropdown.Submenu>
-                </Dropdown.Item>
-              </Dropdown.Submenu>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <RiFolderTransferFill style={{ marginRight: '0.5rem' }} />
-              Move to
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <MdInsertLink style={{ marginRight: '0.5rem' }} />
-              Copy link
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <IoMdTrash style={{ marginRight: '0.5rem' }} />
-              Move to trash
-            </Dropdown.Item>
-          </Dropdown>
+          > */}
+          <UserDropdown
+            activeIcon={activeIcon}
+            handleIconClick={handleIconClick}
+          />
+          {/* </span> */}
+          <CustomDropdown
+            activeIcon={activeIcon}
+            handleIconClick={handleIconClick}
+          />
           <div className="shareBtn">
             <FaUserPlus />
             <span>Share</span>
@@ -129,28 +110,6 @@ const Header = () => {
       </section>
     </div>
   );
-};
-
-const styles = {
-  dropdownBtnActive: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '0.8rem',
-    padding: '0.8rem',
-    cursor: 'pointer',
-  },
-  dropdownBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.8rem',
-    justifyContent: 'center',
-    border: 'none',
-    borderRadius: '0.8rem',
-    cursor: 'pointer',
-    fontSize: '2rem',
-    transition: 'opacity 0.2s ease-in-out',
-  },
 };
 
 export default Header;
