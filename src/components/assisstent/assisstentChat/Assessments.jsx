@@ -4,10 +4,10 @@ import Components from '@components';
 import data from '@data';
 //
 
-import { FaHistory } from "react-icons/fa";
-import { FaBookmark } from "react-icons/fa";
-import { GrGallery } from "react-icons/gr";
-import { GoCommentDiscussion } from "react-icons/go";
+import { FaHistory } from 'react-icons/fa';
+import { FaBookmark } from 'react-icons/fa';
+import { GrGallery } from 'react-icons/gr';
+import { GoCommentDiscussion } from 'react-icons/go';
 
 const Assessments = () => {
   const [showAssessmentList, setShowAssessmentList] = useState(false);
@@ -61,7 +61,6 @@ const Assessments = () => {
           <span onClick={handleToggle} className="iconButton">
             <FaBookmark className="icon" />
           </span>
-          
         </div>
       </section>
 

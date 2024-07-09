@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import assets from "../../../assets";
-import { motion } from "framer-motion";
-import { RiArrowDownSLine } from "react-icons/ri";
+import React, { useState } from 'react';
+import assets from '../../../assets';
+import { motion } from 'framer-motion';
+import { RiArrowDownSLine } from 'react-icons/ri';
 
 const HeaderDropDown = () => {
   const [isOpen, setOpen] = useState(false);

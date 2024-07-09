@@ -1,5 +1,5 @@
 import { FaTimes, FaSearch, FaArrowRight } from 'react-icons/fa';
-import assets from "../../assets"
+import assets from '../../assets';
 import { FiPlus } from 'react-icons/fi';
 
 const MoveToTrash = ({ isOpen, onClose }) => {
@@ -30,28 +30,44 @@ const MoveToTrash = ({ isOpen, onClose }) => {
           <div style={styles.suggestedItem}>
             <FaArrowRight style={styles.arrowIcon} />
             <div style={styles.suggestContainer}>
-              <img src={assets.dashboard.FolderIcon} alt="Folder Icon" style={styles.folderIcon} />
+              <img
+                src={assets.dashboard.FolderIcon}
+                alt="Folder Icon"
+                style={styles.folderIcon}
+              />
               <p>Testing Folders II</p>
             </div>
           </div>
           <div style={styles.suggestedItem}>
             <FaArrowRight style={styles.arrowIcon} />
             <div style={styles.suggestContainer}>
-              <img src={assets.dashboard.FolderIcon} alt="Folder Icon" style={styles.folderIcon} />
+              <img
+                src={assets.dashboard.FolderIcon}
+                alt="Folder Icon"
+                style={styles.folderIcon}
+              />
               <p>Testing Folders II</p>
             </div>
           </div>
           <div style={styles.suggestedItem}>
             <FaArrowRight style={styles.arrowIcon} />
             <div style={styles.suggestContainer}>
-              <img src={assets.dashboard.FolderIcon} alt="Folder Icon" style={styles.folderIcon} />
+              <img
+                src={assets.dashboard.FolderIcon}
+                alt="Folder Icon"
+                style={styles.folderIcon}
+              />
               <p>Testing Folders II</p>
             </div>
           </div>
           <div style={styles.suggestedItem}>
             <FaArrowRight style={styles.arrowIcon} />
             <div style={styles.suggestContainer}>
-              <img src={assets.dashboard.FolderIcon} alt="Folder Icon" style={styles.folderIcon} />
+              <img
+                src={assets.dashboard.FolderIcon}
+                alt="Folder Icon"
+                style={styles.folderIcon}
+              />
               <p>Testing Folders II</p>
             </div>
           </div>
@@ -189,7 +205,7 @@ const styles = {
   },
   plusIcon: {
     marginRight: '8px',
-    color:"rgba(0, 102, 255, 1)"
+    color: 'rgba(0, 102, 255, 1)',
   },
   modalButtons: {
     display: 'flex',

@@ -1,107 +1,107 @@
-import fileIcon from "../../assets/dashboard/fileIcon.png";
-import styles from "../../../scss/modules/dashboard/dashboard.module.scss";
+import fileIcon from '../../assets/dashboard/fileIcon.png';
+import styles from '../../../scss/modules/dashboard/dashboard.module.scss';
 
 const FileStructure = () => {
   const files = [
     {
       icon: fileIcon,
-      name: "Testing1",
+      name: 'Testing1',
     },
     {
       icon: fileIcon,
-      name: "Testing2",
+      name: 'Testing2',
     },
     {
       icon: fileIcon,
-      name: "Testing3",
+      name: 'Testing3',
     },
     {
       icon: fileIcon,
-      name: "Assistant",
+      name: 'Assistant',
     },
     {
       icon: fileIcon,
-      name: "Testing5",
+      name: 'Testing5',
     },
     {
       icon: fileIcon,
-      name: "Testing1",
+      name: 'Testing1',
     },
     {
       icon: fileIcon,
-      name: "Testing2",
+      name: 'Testing2',
     },
     {
       icon: fileIcon,
-      name: "Testing3",
+      name: 'Testing3',
     },
     {
       icon: fileIcon,
-      name: "Assistant",
+      name: 'Assistant',
     },
     {
       icon: fileIcon,
-      name: "Testing5",
+      name: 'Testing5',
     },
     {
       icon: fileIcon,
-      name: "Testing1",
+      name: 'Testing1',
     },
     {
       icon: fileIcon,
-      name: "Testing2",
+      name: 'Testing2',
     },
     {
       icon: fileIcon,
-      name: "Testing3",
+      name: 'Testing3',
     },
     {
       icon: fileIcon,
-      name: "Assistant",
+      name: 'Assistant',
     },
     {
       icon: fileIcon,
-      name: "Testing5",
+      name: 'Testing5',
     },
     {
       icon: fileIcon,
-      name: "Testing1",
+      name: 'Testing1',
     },
     {
       icon: fileIcon,
-      name: "Testing2",
+      name: 'Testing2',
     },
     {
       icon: fileIcon,
-      name: "Testing3",
+      name: 'Testing3',
     },
     {
       icon: fileIcon,
-      name: "Assistant",
+      name: 'Assistant',
     },
     {
       icon: fileIcon,
-      name: "Testing5",
+      name: 'Testing5',
     },
     {
       icon: fileIcon,
-      name: "Testing6",
+      name: 'Testing6',
     },
     {
       icon: fileIcon,
-      name: "Testing7",
+      name: 'Testing7',
     },
     {
       icon: fileIcon,
-      name: "Testing8",
+      name: 'Testing8',
     },
     {
       icon: fileIcon,
-      name: "Testing8",
+      name: 'Testing8',
     },
     {
       icon: fileIcon,
-      name: "Testing8",
+      name: 'Testing8',
     },
   ];
 
@@ -111,8 +111,8 @@ const FileStructure = () => {
         <p>Yesterday</p>
         <p
           style={{
-            fontWeight: "normal",
-            fontSize: "14px",
+            fontWeight: 'normal',
+            fontSize: '14px',
           }}
         >
           See less
@@ -126,14 +126,14 @@ const FileStructure = () => {
               src={icon}
               alt=""
               style={{
-                width: "50px",
-                height: "65px",
+                width: '50px',
+                height: '65px',
               }}
             />
             <p>{name}</p>
             <p
               style={{
-                color: "rgba(0, 102, 255, 1)",
+                color: 'rgba(0, 102, 255, 1)',
               }}
             >
               2 files

@@ -4,19 +4,31 @@ import { FaFileAlt, FaFolder } from 'react-icons/fa';
 import DashboardLayout from '@layout/DashboardLayout';
 import Component from '@components';
 import '@styles/ChatFileManager.css';
-import useManagerChat from "@hooks/useManagerChat"; // Hooks for chat manager 
-import Switch from "react-switch";
+import useManagerChat from '@hooks/useManagerChat'; // Hooks for chat manager
+import Switch from 'react-switch';
 
 const MyAssistant = () => {
   //const [ data, setData ] = useState({ folders: [] });
-  const { managerData, error, toggleMockData, moveChatToFolder, renameFolder, deleteFolder, downloadFolderAsZip, downloadChatAsPdf } = useManagerChat();
+  const {
+    managerData,
+    error,
+    toggleMockData,
+    // moveChatToFolder,
+    // renameFolder,
+    // deleteFolder,
+    // downloadFolderAsZip,
+    // downloadChatAsPdf,
+  } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
   const [showAddDropdown, setShowAddDropdown] = useState(false);
   const addDropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
+      if (
+        addDropdownRef.current &&
+        !addDropdownRef.current.contains(event.target)
+      ) {
         setShowAddDropdown(false);
       }
     };
@@ -45,7 +57,6 @@ const MyAssistant = () => {
     }
   }, [managerData]);
 
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -54,8 +65,6 @@ const MyAssistant = () => {
     return <div>Error: {error}</div>;
   }
 
-
-  
   // const fetchChats = async () => {
   //   try {
   //     const data = await managerData(); // Call the function returned by the hook
@@ -85,45 +94,54 @@ const MyAssistant = () => {
   return (
     <DashboardLayout>
       <div style={styles.container}>
-      <Switch
-  checked={true}
-  onChange={toggleMockData}
-  inputProps={{ 'aria-label': 'controlled' }}
-/>
-      <button onClick={toggleMockData}>Toggle Mock Data</button>;
+        <Switch
+          checked={true}
+          onChange={toggleMockData}
+          inputProps={{ 'aria-label': 'controlled' }}
+        />
+        <button onClick={toggleMockData}>Toggle Mock Data</button>;
         <div style={styles.section}>
           <p style={styles.sectionTitle}>Recent Files</p>
-          <div style={styles.itemsContainer}>
+          {/* <div style={styles.itemsContainer}>
             <div className="chat-file-manager">
-              {managerData && managerData.folders.map(folder => (
-                <div className="folder" key={folder.id}>
-                  <div className="folder-name"><FaFolder /> {folder.name}</div>
-                  <div className="chats">
-                    {folder.chats.map(chat => (                      
-                      <div className="chat-file" key={chat.id}>
-                        <div className="chat-file-icon">📄</div> {/* Icon to represent file */}
-                        <div className="chat-file-title">{chat.title}</div>
-                        <div className="chat-file-preview">{chat.content.substring(0, 100)}...</div>
-                        
-                      </div>
-                    ))}
+              {managerData &&
+                managerData.folders.map((folder) => (
+                  <div className="folder" key={folder.id}>
+                    <div className="folder-name">
+                      <FaFolder /> {folder.name}
+                    </div>
+                    <div className="chats">
+                      {folder.chats.map((chat) => (
+                        <div className="chat-file" key={chat.id}>
+                          <div className="chat-file-icon">📄</div> Icon to
+                          represent file
+                          <div className="chat-file-title">{chat.title}</div>
+                          <div className="chat-file-preview">
+                            {chat.content.substring(0, 100)}...
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
-            {managerData && managerData.folders.map(folder =>(
-                <div key={folder.id}>
-                  {folder.chats.map(chat => (                   
-            <Component.Dashboard.RecentCard key={chat.id} chat={[folder.name, chat]} />
-            ))}
-                </div>
-            ))}
-            
-            <Component.Dashboard.RecentCard />
-            <Component.Dashboard.RecentCard />
-          </div>
-        </div>
+          </div> */}
 
+          {managerData &&
+            managerData.folders.map((folder) => (
+              <div key={folder.id}>
+                {folder.chats.map((chat) => (
+                  <Component.Dashboard.RecentCard
+                    style={styles.cardsStyle}
+                    key={chat.id}
+                    chat={[folder.name, chat]}
+                  />
+                ))}
+              </div>
+            ))}
+          <Component.Dashboard.RecentCard />
+          <Component.Dashboard.RecentCard />
+        </div>
         <div style={styles.section}>
           <div style={styles.aiAssessmentContainer}>
             <p style={styles.sectionTitle}>AI Assessment</p>
@@ -137,10 +155,16 @@ const MyAssistant = () => {
                 </button>
                 {showAddDropdown && (
                   <div style={styles.dropdown}>
-                    <p style={styles.dropdownItem} onClick={() => handleAddItemClick('New Assessment')}>
+                    <p
+                      style={styles.dropdownItem}
+                      onClick={() => handleAddItemClick('New Assessment')}
+                    >
                       <FaFileAlt style={styles.dropdownIcon} /> New Assessment
                     </p>
-                    <p style={styles.dropdownItem} onClick={() => handleAddItemClick('New Folder')}>
+                    <p
+                      style={styles.dropdownItem}
+                      onClick={() => handleAddItemClick('New Folder')}
+                    >
                       <FaFolder style={styles.dropdownIcon} /> New Folder
                     </p>
                   </div>
@@ -149,13 +173,16 @@ const MyAssistant = () => {
             </div>
           </div>
         </div>
-
         <div style={styles.section}>
           <p style={styles.sectionTitle}>Folders</p>
           <div style={styles.itemsContainer}>
-          {managerData && managerData.folders.map(folder => (
-          <Component.Dashboard.FolderCard key={folder.id} folder={folder} />
-          ))}
+            {managerData &&
+              managerData.folders.map((folder) => (
+                <Component.Dashboard.FolderCard
+                  key={folder.id}
+                  folder={folder}
+                />
+              ))}
             <Component.Dashboard.FolderCard />
             <Component.Dashboard.FolderCard />
             <Component.Dashboard.FolderCard />
@@ -163,7 +190,6 @@ const MyAssistant = () => {
             <Component.Dashboard.FolderCard />
           </div>
         </div>
-
         <div style={styles.section}>
           <p style={styles.sectionTitle}>Files</p>
           <div style={styles.itemsContainer}>
@@ -188,6 +214,11 @@ const styles = {
   },
   section: {
     marginTop: '20px',
+    gap: '2rem',
+    // display: 'flex',
+  },
+  cardsStyle: {
+    // display: 'flez',
   },
   sectionTitle: {
     fontFamily: 'Poppins, sans-serif',
@@ -198,7 +229,7 @@ const styles = {
   },
   itemsContainer: {
     display: 'flex',
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     gap: '10px',
   },
   aiAssessmentContainer: {

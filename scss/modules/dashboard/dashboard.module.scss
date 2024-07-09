@@ -4,12 +4,12 @@
   padding: 1% 2%;
   height: 10vh;
 
-  // 
-  .recentFiles{
+  //
+  .recentFiles {
     flex: 1;
     background-color: aqua;
   }
-  // 
+  //
   .SeachBar {
     width: 400px;
     height: 44px;
@@ -28,7 +28,7 @@
     }
 
     input {
-      font-family: "Poppins";
+      font-family: 'Poppins';
       flex: 1;
       height: 40px;
       border: none;
@@ -72,7 +72,7 @@
   height: 30vh;
 
   input {
-    font-family: "Poppins";
+    font-family: 'Poppins';
     width: 400px;
     height: 44px;
     border-radius: 8px;
@@ -117,7 +117,7 @@
     }
 
     .assistantHeading {
-      font-family: "Poppins";
+      font-family: 'Poppins';
       font-size: 20px;
       font-weight: 600;
       line-height: 36px;
@@ -151,7 +151,7 @@
     letter-spacing: 0.12px;
     font-weight: 600;
     color: rgba(10, 10, 10, 0.68);
-    font-family: "Poppins";
+    font-family: 'Poppins';
     border-bottom: 1px solid lightgray;
     border-top: 1px solid lightgray;
     padding: 10px 0;
@@ -193,7 +193,7 @@
     letter-spacing: 0.12px;
     font-weight: 600;
     color: rgba(10, 10, 10, 0.68);
-    font-family: "Poppins";
+    font-family: 'Poppins';
     border-bottom: 1px solid lightgray;
     padding: 10px 0;
   }

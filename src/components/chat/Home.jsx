@@ -1,19 +1,19 @@
-import UserImg from "../../assets/chat/user.png";
+import UserImg from '../../assets/chat/user.png';
 const RawData = [
   {
-    Time: "Today at 14:13 AM",
-    firstName: "Imran",
-    SecondName: "Sherrimac Gyver",
+    Time: 'Today at 14:13 AM',
+    firstName: 'Imran',
+    SecondName: 'Sherrimac Gyver',
   },
   {
-    Time: "April 28, 2024 | 8:00 PM",
-    firstName: "Imran",
-    SecondName: "Sherrimac Gyver",
+    Time: 'April 28, 2024 | 8:00 PM',
+    firstName: 'Imran',
+    SecondName: 'Sherrimac Gyver',
   },
   {
-    Time: "Feb 28, 2024 | 8:00 PM",
-    firstName: "Imran",
-    SecondName: "Sherrimac Gyver",
+    Time: 'Feb 28, 2024 | 8:00 PM',
+    firstName: 'Imran',
+    SecondName: 'Sherrimac Gyver',
   },
 ];
 

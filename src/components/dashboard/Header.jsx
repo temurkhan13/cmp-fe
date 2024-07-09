@@ -1,7 +1,7 @@
-import { CiBellOn } from "react-icons/ci";
-import { IoSearch } from "react-icons/io5";
-import styles from "../../../scss/modules/dashboard/dashboard.module.scss";
-import User from "../../assets/chat/user.png"
+import { CiBellOn } from 'react-icons/ci';
+import { IoSearch } from 'react-icons/io5';
+import styles from '../../../scss/modules/dashboard/dashboard.module.scss';
+import User from '../../assets/chat/user.png';
 
 const Header = () => {
   return (
@@ -13,11 +13,7 @@ const Header = () => {
 
       <div className={styles.ProfileBar}>
         <CiBellOn className={styles.BellIcon} />
-        <img
-          src={User}
-          alt="#"
-          className={styles.ProfileImage}
-        />
+        <img src={User} alt="#" className={styles.ProfileImage} />
       </div>
     </header>
   );
