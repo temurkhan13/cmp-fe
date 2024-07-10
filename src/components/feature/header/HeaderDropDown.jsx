@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import assets from '../../../assets';
 import { motion } from 'framer-motion';
 import { RiArrowDownSLine } from 'react-icons/ri';

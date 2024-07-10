@@ -2,8 +2,9 @@ import { useState } from 'react';
 import Components from '..';
 import assets from '../../assets';
 
-import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import UserDropdown from '../CustomDropdown/UserDropdown';
+import ShareModal from '../customModal/Sharemodal';
+import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import SearchDropdown from '../CustomDropdown/SearchDropdown';
 
 import { BiSearch } from 'react-icons/bi';
@@ -55,14 +56,26 @@ const items = [
 
 const Header = () => {
   const [activeIcon, setActiveIcon] = useState(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
-
   const handleClose = () => {
     setActiveIcon(null);
   };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const members = [
+    { name: 'Imran', role: 'owner' },
+    { name: 'Jerald Huels', role: 'edit' },
+    { name: 'Sherrimac Gyver', role: 'view' },
+    { name: 'New Member', role: 'remove' },
+  ];
 
   return (
     <div className="topbar">
@@ -101,10 +114,13 @@ const Header = () => {
             activeIcon={activeIcon}
             handleIconClick={handleIconClick}
           />
-          <div className="shareBtn">
+          <div className="shareBtn" onClick={handleOpenModal}>
             <FaUserPlus />
             <span>Share</span>
           </div>
+          {isModalOpen && (
+            <ShareModal members={members} onClose={handleCloseModal} />
+          )}
         </div>
         <img src={assets.common.profile} alt="profile" />
       </section>

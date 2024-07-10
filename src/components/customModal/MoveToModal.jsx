@@ -11,6 +11,7 @@ const MoveToModal = ({ folders }) => {
   const [openFolders, setOpenFolders] = useState({});
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
   const handleIconClick = (folderName) => {
     setOpenFolders((prev) => ({
       ...prev,
@@ -206,9 +207,10 @@ const styles = {
     padding: '0.3rem 0',
   },
   noFolder: {
-    paddingLeft: '1.75rem',
     color: 'grey',
-    fontSize: '1.3rem',
+    display: 'flex',
+    fontSize: '1.2rem',
+    paddingLeft: '1.75rem',
   },
   folderBtn: {
     margin: '1rem 0',
