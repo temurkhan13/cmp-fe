@@ -57,6 +57,7 @@ const items = [
 const Header = () => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
@@ -69,7 +70,6 @@ const Header = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
   const members = [
     { name: 'Imran', role: 'owner' },
     { name: 'Jerald Huels', role: 'edit' },
@@ -82,7 +82,7 @@ const Header = () => {
       <div>
         <Components.Feature.HeaderDropDown />
         <Components.Feature.Button className="secondry">
-          Untitled
+          Ai Assistant Test File
         </Components.Feature.Button>
       </div>
       <section>
