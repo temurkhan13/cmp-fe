@@ -16,6 +16,7 @@ export default defineConfig({
       '@modules': '/src/modules',
       '@api': '/src/api',
       '@utils': '/src/utils',
+      '@store': '/src/store',
       
     },
   },

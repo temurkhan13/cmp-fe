@@ -1,8 +1,9 @@
+// store.js
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { PersistGate } from 'redux-persist/integration/react';
 import businessInfoReducer from './businessInfoSlice';
+import chatReducer from './chatSlice';
 
 const persistConfig = {
   key: 'root',
@@ -14,6 +15,7 @@ const persistedReducer = persistReducer(persistConfig, businessInfoReducer);
 const store = configureStore({
   reducer: {
     businessInfo: persistedReducer,
+    chat: chatReducer,
   },
 });
 

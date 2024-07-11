@@ -6,6 +6,7 @@ import { IoMdLink } from 'react-icons/io';
 import { FaUserCircle } from 'react-icons/fa';
 
 const ShareModal = ({ members, onClose }) => {
+  
   const [userRoles, setUserRoles] = useState(members);
   const [inputValue, setInputValue] = useState('');
   const [role, setRole] = useState('edit');

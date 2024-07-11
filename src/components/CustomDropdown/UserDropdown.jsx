@@ -3,13 +3,13 @@ import Dropdown from 'react-multilevel-dropdown';
 import { MdPeople } from 'react-icons/md';
 // import assets from '../../assets/dashboard/index';
 
-const UserDropdown = ({ activeIcon, handleIconClick }) => {
+const UserDropdown = ({ activeIcon, handleIconClick,members }) => {
   // Example user data
   const users = [
     { image: '/path/to/image3.jpg', name: 'Jerald Huels', role: 'Editor' },
     { image: '/path/to/image2.jpg', name: 'Sherrimac Gyver', role: 'Editor' },
     { image: '/path/to/image3.jpg', name: 'Jerald Huels', role: 'Editor' },
-  ];
+    ];
 
   return (
     <Dropdown
@@ -22,7 +22,7 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
           : styles.dropdownBtn
       }
     >
-      {users.map((user) => (
+      {members.map((user) => (
         <Dropdown.Item key={user.name} style={styles.dropdownItem}>
           <img src={user.image} alt={user.name} style={styles.userImage} />
           <div>
@@ -81,6 +81,17 @@ const styles = {
 UserDropdown.propTypes = {
   activeIcon: PropTypes.string,
   handleIconClick: PropTypes.func.isRequired,
+};
+
+
+UserDropdown.propTypes = {
+  members: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      role: PropTypes.oneOf(['owner', 'edit', 'view', 'remove']).isRequired,
+    })
+  ).isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default UserDropdown;

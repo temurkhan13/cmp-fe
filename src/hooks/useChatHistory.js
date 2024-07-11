@@ -10,46 +10,42 @@ const useChatHistory = () => {
     if (useMockData) {
       const mockData = [
         {
+          chatId:1,
           date: "2024-07-06",
+          title:"Change Managment",
           message: [
-            { text: "This is a mock chat message 1." },
-            { text: "This is a mock chat message 2." }
+            { text: "This is a mock chat message 1." }
           ]
         },
         {
+          chatId:2,
           date: "2024-07-05",
+          title:"Change Managment",
           message: [
-            { text: "Another mock chat message 1." },
-            { text: "Another mock chat message 2." },
-            { text: "Another mock chat message 3." },
-            { text: "Another mock chat message 4." }
+            { text: "Another mock chat message 2." }
           ]
         },
         {
+          chatId:3,
           date: "2024-07-05",
+          title:"Change Managment",
           message: [
-            { text: "Another mock chat message 1." },
-            { text: "Another mock chat message 2." },
             { text: "Another mock chat message 3." },
-            { text: "Another mock chat message 4." }
+          ]
+        },
+        {chatId: 4,
+          date: "2024-07-05",
+          title:"Change Managment",
+          message: [
+            { text: "Another mock chat message 4." },
           ]
         },
         {
+          chatId: 5,
           date: "2024-07-05",
+          title:"Change Managment",
           message: [
-            { text: "Another mock chat message 1." },
-            { text: "Another mock chat message 2." },
-            { text: "Another mock chat message 3." },
-            { text: "Another mock chat message 4." }
-          ]
-        },
-        {
-          date: "2024-07-05",
-          message: [
-            { text: "Another mock chat message 1." },
-            { text: "Another mock chat message 2." },
-            { text: "Another mock chat message 3." },
-            { text: "Another mock chat message 4." }
+            { text: "Another mock chat message 5." }
           ]
         }
       ];
