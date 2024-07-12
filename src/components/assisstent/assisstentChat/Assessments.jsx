@@ -33,8 +33,15 @@
 }
 
 import { useState } from 'react';
-import AssessmentModal from './assessmentModal/index';
+// import icon from '../../../assets/common/index';
+import Media from './assessmentModal/Media';
+import Comment from './assessmentModal/Comments';
+import AssessmentModal from './assessmentModal/Index';
+import ChatBookmark from './assessmentModal/ChatBookmark';
 import VersionHistory from './assessmentModal/VersionHistory';
+
+import { RxAvatar } from 'react-icons/rx';
+// import { FaUserCircle } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 
@@ -60,6 +67,144 @@ const versions = [
     users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
   },
 ];
+const images = [
+  'https://picsum.photos/id/0/5000/3333',
+  'https://picsum.photos/id/7/4728/3168',
+  'https://picsum.photos/id/10/2500/1667',
+  'https://picsum.photos/id/11/2500/1667',
+  'https://picsum.photos/id/13/2500/1667',
+  'https://picsum.photos/id/16/2500/1667',
+  'https://picsum.photos/id/24/4855/1803',
+  'https://picsum.photos/id/28/4928/3264',
+  'https://picsum.photos/id/27/3264/1836',
+  'https://picsum.photos/id/29/4000/2670',
+  'https://picsum.photos/id/0/5000/3333',
+  'https://picsum.photos/id/7/4728/3168',
+  'https://picsum.photos/id/10/2500/1667',
+  'https://picsum.photos/id/11/2500/1667',
+  'https://picsum.photos/id/13/2500/1667',
+  'https://picsum.photos/id/16/2500/1667',
+  'https://picsum.photos/id/24/4855/1803',
+  'https://picsum.photos/id/28/4928/3264',
+  'https://picsum.photos/id/27/3264/1836',
+  'https://picsum.photos/id/29/4000/2670',
+];
+const documents = [
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+  {
+    name: 'file_name_123',
+    date: 'April 18, 2024, 6:17 PM',
+    size: '2,345 KB',
+  },
+];
+const links = [
+  {
+    name: 'www.figma.com',
+    url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
+  },
+  {
+    name: 'www.figma.com',
+    url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
+  },
+  {
+    name: 'www.figma.com',
+    url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
+  },
+  {
+    name: 'www.figma.com',
+    url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
+  },
+  {
+    name: 'www.figma.com',
+    url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
+  },
+];
+const data = [
+  {
+    date: 'Today',
+    messages: [
+      {
+        avatar: <RxAvatar />,
+        sender: 'ChangeAI',
+        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
+        savedBy: 'You',
+      },
+    ],
+  },
+  {
+    date: 'Yesterday',
+    messages: [
+      {
+        avatar: <RxAvatar />,
+        sender: 'ChangeAI',
+        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
+        savedBy: 'Imran',
+      },
+    ],
+  },
+  {
+    date: 'Yesterday',
+    messages: [
+      {
+        avatar: <RxAvatar />,
+        sender: 'ChangeAI',
+        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
+        savedBy: 'Imran',
+      },
+    ],
+  },
+  {
+    date: 'Yesterday',
+    messages: [
+      {
+        avatar: <RxAvatar />,
+        sender: 'ChangeAI',
+        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
+        savedBy: 'Imran',
+      },
+    ],
+  },
+];
+const comments = [];
 
 const Assessments = () => {
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
@@ -120,19 +265,35 @@ const Assessments = () => {
         />
       )}
       {isMediaModalOpen && (
-        <AssessmentModal title="Media" bodyContent={''} onClose={closeModal} />
+        <AssessmentModal
+          title="Media"
+          bodyContent={
+            <Media images={images} documents={documents} links={links} />
+          }
+          onClose={closeModal}
+        />
       )}
       {isCommentsModalOpen && (
         <AssessmentModal
           title="Comments"
-          bodyContent={''}
+          bodyContent={<Comment {...comments} />}
           onClose={closeModal}
         />
       )}
       {isBookmarkModalOpen && (
         <AssessmentModal
           title="Book Mark"
-          bodyContent={''}
+          bodyContent={
+            <div>
+              {data.map((item, index) => (
+                <ChatBookmark
+                  key={index}
+                  date={item.date}
+                  messages={item.messages}
+                />
+              ))}
+            </div>
+          }
           onClose={closeModal}
         />
       )}

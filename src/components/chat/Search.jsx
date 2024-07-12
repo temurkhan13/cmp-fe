@@ -1,9 +1,10 @@
-import { IoIosArrowUp } from "react-icons/io";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoMdClose } from "react-icons/io";
-import { IoSearchOutline } from "react-icons/io5";
-import styles from "../../style/chat/chatHeader.module.scss";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import styles from '../../style/chat/chatHeader.module.scss';
+
+import { IoIosArrowUp } from 'react-icons/io';
+import { IoIosArrowDown } from 'react-icons/io';
+import { IoMdClose } from 'react-icons/io';
+import { IoSearchOutline } from 'react-icons/io5';
 
 const Search = ({ closeButton }) => {
   return (
@@ -12,13 +13,14 @@ const Search = ({ closeButton }) => {
         <input type="text" placeholder="Search" />
         <IoMdClose
           style={{
-            background: "lightgray",
-            padding: "7px",
-            borderRadius: "30px",
-            position: "absolute",
+            background: 'lightgray',
+            padding: '7px',
+            borderRadius: '30px',
+            position: 'absolute',
             top: 5,
             right: 10,
-            fontSize: "30px",
+            fontSize: '30px',
+            className: 'send-icon',
           }}
           onClick={closeButton}
         />
@@ -30,7 +32,7 @@ const Search = ({ closeButton }) => {
           <input type="text" placeholder="Find any word" />
           <span
             style={{
-              fontSize: "14px",
+              fontSize: '14px',
             }}
           >
             1/4

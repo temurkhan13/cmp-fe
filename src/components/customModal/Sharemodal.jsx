@@ -47,7 +47,7 @@ const ShareModal = ({ members, onClose }) => {
               <span style={styles.closeButton} onClick={onClose}>
                 <RxCross2
                   style={{
-                    background: 'lightgray',
+                    background: '#f1f1f1',
                     borderRadius: '50%',
                     fontSize: '1.8reme',
                     padding: '0.2rem',
@@ -86,7 +86,7 @@ const ShareModal = ({ members, onClose }) => {
               disabled={isInviteButtonDisabled}
               style={{
                 ...styles.inviteBtn,
-                backgroundColor: isInviteButtonDisabled ? '#ccc' : '#C3E11D',
+                backgroundColor: isInviteButtonDisabled ? '#f1f1f1' : '#C3E11D',
                 color: isInviteButtonDisabled ? '#666' : '#0B1444',
                 cursor: isInviteButtonDisabled ? 'not-allowed' : 'pointer',
               }}

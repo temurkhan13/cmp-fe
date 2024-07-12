@@ -1,16 +1,16 @@
-import AiPic from "../../assets/dashboard/sidebarLogo.png";
-import { IoSearchOutline } from "react-icons/io5";
+import AiPic from '../../assets/dashboard/sidebarLogo.png';
+import { IoSearchOutline } from 'react-icons/io5';
 
 const Rowdata = [
   {
-    name: "ChangeAI",
-    text: "The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.",
-    saveBy: "You",
+    name: 'ChangeAI',
+    text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
+    saveBy: 'You',
   },
   {
-    name: "ChangeAI",
-    text: "The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.",
-    saveBy: "Imran",
+    name: 'ChangeAI',
+    text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
+    saveBy: 'Imran',
   },
 ];
 const Help = () => {
@@ -27,7 +27,7 @@ const Help = () => {
 
       <div
         style={{
-          margin: "2% 4%",
+          margin: '2% 4%',
         }}
       >
         <p>Today</p>

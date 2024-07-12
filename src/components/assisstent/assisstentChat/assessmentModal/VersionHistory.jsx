@@ -80,7 +80,7 @@ const VersionHistory = ({ versions, onClose }) => {
         }
         .version:hover {
           border-radius: 0.8rem;
-          background-color: lightgray;
+          background-color: #f1f1f1;
         }
         .version-content {
           filter: inherit;
@@ -127,7 +127,7 @@ const VersionHistory = ({ versions, onClose }) => {
         }
         .cancel {
           background-color: #fff;
-          border: 0.2rem solid lightgray;
+          border: 0.1rem solid black;
           padding: 1rem;
           border-radius: 0.8rem;
           font-size: 1.3rem;
@@ -165,9 +165,6 @@ const VersionHistory = ({ versions, onClose }) => {
           font-size: 1.2rem;
           font-weight: 600;
           cursor: pointer;
-        }
-        .show-date-button:hover {
-          border: 0.2rem solid red;
         }
       `}</style>
     </div>
