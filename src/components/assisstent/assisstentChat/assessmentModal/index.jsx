@@ -64,7 +64,7 @@ const AssessmentModal = ({ title, bodyContent, onClose }) => {
           overflow-y: auto;
         }
         .close-button {
-          background: lightgrey;
+          background: #f1f1f1;
           border: none;
           cursor: pointer;
           font-size: 1.6rem;
@@ -76,7 +76,7 @@ const AssessmentModal = ({ title, bodyContent, onClose }) => {
           height: 2.4rem;
         }
         .straight-Line {
-          border-top: 0.15rem solid lightgray;
+          border-bottom: 1px solid #f1f1f1;
         }
       `}</style>
     </>

@@ -1,13 +1,13 @@
-import { RxMagicWand } from "react-icons/rx";
+import { RxMagicWand } from 'react-icons/rx';
 
 const AskAi = () => {
   return (
     <div
       className="PopupBox"
       style={{
-        backgroundColor: "white",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-        borderRadius: "5px",
+        backgroundColor: 'white',
+        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+        borderRadius: '5px',
         zIndex: 9999,
       }}
     >
@@ -16,7 +16,7 @@ const AskAi = () => {
           <button className="dropbtn">
             <span>
               <RxMagicWand />
-            </span>{" "}
+            </span>{' '}
             <input type="text" placeholder="Ask AI to edit or generate..." />
           </button>
           <div className="dropdown-content">

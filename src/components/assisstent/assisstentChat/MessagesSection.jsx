@@ -1,47 +1,47 @@
-import { useState, useEffect } from "react";
-import "@styles/chat/ChatMessage.scss";
-import { LuPencil } from "react-icons/lu";
-import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from "react-icons/fa";
-import { IoAttach } from "react-icons/io5";
-import { IoSend } from "react-icons/io5";
-import UserPic from "@assets/chat/user.png";
+import { useState, useEffect } from 'react';
+import '@styles/chat/ChatMessage.scss';
+import { LuPencil } from 'react-icons/lu';
+import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
+import { IoAttach } from 'react-icons/io5';
+import { IoSend } from 'react-icons/io5';
+import UserPic from '@assets/chat/user.png';
 // import UserPic from "../../assets/chat/user.png";
-import AiPic from "@assets/dashboard/sidebarLogo.png";
-import { Example } from "@utils";
-import fileIcon from "@assets/dashboard/fileIcon.png";
-import TonePopup from "./TonePopup";
-import { ScaleLoader } from "react-spinners";
+import AiPic from '@assets/dashboard/sidebarLogo.png';
+import { Example } from '@utils';
+import fileIcon from '@assets/dashboard/fileIcon.png';
+import TonePopup from './TonePopup';
+import { ScaleLoader } from 'react-spinners';
 import ReactMarkdown from 'react-markdown';
 
 // hooks
 
 // ASk-Ai
-import useGrammarFix from "@hooks/useGrammarFix";
-import useSummarize from "@hooks/useSummarize";
-import useImproveWriting from "@hooks/useImproveWriting";
+import useGrammarFix from '@hooks/useGrammarFix';
+import useSummarize from '@hooks/useSummarize';
+import useImproveWriting from '@hooks/useImproveWriting';
 
 // change Tone
-import useChangeTone from "@hooks/useChangeTone";
+import useChangeTone from '@hooks/useChangeTone';
 
 // response length
-import useComprehensive from "@hooks/useComprehensive";
-import useAuto from "@hooks/useAuto";
-import useShorter from "@hooks/useShorter";
-import useLonger from "@hooks/useLonger";
+import useComprehensive from '@hooks/useComprehensive';
+import useAuto from '@hooks/useAuto';
+import useShorter from '@hooks/useShorter';
+import useLonger from '@hooks/useLonger';
 
 // chat upload pdf & text
-import useChat from "@hooks/useChat";
+import useChat from '@hooks/useChat';
 
 const MessagesSection = () => {
   const [file, setFile] = useState([]);
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   //
   const [chat, setChat] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [selectedText, setSelectedText] = useState("");
-  const [selectedTone, setSelectedTone] = useState("");
-  const [responseLength, setResponseLength] = useState("");
-  const [askAi, setAskAI] = useState("");
+  const [selectedText, setSelectedText] = useState('');
+  const [selectedTone, setSelectedTone] = useState('');
+  const [responseLength, setResponseLength] = useState('');
+  const [askAi, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
 
   // custom hooks
@@ -78,8 +78,8 @@ const MessagesSection = () => {
 
   // send chat
   const handleSendMessage = async () => {
-    console.log("Text:", text);
-    console.log("Uploaded File:", file);
+    console.log('Text:', text);
+    console.log('Uploaded File:', file);
 
     // set user chat
     if (!text && !file) return;
@@ -88,7 +88,7 @@ const MessagesSection = () => {
       setChat((prevChat) => [
         ...prevChat,
         {
-          role: "user",
+          role: 'user',
           content: text || null,
           // file: file ? URL.createObjectURL(file) : null,
           // fileName: file ? file.name : null,
@@ -98,7 +98,7 @@ const MessagesSection = () => {
       setChat((prevChat) => [
         ...prevChat,
         {
-          role: "user",
+          role: 'user',
           // content: text || null,
           file: file ? URL.createObjectURL(file) : null,
           fileName: file ? file.name : null,
@@ -111,13 +111,13 @@ const MessagesSection = () => {
       const response = await chatWithdoc(text, file);
       if (response) {
         // set AI chat
-        setChat((prevChat) => [...prevChat, { role: "ai", content: response }]);
+        setChat((prevChat) => [...prevChat, { role: 'ai', content: response }]);
       }
 
       // setFile([]);
       setFile(null); // Reset the file state
-      document.getElementById("file-input").value = "";
-      setText("");
+      document.getElementById('file-input').value = '';
+      setText('');
     } catch (error) {
       console.log(error.message);
     } finally {
@@ -131,20 +131,20 @@ const MessagesSection = () => {
       setLoading(true);
       setAskAI(value);
 
-      if (value === "Fix Spelling & Grammar") {
+      if (value === 'Fix Spelling & Grammar') {
         const responseGrammar = await fixGrammar(selectedText);
         applyFixedText(responseGrammar);
         //
-      } else if (value === "Improve Writing") {
+      } else if (value === 'Improve Writing') {
         const responseWriting = await improveWriting(selectedText);
         applyFixedText(responseWriting);
         //
-      } else if (value === "Summarize") {
+      } else if (value === 'Summarize') {
         const responseSummary = await summarize(selectedText);
         applyFixedText(responseSummary);
       }
     } catch (error) {
-      console.error("Asi AI", error);
+      console.error('Asi AI', error);
     } finally {
       setLoading(false);
     }
@@ -181,12 +181,12 @@ const MessagesSection = () => {
     // if (selectedText && tone) {
     setLoading(true);
     try {
-      console.log("HandleToen -> ",tone)
-      console.log("HandleToen selectedText -> ",selectedText)
+      console.log('HandleToen -> ', tone);
+      console.log('HandleToen selectedText -> ', selectedText);
       const response = await ChangeToneFun(selectedText, tone);
       applyFixedText(response);
     } catch (error) {
-      console.error("Error occurred while changing tone:", error);
+      console.error('Error occurred while changing tone:', error);
     } finally {
       setLoading(false);
     }
@@ -195,31 +195,31 @@ const MessagesSection = () => {
 
   // handle Response length
   const handleResponseLengthChange = async (value) => {
-    console.log("response length", value);
+    console.log('response length', value);
     setResponseLength(length);
 
     // if (value) {
     setLoading(true);
     try {
-      if (value === "Auto") {
+      if (value === 'Auto') {
         const responseAuto = await autoWritingFnc(selectedText);
         applyFixedText(responseAuto);
         //
-      } else if (value === "Small") {
+      } else if (value === 'Small') {
         const responseSmall = await shortText(selectedText);
         applyFixedText(responseSmall);
         //
-      } else if (value === "Medium") {
+      } else if (value === 'Medium') {
         const responseMedium = await LongText(selectedText);
         applyFixedText(responseMedium);
         //
-      } else if (value === "Comprehensive") {
+      } else if (value === 'Comprehensive') {
         const responseComp = await comprehensiveWriting(selectedText);
         applyFixedText(responseComp);
         //
       }
     } catch (error) {
-      console.error("Error occurred while changing tone:", error);
+      console.error('Error occurred while changing tone:', error);
     } finally {
       setLoading(false);
     }
@@ -231,16 +231,16 @@ const MessagesSection = () => {
   };
 
   useEffect(() => {
-    document.addEventListener("mouseup", handleTextSelect);
+    document.addEventListener('mouseup', handleTextSelect);
     return () => {
-      document.removeEventListener("mouseup", handleTextSelect);
+      document.removeEventListener('mouseup', handleTextSelect);
     };
   }, []);
 
   return (
     <div className="chat-message-wrapper">
-      <div className="spinner" style={{ display: loading ? "flex" : "none" }}>
-        <ScaleLoader color={"#000000"} loading={loading} size={150} />
+      <div className="spinner" style={{ display: loading ? 'flex' : 'none' }}>
+        <ScaleLoader color={'#000000'} loading={loading} size={150} />
       </div>
 
       <div className="chat-message">
@@ -248,7 +248,7 @@ const MessagesSection = () => {
           type="file"
           id="file-input"
           onChange={handleFileChange}
-          style={{ display: "none" }}
+          style={{ display: 'none' }}
           multiple
         />
 
@@ -266,7 +266,7 @@ const MessagesSection = () => {
             {chat.map((item, index) => (
               <div key={index}>
                 <div>
-                  {item.role === "user" ? (
+                  {item.role === 'user' ? (
                     <div className="card">
                       <div>
                         <img src={UserPic} alt="avatar" />
@@ -275,7 +275,9 @@ const MessagesSection = () => {
                         <p className="Heading">You</p>
                         {/* <div className="msg">{item.content}</div> */}
                         {item.content && (
-                          <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
+                          <div className="msg">
+                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                          </div>
                         )}
                         {item.file && (
                           <div className="file-preview">
@@ -300,7 +302,9 @@ const MessagesSection = () => {
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
+                        <div className="msg">
+                          <ReactMarkdown>{item.content}</ReactMarkdown>
+                        </div>
                         <div>
                           <FaCopy />
                           <FaThumbsUp />
@@ -330,13 +334,13 @@ const MessagesSection = () => {
                 <label htmlFor="file-input">
                   <span
                     style={{
-                      color: "rgba(0, 102, 255, 1)",
-                      textDecoration: "none",
-                      cursor: "pointer",
+                      color: 'rgba(0, 102, 255, 1)',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
                     }}
                   >
                     Click to upload
-                  </span>{" "}
+                  </span>{' '}
                   or drag and drop
                 </label>
               </div>
@@ -357,7 +361,7 @@ const MessagesSection = () => {
       </div>
 
       {error && (
-        <div className="error" style={{ color: "red" }}>
+        <div className="error" style={{ color: 'red' }}>
           {error}
         </div>
       )}
@@ -367,7 +371,7 @@ const MessagesSection = () => {
           <label htmlFor="file-input" className="file-upload-text">
             {/* {file ? file.map((f) => f.name).join(", ") : ""} */}
             {/* {file.name} */}
-            {file ? file.name : ""}
+            {file ? file.name : ''}
           </label>
         </div>
         <div className="input-container">
