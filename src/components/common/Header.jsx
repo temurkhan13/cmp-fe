@@ -19,6 +19,7 @@ const Header = () => {
   const currentChatId = useSelector((state) => state.chat.currentChatId);
   const sharedUsers = useSelector((state) => state.chat.sharedUsers);
 
+
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
@@ -34,7 +35,6 @@ const Header = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
   useEffect(() => {
     if (currentChatId) {
      // console.log("header dispatch: "+fetchSharedUsers(currentChatId));
@@ -47,7 +47,7 @@ const Header = () => {
     <div className="topbar">
       <div>
         <Components.Feature.HeaderDropDown />
-        <Components.Feature.Button className="secondry">Untitled</Components.Feature.Button>
+        <Components.Feature.Button className="secondry">Ai Assistant Test File</Components.Feature.Button>
       </div>
       <section>
         <div>

@@ -25,7 +25,7 @@
   }
   & > div {
     display: flex;
-    align-items: center;
+    // align-items: center;
     justify-content: space-between;
     padding: 1.4rem 1rem;
     & > div {
@@ -70,4 +70,14 @@
       }
     }
   }
+}
+
+.header-collapsed {
+  display: 'flex';
+  flex-direction: column-reverse;
+  margin-right: auto;
+  gap: 1rem;
+}
+.header-collapsed-title {
+  display: none;
 }

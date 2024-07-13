@@ -126,20 +126,6 @@ const MoveToModal = ({ folders }) => {
   );
 };
 
-MoveToModal.propTypes = {
-  folders: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      subfolders: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          subfolders: PropTypes.array,
-        })
-      ),
-    })
-  ).isRequired,
-};
-
 const styles = {
   container: {
     padding: '1rem',
@@ -228,6 +214,20 @@ const styles = {
   straightLine: {
     borderTop: '0.0625rem solid lightgray',
   },
+};
+
+MoveToModal.propTypes = {
+  folders: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      subfolders: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          subfolders: PropTypes.array,
+        })
+      ),
+    })
+  ).isRequired,
 };
 
 export default MoveToModal;

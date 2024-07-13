@@ -1,30 +1,14 @@
-import { useState } from 'react';
-import { RxCross2 } from 'react-icons/rx';
-import Components from '@components';
-import data from '@data';
-//
-
-import { FaHistory } from 'react-icons/fa';
-import { FaBookmark } from 'react-icons/fa';
-import { GrGallery } from 'react-icons/gr';
-import { GoCommentDiscussion } from 'react-icons/go';
-
-const Assessments = () => {
-  const [showAssessmentList, setShowAssessmentList] = useState(false);
-
-  const handleToggle = () => {
-    setShowAssessmentList(!showAssessmentList);
-  };
-
-  return (
-    <>
-      {showAssessmentList && (
+// import { RxCross2 } from 'react-icons/rx';
+// import Components from '@components';
+// import data from '@data';
+{
+  /* {showAssessmentList && (
         <div className="assessmentList">
           <header>
             <Components.Feature.Text className="main--bold">
               Assessments
             </Components.Feature.Text>
-            <span onClick={handleToggle}>
+            <span >
               <RxCross2 />
             </span>
           </header>
@@ -43,35 +27,121 @@ const Assessments = () => {
               data={data.chat.faqData}
               link={true}
             />
-          </section>
-        </div>
-      )}
+            </section>
+            </div>
+            )} */
+}
 
+import { useState } from 'react';
+import AssessmentModal from './assessmentModal/index';
+import VersionHistory from './assessmentModal/VersionHistory';
+import { IoIosChatboxes } from 'react-icons/io';
+import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
+
+const versions = [
+  {
+    date: 'Today at 14:13 AM',
+    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
+  },
+  {
+    date: 'April 28, 2024 | 8:00 PM',
+    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
+  },
+  {
+    date: 'Feb 28, 2024 | 8:00 PM',
+    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
+  },
+  {
+    date: 'Jan 28, 2024 | 8:00 PM',
+    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
+  },
+  {
+    date: 'Today at 14:13 AM',
+    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
+  },
+];
+
+const Assessments = () => {
+  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
+    useState(false);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+
+  const closeModal = () => {
+    setIsVersionHistoryModalOpen(false);
+    setIsMediaModalOpen(false);
+    setIsCommentsModalOpen(false);
+    setIsBookmarkModalOpen(false);
+  };
+
+  return (
+    <>
       <section className="iconSection">
         <div className="iconContainer">
-          <span onClick={handleToggle} className="iconButton">
-            <FaHistory className="icon" />
+          <span
+            className={`iconButton ${
+              isVersionHistoryModalOpen ? 'active' : ''
+            }`}
+            onClick={() => setIsVersionHistoryModalOpen(true)}
+          >
+            <FaHistory className="icon" size={20} />
+            <span className="tooltip">Version History</span>
           </span>
-          <span onClick={handleToggle} className="iconButton">
-            <GrGallery className="icon" />
+          <span
+            className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}
+            onClick={() => setIsMediaModalOpen(true)}
+          >
+            <FaImages className="icon" size={20} />
+            <span className="tooltip">Media</span>
           </span>
-          <span onClick={handleToggle} className="iconButton">
-            <GoCommentDiscussion className="icon" />
+          <span
+            className={`iconButton ${isCommentsModalOpen ? 'active' : ''}`}
+            onClick={() => setIsCommentsModalOpen(true)}
+          >
+            <IoIosChatboxes className="icon" size={22} />
+            <span className="tooltip">Comments</span>
           </span>
-          <span onClick={handleToggle} className="iconButton">
-            <FaBookmark className="icon" />
+          <span
+            className={`iconButton ${isBookmarkModalOpen ? 'active' : ''}`}
+            onClick={() => setIsBookmarkModalOpen(true)}
+          >
+            <FaBookmark className="icon" size={20} />
+            <span className="tooltip">Bookmark</span>
           </span>
         </div>
       </section>
 
-      <style jsx>{`
-        .assessmentList {
-          width: ${showAssessmentList ? '30.8rem' : '0'};
-          transition: width 0.3s;
-        }
+      {isVersionHistoryModalOpen && (
+        <AssessmentModal
+          title="Version History"
+          bodyContent={<VersionHistory versions={versions} />}
+          onClose={closeModal}
+        />
+      )}
+      {isMediaModalOpen && (
+        <AssessmentModal title="Media" bodyContent={''} onClose={closeModal} />
+      )}
+      {isCommentsModalOpen && (
+        <AssessmentModal
+          title="Comments"
+          bodyContent={''}
+          onClose={closeModal}
+        />
+      )}
+      {isBookmarkModalOpen && (
+        <AssessmentModal
+          title="Book Mark"
+          bodyContent={''}
+          onClose={closeModal}
+        />
+      )}
+
+      <style>{`
         .iconSection {
           display: flex;
           flex-direction: column;
+          align-items: center;
         }
         .iconContainer {
           padding-top: 1rem;
@@ -83,22 +153,60 @@ const Assessments = () => {
           border-radius: 10px;
           align-items: center;
           justify-content: center;
-          width: 3.5rem;
+          width: 5rem;
         }
         .iconButton {
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          width: 2.7rem;
-          height: 2.7rem;
-          background: #d9d9d9;
+          width: 3.5rem;
+          height: 3.5rem;
           border-radius: 8px;
+          position: relative;
+        }
+        .iconButton:hover {
+          background: #d9d9d9;
+        }
+        .iconButton.active {
+          background: black;
+          transition: opacity 0.5s;
+        }
+        .iconButton.active .icon {
+          color: white;
         }
         .icon {
-          width: 1.8rem;
-          height: 1.8rem;
           color: #595959;
+        }
+         .tooltip {
+          visibility: hidden;
+          background-color: black;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 1rem;
+          font-size: 1.2rem;
+          position: absolute;
+          z-index: 1;
+          bottom: 0%; 
+          right: 135%;
+          opacity: 0;
+          transition: opacity 0.5s;
+          white-space: nowrap;
+        }
+        .iconButton:hover .tooltip {
+          visibility: visible;
+          opacity: 1;
+        }
+        .tooltip::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 100%;
+          margin-top: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: transparent transparent transparent black;
         }
       `}</style>
     </>

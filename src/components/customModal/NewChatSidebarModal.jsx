@@ -35,7 +35,7 @@ const modalStyles = {
   },
 };
 
-const NewChatModal = ({ isOpen, closeModal }) => {
+const NewChatSidebarModal = ({ isOpen, closeModal }) => {
   if (!isOpen) return null;
 
   return (
@@ -65,9 +65,9 @@ const NewChatModal = ({ isOpen, closeModal }) => {
   );
 };
 
-NewChatModal.propTypes = {
+NewChatSidebarModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
 
-export default NewChatModal;
+export default NewChatSidebarModal;
