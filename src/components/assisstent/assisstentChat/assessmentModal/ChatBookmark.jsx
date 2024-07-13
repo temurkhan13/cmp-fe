@@ -41,7 +41,7 @@ const ChatBookmark = ({ date, messages }) => {
                 </div>
               </div>
             </div>
-            <div className="text">{message.text}</div>
+            <div className="bookmark-text">{message.text}</div>
             <div className="saved-by">
               <span> Saved by </span>
               {message.savedBy}
@@ -99,7 +99,7 @@ const ChatBookmark = ({ date, messages }) => {
           cursor: pointer;
           font-size:1.5rem;
         }
-        .text {
+        .bookmark-text {
           margin-bottom: 0.5rem;
           border:2px solid lightgray;
           font-size:1.4rem;

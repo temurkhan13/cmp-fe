@@ -35,13 +35,13 @@
 import { useState } from 'react';
 // import icon from '../../../assets/common/index';
 import Media from './assessmentModal/Media';
-import Comment from './assessmentModal/Comments';
+import Comments from './assessmentModal/Comments';
 import AssessmentModal from './assessmentModal/Index';
 import ChatBookmark from './assessmentModal/ChatBookmark';
 import VersionHistory from './assessmentModal/VersionHistory';
 
 import { RxAvatar } from 'react-icons/rx';
-// import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 
@@ -204,7 +204,86 @@ const data = [
     ],
   },
 ];
-const comments = [];
+const Comment = {
+  id: 1,
+  time: 'Today',
+  avatar: <FaUserCircle />,
+  name: 'Jerald Huels',
+  text: 'Can you explain the ADKAR model? How it works?',
+  status: 'It’s Completed.',
+  replies: [
+    {
+      id: 11,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Imran',
+      text: 'Sure, let me explain.',
+    },
+    {
+      id: 12,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 13,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 14,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 15,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 16,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 17,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 18,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 19,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+    {
+      id: 20,
+      time: 'Today',
+      avatar: <FaUserCircle />,
+      name: 'Alex',
+      text: 'I can help too.',
+    },
+  ],
+};
 
 const Assessments = () => {
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
@@ -276,13 +355,13 @@ const Assessments = () => {
       {isCommentsModalOpen && (
         <AssessmentModal
           title="Comments"
-          bodyContent={<Comment {...comments} />}
+          bodyContent={<Comments Comments={Comment} />}
           onClose={closeModal}
         />
       )}
       {isBookmarkModalOpen && (
         <AssessmentModal
-          title="Book Mark"
+          title="Bookmark"
           bodyContent={
             <div>
               {data.map((item, index) => (
