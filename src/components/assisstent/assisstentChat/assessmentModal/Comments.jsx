@@ -254,7 +254,7 @@ const Comments = ({ Comments }) => {
 .replies-toggle {
   color: blue;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 1.1rem;
 }
 .options-icon {
   cursor: pointer;
