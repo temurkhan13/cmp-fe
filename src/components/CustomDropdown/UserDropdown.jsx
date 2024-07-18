@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
 import { MdPeople } from 'react-icons/md';
-// import assets from '../../assets/dashboard/index';
+import { useSelector } from 'react-redux';
 
-const UserDropdown = ({ activeIcon, handleIconClick,members }) => {
-  // Example user data
-  const users = [
-    { image: '/path/to/image3.jpg', name: 'Jerald Huels', role: 'Editor' },
-    { image: '/path/to/image2.jpg', name: 'Sherrimac Gyver', role: 'Editor' },
-    { image: '/path/to/image3.jpg', name: 'Jerald Huels', role: 'Editor' },
-    ];
+const UserDropdown = ({ activeIcon, handleIconClick }) => {
+  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
+  const chats = useSelector((state) => state.chat.chats);
+  const users = useSelector((state) => state.user.users); // Assuming you have a `users` slice of state
+
+  const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+
+  const userDetailsMap = currentChat ? currentChat.sharedUsers.reduce((acc, user) => {
+    acc[user.userId] = users.find((u) => u.userId === user.userId);
+    return acc;
+  }, {}) : {};
 
   return (
     <Dropdown
@@ -22,15 +26,18 @@ const UserDropdown = ({ activeIcon, handleIconClick,members }) => {
           : styles.dropdownBtn
       }
     >
-      {members.map((user) => (
-        <Dropdown.Item key={user.name} style={styles.dropdownItem}>
-          <img src={user.image} alt={user.name} style={styles.userImage} />
-          <div>
-            <div style={styles.userName}>{user.name}</div>
-            <div style={styles.userRole}>{user.role}</div>
-          </div>
-        </Dropdown.Item>
-      ))}
+      {currentChat && currentChat.sharedUsers.map((user) => {
+        const userDetails = userDetailsMap[user.userId];
+        return (
+          <Dropdown.Item key={user.userId} style={styles.dropdownItem}>
+            <img src={userDetails.image} alt={userDetails.name} style={styles.userImage} />
+            <div>
+              <div style={styles.userName}>{userDetails.name}</div>
+              <div style={styles.userRole}>{user.role}</div>
+            </div>
+          </Dropdown.Item>
+        );
+      })}
     </Dropdown>
   );
 };
@@ -81,17 +88,12 @@ const styles = {
 UserDropdown.propTypes = {
   activeIcon: PropTypes.string,
   handleIconClick: PropTypes.func.isRequired,
-};
-
-
-UserDropdown.propTypes = {
   members: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       role: PropTypes.oneOf(['owner', 'edit', 'view', 'remove']).isRequired,
     })
   ).isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
 export default UserDropdown;

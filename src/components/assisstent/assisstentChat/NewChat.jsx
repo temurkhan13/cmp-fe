@@ -8,6 +8,35 @@ import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
 import { fetchSharedUsers, setCurrentChat } from '@store/chatSlice';
 
+import {
+  addChat,
+  updateChat,
+  deleteChat,
+  addComment,
+  updateComment,
+  deleteComment,
+  addReply,
+  updateReply,
+  deleteReply,
+  addBookmark,
+  deleteBookmark,
+  addMedia,
+  deleteMedia,
+  addTask,
+  updateTask,
+  deleteTask,
+  addVersion,
+  deleteVersion,
+  addImage,
+  deleteImage,
+  addDocument,
+  deleteDocument,
+  addLink,
+  deleteLink,
+  setSelectedChatId,
+} from '../../../redux/slices/chatSlice';
+
+
 const NewChat = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,9 +47,17 @@ const NewChat = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const sharedUsers = useSelector((state) => state.chat.sharedUsers);
-  const currentChatId = useSelector((state) => state.chat.currentChatId);
+  //const sharedUsers = useSelector((state) => state.chat.sharedUsers);
+  //const currentChatId = useSelector((state) => state.chat.currentChat);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // State for sidebar collapse
+
+  //full-redux
+  const chats = useSelector((state) => state.chat.chats);
+  const currentChatId = useSelector((state) => state.chat.currentChat);
+  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
+
+
+
 
   // Function to toggle sidebar collapse state
   const toggleSidebar = () => {
@@ -37,45 +74,97 @@ const NewChat = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchInitialChatHistory = async () => {
-      setLoading(true);
-      try {
-        const initialHistory = await historyChat();
-        setChatHistory(Array.isArray(initialHistory) ? initialHistory : []);
-      } catch (error) {
-        console.error('Error occurred while fetching initial chat history:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //this is the older function for fetching chat data from api
+  // useEffect(() => {
+  //   const fetchInitialChatHistory = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const initialHistory = await historyChat();
+  //       setChatHistory(Array.isArray(initialHistory) ? initialHistory : []);
+  //     } catch (error) {
+  //       console.error('Error occurred while fetching initial chat history:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchInitialChatHistory();
-  }, []);
+  //   fetchInitialChatHistory();
+  // }, []);
 
+  // useEffect(() => {
+  //   if (Array.isArray(chatHistory) && chatHistory.length > 0) {
+  //     setMessages(chatHistory);
+  //   }
+  // }, [chatHistory]);
+
+
+  // Update selectedChat if the chat data changes
   useEffect(() => {
-    if (Array.isArray(chatHistory) && chatHistory.length > 0) {
-      setMessages(chatHistory);
+    if (selectedChat) {
+      const updatedChat = chats.find(chat => chat.chatId === selectedChat.chatId);
+      setSelectedChatId(updatedChat || null);
     }
-  }, [chatHistory]);
+  }, [chats]);
 
-  useEffect(() => {
-    console.log('Current chat ID:', currentChatId);
-    if (currentChatId) {
-      dispatch(fetchSharedUsers(currentChatId));
-    }
-  }, [currentChatId, dispatch]);
+  // useEffect(() => {
+  //   if (currentChatId) {
+  //     console.log('Current chat ID:', currentChatId.chatId);
+  //     dispatch(fetchSharedUsers(currentChatId.chatId));
+  //   }
+  // }, [currentChatId, dispatch]);
+
 
   const handleChatSelect = (chatId) => {
     console.log(chatId);
-    dispatch(setCurrentChat({ chatId }));
+   setSelectedChatId(chatId);
+   dispatch(setSelectedChatId(chatId));
+   
+   // dispatch(setCurrentChat({ chatId })); //previous Implementation
   };
 
 
-
-  const handleRefresh = () => {
-    window.location.reload();
+  // full-redux fun
+  const handleAddChat = () => {
+    const newChat = {
+      chatId: `chatId${chats.length + 1}`,
+      chatTitle : "How to Change Management",
+      version: 1,
+      generalMessages: [],
+      sharedUsers: [],
+      comments: [],
+      bookmarks: [],
+      media: [],
+      tasks: [],
+      versions: [],
+      images: [],
+      documents: [],
+      links: [],
+      bookmarkData: [],
+      commentingUsers: [],
+      commentReplies: [],
+    };
+    console.log(newChat.chatId);
+    
+    dispatch(addChat(newChat));
+    dispatch(setSelectedChatId(newChat.chatId));
+   // setSelectedChatId(newChat.chatId);
+    
   };
+
+  const handleAddMessage = (content) => {
+    if (selectedChatId) {
+      const newMessage = {
+        messageId: `msg${Date.now()}`,
+        userId: 'currentUserId', // Replace with actual user ID
+        content,
+        timestamp: new Date().toISOString(),
+      };
+      dispatch(addMessage({ chatId: selectedChatId, message: newMessage }));
+    }
+  };
+
+const selectedChat = chats.find((chat) => chat.chatId === selectedChatId);
+
 
   const handleScroll = async () => {
     const chatContainer = chatContainerRef.current;
@@ -85,14 +174,16 @@ const NewChat = () => {
       !loading
     ) {
       setLoading(true);
-      try {
-        const newHistoryItem = await historyChat();
-        setChatHistory((prevHistory) => [...prevHistory, ...newHistoryItem]);
-      } catch (error) {
-        console.error('Error occurred while loading more chat history:', error);
-      } finally {
-        setLoading(false);
-      }
+//TODO - onScroll will be implemented based on redux fetching we will try lazy load
+
+      // try {
+      //   const newHistoryItem = await historyChat();
+      //   setChatHistory((prevHistory) => [...prevHistory, ...newHistoryItem]);
+      // } catch (error) {
+      //   console.error('Error occurred while loading more chat history:', error);
+      // } finally {
+      //   setLoading(false);
+      // }
     }
   };
 
@@ -116,7 +207,7 @@ const NewChat = () => {
         }`}
       >
         <div
-          onClick={handleRefresh}
+          onClick={handleAddChat}
           style={{ cursor: 'pointer' }}
           className={`sidebar-header-title ${
             sidebarCollapsed ? 'header-collapsed-title' : ''
@@ -148,39 +239,33 @@ const NewChat = () => {
       </div>
       {!sidebarCollapsed && ( // Render chat messages only if sidebar is not collapsed
         <>
-          {Array.isArray(messages) &&
-            messages.map((el, index) => (
-              <section key={index}>
-                <Components.Feature.Text className="middium--light">
-                  {el.date}
+          {Array.isArray(chats) &&
+            chats.map((chat, index) => (
+              <section key={index}  onClick={() => handleChatSelect(chat.chatId)}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',                
+              }}
+              >
+                <Components.Feature.Text className="middium--light"
+                style={{
+                  cursor: "pointer",
+                }}
+                >
+                {chat.chatTitle}
                 </Components.Feature.Text>
-                <div>
-                  {Array.isArray(el.message) &&
-                    el.message.map((msg, msgIndex) => (
-                      <div
-                        key={msgIndex}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <Components.Feature.Text className="secondry">
-                          {msg.text}
-                        </Components.Feature.Text>
-                        <BsThreeDots
-                          onClick={() => openModal(index, msgIndex)}
+                <BsThreeDots
+                          onClick={() => openModal(index, chat.chatId)}
                           style={{ cursor: 'pointer' }}
                         />
                         {showMenu.index === index &&
-                          showMenu.msgIndex === msgIndex && (
+                          showMenu.msgIndex === chat.chatId && (
                             <NewChatSidebarModal
                               isOpen={isModalOpen}
                               closeModal={closeModal}
+                              chatId= {chat.chatId}
                             />
                           )}
-                      </div>
-                    ))}
-                </div>
               </section>
             ))}
           {loading && <div>Loading...</div>}

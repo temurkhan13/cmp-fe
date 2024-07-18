@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentChat, fetchSharedUsers } from '@store/chatSlice';
+//import { setCurrentChat, fetchSharedUsers } from '@store/chatSlice';
 import Components from '@components';
 import assets from '../../assets';
 import UserDropdown from '../CustomDropdown/UserDropdown';
@@ -10,14 +10,26 @@ import SearchDropdown from '../CustomDropdown/SearchDropdown';
 import { BiSearch } from 'react-icons/bi';
 import { FaUserPlus } from 'react-icons/fa6';
 
+
+
 const searchUser = ['John', 'abigale', 'mosa'];
 
+
+
 const Header = () => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const [activeIcon, setActiveIcon] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const currentChatId = useSelector((state) => state.chat.currentChatId);
-  const sharedUsers = useSelector((state) => state.chat.sharedUsers);
+
+
+  // const selectedChatId = useSelector((state) => state.chat.selectedChatId);
+  // const chats = useSelector((state) => state.chat.chats);
+  // const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+
+  
+
+ // const currentChatId = useSelector((state) => state.chat.currentChatId);
+ // const sharedUsers = useSelector((state) => state.chat.sharedUsers);
 
 
   const handleIconClick = (icon) => {
@@ -35,13 +47,13 @@ const Header = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  useEffect(() => {
-    if (currentChatId) {
-     // console.log("header dispatch: "+fetchSharedUsers(currentChatId));
-     setCurrentChat(currentChatId);
-      dispatch(fetchSharedUsers(currentChatId));
-    }
-  }, [currentChatId, dispatch]);
+  // useEffect(() => {
+  //   if (currentChatId) {
+  //    // console.log("header dispatch: "+fetchSharedUsers(currentChatId));
+  //    setCurrentChat(currentChatId);
+  //     dispatch(fetchSharedUsers(currentChatId));
+  //   }
+  // }, [currentChatId, dispatch]);
 
   return (
     <div className="topbar">
@@ -57,13 +69,13 @@ const Header = () => {
           {activeIcon === 'search' && (
             <SearchDropdown title="Search" items={searchUser} visible={activeIcon === 'search'} onClose={handleClose} />
           )}
-          <UserDropdown activeIcon={activeIcon} handleIconClick={handleIconClick} members={sharedUsers} />
+          <UserDropdown activeIcon={activeIcon} handleIconClick={handleIconClick}  />
           <CustomDropdown activeIcon={activeIcon} handleIconClick={handleIconClick} />
           <div className="shareBtn" onClick={handleOpenModal}>
             <FaUserPlus />
             <span>Share</span>
           </div>
-          {isModalOpen && <ShareModal members={sharedUsers} onClose={handleCloseModal} />}
+          {isModalOpen && <ShareModal  onClose={handleCloseModal} />}
         </div>
         <img src={assets.common.profile} alt="profile" />
       </section>

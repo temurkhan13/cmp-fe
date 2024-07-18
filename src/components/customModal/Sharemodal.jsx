@@ -1,15 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { RxCross2 } from 'react-icons/rx';
 import { IoMdLink } from 'react-icons/io';
 import { FaUserCircle } from 'react-icons/fa';
 
+import { useSelector, useDispatch } from 'react-redux';
+//import { addUserToChat } from '../redux/actions'; // Adjust with your actual action creator
+
+import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
+
 const ShareModal = ({ members, onClose }) => {
-  
-  const [userRoles, setUserRoles] = useState(members);
+  const dispatch = useDispatch();
+
+  const { selectedChatId, chats, users, currentChat } = useSelectedChat();
+
+  const userDetailsMap = currentChat ? currentChat.sharedUsers.reduce((acc, user) => {
+    acc[user.userId] = users.find((u) => u.userId === user.userId);
+    return acc;
+  }, {}) : {};
+
+  const [userRoles, setUserRoles] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [role, setRole] = useState('edit');
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
+
+  useEffect(() => {
+    if (currentChat) {
+      const userRolesArray = currentChat.sharedUsers.map((user) => ({
+        ...user,
+        ...userDetailsMap[user.userId],
+      }));
+      setUserRoles(userRolesArray);
+    }
+  }, []);  //removed to once [currentChat, userDetailsMap]
 
   const handleRoleChange = (name, newRole) => {
     setUserRoles(
@@ -20,16 +44,41 @@ const ShareModal = ({ members, onClose }) => {
   };
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+
+    // Filter users based on input value for autocomplete
+    const filteredUsers = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(value.toLowerCase()) ||
+        user.email.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSuggestedUsers(filteredUsers);
   };
 
   const handleRoleSelectChange = (e) => {
     setRole(e.target.value);
   };
 
+  const handleUserSelect = (selectedUser) => {
+    setInputValue(selectedUser.name); // Update input value with selected user's name
+    setSuggestedUsers([]); // Clear suggestions
+  };
+
+  const handleSendInvite = () => {
+    const newUser = {
+      name: inputValue,
+      role,
+    };
+   // dispatch(addUserToChat(newUser, selectedChatId)); // Dispatch action to add user to chat
+    setInputValue('');
+    setRole('edit'); // Reset role selection after sending invite
+  };
+
   const isExistingMember = userRoles.some((user) => user.name === inputValue);
   const isEmail =
-    /^[^\s@]+@[^\s@]+\.(.com|.net|.org|.edu|.gov|.mil|.biz|.info|.io|.co|.us|.uk|.me|.site|.online|.outlook|.email|.pro|.tech|.app|.dev|.xyz|.ai)$/i.test(
+    /^[^\s@]+@[^\s@]+\.(com|.net|.org|.edu|.gov|.mil|.biz|.info|.io|.co|.us|.uk|.me|.site|.online|.outlook|.email|.pro|.tech|.app|.dev|.xyz|.ai)$/i.test(
       inputValue
     );
 
@@ -82,7 +131,20 @@ const ShareModal = ({ members, onClose }) => {
                   Remove
                 </option>
               </select>
-            </div>{' '}
+            </div>
+            {suggestedUsers.length > 0 && (
+              <ul style={styles.suggestionList}>
+                {suggestedUsers.map((user) => (
+                  <li
+                    key={user.userId}
+                    style={styles.suggestionItem}
+                    onClick={() => handleUserSelect(user)}
+                  >
+                    {user.name} ({user.email})
+                  </li>
+                ))}
+              </ul>
+            )}
             <button
               disabled={isInviteButtonDisabled}
               style={{
@@ -91,6 +153,7 @@ const ShareModal = ({ members, onClose }) => {
                 color: isInviteButtonDisabled ? '#666' : '#0B1444',
                 cursor: isInviteButtonDisabled ? 'not-allowed' : 'pointer',
               }}
+              onClick={handleSendInvite}
             >
               Send Invite
             </button>
@@ -98,19 +161,19 @@ const ShareModal = ({ members, onClose }) => {
           <hr style={styles.straightLine} />
 
           <ul style={styles.members}>
-            {userRoles.map((member) => (
-              <li key={member.name} style={styles.member}>
+            {userRoles.map((user) => (
+              <li key={user.name} style={styles.member}>
                 <div style={styles.memberInfo}>
                   <FaUserCircle size={30} />
-                  <span style={styles.memberName}>{member.name}</span>
+                  <span style={styles.memberName}>{user.name}</span>
                 </div>
                 <select
                   style={styles.select}
-                  value={member.role}
+                  value={user.role}
                   onChange={(e) =>
-                    handleRoleChange(member.name, e.target.value)
+                    handleRoleChange(user.name, e.target.value)
                   }
-                  disabled={member.role === 'owner'}
+                  disabled={user.role === 'owner'}
                 >
                   <option value="owner" style={styles.rolesOption}>
                     Owner
@@ -165,6 +228,7 @@ const styles = {
     alignItems: 'baseline',
     justifyContent: 'center',
     gap: '1rem',
+    position: 'relative',
   },
   inputGroup: {
     display: 'flex',
@@ -174,6 +238,7 @@ const styles = {
     paddingLeft: '1rem',
     paddingRight: '1rem',
     borderRadius: '0.8rem',
+    position: 'relative',
   },
   input: {
     flex: 1,
@@ -238,6 +303,26 @@ const styles = {
     fontWeight: '500',
     cursor: 'pointer',
     gap: '1.5rem',
+  },
+  suggestionList: {
+    position: 'absolute',
+    top: '100%',
+    left: '0',
+    right: '0',
+    zIndex: '1000',
+    background: '#fff',
+    boxShadow: '0 0.125rem 0.625rem rgba(0,0,0,0.1)',
+    borderRadius: '0.5rem',
+    maxHeight: '15rem',
+    overflowY: 'auto',
+    border: '0.0625rem solid #ccc',
+  },
+  suggestionItem: {
+    padding: '0.5rem 1rem',
+    cursor: 'pointer',
+    borderBottom: '0.0625rem solid #eee',
+    fontSize: '1.4rem',
+    color: '#333',
   },
 };
 

@@ -154,7 +154,7 @@ import { useState } from 'react';
 import AssessmentTasks from './assessmentComponent/AssessmentTasks';
 import Media from '../../assisstent/assisstentChat/assessmentModal/Media';
 import Comments from '../../assisstent/assisstentChat/assessmentModal/Comments';
-import AssessmentModal from '../../assisstent/assisstentChat/assessmentModal/Index';
+import AssessmentModal from '../../assisstent/assisstentChat/assessmentModal/index';
 import ChatBookmark from '../../assisstent/assisstentChat/assessmentModal/ChatBookmark';
 import VersionHistory from '../../assisstent/assisstentChat/assessmentModal/VersionHistory';
 

@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 import { FaFolder, FaTrash } from 'react-icons/fa';
+import { deleteChat } from '../../redux/slices/chatSlice';
+import { useDispatch } from 'react-redux';
+
 
 const modalStyles = {
   modalBackground: {
@@ -35,7 +38,8 @@ const modalStyles = {
   },
 };
 
-const NewChatSidebarModal = ({ isOpen, closeModal }) => {
+const NewChatSidebarModal = ({ isOpen, closeModal, chatId }) => {
+  const dispatch = useDispatch();
   if (!isOpen) return null;
 
   return (
@@ -56,6 +60,8 @@ const NewChatSidebarModal = ({ isOpen, closeModal }) => {
           style={{ ...modalStyles.modalOption, ...modalStyles.lastModalOption }}
           onClick={() => {
             /* Handle Move to Trash */
+            console.log(chatId);
+            dispatch(deleteChat(chatId));
           }}
         >
           <FaTrash style={modalStyles.icon} /> Move to Trash

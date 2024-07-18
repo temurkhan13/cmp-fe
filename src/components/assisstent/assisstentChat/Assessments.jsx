@@ -36,7 +36,7 @@ import { useState } from 'react';
 // import icon from '../../../assets/common/index';
 import Media from './assessmentModal/Media';
 import Comments from './assessmentModal/Comments';
-import AssessmentModal from './assessmentModal/Index';
+import AssessmentModal from './assessmentModal/index';
 import ChatBookmark from './assessmentModal/ChatBookmark';
 import VersionHistory from './assessmentModal/VersionHistory';
 
@@ -44,6 +44,9 @@ import { RxAvatar } from 'react-icons/rx';
 import { FaUserCircle } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+
+
 
 const versions = [
   {
@@ -286,6 +289,14 @@ const Comment = {
 };
 
 const Assessments = () => {
+
+  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
+  const chats = useSelector((state) => state.chat.chats);
+  const users = useSelector((state) => state.user.users); // Assuming you have a `users` slice of state
+
+  const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+
+
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
@@ -339,7 +350,7 @@ const Assessments = () => {
       {isVersionHistoryModalOpen && (
         <AssessmentModal
           title="Version History"
-          bodyContent={<VersionHistory versions={versions} />}
+          bodyContent={<VersionHistory versions={currentChat.versions} />}
           onClose={closeModal}
         />
       )}
@@ -347,7 +358,7 @@ const Assessments = () => {
         <AssessmentModal
           title="Media"
           bodyContent={
-            <Media images={images} documents={documents} links={links} />
+            <Media images={images} documents={currentChat.documents} links={links} />
           }
           onClose={closeModal}
         />
@@ -355,7 +366,7 @@ const Assessments = () => {
       {isCommentsModalOpen && (
         <AssessmentModal
           title="Comments"
-          bodyContent={<Comments Comments={Comment} />}
+          bodyContent={<Comments comments={currentChat.comments} />}
           onClose={closeModal}
         />
       )}
@@ -364,7 +375,7 @@ const Assessments = () => {
           title="Bookmark"
           bodyContent={
             <div>
-              {data.map((item, index) => (
+              {currentChat.bookmarks.map((item, index) => (
                 <ChatBookmark
                   key={index}
                   date={item.date}

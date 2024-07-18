@@ -8,8 +8,8 @@ import useLogin from '../../hooks/useLogin';
 const SignIn = () => {
   const { login, loading, error } = useLogin();
   const initalValues = {
-    email: '',
-    password: '',
+    'email': '',
+    'password': '',
   };
 
   return (

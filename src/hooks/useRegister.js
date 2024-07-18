@@ -27,7 +27,6 @@ const useRegister = () => {
         webURL: allDetails.websiteURL,
         jobTitle: allDetails.jobTitle,
       });
-      console.log('Registration successful:', response.data);
 
       if (response.data && response.data.tokens && response.data.tokens.access) {
         if (response.data) {
