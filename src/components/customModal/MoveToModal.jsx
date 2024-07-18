@@ -11,6 +11,9 @@ const MoveToModal = ({ folders }) => {
   const [openFolders, setOpenFolders] = useState({});
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [newFolderName, setNewFolderName] = useState('');
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [folderList, setFolderList] = useState(folders);
 
   const handleIconClick = (folderName) => {
     setOpenFolders((prev) => ({
@@ -27,6 +30,25 @@ const MoveToModal = ({ folders }) => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleNewFolderClick = () => {
+    setIsCreatingFolder(true);
+  };
+
+  const handleNewFolderChange = (e) => {
+    setNewFolderName(e.target.value);
+  };
+
+  const handleNewFolderSubmit = (e) => {
+    if (e.key === 'Enter' && newFolderName.trim()) {
+      setFolderList((prevFolders) => [
+        ...prevFolders,
+        { name: newFolderName, subfolders: [] },
+      ]);
+      setNewFolderName('');
+      setIsCreatingFolder(false);
+    }
   };
 
   const filterFolders = (folders, searchTerm) => {
@@ -62,7 +84,7 @@ const MoveToModal = ({ folders }) => {
       const isSelected = selectedFolder === folderName;
 
       return (
-        <div key={index}>
+        <div key={folderName}>
           <div style={styles.folder}>
             <div
               onClick={() => handleIconClick(folderName)}
@@ -97,7 +119,7 @@ const MoveToModal = ({ folders }) => {
     });
   };
 
-  const filteredFolders = filterFolders(folders, searchTerm);
+  const filteredFolders = filterFolders(folderList, searchTerm);
 
   return (
     <>
@@ -115,12 +137,23 @@ const MoveToModal = ({ folders }) => {
       </div>
       <hr style={styles.straightLine} />
       <div style={styles.title}>Suggested</div>
-      <div style={styles.container}>{renderFolders(filteredFolders)} </div>
+      <div style={styles.container}>{renderFolders(filteredFolders)}</div>
       <hr style={styles.straightLine} />
-      <button style={styles.folderBtn}>
-        <GoPlus size={18} />
-        New Folder
-      </button>
+      {isCreatingFolder ? (
+        <input
+          type="text"
+          value={newFolderName}
+          onChange={handleNewFolderChange}
+          onKeyDown={handleNewFolderSubmit}
+          style={styles.newFolderInput}
+          placeholder="Enter folder name"
+        />
+      ) : (
+        <button style={styles.folderBtn} onClick={handleNewFolderClick}>
+          <GoPlus size={18} />
+          New Folder
+        </button>
+      )}
       <hr style={styles.straightLine} />
     </>
   );
@@ -187,11 +220,6 @@ const styles = {
   subfolderContainer: {
     paddingLeft: '1.25rem',
   },
-  subfolder: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.3rem 0',
-  },
   noFolder: {
     color: 'grey',
     display: 'flex',
@@ -213,6 +241,14 @@ const styles = {
   },
   straightLine: {
     borderTop: '0.0625rem solid lightgray',
+  },
+  newFolderInput: {
+    margin: '1rem 0',
+    padding: '0.5rem',
+    border: '0.15rem solid lightgray',
+    borderRadius: '0.7rem',
+    width: '100%',
+    outline: 'none',
   },
 };
 

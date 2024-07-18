@@ -3,7 +3,8 @@ import '@styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
 import { IoAttach, IoSend } from 'react-icons/io5';
-import InpireMeIcon from "../../../assets/inspireBtn.svg"
+import { FaFile } from 'react-icons/fa6';
+import InpireMeIcon from '../../../assets/inspireBtn.svg';
 import UserPic from '@assets/chat/user.png';
 import AiPic from '@assets/dashboard/sidebarLogo.png';
 import { Example } from '@utils';
@@ -21,17 +22,22 @@ import useShorter from '@hooks/useShorter';
 import useLonger from '@hooks/useLonger';
 import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateChatMessages, addBookmark } from '../../../redux/slices/chatSlice'; // Adjust the path to your actions file
+import {
+  updateChatMessages,
+  addBookmark,
+} from '../../../redux/slices/chatSlice'; // Adjust the path to your actions file
 
 const MessagesSection = () => {
   const dispatch = useDispatch();
   const selectedChatId = useSelector((state) => state.chat.selectedChatId);
   const chats = useSelector((state) => state.chat.chats);
   const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
-  
+
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
-  const [chat, setChat] = useState(currentChat ? currentChat.generalMessages : []);
+  const [chat, setChat] = useState(
+    currentChat ? currentChat.generalMessages : []
+  );
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
@@ -53,7 +59,6 @@ const MessagesSection = () => {
     if (currentChat) {
       console.log(currentChat);
       setChat(currentChat.generalMessages);
-
     }
   }, [currentChat]);
 
@@ -76,12 +81,12 @@ const MessagesSection = () => {
     const newMessage = {
       role: 'user',
       content: text || null,
-    //  file: file ? URL.createObjectURL(file) : null,
-    //  fileName: file ? file.name : null,
+      //  file: file ? URL.createObjectURL(file) : null,
+      //  fileName: file ? file.name : null,
     };
 
     const updatedChat = [...chat, newMessage];
-    
+
     setChat(updatedChat);
     dispatch(updateChatMessages(selectedChatId, updatedChat));
 
@@ -198,28 +203,26 @@ const MessagesSection = () => {
     setPopupVisible(false);
   };
 
-  const handleAddBookmark = (content, messageId) =>{
+  const handleAddBookmark = (content, messageId) => {
     const bookmark = {
-      "bookmarkId": "bookmarkId3",
-      "userId": "userId4",
-      "timestamp": "2024-07-12T12:40:00Z",
-      "date": "2024-07-12",
-      "messages": [
+      bookmarkId: 'bookmarkId3',
+      userId: 'userId4',
+      timestamp: '2024-07-12T12:40:00Z',
+      date: '2024-07-12',
+      messages: [
         {
-          "messageId":"messageId1",
-          "sender": 'ChangeAI',
-          "text": {content},
-          "savedBy": 'You',
+          messageId: 'messageId1',
+          sender: 'ChangeAI',
+          text: { content },
+          savedBy: 'You',
         },
       ],
-    }
+    };
     dispatch(addBookmark(selectedChatId, bookmark));
-console.log("bookmarked "+ bookmark.bookmarkId);
+    console.log('bookmarked ' + bookmark.bookmarkId);
   };
 
-
   const handleInspireClick = async () => {
-
     // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
     // const inspiredText = await handleInspire(answers[currentQuestionKey]);
     // setAnswers({
@@ -227,7 +230,6 @@ console.log("bookmarked "+ bookmark.bookmarkId);
     //   [currentQuestionKey]: inspiredText,
     // });
   };
-
 
   useEffect(() => {
     document.addEventListener('mouseup', handleTextSelect);
@@ -238,8 +240,8 @@ console.log("bookmarked "+ bookmark.bookmarkId);
 
   return (
     <div className="chat-message-wrapper">
-      <div className="spinner" style={{ display: loading ? "flex" : "none" }}>
-        <ScaleLoader color={"#000000"} loading={loading} size={150} />
+      <div className="spinner" style={{ display: loading ? 'flex' : 'none' }}>
+        <ScaleLoader color={'#000000'} loading={loading} size={150} />
       </div>
 
       <div className="chat-message">
@@ -247,7 +249,7 @@ console.log("bookmarked "+ bookmark.bookmarkId);
           type="file"
           id="file-input"
           onChange={handleFileChange}
-          style={{ display: "none" }}
+          style={{ display: 'none' }}
           multiple
         />
 
@@ -265,7 +267,7 @@ console.log("bookmarked "+ bookmark.bookmarkId);
             {chat.map((item, index) => (
               <div key={index}>
                 <div>
-                  {item.role === "user" ? (
+                  {item.role === 'user' ? (
                     <div className="card">
                       <div>
                         <img src={UserPic} alt="avatar" />
@@ -274,7 +276,9 @@ console.log("bookmarked "+ bookmark.bookmarkId);
                         <p className="Heading">You</p>
                         {/* <div className="msg">{item.content}</div> */}
                         {item.content && (
-                          <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
+                          <div className="msg">
+                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                          </div>
                         )}
                         {item.file && (
                           <div className="file-preview">
@@ -299,21 +303,23 @@ console.log("bookmarked "+ bookmark.bookmarkId);
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
+                        <div className="msg">
+                          <ReactMarkdown>{item.content}</ReactMarkdown>
+                        </div>
                         <div>
-                          <FaCopy 
-                          onClick={handleAddBookmark(item.content,item.messageId)}
-                          style={{
-                            cursor: "pointer",
-                          }}
+                          <FaCopy
+                            onClick={handleAddBookmark(
+                              item.content,
+                              item.messageId
+                            )}
+                            style={{
+                              cursor: 'pointer',
+                            }}
                           />
                           <FaThumbsUp />
                           <FaThumbsDown />
-                          
-                          <FaSync 
-                          />            
-                          
-                          
+
+                          <FaSync />
                         </div>
                       </div>
                     </div>
@@ -330,7 +336,8 @@ console.log("bookmarked "+ bookmark.bookmarkId);
               onDragOver={handleDragOver}
             >
               <div className="file-upload-icon">
-                <img src={fileIcon} alt="" />
+                {/* <img src={fileIcon} alt="" /> */}
+                <FaFile style={{ fontSize: '5rem', color: '#0066FFAD' }} />
               </div>
 
               <div className="file-upload-text">Upload Your File</div>
@@ -338,24 +345,26 @@ console.log("bookmarked "+ bookmark.bookmarkId);
                 <label htmlFor="file-input">
                   <span
                     style={{
-                      color: "rgba(0, 102, 255, 1)",
-                      textDecoration: "none",
-                      cursor: "pointer",
+                      color: 'rgba(0, 102, 255, 1)',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
                     }}
                   >
                     Click to upload
-                  </span>{" "}
+                  </span>{' '}
                   or drag and drop
                 </label>
               </div>
-              <div className="file-upload-info">
-                (Max file size will be 25MB)
-              </div>
+              <div className="file-upload-info">(Max. File size: 25MB)</div>
             </div>
 
             <div className="data-map">
               {Example.map(({ question }, index) => (
-                <div key={index} className="data-map-item">
+                <div
+                  key={index}
+                  className="data-map-item"
+                  onClick={() => setText(question)}
+                >
                   {question}
                 </div>
               ))}
@@ -365,7 +374,7 @@ console.log("bookmarked "+ bookmark.bookmarkId);
       </div>
 
       {error && (
-        <div className="error" style={{ color: "red" }}>
+        <div className="error" style={{ color: 'red' }}>
           {error}
         </div>
       )}
@@ -375,26 +384,39 @@ console.log("bookmarked "+ bookmark.bookmarkId);
           <label htmlFor="file-input" className="file-upload-text">
             {/* {file ? file.map((f) => f.name).join(", ") : ""} */}
             {/* {file.name} */}
-            {file ? file.name : ""}
+            {file ? file.name : ''}
           </label>
         </div>
         <div className="input-container">
-        <div style={{ position: 'left', bottom: '10px', right: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                  <img src={InpireMeIcon} alt="Inspire Me" onClick={handleInspireClick} />
-                  {loading && (
-                    <div
-                      style={{
-                        border: '2px solid rgba(0, 0, 0, 0.1)',
-                        borderTop: '2px solid #000',
-                        borderRadius: '50%',
-                        width: '16px',
-                        height: '16px',
-                        animation: 'spin 1s linear infinite',
-                        marginLeft: '8px'
-                      }}
-                    />
-                  )}
-                </div>
+          <div
+            style={{
+              position: 'left',
+              bottom: '10px',
+              right: '10px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src={InpireMeIcon}
+              alt="Inspire Me"
+              onClick={handleInspireClick}
+            />
+            {loading && (
+              <div
+                style={{
+                  border: '2px solid rgba(0, 0, 0, 0.1)',
+                  borderTop: '2px solid #000',
+                  borderRadius: '50%',
+                  width: '16px',
+                  height: '16px',
+                  animation: 'spin 1s linear infinite',
+                  marginLeft: '8px',
+                }}
+              />
+            )}
+          </div>
           <input
             type="text"
             placeholder="Enter text here.."
@@ -403,13 +425,11 @@ console.log("bookmarked "+ bookmark.bookmarkId);
           />
           <div className="icons">
             <label htmlFor="file-input">
-              <IoAttach />
+              <IoAttach className="send-icon " />
             </label>
-            <IoSend onClick={handleSendMessage} />
+            <IoSend onClick={handleSendMessage} className="send-icon " />
           </div>
-          
         </div>
-        
       </div>
     </div>
   );

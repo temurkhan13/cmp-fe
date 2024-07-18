@@ -7,9 +7,8 @@ import { format } from 'date-fns'; // Importing format function from date-fns
 
 const initialChatState = mockChat;
 
-
 const initialState = {
-    selectedChatId: null,
+  selectedChatId: null,
   chats: initialChatState,
   loading: false,
   error: null,
@@ -20,14 +19,14 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     setChats: (state, action) => {
-        state.chats = action.payload;
-      },
-      setSelectedChatId: (state, action) => {
-        state.selectedChatId = action.payload;
-      },
+      state.chats = action.payload;
+    },
+    setSelectedChatId: (state, action) => {
+      state.selectedChatId = action.payload;
+    },
     addChat: (state, action) => {
-     // state.chats.push(action.payload);
-     state.chats.unshift(action.payload);
+      // state.chats.push(action.payload);
+      state.chats.unshift(action.payload);
     },
     updateChat: (state, action) => {
       const { chatId, updatedChat } = action.payload;
@@ -39,7 +38,6 @@ const chatSlice = createSlice({
     deleteChat: (state, action) => {
       const chatId = action.payload;
       state.chats = state.chats.filter((chat) => chat.chatId !== chatId);
-      
     },
     updateChatMessages: (state, action) => {
       const { chatId, messages } = action.payload;
@@ -56,7 +54,7 @@ const chatSlice = createSlice({
           text: comment,
           timestamp: format(new Date(), 'yyyy-MM-dd hh:mm:ssa'), // Add timestamp
           commentId: uuidv4(), // Generate a unique ID
-          "userName": "Raphale", //this will be the Auth User
+          userName: 'Raphale', //this will be the Auth User
           replies: [],
         };
         chat.comments.push(newComment);
@@ -64,24 +62,28 @@ const chatSlice = createSlice({
     },
     updateComment: (state, action) => {
       const { chatId, commentId, updatedComment } = action.payload;
-      console.log(updatedComment +" comment updating ...."+chatId +commentId);
+      console.log(
+        updatedComment + ' comment updating ....' + chatId + commentId
+      );
       const chat = state.chats.find((chat) => chat.chatId === chatId);
       if (chat) {
-        const commentIndex = chat.comments.findIndex((c) => c.commentId === commentId);
+        const commentIndex = chat.comments.findIndex(
+          (c) => c.commentId === commentId
+        );
         if (commentIndex !== -1) {
           chat.comments[commentIndex].text = updatedComment;
           //chat.comments[commentIndex].text = { ...chat.comments[commentIndex].text, ...updatedComment }; //immutability not needed
-          console.log("comment updated");
+          console.log('comment updated');
         }
       }
     },
     deleteComment: (state, action) => {
       const { chatId, commentId } = action.payload;
-      console.log("delete comment"+chatId + commentId);
+      console.log('delete comment' + chatId + commentId);
       const chat = state.chats.find((chat) => chat.chatId === chatId);
       if (chat) {
         chat.comments = chat.comments.filter((c) => c.commentId !== commentId);
-        console.log("comment deleted");
+        console.log('comment deleted');
       }
     },
     addReply: (state, action) => {
@@ -91,10 +93,10 @@ const chatSlice = createSlice({
         const comment = chat.comments.find((c) => c.commentId === commentId);
         if (comment) {
           const newReply = {
-            text:reply,
+            text: reply,
             timestamp: format(new Date(), 'yyyy-MM-dd hh:mm:ssa'), // Add timestamp
             replyId: uuidv4(), // Generate a unique ID
-            "userName": "Raphale", //this will be the Auth User
+            userName: 'Raphale', //this will be the Auth User
           };
           comment.replies.push(newReply);
         }
@@ -106,10 +108,12 @@ const chatSlice = createSlice({
       if (chat) {
         const comment = chat.comments.find((c) => c.commentId === commentId);
         if (comment) {
-          const replyIndex = comment.replies.findIndex((r) => r.replyId === replyId);
+          const replyIndex = comment.replies.findIndex(
+            (r) => r.replyId === replyId
+          );
           if (replyIndex !== -1) {
             comment.replies[replyIndex].text = updatedReply;
-           // comment.replies[replyIndex] = { ...comment.replies[replyIndex], ...updatedReply };
+            // comment.replies[replyIndex] = { ...comment.replies[replyIndex], ...updatedReply };
           }
         }
       }
@@ -120,7 +124,9 @@ const chatSlice = createSlice({
       if (chat) {
         const comment = chat.comments.find((c) => c.commentId === commentId);
         if (comment) {
-          comment.replies = comment.replies.filter((r) => r.replyId !== replyId);
+          comment.replies = comment.replies.filter(
+            (r) => r.replyId !== replyId
+          );
         }
       }
     },
@@ -135,7 +141,9 @@ const chatSlice = createSlice({
       const { chatId, bookmarkId } = action.payload;
       const chat = state.chats.find((chat) => chat.chatId === chatId);
       if (chat) {
-        chat.bookmarks = chat.bookmarks.filter((b) => b.bookmarkId !== bookmarkId);
+        chat.bookmarks = chat.bookmarks.filter(
+          (b) => b.bookmarkId !== bookmarkId
+        );
       }
     },
     addMedia: (state, action) => {
@@ -215,7 +223,9 @@ const chatSlice = createSlice({
       const { chatId, documentId } = action.payload;
       const chat = state.chats.find((chat) => chat.chatId === chatId);
       if (chat) {
-        chat.documents = chat.documents.filter((doc) => doc.documentId !== documentId);
+        chat.documents = chat.documents.filter(
+          (doc) => doc.documentId !== documentId
+        );
       }
     },
     addLink: (state, action) => {
@@ -243,7 +253,9 @@ const chatSlice = createSlice({
       const { chatId, bookmarkDataId } = action.payload;
       const chat = state.chats.find((chat) => chat.chatId === chatId);
       if (chat) {
-        chat.bookmarkData = chat.bookmarkData.filter((b) => b.bookmarkDataId !== bookmarkDataId);
+        chat.bookmarkData = chat.bookmarkData.filter(
+          (b) => b.bookmarkDataId !== bookmarkDataId
+        );
       }
     },
     addCommentingUser: (state, action) => {
@@ -257,14 +269,16 @@ const chatSlice = createSlice({
       const { chatId, commentingUserId } = action.payload;
       const chat = state.chats.find((chat) => chat.chatId === chatId);
       if (chat) {
-        chat.commentingUsers = chat.commentingUsers.filter((u) => u.commentingUserId !== commentingUserId);
+        chat.commentingUsers = chat.commentingUsers.filter(
+          (u) => u.commentingUserId !== commentingUserId
+        );
       }
     },
   },
 });
 
 export const {
-setSelectedChatId,
+  setSelectedChatId,
   addChat,
   updateChat,
   deleteChat,

@@ -1,39 +1,37 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-
-const initialUserState = 
-   [
-    {
-      userId: "userId1",
-      name: "Jerald Huels",
-      role: "Editor",
-      image: "/path/to/image1.jpg"
-    },
-    {
-      userId: "userId2",
-      name: "Sherrimac Gyver",
-      role: "Editor",
-      image: "/path/to/image2.jpg"
-    },
-    {
-      userId: "userId3",
-      name: "Alex Doe",
-      role: "Viewer",
-      image: "/path/to/image3.jpg"
-    },
-    {
-      userId: "userId4",
-      name: "Jane Smith",
-      role: "Editor",
-      image: "/path/to/image4.jpg"
-    },
-    {
-      userId: "userId5",
-      name: "JaMe SmithII",
-      role: "Editor",
-      image: "/path/to/image4.jpg"
-    }
-  ];
+const initialUserState = [
+  {
+    userId: 'userId1',
+    name: 'Jerald Huels',
+    role: 'Editor',
+    image: '/src/assets/dashboard/User1.svg',
+  },
+  {
+    userId: 'userId2',
+    name: 'Sherrimac Gyver',
+    role: 'Editor',
+    image: '/path/to/image2.jpg',
+  },
+  {
+    userId: 'userId3',
+    name: 'Alex Doe',
+    role: 'Viewer',
+    image: '/src/assets/dashboard/User1.svg',
+  },
+  {
+    userId: 'userId4',
+    name: 'Jane Smith',
+    role: 'Editor',
+    image: '/src/assets/dashboard/User2.svg',
+  },
+  {
+    userId: 'userId5',
+    name: 'JaMe SmithII',
+    role: 'Editor',
+    image: '/src/assets/dashboard/User3.svg',
+  },
+];
 
 const initialState = {
   users: initialUserState, // This will hold the user details
@@ -64,7 +62,6 @@ const userSlice = createSlice({
     },
   },
 });
-
 
 export const { setUsers, addUser, updateUser, deleteUser } = userSlice.actions;
 export default userSlice.reducer;

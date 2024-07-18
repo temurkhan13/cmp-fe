@@ -20,9 +20,11 @@
   width: 100%;
   max-width: 1000px;
   overflow-y: auto;
-  padding: 0 1rem;
+  // padding: 0 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
   border-radius: 8px;
   &::-webkit-scrollbar {
     display: none;
@@ -51,6 +53,7 @@
     background-color: white;
     color: black;
     display: flex;
+    border-radius: 1rem;
     justify-content: space-around;
   }
 
@@ -59,7 +62,7 @@
   }
 
   .navbar .dropbtn {
-    font-size: 16px;
+    font-size: 1.4rem;
     border: none;
     outline: none;
     color: black;
@@ -72,6 +75,7 @@
 
   .navbar .dropdown:hover .dropbtn {
     background-color: lightgray;
+    border-radius: 1rem;
     color: black;
   }
 
@@ -80,6 +84,7 @@
     position: absolute;
     background-color: #f9f9f9;
     min-width: 160px;
+    border-radius: 0.5rem;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
   }
@@ -101,7 +106,7 @@
   }
 
   .sendAskAI {
-    font-size: 15px;
+    font-size: 1.3rem;
   }
 
   .sendAskAI:hover {
@@ -140,9 +145,13 @@
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
+      border-radius: 1rem;
+      background-color: rgb(245, 245, 245);
+      transition: all 0.1s ease-in-out;
 
       &:hover {
-        background-color: #f9f9f9;
+        background-color: lightblue;
+        border: 2px dashed blue;
       }
 
       .file-upload-icon {
@@ -156,7 +165,7 @@
       }
 
       .file-upload-info {
-        font-size: 14px;
+        font-size: 1.5rem;
         color: gray;
       }
     }
@@ -168,9 +177,13 @@
       margin-top: 20px;
 
       .data-map-item {
-        padding: 20px;
+        padding: 1rem;
         border-radius: 10px;
         border: 2px solid lightgray;
+        &:hover {
+          cursor: pointer;
+          background-color: #f1f1f1;
+        }
       }
     }
 
@@ -182,7 +195,7 @@
       .assessmentDefaultHeading {
         font-family: 'Poppins';
         font-weight: 600;
-        font-size: '20px';
+        font-size: 1.6rem;
         line-height: 28px;
         letter-spacing: 0.12;
         color: 'rgba(10, 10, 10, 1)';
@@ -190,7 +203,7 @@
       .assessmentDefaultSubHeading {
         font-family: 'Poppins';
         font-weight: 400;
-        font-size: '14px';
+        font-size: 1.4rem;
         line-height: 26px;
         letter-spacing: 0.24;
         color: 'rgba(10, 10, 10, 1)';
@@ -201,7 +214,7 @@
         // background-color:"black";
         font-family: 'Poppins';
         font-weight: 500;
-        font-size: '14px';
+        // font-size: 14px;
         line-height: 23px;
         letter-spacing: 0.23;
         color: 'gba(11, 20, 68, 1)';
@@ -214,8 +227,10 @@
   max-width: 1000px;
   border: 1px solid gray;
   width: 100%;
-  border-radius: 3px;
+  // border-radius: 3px;
   padding: 0 2%;
+  border-radius: 1rem;
+  margin-bottom: 3rem;
 
   .input-container {
     display: flex;
@@ -230,6 +245,9 @@
     svg {
       font-size: 30px;
       padding: 0 10%;
+    }
+    .send-icon {
+      cursor: pointer;
     }
   }
 }

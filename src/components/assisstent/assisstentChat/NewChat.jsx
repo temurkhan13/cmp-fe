@@ -36,7 +36,6 @@ import {
   setSelectedChatId,
 } from '../../../redux/slices/chatSlice';
 
-
 const NewChat = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -55,9 +54,6 @@ const NewChat = () => {
   const chats = useSelector((state) => state.chat.chats);
   const currentChatId = useSelector((state) => state.chat.currentChat);
   const selectedChatId = useSelector((state) => state.chat.selectedChatId);
-
-
-
 
   // Function to toggle sidebar collapse state
   const toggleSidebar = () => {
@@ -97,11 +93,12 @@ const NewChat = () => {
   //   }
   // }, [chatHistory]);
 
-
   // Update selectedChat if the chat data changes
   useEffect(() => {
     if (selectedChat) {
-      const updatedChat = chats.find(chat => chat.chatId === selectedChat.chatId);
+      const updatedChat = chats.find(
+        (chat) => chat.chatId === selectedChat.chatId
+      );
       setSelectedChatId(updatedChat || null);
     }
   }, [chats]);
@@ -113,21 +110,19 @@ const NewChat = () => {
   //   }
   // }, [currentChatId, dispatch]);
 
-
   const handleChatSelect = (chatId) => {
     console.log(chatId);
-   setSelectedChatId(chatId);
-   dispatch(setSelectedChatId(chatId));
-   
-   // dispatch(setCurrentChat({ chatId })); //previous Implementation
-  };
+    setSelectedChatId(chatId);
+    dispatch(setSelectedChatId(chatId));
 
+    // dispatch(setCurrentChat({ chatId })); //previous Implementation
+  };
 
   // full-redux fun
   const handleAddChat = () => {
     const newChat = {
       chatId: `chatId${chats.length + 1}`,
-      chatTitle : "How to Change Management",
+      chatTitle: 'How to Change Management',
       version: 1,
       generalMessages: [],
       sharedUsers: [],
@@ -144,11 +139,10 @@ const NewChat = () => {
       commentReplies: [],
     };
     console.log(newChat.chatId);
-    
+
     dispatch(addChat(newChat));
     dispatch(setSelectedChatId(newChat.chatId));
-   // setSelectedChatId(newChat.chatId);
-    
+    // setSelectedChatId(newChat.chatId);
   };
 
   const handleAddMessage = (content) => {
@@ -163,8 +157,7 @@ const NewChat = () => {
     }
   };
 
-const selectedChat = chats.find((chat) => chat.chatId === selectedChatId);
-
+  const selectedChat = chats.find((chat) => chat.chatId === selectedChatId);
 
   const handleScroll = async () => {
     const chatContainer = chatContainerRef.current;
@@ -174,7 +167,7 @@ const selectedChat = chats.find((chat) => chat.chatId === selectedChatId);
       !loading
     ) {
       setLoading(true);
-//TODO - onScroll will be implemented based on redux fetching we will try lazy load
+      //TODO - onScroll will be implemented based on redux fetching we will try lazy load
 
       // try {
       //   const newHistoryItem = await historyChat();
@@ -241,31 +234,38 @@ const selectedChat = chats.find((chat) => chat.chatId === selectedChatId);
         <>
           {Array.isArray(chats) &&
             chats.map((chat, index) => (
-              <section key={index}  onClick={() => handleChatSelect(chat.chatId)}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',                
-              }}
-              >
-                <Components.Feature.Text className="middium--light"
+              <section
+                key={index}
+                onClick={() => handleChatSelect(chat.chatId)}
                 style={{
-                  cursor: "pointer",
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '1rem',
+                  margin: '0.5rem 0',
+                  justifyContent: 'space-between',
                 }}
+                className="chat-item-section"
+              >
+                <Components.Feature.Text
+                  className="middium--light"
+                  style={{
+                    cursor: 'pointer',
+                  }}
                 >
-                {chat.chatTitle}
+                  {chat.chatTitle}
                 </Components.Feature.Text>
                 <BsThreeDots
-                          onClick={() => openModal(index, chat.chatId)}
-                          style={{ cursor: 'pointer' }}
-                        />
-                        {showMenu.index === index &&
-                          showMenu.msgIndex === chat.chatId && (
-                            <NewChatSidebarModal
-                              isOpen={isModalOpen}
-                              closeModal={closeModal}
-                              chatId= {chat.chatId}
-                            />
-                          )}
+                  onClick={() => openModal(index, chat.chatId)}
+                  style={{ cursor: 'pointer', fontSize: '1.5rem ' }}
+                />
+                {showMenu.index === index &&
+                  showMenu.msgIndex === chat.chatId && (
+                    <NewChatSidebarModal
+                      isOpen={isModalOpen}
+                      closeModal={closeModal}
+                      chatId={chat.chatId}
+                    />
+                  )}
               </section>
             ))}
           {loading && <div>Loading...</div>}

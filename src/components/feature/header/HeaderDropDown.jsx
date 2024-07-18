@@ -38,23 +38,11 @@ const HeaderDropDown = () => {
         style={styles.dropdownButtonActive}
       >
         <Dropdown.Item onClick={handleGoToDashboardClick}>
-          Go to Dashboard{' '}
-          {showIcon && <BsArrowReturnLeft style={{ marginLeft: 'auto' }} />}
+          Go to Dashboard
+          {showIcon && <BsArrowReturnLeft />}
         </Dropdown.Item>
-        <Dropdown.Item>
-          File{' '}
-          <MdOutlineKeyboardArrowRight
-            style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
-          />
-          <Dropdown.Submenu position="right">
-            <Dropdown.Item>New File</Dropdown.Item>
-            <Dropdown.Item>Duplicate</Dropdown.Item>
-          </Dropdown.Submenu>
-        </Dropdown.Item>
-        <Dropdown.Item>Comment</Dropdown.Item>
-        <Dropdown.Item>Share</Dropdown.Item>
-        <Dropdown.Item>Copy link</Dropdown.Item>
-        <Dropdown.Item>Move to trash</Dropdown.Item>
+        <Dropdown.Item>New Workspace</Dropdown.Item>
+        <Dropdown.Item>Recent Workspaces list</Dropdown.Item>
       </Dropdown>
     </div>
   );
@@ -65,10 +53,11 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
+    gap: '0.5rem',
   },
   dropdownButtonActive: {
     border: '0.1rem solid lightgray',
-    borderRadius: '1rem',
+    borderRadius: '1.5rem',
     background: 'white',
     padding: '2.4rem 1rem',
     boxShadow: 'none',

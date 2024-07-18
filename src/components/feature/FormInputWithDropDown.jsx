@@ -1,73 +1,84 @@
-import { useState, useEffect, useRef } from "react";
-import { ErrorMessage, useField } from "formik";
-import { IoIosArrowDown } from "react-icons/io";
-import { motion } from "framer-motion";
-import Components from "..";
+import { useState, useEffect, useRef } from 'react';
+import { ErrorMessage, useField } from 'formik';
+import { IoIosArrowDown } from 'react-icons/io';
+import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
+import Components from '..';
 
 const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
   const [field, meta, helpers] = useField(props);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [showDropDown, setShowDropDown] = useState(false);
   const dropdownRef = useRef(null);
   const dropDownData = data;
+
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
     setShowDropDown(true);
     helpers.setValue(value);
   };
+
   const handleArrowClick = (e) => {
     setShowDropDown(!showDropDown);
     e.stopPropagation();
   };
+
   const handleItemClick = (item) => {
     setInputValue(item);
     setShowDropDown(false);
     helpers.setValue(item);
   };
+
   const handleClickOutside = (e) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
       setShowDropDown(false);
     }
   };
+
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
   const filteredData = dropDownData.filter((item) => {
-    if (typeof inputValue === "number") {
+    if (typeof inputValue === 'number') {
       return item.includes(inputValue.toString());
-    } else if (typeof inputValue === "string") {
+    } else if (typeof inputValue === 'string') {
       return item.toLowerCase().includes(inputValue.toLowerCase());
     }
     return false;
   });
+
   return (
     <div
       className={`formInputWithDropDown ${
-        meta.touched && meta.error && "is-invalid"
+        meta.touched && meta.error ? 'is-invalid' : ''
       }`}
-      style={{ position: "relative" }}
+      style={{ position: 'relative' }}
     >
       <section data-aos="fade-up" data-aos-duration={`600`}>
         <label
           htmlFor={field.name}
           className={`form-label ${
-            inputValue !== "" && "form-label-input-value"
+            inputValue !== '' ? 'form-label-input-value' : ''
           }`}
         >
           {label}
         </label>
 
-        <div style={{ border: meta.touched && meta.error && "1px solid red" }}>
+        <div
+          style={{
+            border: meta.touched && meta.error ? '1px solid red' : undefined,
+          }}
+        >
           <input
             placeholder={place}
             type="text"
-            className={`form-input ${className}   ${
-              meta.touched && meta.error && "is-invalid"
+            className={`form-input ${className} ${
+              meta.touched && meta.error ? 'is-invalid' : ''
             }`}
             {...field}
             {...props}
@@ -76,13 +87,7 @@ const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
             value={inputValue}
           />
           <motion.div
-            animate={
-              showDropDown
-                ? {
-                    rotate: -180,
-                  }
-                : { rotate: 0 }
-            }
+            animate={showDropDown ? { rotate: -180 } : { rotate: 0 }}
             onClick={handleArrowClick}
           >
             <IoIosArrowDown />
@@ -98,8 +103,8 @@ const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
       </section>
       {showDropDown && (
         <motion.div
-          initial={{ y: "-6rem", opacity: 1 }}
-          animate={{ y: "0rem", opacity: 1 }}
+          initial={{ y: '-6rem', opacity: 1 }}
+          animate={{ y: '0rem', opacity: 1 }}
           exit={{ opacity: 1 }}
           ref={dropdownRef}
         >
@@ -122,6 +127,18 @@ const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
       )}
     </div>
   );
+};
+
+FormInputWithDropDown.propTypes = {
+  label: PropTypes.string.isRequired,
+  place: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.string).isRequired,
+  className: PropTypes.string,
+};
+
+FormInputWithDropDown.defaultProps = {
+  place: '',
+  className: '',
 };
 
 export default FormInputWithDropDown;

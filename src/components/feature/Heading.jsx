@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from 'prop-types';
 
 const Heading = (props) => {
   return (
@@ -11,6 +11,14 @@ const Heading = (props) => {
       {props.children}
     </h1>
   );
+};
+
+Heading.propTypes = {
+  className: PropTypes.string.isRequired,
+  animation: PropTypes.string,
+  duration: PropTypes.number,
+  id: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 export default Heading;

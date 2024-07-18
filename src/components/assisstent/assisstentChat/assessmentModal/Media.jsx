@@ -1,22 +1,41 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { RxCross2 } from 'react-icons/rx';
 import { IoMdDocument } from 'react-icons/io';
 import { MdInsertLink } from 'react-icons/md';
+import { GrPrevious } from 'react-icons/gr';
+import { GrNext } from 'react-icons/gr';
+import { IoIosChatboxes } from 'react-icons/io';
 
 const Media = ({ images, documents, links }) => {
-  const [activeTab, setActiveTab] = useState('Images');
-  const [popupImage, setPopupImage] = useState(null);
+  const [activeTab, setActiveTab] = useState('Images'); // Initialize activeTab state to 'Images'
+  const [popupImageIndex, setPopupImageIndex] = useState(null);
 
   const closePopup = () => {
-    setPopupImage(null);
+    setPopupImageIndex(null);
+  };
+
+  const showPreviousImage = () => {
+    setPopupImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const showNextImage = () => {
+    setPopupImageIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   return (
     <div className="container">
       <div className="tabs">
-        <button onClick={() => setActiveTab('Images')}>Images</button>
+        <button
+          onClick={() => setActiveTab('Images')}
+          className={activeTab === 'Images' ? 'active' : ''}
+        >
+          Images
+        </button>
         <button onClick={() => setActiveTab('Documents')}>Documents</button>
         <button onClick={() => setActiveTab('Links')}>Links</button>
       </div>
@@ -29,7 +48,7 @@ const Media = ({ images, documents, links }) => {
                 src={src}
                 alt={`img-${index}`}
                 className="gallery-image"
-                onClick={() => setPopupImage(src)}
+                onClick={() => setPopupImageIndex(index)}
               />
             ))}
           </div>
@@ -69,13 +88,24 @@ const Media = ({ images, documents, links }) => {
         )}
       </div>
 
-      {popupImage && (
-        <div className="popup" onClick={closePopup}>
+      {popupImageIndex !== null && (
+        <div className="popup">
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={closePopup}>
-              <RxCross2 />
+            <button className="close-btn">
+              <RxCross2 onClick={closePopup} />
+              <IoIosChatboxes />
             </button>
-            <img src={popupImage} alt="Popup" className="popup-image" />
+            <img
+              src={images[popupImageIndex]}
+              alt="Popup"
+              className="popup-image"
+            />
+            <button className="prev-btn" onClick={showPreviousImage}>
+              <GrNext />
+            </button>
+            <button className="next-btn" onClick={showNextImage}>
+              <GrPrevious />
+            </button>
           </div>
         </div>
       )}
@@ -85,7 +115,6 @@ const Media = ({ images, documents, links }) => {
           margin: 0 auto;
           text-align: center;
         }
-
         .tabs {
           display: flex;
           align-items: center;
@@ -93,7 +122,6 @@ const Media = ({ images, documents, links }) => {
           border-bottom: 1px solid lightgray;
           margin-bottom: 1.25rem; 
         }
-
         .tabs button {
           background-color: transparent;
           border: none;
@@ -102,23 +130,19 @@ const Media = ({ images, documents, links }) => {
           margin: 0 0.3125rem; 
           font-size: 1.3rem; 
         }
-
         .tabs button:focus {
           outline: none;
           border-bottom: 1px solid black;
         }
-
         .content {
           display: flex;
           justify-content: center;
         }
-
         .image-gallery {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 0.625rem;
         }
-
         .gallery-image {
           width: 100%;
           height: 9.375rem;
@@ -126,54 +150,68 @@ const Media = ({ images, documents, links }) => {
           cursor: pointer;
           transition: transform 0.2s ease-in-out;
         }
-
         .gallery-image:hover {
           transform: scale(1.05);
         }
-
         .popup {
           position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+          top: 0;
+          left: 0;
           width: 100%;
           height: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
+          background: rgba(0, 0, 0, 0.8);
           animation: fadeIn 0.3s ease-in-out;
-          width:100rem;
         }
-
         .popup-content {
           position: relative;
           max-width: 80%;
           max-height: 80%;
+          background-size: cover;
           animation: zoomIn 0.1s ease-in-out;
         }
-
         .popup-image {
-          width: 100%;
-          height: auto;
+        width: 80vw;
+        height:80vh;
         }
-
         .close-btn {
-       position: absolute;
-       top: 3rem;
-       right: 3rem;
-         background: black;
-         color:white;
+          display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-around;
+    position: absolute;
+    top: 0rem;
+    right: -10rem;
+    background-color: white;
+    color: gray;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 1rem;
+    gap: 0.5rem;
+    border-radius: 1rem;
+        }
+        .prev-btn, .next-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          // background: white;
           border: none;
           cursor: pointer;
-          font-size: 3rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 0.5rem;
+          font-size: 1.8rem;
+          padding: 0.8rem;
+          display:flex;
+          justify-content: center;
+          border-radius:50%;
         }
-
+        .prev-btn {
+          right: -8rem;
+        }
+        .next-btn {
+          left: -8rem;
+        }
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -182,7 +220,6 @@ const Media = ({ images, documents, links }) => {
             opacity: 1;
           }
         }
-
         @keyframes zoomIn {
           from {
             transform: scale(0.5);
@@ -191,38 +228,31 @@ const Media = ({ images, documents, links }) => {
             transform: scale(1);
           }
         }
-          .documents-list{
-         
-        }
-          .documents-list {
+        .documents-list {
           width: 100%;
         }
-
         .document-item {
           display: flex;
           align-items: center;
           padding: 0.625rem; 
           border-radius:1rem;
           padding-bottom:1rem;
-          &:hover{
-          background-color: #f1f1f1;
-          cursor: pointer;
+          &:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
           }
         }
-
         .document-icon {
-        color:gray;
-        display:flex;
-        font-size: 4rem; 
-        margin-right: 0.625rem; 
+          color: gray;
+          display: flex;
+          font-size: 4rem; 
+          margin-right: 0.625rem; 
         }
-
         .document-info {
           text-align: left;
-          width:100%;
+          width: 100%;
         }
-
-       .document-name {
+        .document-name {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -232,46 +262,39 @@ const Media = ({ images, documents, links }) => {
         .document-details {
           font-size: 1.1rem; 
           text-align: left;
-          color: #gray;
+          color: gray;
         }
-          .document-size{
+        .document-size {
           font-size: 1.1rem;
           color: gray;
-          }
-           .links-list {
+        }
+        .links-list {
           width: 100%;
         }
-
         .link-item {
           display: flex;
           align-items: center;
           padding: 1rem; 
         }
-
         .link-button {
-        display:flex;
+          display: flex;
           font-size: 2.5rem; 
           margin-right: 1rem; 
-          outline:none;
-          background-color:#f1f1f1;
-          padding:0.5rem;
+          outline: none;
+          background-color: #f1f1f1;
+          padding: 0.5rem;
           border-radius: 0.5rem;
           border: none;
-          // border:none;
-
         }
-
         .link-info {
           text-align: left;
           width: 100%;
         }
-
         .link-name {
           font-size: 1.3rem; 
           font-weight: 500;
           color: #000;
         }
-
         .link-url {
           font-size: 1.1rem; 
           white-space: nowrap;
@@ -279,7 +302,6 @@ const Media = ({ images, documents, links }) => {
           text-overflow: ellipsis;
           color: gray;
         }
-
       `}</style>
     </div>
   );
@@ -301,4 +323,5 @@ Media.propTypes = {
     })
   ).isRequired,
 };
+
 export default Media;

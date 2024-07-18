@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Document</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .page {
+        width: 21cm;
+        height: 29.7cm;
+        box-sizing: border-box;
+        padding: 2cm;
+        border: 1px solid #ccc;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .page-content-one {
+        background-color: #c3e11d;
+        background-image: url('../../src/assets/dashboard/front-bg.svg');
+        background-size: cover;
+      }
+
+      .logo {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .heading {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        font-size: 2rem;
+      }
+
+      .content {
+        height: calc(100% - 4cm);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .report-title {
+        display: flex;
+        font-size: 2rem;
+        margin-top: 2rem;
+        text-align: center;
+        border-radius: 2rem;
+        justify-content: center;
+        background-color: #c3e11d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page page-content-one">
+      <img src="../../src/assets/dashboard/logo.svg" alt="Logo" class="logo" />
+      <div class="heading">Word Document Heading</div>
+    </div>
+
+    <div class="page page-content-two">
+      <div class="report-title">Word Document Report Title</div>
+      <div class="content">
+        <p>Additional content for the Word document.</p>
+      </div>
+    </div>
+  </body>
+</html>
