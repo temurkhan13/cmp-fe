@@ -1,4 +1,4 @@
-import Components from "../../components";
+import Components from '../../components';
 const CheckOut = () => {
   return (
     <div className="checkout">

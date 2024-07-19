@@ -11,14 +11,14 @@ const SetNewPassword = () => {
     password: '',
     confirmPassword: '',
   };
-  const { register, error, loading  } = useRegister();
+  const { register, error, loading } = useRegister();
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(false);
 
     const allDetails = { ...detailsBusinessInfo, ...values };
     await register(allDetails, values.password);
-    setSubmitting(false)
+    setSubmitting(false);
   };
 
   return (
@@ -53,8 +53,12 @@ const SetNewPassword = () => {
                 place="Confirm password"
               />
               {error && <p style={{ color: 'red' }}>{error}</p>}
-              <Components.Feature.Button className="primary" type="submit" disabled={loading}>
-              {loading ? 'Loading...' : 'Continue'}
+              <Components.Feature.Button
+                className="primary"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Continue'}
               </Components.Feature.Button>
             </Form>
           )}

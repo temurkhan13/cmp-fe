@@ -36,7 +36,6 @@ const VerifyEmail = () => {
                 label="Verification Code"
                 place="Enter 6-digit code"
                 handleVerification={(value) => verifyEmail({ value })}
-
               />
               {error && (
                 <div
@@ -57,7 +56,7 @@ const VerifyEmail = () => {
                   color: 'rgba(10, 10, 10, 0.68)',
                 }}
               >
-                Didn't receive a code?{' '}
+                Didn&apos;t receive a code?{' '}
                 <span
                   style={{
                     fontFamily: 'Poppins',

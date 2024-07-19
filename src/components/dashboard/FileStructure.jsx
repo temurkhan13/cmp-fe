@@ -112,7 +112,7 @@ const FileStructure = () => {
         <p
           style={{
             fontWeight: 'normal',
-            fontSize: '14px',
+            fontSize: '1.5rem',
           }}
         >
           See less

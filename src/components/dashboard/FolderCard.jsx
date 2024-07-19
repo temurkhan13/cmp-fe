@@ -11,22 +11,17 @@ import {
 } from 'react-icons/fa';
 import TrashModal from './TrashModal'; // Adjust the import path as per your project structure
 import MoveToFolderModal from './MoveToTrash'; // Adjust the import path as per your project structure
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import useManagerChat from '@hooks/useManagerChat';
 import { downloadChatAsPDF, downloadFolderAsZip } from '@utils/ExportAs';
 
-
-const FolderCard =  ({ folder }) => {
+const FolderCard = ({ folder }) => {
   if (!folder) {
     return null; // Add a safeguard to handle if folder is not defined
   }
   const { id, name } = folder;
 
-  const {moveChatToFolder, renameFolder, deleteFolder }= useManagerChat
-
-
-
-
+  const { moveChatToFolder, renameFolder, deleteFolder } = useManagerChat;
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showTrashModal, setShowTrashModal] = useState(false); // State for trash modal
@@ -55,13 +50,11 @@ const FolderCard =  ({ folder }) => {
       setShowTrashModal(true); // Open trash modal
     } else if (action === 'Move To Folder') {
       setShowMoveToFolderModal(true); // Open move to folder modal
-    }
-    else if (action === 'Downloads') {
+    } else if (action === 'Downloads') {
       downloadFolderAsZip(folder);
-      
+
       //setShowMoveToFolderModal(true); // Open move to folder modal
-    }
-    else {
+    } else {
       console.log(action);
       setShowDropdown(false);
     }
@@ -83,70 +76,72 @@ const FolderCard =  ({ folder }) => {
 
   return (
     <div>
-    
-    <div style={styles.folder}>
-      <img src={assets.dashboard.FolderIcon} alt="FolderIcon"/>
-      <div >
-        <p style={styles.folderHeading}>{name}</p>
-        <p style={styles.folderSubheading}>Modified 2 days ago</p>
-      </div>
-      <div style={styles.folderItems}>
-        <p style={styles.item}>{id} Items</p>
-        <div ref={dropdownRef} style={{ position: 'relative' }}>
-          <BsThreeDots onClick={toggleDropdown} style={{ cursor: 'pointer' }} />
-          {showDropdown && (
-            <div style={styles.dropdown}>
-              <p
-                style={styles.dropdownItem}
-                onClick={() => handleItemClick('Move To Folder')}
-              >
-                <FaFolderPlus style={styles.dropdownIcon} /> Move To Folder
-              </p>
-              <p
-                style={styles.dropdownItem}
-                onClick={() => handleItemClick('Duplicate')}
-              >
-                <FaCopy style={styles.dropdownIcon} /> Duplicate
-              </p>
-              <p
-                style={styles.dropdownItem}
-                onClick={() => handleItemClick('Rename')}
-              >
-                <FaEdit style={styles.dropdownIcon} /> Rename
-              </p>
-              <p
-                style={styles.dropdownItem}
-                onClick={() => handleItemClick('Downloads')}
-              >
-                <FaDownload style={styles.dropdownIcon} /> Download As Zip
-              </p>
-              <p
-                style={styles.dropdownItem}
-                onClick={() => handleItemClick('Copy Link')}
-              >
-                <FaLink style={styles.dropdownIcon} /> Copy Link
-              </p>
-              <p
-                style={styles.dropdownItem}
-                onClick={() => handleItemClick('Move to trash')}
-              >
-                <FaTrash style={styles.dropdownIcon} /> Move to trash
-              </p>
-            </div>
-          )}
+      <div style={styles.folder}>
+        <img src={assets.dashboard.FolderIcon} alt="FolderIcon" />
+        <div>
+          <p style={styles.folderHeading}>{name}</p>
+          <p style={styles.folderSubheading}>Modified 2 days ago</p>
         </div>
+        <div style={styles.folderItems}>
+          <p style={styles.item}>{id} Items</p>
+          <div ref={dropdownRef} style={{ position: 'relative' }}>
+            <BsThreeDots
+              onClick={toggleDropdown}
+              style={{ cursor: 'pointer' }}
+            />
+            {showDropdown && (
+              <div style={styles.dropdown}>
+                <p
+                  style={styles.dropdownItem}
+                  onClick={() => handleItemClick('Move To Folder')}
+                >
+                  <FaFolderPlus style={styles.dropdownIcon} /> Move To Folder
+                </p>
+                <p
+                  style={styles.dropdownItem}
+                  onClick={() => handleItemClick('Duplicate')}
+                >
+                  <FaCopy style={styles.dropdownIcon} /> Duplicate
+                </p>
+                <p
+                  style={styles.dropdownItem}
+                  onClick={() => handleItemClick('Rename')}
+                >
+                  <FaEdit style={styles.dropdownIcon} /> Rename
+                </p>
+                <p
+                  style={styles.dropdownItem}
+                  onClick={() => handleItemClick('Downloads')}
+                >
+                  <FaDownload style={styles.dropdownIcon} /> Download As Zip
+                </p>
+                <p
+                  style={styles.dropdownItem}
+                  onClick={() => handleItemClick('Copy Link')}
+                >
+                  <FaLink style={styles.dropdownIcon} /> Copy Link
+                </p>
+                <p
+                  style={styles.dropdownItem}
+                  onClick={() => handleItemClick('Move to trash')}
+                >
+                  <FaTrash style={styles.dropdownIcon} /> Move to trash
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        {/* Modals */}
+        <TrashModal
+          isOpen={showTrashModal}
+          onClose={closeTrashModal}
+          onProceed={handleProceedTrash}
+        />
+        <MoveToFolderModal
+          isOpen={showMoveToFolderModal}
+          onClose={closeMoveToFolderModal}
+        />
       </div>
-      {/* Modals */}
-      <TrashModal
-        isOpen={showTrashModal}
-        onClose={closeTrashModal}
-        onProceed={handleProceedTrash}
-      />
-      <MoveToFolderModal
-        isOpen={showMoveToFolderModal}
-        onClose={closeMoveToFolderModal}
-      />
-    </div>
     </div>
   );
 };
@@ -218,7 +213,6 @@ const styles = {
     marginRight: '8px',
   },
 };
-
 
 // Prop types validation
 FolderCard.propTypes = {

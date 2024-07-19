@@ -162,6 +162,7 @@ const EditModal = ({ isOpen, onClose }) => {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
   }
   .modalContainer {
     background: white;

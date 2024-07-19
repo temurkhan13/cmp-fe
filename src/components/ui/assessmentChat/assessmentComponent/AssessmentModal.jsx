@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
-import Skeleton from 'react-loading-skeleton';
+// import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import EditModal from '../assessmentComponent/EditModal';
 
@@ -12,7 +12,7 @@ import { IoSync } from 'react-icons/io5';
 const AssessmentModal = ({
   title,
   content,
-  onRegenerate,
+  // onRegenerate,
   onDownload,
   onClose,
 }) => {
@@ -24,7 +24,7 @@ const AssessmentModal = ({
 
   const handleRegenerate = () => {
     setIsLoading(true);
-    onRegenerate();
+    // onRegenerate();
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
@@ -45,6 +45,9 @@ const AssessmentModal = ({
               />
               Edit
             </button>
+            {isModalOpen && (
+              <EditModal isOpen={isModalOpen} onClose={closeModal} />
+            )}
             <div className="dropdown">
               <Dropdown title="Download" buttonClassName="dropdown-btn">
                 <Dropdown.Item onClick={() => onDownload('pdf')}>
@@ -65,35 +68,38 @@ const AssessmentModal = ({
         </div>
         <hr className="separator" />
         <div className="content">
-          {isLoading ? (
+          {/* {isLoading ? (
             <Skeleton count={content.length} height={20} />
           ) : (
             content.map((paragraph, index) => <h3 key={index}>{paragraph}</h3>)
-          )}
+          )} */}
+          {content}
         </div>
       </div>
-      {isModalOpen && <EditModal isOpen={isModalOpen} onClose={closeModal} />}
       <style>{`
         .modalOverlay {
           position: fixed;
           top: 0;
           left: 0;
+          right:0;
           width: 100%;
           height: 100%;
           background-color: rgba(0, 0, 0, 0.3);
           display: flex;
           justify-content: center;
           align-items: center;
-          z-index: 1000;
+          z-index: 10;
         }
         .modal {
-          border-radius: 0.5rem;
-          width: 80% !important;
-          height: 70rem;
-          box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+          left:20%;
+          right:100%;
+          height: 30vh;
           display: flex;
-          flex-direction: column;
           padding: 2rem;
+          width: 60% !important;
+          // border-radius: 0.5rem;
+          // flex-direction: column;
+          // box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
         }
         .header {
           display: flex;

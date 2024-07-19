@@ -39,7 +39,7 @@ const HeaderDropDown = () => {
       >
         <Dropdown.Item onClick={handleGoToDashboardClick}>
           Go to Dashboard
-          {showIcon && <BsArrowReturnLeft />}
+          {showIcon && <BsArrowReturnLeft style={{ marginLeft: 'auto' }} />}
         </Dropdown.Item>
         <Dropdown.Item>New Workspace</Dropdown.Item>
         <Dropdown.Item>Recent Workspaces list</Dropdown.Item>

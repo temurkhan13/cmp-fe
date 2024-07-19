@@ -9,15 +9,15 @@ import { FaEquals } from 'react-icons/fa';
 import data from '../../data';
 import { useNavigate } from 'react-router-dom';
 import useInspire from '../../hooks/useInspire';
-import InpireMeIcon from "../../assets/inspireBtn.svg"
-import ReactMarkdown from 'react-markdown';
+import InpireMeIcon from '../../assets/inspireBtn.svg';
+// import ReactMarkdown from 'react-markdown';
 
 const Questionnaire = () => {
   const [activeStep, setActiveStep] = useState(1);
   const [answers, setAnswers] = useState({});
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [Questions, setQuestions] = useState("");
+  const [Questions, setQuestions] = useState('');
   const navigate = useNavigate();
   const { loading, handleInspire } = useInspire();
 
@@ -29,12 +29,11 @@ const Questionnaire = () => {
       questionnaireString += `${index + 1}. ${
         question.question
       }\nAnswer: ${answer}\n`;
-      setQuestions(questionnaireString)
+      setQuestions(questionnaireString);
     });
-
   };
   const HandleStart = () => {
-    console.log("fghjk")
+    // console.log("fghjk")
     navigate('/assessment/chat', { state: { Questions } });
   };
 
@@ -64,7 +63,9 @@ const Questionnaire = () => {
   };
 
   const handleInspireClick = async () => {
-    const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
+    const currentQuestionKey = `question-${
+      data.questionnaire.Questions[activeStep - 1].id
+    }`;
     const inspiredText = await handleInspire(answers[currentQuestionKey]);
     setAnswers({
       ...answers,
@@ -144,16 +145,35 @@ const Questionnaire = () => {
               <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
               <div style={{ position: 'relative' }}>
                 <textarea
-                  name={`question-${data.questionnaire.Questions[activeStep - 1].id}`}
+                  name={`question-${
+                    data.questionnaire.Questions[activeStep - 1].id
+                  }`}
                   value={
-                    answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`] || '' 
+                    answers[
+                      `question-${
+                        data.questionnaire.Questions[activeStep - 1].id
+                      }`
+                    ] || ''
                   }
                   onChange={handleTextareaChange}
                   className={styles.InputStyle}
                   style={{ height: '150px' }} // Adjust the height as needed
                 />
-                <div style={{ position: 'absolute', bottom: '10px', right: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                  <img src={InpireMeIcon} alt="Inspire Me" onClick={handleInspireClick} />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    right: '10px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <img
+                    src={InpireMeIcon}
+                    alt="Inspire Me"
+                    onClick={handleInspireClick}
+                  />
                   {loading && (
                     <div
                       style={{
@@ -163,7 +183,7 @@ const Questionnaire = () => {
                         width: '16px',
                         height: '16px',
                         animation: 'spin 1s linear infinite',
-                        marginLeft: '8px'
+                        marginLeft: '8px',
                       }}
                     />
                   )}

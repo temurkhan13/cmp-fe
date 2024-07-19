@@ -19,7 +19,7 @@ import {
   deleteReply,
 } from '../../../../redux/slices/chatSlice';
 
-const Comments = ({ comments }) => {
+const AssessmentComments = ({ comments }) => {
   const dispatch = useDispatch();
   const chatId = useSelector((state) => state.chat.selectedChatId);
 
@@ -479,7 +479,7 @@ const Comments = ({ comments }) => {
   );
 };
 
-Comments.propTypes = {
+AssessmentComments.propTypes = {
   comments: PropTypes.arrayOf(
     PropTypes.shape({
       commentId: PropTypes.number.isRequired,
@@ -499,4 +499,4 @@ Comments.propTypes = {
   ).isRequired,
 };
 
-export default Comments;
+export default AssessmentComments;

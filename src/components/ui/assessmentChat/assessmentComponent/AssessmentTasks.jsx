@@ -1,13 +1,15 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
+
+import Editor from './Editor';
 import AssessmentModal from './AssessmentModal';
 
 const AssessmentTasks = ({ tasks }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleRegenerate = () => {
-    console.log('Regenerate clicked');
-  };
+  //
+  //   const handleRegenerate = () => {
+  //     console.log('Regenerate clicked');
+  //   };
 
   const handleDownload = (format) => {
     console.log(`Download ${format} clicked`);
@@ -176,12 +178,16 @@ const AssessmentTasks = ({ tasks }) => {
       {isModalOpen && (
         <AssessmentModal
           title="Change Vision/Case for Change"
-          content={[
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          ]}
-          onRegenerate={handleRegenerate}
+          content={
+            <Editor placeholder="Type your text here..." height="100vw" />
+
+            //   [
+            //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            // ]
+          }
+          // onRegenerate={handleRegenerate}
           onDownload={handleDownload}
           onClose={handleClose}
         />

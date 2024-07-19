@@ -152,11 +152,11 @@
 
 import { useState } from 'react';
 import AssessmentTasks from './assessmentComponent/AssessmentTasks';
-import Media from '../../assisstent/assisstentChat/assessmentModal/Media';
-import Comments from '../../assisstent/assisstentChat/assessmentModal/Comments';
+import AssessmentMedia from './assessmentComponent/AssessmentMedia';
+import AssessmentComments from './assessmentComponent/AssessmentComments';
 import AssessmentModal from '../../assisstent/assisstentChat/assessmentModal/index';
-import ChatBookmark from '../../assisstent/assisstentChat/assessmentModal/ChatBookmark';
-import VersionHistory from '../../assisstent/assisstentChat/assessmentModal/VersionHistory';
+import AsessmentBookmark from './assessmentComponent/AssessmentBookmark';
+import AssessmentVersionHistory from './assessmentComponent/AssessmentVersionHistory';
 
 import { RiVideoFill } from 'react-icons/ri';
 import { RxAvatar } from 'react-icons/rx';
@@ -171,10 +171,10 @@ import {
 
 const tasks = [
   { name: 'Assessment Progress', progress: 3 },
-  { name: 'Change vision/case for change', progress: 24 },
+  { name: 'Change vision/case for change', progress: 100 },
   { name: 'Change approach / strategy', progress: 50 },
   { name: 'Change impact assessment', progress: 65 },
-  { name: 'Stakeholder assessment/map', progress: 80 },
+  { name: 'Stakeholder assessment/map', progress: 100 },
   { name: 'ADKAR assessment', progress: 100 },
   { name: 'Training assessment', progress: 7 },
   { name: 'Communications plan', progress: 20 },
@@ -496,7 +496,7 @@ const Assessments = () => {
       {activeIcon === 'clock' && (
         <AssessmentModal
           title="Version History"
-          bodyContent={<VersionHistory versions={versions} />}
+          bodyContent={<AssessmentVersionHistory versions={versions} />}
           onClose={() => setActiveIcon(null)}
         />
       )}
@@ -504,7 +504,11 @@ const Assessments = () => {
         <AssessmentModal
           title="Images"
           bodyContent={
-            <Media images={images} documents={documents} links={links} />
+            <AssessmentMedia
+              images={images}
+              documents={documents}
+              links={links}
+            />
           }
           onClose={() => setActiveIcon(null)}
         />
@@ -512,18 +516,17 @@ const Assessments = () => {
       {activeIcon === 'message' && (
         <AssessmentModal
           title="Comments"
-          bodyContent={<Comments Comments={Comment} />}
+          bodyContent={<AssessmentComments Comments={Comment} />}
           onClose={() => setActiveIcon(null)}
         />
       )}
-
       {activeIcon === 'bookmark' && (
         <AssessmentModal
           title="Bookmark"
           bodyContent={
             <div>
               {data.map((item, index) => (
-                <ChatBookmark
+                <AsessmentBookmark
                   key={index}
                   date={item.date}
                   messages={item.messages}

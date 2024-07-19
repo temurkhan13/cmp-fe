@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 //import { setCurrentChat, fetchSharedUsers } from '@store/chatSlice';
 import Components from '@components';
@@ -7,6 +7,7 @@ import UserDropdown from '../CustomDropdown/UserDropdown';
 import ShareModal from '../customModal/Sharemodal';
 import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import SearchDropdown from '../CustomDropdown/SearchDropdown';
+import ProfileDropdown from './Logout';
 import { BiSearch } from 'react-icons/bi';
 import { FaUserPlus } from 'react-icons/fa6';
 
@@ -16,6 +17,7 @@ const Header = () => {
   //const dispatch = useDispatch();
   const [activeIcon, setActiveIcon] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   // const selectedChatId = useSelector((state) => state.chat.selectedChatId);
   // const chats = useSelector((state) => state.chat.chats);
@@ -39,6 +41,15 @@ const Header = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const closeProfileDropdown = () => {
+    setIsProfileDropdownOpen(false);
+  };
+
   // useEffect(() => {
   //   if (currentChatId) {
   //    // console.log("header dispatch: "+fetchSharedUsers(currentChatId));
@@ -85,8 +96,16 @@ const Header = () => {
           </div>
           {isModalOpen && <ShareModal onClose={handleCloseModal} />}
         </div>
-        <img src={assets.common.profile} alt="profile" />
+        <img
+          src={assets.common.profile}
+          alt="profile"
+          onClick={toggleProfileDropdown}
+          style={{ cursor: 'pointer' }}
+        />
       </section>
+      {isProfileDropdownOpen && (
+        <ProfileDropdown onClose={closeProfileDropdown} />
+      )}
     </div>
   );
 };

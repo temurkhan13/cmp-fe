@@ -176,8 +176,12 @@
       text-align: center;
       align-items: center;
       justify-content: center;
+
       flex: 0 0 auto;
       margin-right: 50px;
+
+      max-width: 100%; /* Ensures the container doesn't exceed the viewport width */
+      overflow: auto; /* Adds scrollbars if the content overflows */
     }
   }
 }

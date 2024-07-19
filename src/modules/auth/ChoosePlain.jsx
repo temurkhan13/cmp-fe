@@ -1,7 +1,6 @@
-
-import { useState } from "react";
-import Components from "../../components";
-import data from "../../data";
+import { useState } from 'react';
+import Components from '../../components';
+import data from '../../data';
 
 const ChoosePlain = () => {
   const [isActive, setIsActive] = useState(false);
@@ -25,13 +24,13 @@ const ChoosePlain = () => {
         </Components.Feature.Text>
         <div>
           <Components.Feature.Button
-            className={`toggle${isActive ? "" : "--active"}`}
+            className={`toggle${isActive ? '' : '--active'}`}
             onClick={toggleHandler}
           >
             Monthly
           </Components.Feature.Button>
           <Components.Feature.Button
-            className={`toggle${isActive ? "--active" : ""}`}
+            className={`toggle${isActive ? '--active' : ''}`}
             onClick={toggleHandler}
           >
             Yearly

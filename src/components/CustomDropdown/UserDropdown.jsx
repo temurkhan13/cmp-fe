@@ -1,19 +1,63 @@
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
-import { MdPeople } from 'react-icons/md';
+import { MdPeople, MdPerson } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
 const UserDropdown = ({ activeIcon, handleIconClick }) => {
   const selectedChatId = useSelector((state) => state.chat.selectedChatId);
   const chats = useSelector((state) => state.chat.chats);
-  const users = useSelector((state) => state.user.users); // Assuming you have a `users` slice of state
+  const users = useSelector((state) => state.user.users);
 
   const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
 
-  const userDetailsMap = currentChat ? currentChat.sharedUsers.reduce((acc, user) => {
-    acc[user.userId] = users.find((u) => u.userId === user.userId);
-    return acc;
-  }, {}) : {};
+  const userDetailsMap = currentChat
+    ? currentChat.sharedUsers.reduce((acc, user) => {
+        acc[user.userId] = users.find((u) => u.userId === user.userId);
+        return acc;
+      }, {})
+    : {};
+
+  const owner = users.find((user) => user.role === 'owner');
+
+  const renderDropdownItems = () => {
+    const nonOwnerUsers =
+      currentChat?.sharedUsers.filter((user) => user.role !== 'owner') || [];
+
+    return (
+      <>
+        <Dropdown.Item style={styles.dropdownItem}>
+          <MdPerson style={styles.icon} />
+          <div>
+            <div style={styles.userName}>{owner?.name || 'Owner'}</div>
+            <div style={styles.userRole}>owner</div>
+          </div>
+        </Dropdown.Item>
+        <hr style={{ color: 'lightgray' }} />
+        {nonOwnerUsers.length === 0 ? (
+          <Dropdown.Item style={styles.dropdownItem}>
+            No other users available
+          </Dropdown.Item>
+        ) : (
+          nonOwnerUsers.map((user) => {
+            const userDetails = userDetailsMap[user.userId];
+            return (
+              <Dropdown.Item key={user.userId} style={styles.dropdownItem}>
+                <img
+                  src={userDetails.image}
+                  alt={userDetails.name}
+                  style={styles.userImage}
+                />
+                <div>
+                  <div style={styles.userName}>{userDetails.name}</div>
+                  <div style={styles.userRole}>{user.role}</div>
+                </div>
+              </Dropdown.Item>
+            );
+          })
+        )}
+      </>
+    );
+  };
 
   return (
     <Dropdown
@@ -26,18 +70,7 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
           : styles.dropdownBtn
       }
     >
-      {currentChat && currentChat.sharedUsers.map((user) => {
-        const userDetails = userDetailsMap[user.userId];
-        return (
-          <Dropdown.Item key={user.userId} style={styles.dropdownItem}>
-            <img src={userDetails.image} alt={userDetails.name} style={styles.userImage} />
-            <div>
-              <div style={styles.userName}>{userDetails.name}</div>
-              <div style={styles.userRole}>{user.role}</div>
-            </div>
-          </Dropdown.Item>
-        );
-      })}
+      {renderDropdownItems()}
     </Dropdown>
   );
 };
@@ -67,7 +100,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     padding: '0.8rem',
-    borderRadius: '1rem',
+    // borderRadius: '1rem',
   },
   userImage: {
     width: '40px',
@@ -83,17 +116,15 @@ const styles = {
     fontSize: '1rem',
     color: 'gray',
   },
+  icon: {
+    marginRight: '0.8rem',
+    fontSize: '1.5rem',
+  },
 };
 
 UserDropdown.propTypes = {
   activeIcon: PropTypes.string,
   handleIconClick: PropTypes.func.isRequired,
-  members: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      role: PropTypes.oneOf(['owner', 'edit', 'view', 'remove']).isRequired,
-    })
-  ).isRequired,
 };
 
 export default UserDropdown;

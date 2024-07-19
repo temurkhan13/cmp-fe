@@ -15,10 +15,18 @@ const ShareModal = ({ members, onClose }) => {
 
   const { selectedChatId, chats, users, currentChat } = useSelectedChat();
 
-  const userDetailsMap = currentChat ? currentChat.sharedUsers.reduce((acc, user) => {
-    acc[user.userId] = users.find((u) => u.userId === user.userId);
-    return acc;
-  }, {}) : {};
+  const permanentOwner = {
+    name: 'Owner Name', // Replace with actual owner name
+    userId: 'owner-id', // Replace with actual owner ID
+    role: 'owner',
+  };
+
+  const userDetailsMap = currentChat
+    ? currentChat.sharedUsers.reduce((acc, user) => {
+        acc[user.userId] = users.find((u) => u.userId === user.userId);
+        return acc;
+      }, {})
+    : {};
 
   const [userRoles, setUserRoles] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -31,14 +39,14 @@ const ShareModal = ({ members, onClose }) => {
         ...user,
         ...userDetailsMap[user.userId],
       }));
-      setUserRoles(userRolesArray);
+      setUserRoles([permanentOwner, ...userRolesArray]);
     }
-  }, []);  //removed to once [currentChat, userDetailsMap]
+  }, [currentChat, userDetailsMap]);
 
-  const handleRoleChange = (name, newRole) => {
+  const handleRoleChange = (userId, newRole) => {
     setUserRoles(
       userRoles.map((user) =>
-        user.name === name ? { ...user, role: newRole } : user
+        user.userId === userId ? { ...user, role: newRole } : user
       )
     );
   };
@@ -47,7 +55,6 @@ const ShareModal = ({ members, onClose }) => {
     const value = e.target.value;
     setInputValue(value);
 
-    // Filter users based on input value for autocomplete
     const filteredUsers = users.filter(
       (user) =>
         user.name.toLowerCase().includes(value.toLowerCase()) ||
@@ -62,8 +69,8 @@ const ShareModal = ({ members, onClose }) => {
   };
 
   const handleUserSelect = (selectedUser) => {
-    setInputValue(selectedUser.name); // Update input value with selected user's name
-    setSuggestedUsers([]); // Clear suggestions
+    setInputValue(selectedUser.name);
+    setSuggestedUsers([]);
   };
 
   const handleSendInvite = () => {
@@ -71,9 +78,9 @@ const ShareModal = ({ members, onClose }) => {
       name: inputValue,
       role,
     };
-   // dispatch(addUserToChat(newUser, selectedChatId)); // Dispatch action to add user to chat
+    // dispatch(addUserToChat(newUser, selectedChatId)); // Dispatch action to add user to chat
     setInputValue('');
-    setRole('edit'); // Reset role selection after sending invite
+    setRole('edit');
   };
 
   const isExistingMember = userRoles.some((user) => user.name === inputValue);
@@ -82,7 +89,32 @@ const ShareModal = ({ members, onClose }) => {
       inputValue
     );
 
-  const isInviteButtonDisabled = !inputValue || isExistingMember || isEmail;
+  const isInviteButtonDisabled =
+    !inputValue || isExistingMember || isEmail || role === 'owner';
+
+  const handleApplyChanges = () => {
+    // Implement the action to handle changes to the users' dropdown
+    console.log('Changes applied:', userRoles);
+    // Example: dispatch(updateChatUsers(selectedChatId, userRoles)); // Replace with actual action
+  };
+
+  const renderRoleOptions = (user) => {
+    if (user.role === 'owner') {
+      return (
+        <>
+          <option value="owner">Owner</option>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <option value="edit">Can Edit</option>
+          <option value="view">Can View</option>
+          <option value="remove">Remove</option>
+        </>
+      );
+    }
+  };
 
   return (
     <>
@@ -99,7 +131,7 @@ const ShareModal = ({ members, onClose }) => {
                   style={{
                     background: '#f1f1f1',
                     borderRadius: '50%',
-                    fontSize: '1.8reme',
+                    fontSize: '1.8rem',
                     padding: '0.2rem',
                   }}
                 />
@@ -126,9 +158,6 @@ const ShareModal = ({ members, onClose }) => {
                 </option>
                 <option value="view" style={styles.rolesOption}>
                   Can View
-                </option>
-                <option value="remove" style={styles.rolesOption}>
-                  Remove
                 </option>
               </select>
             </div>
@@ -162,7 +191,7 @@ const ShareModal = ({ members, onClose }) => {
 
           <ul style={styles.members}>
             {userRoles.map((user) => (
-              <li key={user.name} style={styles.member}>
+              <li key={user.userId} style={styles.member}>
                 <div style={styles.memberInfo}>
                   <FaUserCircle size={30} />
                   <span style={styles.memberName}>{user.name}</span>
@@ -171,24 +200,20 @@ const ShareModal = ({ members, onClose }) => {
                   style={styles.select}
                   value={user.role}
                   onChange={(e) =>
-                    handleRoleChange(user.name, e.target.value)
+                    handleRoleChange(user.userId, e.target.value)
                   }
                   disabled={user.role === 'owner'}
                 >
-                  <option value="owner" style={styles.rolesOption}>
-                    Owner
-                  </option>
-                  <option value="edit" style={styles.rolesOption}>
-                    Can Edit
-                  </option>
-                  <option value="view" style={styles.rolesOption}>
-                    Can View
-                  </option>
-                  <option value="remove">Remove</option>
+                  {renderRoleOptions(user)}
                 </select>
               </li>
             ))}
           </ul>
+
+          {/* Add the new button here */}
+          <button style={styles.applyBtn} onClick={handleApplyChanges}>
+            Apply Changes
+          </button>
         </div>
       </div>
     </>
@@ -213,6 +238,7 @@ const styles = {
     padding: '2rem',
     boxShadow: '0 0.125rem 0.625rem rgba(0,0,0,0.1)',
     zIndex: 1000,
+    position: 'relative',
   },
   shareHeading: {
     fontSize: '1.7rem',
@@ -251,14 +277,38 @@ const styles = {
   },
   select: {
     borderRadius: '0.25rem',
+    padding: '0.5rem',
+    fontSize: '1.4rem',
     border: 'none',
     outline: 'none',
+  },
+  rolesOption: {
+    fontSize: '1.4rem',
+    color: '#333',
+    outline: 'none',
+    border: 'none',
   },
   inviteBtn: {
     border: 'none',
     outline: 'none',
     padding: '1rem',
     borderRadius: '0.8rem',
+  },
+  applyBtn: {
+    position: 'relative',
+    // bottom: '0rem',
+    // right: '0rem',
+    left: '40rem',
+    top: '1rem',
+    border: 'none',
+    outline: 'none',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '0.8rem',
+    backgroundColor: '#C3E11D',
+    color: '#0B1444',
+    cursor: 'pointer',
+    fontSize: '1.4rem',
+    fontWeight: '500',
   },
   members: {
     listStyleType: 'none',
