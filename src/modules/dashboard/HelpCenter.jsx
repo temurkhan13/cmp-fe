@@ -1,8 +1,11 @@
-import DashboardLayout from "../../layout/DashboardLayout";
+import HelpCenterComp from '../../components/dashboard/HelpCenterComp';
+import DashboardLayout from '../../layout/DashboardLayout';
 const HelpCenter = () => {
   return (
-    <DashboardLayout>HelpCenter</DashboardLayout>
-  )
-}
+    <DashboardLayout>
+      <HelpCenterComp />
+    </DashboardLayout>
+  );
+};
 
-export default HelpCenter
+export default HelpCenter;

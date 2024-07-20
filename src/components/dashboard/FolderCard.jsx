@@ -87,7 +87,7 @@ const FolderCard = ({ folder }) => {
           <div ref={dropdownRef} style={{ position: 'relative' }}>
             <BsThreeDots
               onClick={toggleDropdown}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', fontSize: '2rem' }}
             />
             {showDropdown && (
               <div style={styles.dropdown}>

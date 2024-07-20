@@ -1,36 +1,36 @@
-import FolderIcon from "../../assets/dashboard/folderIcon.png";
-import styles from "../../../scss/modules/dashboard/dashboard.module.scss";
+import FolderIcon from '../../assets/dashboard/folderIcon.png';
+import styles from '../../../scss/modules/dashboard/dashboard.module.scss';
 
 const FolderStructure = () => {
   const folders = [
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
-    { name: "folder1" },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
+    { name: 'folder1' },
   ];
 
   return (
@@ -39,8 +39,8 @@ const FolderStructure = () => {
         <p>Folders</p>
         <p
           style={{
-            fontWeight: "normal",
-            fontSize: "14px",
+            fontWeight: 'normal',
+            fontSize: '14px',
           }}
         >
           See All (23)
@@ -54,14 +54,14 @@ const FolderStructure = () => {
               src={FolderIcon}
               alt=""
               style={{
-                width: "65px",
-                height: "55px",
+                width: '65px',
+                height: '55px',
               }}
             />
             <p>{name}</p>
             <p
               style={{
-                color: "rgba(0, 102, 255, 1)",
+                color: 'rgba(0, 102, 255, 1)',
               }}
             >
               2 files
