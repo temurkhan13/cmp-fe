@@ -3,13 +3,36 @@ import assets from '../../assets';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
-import useLogin from '../../hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
+//import useLogin from '../../hooks/useLogin';
+
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/slices/authSlice';
+import { useSelector } from 'react-redux';
+
 
 const SignIn = () => {
-  const { login, loading, error } = useLogin();
+  //const { login, loading, error } = useLogin();
+
+  const { isLoading, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const initalValues = {
     'email': '',
     'password': '',
+  };
+
+
+  const handleLoginSubmit = async (email,password) => {
+   // e.preventDefault();
+    try {
+      // Dispatch async action to register email and get verification code
+      const response = await dispatch(login({email,password}));
+      console.log(response);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
   };
 
   return (
@@ -51,7 +74,8 @@ const SignIn = () => {
             validationSchema={data.validation.validationAuth.validationSignIn}
             onSubmit={(values, { resetForm }) => {
               console.log(values);
-              login(values.email, values.password);
+              handleLoginSubmit(values.email,values.password);
+             // login(values.email, values.password);
               resetForm();
             }}
           >
@@ -67,7 +91,7 @@ const SignIn = () => {
                   label="Password"
                   place="Enter password"
                 />
-                {error && (<p style={{color:"red"}}>{error}</p>)}
+                { error && (<p style={{color:"red"}}>{error}</p>)}
                 <section className="signIn_remember  mb_Tertiary">
                   <div>
                     <input type="checkbox" />
@@ -80,9 +104,9 @@ const SignIn = () => {
                 <Components.Feature.Button
                   className="primary"
                   type="submit"
-                  disabled={loading}
+                  disabled={isLoading}
                 >
-                  {loading ? 'Logging in...' : 'Log In'}
+                  { isLoading ? 'Logging in...' : 'Log In' }
                 </Components.Feature.Button>
               </Form>
             )}

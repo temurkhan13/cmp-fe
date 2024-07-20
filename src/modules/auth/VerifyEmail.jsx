@@ -3,11 +3,25 @@ import { Formik, Form } from 'formik';
 import useVerifyEmail from '../../hooks/useVerifyEmail';
 import { useLocation } from 'react-router-dom';
 
+
+import { useNavigate } from 'react-router-dom';
+
+import { useDispatch } from 'react-redux';
+import { verify } from '../../redux/slices/authSlice';
+
 const VerifyEmail = () => {
+
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
   const location = useLocation();
   const { email } = location.state;
   const initialValues = { number: '' };
-  const { verifyEmail, error } = useVerifyEmail();
+  //const { verifyEmail, error } = useVerifyEmail();
+
+
 
   return (
     <Components.Feature.Container className="auth signIn">
@@ -35,9 +49,16 @@ const VerifyEmail = () => {
                 name="number"
                 label="Verification Code"
                 place="Enter 6-digit code"
-                handleVerification={(value) => verifyEmail({ value })}
+                //handleVerification={(value) => verifyEmail({ value })}
+                handleVerification={(value) => 
+                 {
+                  const response = dispatch(verify({ value }));
+                  if(response.data){
+                    navigate('/choose-plain');
+                  }
+                }}
               />
-              {error && (
+              {/*error && (
                 <div
                   style={{
                     color: 'red',
@@ -45,7 +66,7 @@ const VerifyEmail = () => {
                 >
                   {error}
                 </div>
-              )}{' '}
+              )*/}{' '}
               <p
                 style={{
                   fontFamily: 'Poppins',

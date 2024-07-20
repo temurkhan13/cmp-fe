@@ -15,6 +15,8 @@ const useRegister = () => {
     setError(null);
     setSuccess(false);
 
+
+    
     try {
       const response = await apiClient.post('/auth/', {
         email: allDetails.email,

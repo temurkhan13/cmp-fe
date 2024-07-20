@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
 // Define initial state
 const initialState = {
   token: localStorage.getItem('token'),
@@ -9,13 +10,23 @@ const initialState = {
   error: null,
 };
 
+
+const baseURL = 'http://139.59.4.99:3000/api/auth';
+
+
 // Async thunk action to handle login
 export const loginAsync = createAsyncThunk(
   'auth/login',
-  async (credentials, thunkAPI) => {
+  async ({email,password}, thunkAPI) => {
     try {
-      const response = await axios.post('/login', credentials);
+      console.log('token '+ email);
+      const response = await axios.post(baseURL+'/login', {
+        email,
+        password,
+      });
       const { token } = response.data;
+      console.log('token '+ token);
+      
       localStorage.setItem('token', token); // Store token in localStorage
       return token;
     } catch (error) {
@@ -39,12 +50,25 @@ export const registerEmailAsync = createAsyncThunk(
   }
 );
 
+
+
 // Async thunk action to handle full registration
 export const registerAsync = createAsyncThunk(
   'auth/register',
-  async (registrationData, thunkAPI) => {
+  async ({registrationData, password}, thunkAPI) => {
     try {
-      const response = await axios.post('/auth/register', registrationData);
+      const response = await axios.post(baseURL+'/', {
+        email: registrationData.email,
+        password: password,
+        firstName: registrationData.name,
+        lastName: registrationData.lastName,
+        industry: registrationData.industry,
+        companyName: registrationData.companyName,
+        companySize: registrationData.companySize,
+        webURL: registrationData.websiteURL,
+        jobTitle: registrationData.jobTitle,
+
+      });
       const { token } = response.data;
       localStorage.setItem('token', token); // Store token in localStorage
       return token;
@@ -53,6 +77,20 @@ export const registerAsync = createAsyncThunk(
     }
   }
 );
+
+// Async thunk action to handle email registration and get verification code
+export const codeVerifyAsync = createAsyncThunk(
+    'auth/verification',
+    async (code, thunkAPI) => {
+      try {
+        const response = await axios.post(baseURL+'/verification',
+             {"verificationCode": parseInt( code.value.newValue) });
+        return response.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error.response.data);
+      }
+    }
+  );
 
 // Async thunk action to handle logout
 export const logoutAsync = createAsyncThunk(
@@ -111,6 +149,20 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload.message || 'Registration failed';
       })
+      .addCase(codeVerifyAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(codeVerifyAsync.fulfilled, (state, action) => {
+        //state.token = action.payload;
+        state.isLoggedIn = true;
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(codeVerifyAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload.message || 'Verification failed';
+      })
       .addCase(logoutAsync.fulfilled, (state) => {
         state.token = null;
         state.isLoggedIn = false;
@@ -123,4 +175,4 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 // Export async actions
-export { loginAsync as login, registerEmailAsync as registerEmail, registerAsync as register, logoutAsync as logout };
+export { loginAsync as login, registerEmailAsync as registerEmail, registerAsync as register, logoutAsync as logout, codeVerifyAsync as verify };
