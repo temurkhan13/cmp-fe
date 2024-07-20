@@ -1,4 +1,5 @@
-import { FaTimes } from 'react-icons/fa'; // Import the close icon from react-icons/fa
+import PropTypes from 'prop-types';
+import { FaTimes } from 'react-icons/fa';
 
 const TrashModal = ({ isOpen, onClose, onProceed }) => {
   if (!isOpen) return null;
@@ -17,16 +18,28 @@ const TrashModal = ({ isOpen, onClose, onProceed }) => {
         </p>
         <hr />
         <div style={styles.modalButtons}>
-          <button style={{ ...styles.button, ...styles.cancelButton }} onClick={onClose}>
+          <button
+            style={{ ...styles.button, ...styles.cancelButton }}
+            onClick={onClose}
+          >
             Cancel
           </button>
-          <button style={{ ...styles.button, ...styles.proceedButton }} onClick={onProceed}>
+          <button
+            style={{ ...styles.button, ...styles.proceedButton }}
+            onClick={onProceed}
+          >
             Proceed
           </button>
         </div>
       </div>
     </div>
   );
+};
+
+TrashModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onProceed: PropTypes.func.isRequired,
 };
 
 const styles = {
@@ -79,8 +92,8 @@ const styles = {
     padding: '20px',
   },
   button: {
-    flex: '1 0 50%', 
-    maxWidth: '50%', 
+    flex: '1 0 50%',
+    maxWidth: '50%',
     padding: '10px 0',
     borderRadius: '5px',
     cursor: 'pointer',

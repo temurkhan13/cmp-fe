@@ -1,29 +1,29 @@
-import { TiPlus } from "react-icons/ti";
-import { BsFilterLeft } from "react-icons/bs";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { BsFilterCircle } from "react-icons/bs";
-import { HiAdjustmentsHorizontal } from "react-icons/hi2";
-import { TfiMenuAlt } from "react-icons/tfi";
-import { RxCross1 } from "react-icons/rx";
-import { SlArrowRight } from "react-icons/sl";
-import { SlArrowLeft } from "react-icons/sl";
-import { CgMenuGridR } from "react-icons/cg";
-import StartIcon from "../../assets/dashboard/StarICon.png";
-import styles from "../../../scss/modules/dashboard/dashboard.module.scss";
+import { TiPlus } from 'react-icons/ti';
+import { BsFilterLeft } from 'react-icons/bs';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { BsFilterCircle } from 'react-icons/bs';
+import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
+import { TfiMenuAlt } from 'react-icons/tfi';
+// import { RxCross1 } from 'react-icons/rx';
+import { SlArrowRight } from 'react-icons/sl';
+import { SlArrowLeft } from 'react-icons/sl';
+import { CgMenuGridR } from 'react-icons/cg';
+import StartIcon from '../../assets/dashboard/StarICon.png';
+import styles from '../../../scss/modules/dashboard/dashboard.module.scss';
 
 const AssistantBar = () => {
   return (
     <>
       <main className={styles.main}>
-        <RxCross1
+        {/* <RxCross1
           style={{
-            borderRadius: "30px",
-            position: "absolute",
+            borderRadius: '30px',
+            position: 'absolute',
             top: 20,
             right: 20,
-            fontSize: "15px",
+            fontSize: '15px',
           }}
-        />
+        /> */}
         <input type="text" placeholder="Enter a prompt to generate new file" />
 
         <button className={styles.assbtn}>
@@ -36,9 +36,9 @@ const AssistantBar = () => {
         <div className={styles.Container}>
           <div
             style={{
-              display: "flex",
-              textAlign: "center",
-              justifyContent: "center",
+              display: 'flex',
+              textAlign: 'center',
+              justifyContent: 'center',
             }}
           >
             <button className={styles.arrowBtn}>
@@ -52,44 +52,44 @@ const AssistantBar = () => {
 
           <div
             style={{
-              display: "flex",
-              textAlign: "center",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              textAlign: 'center',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-                justifyContent: "center",
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+                justifyContent: 'center',
               }}
             >
-              <CgMenuGridR style={{ fontSize: "26px" }} />
+              <CgMenuGridR style={{ fontSize: '26px' }} />
               <TfiMenuAlt
                 style={{
-                  marginRight: "30px",
-                  marginLeft: "5px",
-                  fontSize: "18px",
+                  marginRight: '30px',
+                  marginLeft: '5px',
+                  fontSize: '18px',
                 }}
               />
             </div>
             <div>
-              <BsFilterLeft style={{ fontSize: "22px" }} />
+              <BsFilterLeft style={{ fontSize: '22px' }} />
               <MdOutlineKeyboardArrowDown
-                style={{ marginRight: "30px", fontSize: "18px" }}
+                style={{ marginRight: '30px', fontSize: '18px' }}
               />
             </div>
             <div>
-              <BsFilterCircle style={{ fontSize: "20px" }} />
+              <BsFilterCircle style={{ fontSize: '20px' }} />
               <MdOutlineKeyboardArrowDown
-                style={{ marginRight: "30px", fontSize: "18px" }}
+                style={{ marginRight: '30px', fontSize: '18px' }}
               />
             </div>
             <div>
               <HiAdjustmentsHorizontal
-                style={{ marginRight: "30px", fontSize: "22px" }}
+                style={{ marginRight: '30px', fontSize: '22px' }}
               />
               {/* <MdOutlineKeyboardArrowDown /> */}
             </div>
