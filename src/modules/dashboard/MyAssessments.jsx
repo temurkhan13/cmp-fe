@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import DashboardLayout from '@layout/DashboardLayout';
-import useManagerChat from '@hooks/useManagerChat';
-// import RecentCards from '../../components/dashboard/RecentCard';
+
 import Component from '@components';
-import { PiFilesFill } from 'react-icons/pi';
+import useManagerChat from '@hooks/useManagerChat';
+import DashboardLayout from '@layout/DashboardLayout';
+import Header from '../../components/dashboard/Header';
 // import Switch from 'react-switch';
+import { PiFilesFill } from 'react-icons/pi';
+// import RecentCards from '../../components/dashboard/RecentCard';
 
 const MyAssistant = () => {
   const { managerData, error, toggleMockData } = useManagerChat();
@@ -71,6 +73,7 @@ const MyAssistant = () => {
 
   return (
     <DashboardLayout>
+      <Header />
       <div className="container">
         {/* <Switch
           checked={true}
