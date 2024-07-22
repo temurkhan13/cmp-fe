@@ -1,22 +1,117 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
+import  wordTemplate  from '../../../../reports/word.html';
+import WordReportTemplate from '../../../reports/WordReportTemplate';
+import ReactDOMServer from 'react-dom/server';
+//import HTMLtoDOCX from "html-to-docx";
+
 
 const Editor = ({ placeholder, height }) => {
   const editor = useRef(null);
   const [content, setContent] = useState('');
+  
+
+  const markdownData = `
+# Welcome to Our Service
+
+We are glad to have you here. Please explore the features below.
+
+- **Feature 1**: Easy to use
+- **Feature 2**: Dynamic rendering
+- **Feature 3**: Customizable components
+
+Feel free to contact us for more information.
+`;
+
+// Generate HTML for TrioPage
+const reportHtml = ReactDOMServer.renderToStaticMarkup(
+  <WordReportTemplate content={markdownData}/>
+);
+
+
+
+
+const htmlToDocx = (html) => {
+  
+
+};
+
+
+
+
+
+
+const downloadDocx = async (content) => {
+  try {
+    const doc = htmlToDocx(content);
+
+    // Convert the DOCX document to a Blob
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, 'document.docx');
+  } catch (error) {
+    console.error('Error generating DOCX file:', error);
+  }
+};
+
+
+  useEffect(() => {
+setContent(reportHtml);
+  },[reportHtml]);
 
   const config = useMemo(
     () => ({
       readonly: false,
       placeholder: placeholder || 'Start typing...',
       height: height || '100%', // Set the height here
+      "showCharsCounter": false,
+      "showWordsCounter": false,
+      "showXPathInStatusbar": false,
+      toolbarButtonSize: 'large',
+      toolbarAdaptive: true,
+      extraPlugins: ["export-docs"],
+    export: {
+      fileProxy: "/export-to-pdf", // Ensure this endpoint is correctly set up on your server
+      download: true, // Enable download directly from the editor
+    },
+      aiAssistant: {
+        aiTranslateToFrenchPrompt:"",
+
+      aiAssistantCallback(propmt, htmlFragment) {
+
+      return Promise.resolve('AI Assistant is not configured');
+      }
+  },
+      buttons: [
+        'bold', 'italic', 'underline', '|',
+        'ul', 'ol', '|',
+        'outdent', 'indent', '|',
+        'font', 'fontsize', 'brush', 'paragraph', '|',
+        'image', 'table', '|',
+        {
+          name: 'export',
+          iconURL: 'http://localhost:5173/src/assets/common/icon.svg',
+          exec: (editor) => {
+            const content = editor.getEditorValue();
+            console.log(content);
+            downloadDocx(content);
+          //  const blob = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+          // const docxContent = HTMLDocx.asBlob(content);
+          // const link = document.createElement('a');
+          // link.href = URL.createObjectURL(docxContent);
+          // link.download = 'document.docx';
+          // link.click();
+          }
+        },
+        'fullsize', 'print', '|',
+        'source'
+      ],
     }),
     [placeholder, height]
   );
 
   return (
-    <JoditEditor
+    <div>    <JoditEditor
       ref={editor}
       value={content}
       config={config}
@@ -24,6 +119,8 @@ const Editor = ({ placeholder, height }) => {
       onBlur={(newContent) => setContent(newContent)}
       onChange={() => {}}
     />
+</div>
+
   );
 };
 

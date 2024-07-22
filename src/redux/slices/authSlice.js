@@ -24,10 +24,12 @@ export const loginAsync = createAsyncThunk(
         email,
         password,
       });
-      const { token } = response.data;
-      console.log('token '+ token);
+        const  token  = response.data.tokens.access.token;
+        console.log('token response '+ token);
+        
+        localStorage.setItem('token', token); // Store token in localStorage
       
-      localStorage.setItem('token', token); // Store token in localStorage
+      
       return token;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -105,7 +107,21 @@ export const logoutAsync = createAsyncThunk(
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem('token');
+      state.token = null;
+      state.user = null;
+      state.status = 'idle';
+      state.error = null;
+    },
+    rehydrateToken: (state) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        state.token = token;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.pending, (state) => {
@@ -114,6 +130,7 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.token = action.payload;
+        console.log("token: " + state.token);
         state.isLoggedIn = true;
         state.isLoading = false;
         state.error = null;
@@ -174,5 +191,6 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 
+export const { rehydrateToken } = authSlice.actions;
 // Export async actions
 export { loginAsync as login, registerEmailAsync as registerEmail, registerAsync as register, logoutAsync as logout, codeVerifyAsync as verify };

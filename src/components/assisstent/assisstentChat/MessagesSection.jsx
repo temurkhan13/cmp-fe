@@ -146,9 +146,12 @@ const MessagesSection = () => {
         };
       }
       return message;
+
     });
 
     setChat(updatedChat);
+    dispatch(updateChatMessages(selectedChatId, updatedChat));
+
     setPopupVisible(false);
   };
 

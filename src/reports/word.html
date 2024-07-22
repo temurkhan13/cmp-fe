@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Word Document</title>
     <style>
       body {
         margin: 0;
@@ -60,15 +59,19 @@
     </style>
   </head>
   <body>
-    <div class="page page-content-one">
+    <div class="page first-page">
       <img src="../../src/assets/dashboard/logo.svg" alt="Logo" class="logo" />
       <div class="heading">Word Document Heading</div>
+    </div>
+    <div class="page page-content-one">
+      <img src="../../src/assets/dashboard/logo.svg" alt="Logo" class="logo" />
+      <div class="heading">Table of content</div>
     </div>
 
     <div class="page page-content-two">
       <div class="report-title">Word Document Report Title</div>
       <div class="content">
-        <p>Additional content for the Word document.</p>
+        <p>{{ReportData}}</p>
       </div>
     </div>
   </body>

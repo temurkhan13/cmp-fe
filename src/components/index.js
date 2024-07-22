@@ -3,6 +3,7 @@ import * as Feature from './feature';
 import * as UI from './ui';
 import * as Assistant from './assisstent';
 import * as Dashboard from './dashboard';
+import * as Reports from './reports';
 
 const Components = {
   Common,
@@ -10,6 +11,7 @@ const Components = {
   UI,
   Assistant,
   Dashboard,
+  Reports,
 };
 
 export default Components;
