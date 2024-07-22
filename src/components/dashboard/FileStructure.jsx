@@ -3,103 +3,99 @@ import { BiSolidFolderOpen } from 'react-icons/bi';
 const FileStructure = () => {
   const files = [
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing6',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing7',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing8',
     },
     {
-      icon: <BiSolidFolderOpen />,
-      name: 'Testing8',
-    },
-    {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing8',
     },
   ];
@@ -148,12 +144,17 @@ const FileStructure = () => {
             }
             .file {
               cursor: pointer;
-          margin:0 0.5rem;
+          margin:0.5rem;
           font-size:1.3rem;
           text-align: center;
+          padding:0.5rem;
+          &:hover{
+          background-color: #f0f0f0;
+          border-radius:0.8rem;
+          }
         }
           .icon{
-          font-size: 5rem;
+          // font-size: 5rem;
           color:gray;
           }
         .file-count {

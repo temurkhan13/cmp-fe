@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CiFaceSmile, CiFaceFrown, CiFaceMeh } from 'react-icons/ci';
 
 const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
   const [feedback, setFeedback] = useState('');
-  const [mood, setMood] = useState(null);
   const [rating, setRating] = useState(null);
 
   const handleRadioChange = (option) => {
@@ -32,10 +30,6 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
     setFeedback(event.target.value);
   };
 
-  const handleMoodClick = (mood) => {
-    setMood(mood);
-  };
-
   const handleRatingClick = (number) => {
     setRating(number);
   };
@@ -44,7 +38,6 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
     console.log('Selected Option:', selectedOption);
     console.log('Selected Checkboxes:', selectedCheckboxes);
     console.log('Feedback:', feedback);
-    console.log('Mood:', mood);
     console.log('Rating:', rating);
   };
 
@@ -105,7 +98,7 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
           ))}
         </div>
         <div className="mood-section">
-          <div className="face-moods">
+          {/* <div className="face-moods">
             <CiFaceSmile
               className={`face-icon ${mood === 'smile' ? 'active-smile' : ''}`}
               onClick={() => handleMoodClick('smile')}
@@ -118,7 +111,7 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
               className={`face-icon ${mood === 'frown' ? 'active-frown' : ''}`}
               onClick={() => handleMoodClick('frown')}
             />
-          </div>
+          </div> */}
           <label className="feedback-label">Your Feedback</label>
           <textarea
             value={feedback}

@@ -22,7 +22,7 @@ const RecentCards = ({ chats }) => (
             <MdOutlineEdit />
           </div>
           <div className="content">
-            <h3 className="ai-heading">
+            <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
               <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
               ChangeAI
             </h3>

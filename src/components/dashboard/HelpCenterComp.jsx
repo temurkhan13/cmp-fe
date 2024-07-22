@@ -14,6 +14,7 @@ import {
   FaOpera,
   FaMicrosoft,
 } from 'react-icons/fa';
+import heading from '../../assets/dashboard/heading.svg';
 
 const HelpCenterComp = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,77 +27,152 @@ const HelpCenterComp = () => {
     {
       name: 'Introduction to AI',
       href: '#section1',
-      icon: <FaApple size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaApple
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'Machine Learning Overview',
       href: '#section2',
-      icon: <FaAndroid size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaAndroid
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'Deep Learning Basics',
       href: '#section3',
-      icon: <FaWindows size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaWindows
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'Neural Networks',
       href: '#section4',
-      icon: <FaLinux size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaLinux
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI Applications',
       href: '#section5',
-      icon: <FaChrome size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaChrome
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'Future of AI',
       href: '#section6',
-      icon: <FaFirefox size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaFirefox
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI in Healthcare',
       href: '#section7',
-      icon: <FaSafari size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaSafari
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI in Finance',
       href: '#section8',
-      icon: <FaEdge size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaEdge
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI in Robotics',
       href: '#section9',
-      icon: <FaInternetExplorer size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaInternetExplorer
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'Ethics in AI',
       href: '#section10',
-      icon: <FaOpera size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaOpera
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI Research',
       href: '#section11',
-      icon: <FaMicrosoft size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaMicrosoft
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI Startups',
       href: '#section12',
-      icon: <FaApple size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaApple
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI Conferences',
       href: '#section13',
-      icon: <FaAndroid size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaAndroid
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'AI Tools',
       href: '#section14',
-      icon: <FaWindows size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaWindows
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
     {
       name: 'Getting Started with AI',
       href: '#section15',
-      icon: <FaLinux size={26} style={{ marginRight: '1rem' }} />,
+      icon: (
+        <FaLinux
+          size={26}
+          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
+        />
+      ),
     },
   ];
 
@@ -123,6 +199,9 @@ const HelpCenterComp = () => {
           sidebarOpen ? 'sidebar-open' : 'sidebar-closed'
         }`}
       >
+        <div className="help-Heading">
+          Revolutionizing world through smart Innovation
+        </div>
         <section id="section1">
           <h2>AI Introduction</h2>
           <p>
@@ -305,6 +384,19 @@ const HelpCenterComp = () => {
           align-items: flex-start;
           position: relative;
         }
+          .help-Heading{
+          padding:5rem;
+          width:100%;
+          font-size:3.5rem;
+          font-weight:600;
+          text-align:center;
+          margin-bottom:2rem;
+          color:white;
+          border-radius:2rem;
+          background-image:url(${heading});
+          background-repeat:no-repeat;
+          background-size: cover;
+          }
         .helpcenter-sidebar {
           position: fixed;
           top: 50%;
@@ -315,7 +407,7 @@ const HelpCenterComp = () => {
           box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
           overflow-y: auto;
           transition: transform 0.3s ease;
-          transform: translateY(-50%) translateX(82%);
+          transform: translateY(-50%) translateX(79%);
           z-index: 1000;
           display: flex;
           flex-direction: column;
@@ -327,7 +419,7 @@ const HelpCenterComp = () => {
         .sidebar-toggle {
           position: absolute;
           top: 1rem;
-          left: 1rem;
+          left: 2rem;
           background: none;
           border: none;
           cursor: pointer;

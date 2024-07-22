@@ -2,6 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Header from '@components/dashboard/Header';
+// import RecentCard from '../../components/dashboard/RecentCard';
+import card1 from '../../assets/dashboard/card1.svg';
 import FileStructure from '../../components/dashboard/FileStructure';
 
 import { RxCross2 } from 'react-icons/rx';
@@ -9,31 +11,43 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { PiFilesFill } from 'react-icons/pi';
 import { FaFolderOpen, FaNetworkWired } from 'react-icons/fa';
 import { BiSolidCollection, BiSolidFolderOpen } from 'react-icons/bi';
+import { BsWindowStack } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
+import { GoPlus } from 'react-icons/go';
+import { TiPlus } from 'react-icons/ti';
+import { BsFilterLeft } from 'react-icons/bs';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { BsFilterCircle } from 'react-icons/bs';
+import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
+import { TfiMenuAlt } from 'react-icons/tfi';
+import { SlArrowRight } from 'react-icons/sl';
+import { SlArrowLeft } from 'react-icons/sl';
+import { CgMenuGridR } from 'react-icons/cg';
 
 const cardData = [
   {
-    icon: <BiSolidCollection style={{ fontSize: '2rem' }} />,
-    title: 'Total WorkSpaces',
+    icon: <BiSolidCollection style={{ fontSize: '3.5rem', color: 'gray ' }} />,
+    title: 'WorkSpaces',
     count: 30,
-    hoverColor: '#e0f7fa',
+    background: card1,
   },
   {
-    icon: <PiFilesFill style={{ fontSize: '2rem' }} />,
-    title: 'Total Assessments',
+    icon: <PiFilesFill style={{ fontSize: '3.5rem', color: 'gray' }} />,
+    title: 'Assessments',
     count: 30,
-    hoverColor: '#ffebee',
+    background: card1,
   },
   {
-    icon: <BiSolidFolderOpen style={{ fontSize: '2rem' }} />,
-    title: 'Total chat Assistants',
+    icon: <BiSolidFolderOpen style={{ fontSize: '3.5rem', color: 'gray' }} />,
+    title: 'Chat Assistants',
     count: 30,
-    hoverColor: '#f3e5f5',
+    background: card1,
   },
   {
-    icon: <FaNetworkWired style={{ fontSize: '2rem' }} />,
-    title: 'Total Wireframes',
+    icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
+    title: 'Wireframes',
     count: 30,
-    hoverColor: '#fff3e0',
+    background: card1,
   },
 ];
 
@@ -1110,17 +1124,6 @@ const DashboardHomeComp = () => {
     { name: 'Reinforcement Learning Concepts' },
     { name: 'AI and Ethics' },
     { name: 'AI in Healthcare Applications' },
-    { name: 'AI in Financial Services' },
-    { name: 'Data Science Techniques' },
-    { name: 'Predictive Modeling' },
-    { name: 'AI and Privacy' },
-    { name: 'Computer Vision Applications' },
-    { name: 'Deep Learning Explained' },
-    { name: 'AI for Beginners' },
-    { name: 'AI Research Papers' },
-    { name: 'Natural Language Processing Guide' },
-    { name: 'Understanding AI Algorithms' },
-    { name: 'AI in Marketing' },
   ];
 
   const toggleModal = (folder) => {
@@ -1152,26 +1155,43 @@ const DashboardHomeComp = () => {
         {cardData.map((card, index) => (
           <div
             key={index}
-            className="card"
-            style={{ '--hover-color': card.hoverColor }}
+            className="dashboard-card"
+            style={{
+              background: `url(${card.background}) no-repeat`,
+              backgroundSize: 'cover',
+            }}
           >
-            <p className="count-heading">
-              {card.icon}
-              {card.title}
-            </p>
-            <p className="counts">{card.count}</p>
+            <div className="count-heading">
+              <div>{card.icon}</div>
+              <div>{card.title}</div>
+            </div>
+            <div
+              className="counts"
+              style={{
+                fontSize: `${
+                  String(card.count).length > 3 ? '2.8rem' : '5rem'
+                }`,
+              }}
+            >
+              {card.count}
+            </div>
           </div>
         ))}
       </div>
 
       <div className="collection">
-        <p className="collection-heading">WorkSpaces</p>
-        <button
-          className="workspace-btn"
-          onClick={() => setIsNewWorkspaceModalOpen(true)}
-        >
-          New WorkSpace <AiOutlinePlus style={{ fontSize: '2rem' }} />
-        </button>
+        {/* <p>WorkSpace</p> */}
+        <div className="workspace-header">
+          <p className="collection-heading">Workspaces</p>
+          <button
+            className="workspace-btn"
+            onClick={() => setIsNewWorkspaceModalOpen(true)}
+          >
+            New WorkSpace <AiOutlinePlus style={{ fontSize: '2rem' }} />
+          </button>
+        </div>
+        {/* <hr className="straight-line" /> */}
+
         <div className="icons">
           {folders.map((folder, index) => (
             <div
@@ -1183,14 +1203,14 @@ const DashboardHomeComp = () => {
               }}
             >
               <div className="icon-container">
-                <BiSolidCollection
+                <BsWindowStack
                   onClick={() => toggleModal(folder)}
                   className="collection-icon"
                 />
+                <span style={{ fontSize: '1.3rem' }} title={folder.name}>
+                  {truncateString(folder.name, 8)}
+                </span>
               </div>
-              <span style={{ fontSize: '1.3rem' }} title={folder.name}>
-                {truncateString(folder.name, 8)}
-              </span>
             </div>
           ))}
         </div>
@@ -1200,19 +1220,6 @@ const DashboardHomeComp = () => {
             <div className="modal-wrapper">
               <h3 className="modal-heading">{selectedFolder.name}</h3>
               <button
-                style={{
-                  border: 'none',
-                  outline: 'none',
-                  background: 'lightgray',
-                  width: '3rem',
-                  height: '3rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '1.8rem',
-                  borderRadius: '50%',
-                }}
                 className="modal-closebtn"
                 onClick={() => setIsModalOpen(false)}
               >
@@ -1223,38 +1230,39 @@ const DashboardHomeComp = () => {
               <ul>
                 <div className="modal-sections">
                   <div className="section1">
-                    <span className="section-heading">
+                    <div className="section-heading">
                       {selectedFolder.details.section1.heading}
-                    </span>
-                    {selectedFolder.details.section1.recentFiles.map(
-                      (item, index) => (
-                        <ul key={index}>
-                          <li className="section-list-item">
-                            <FaFolderOpen
-                              style={{
-                                marginRight: '8px',
-                                fontSize: '1.5rem',
-                                color: 'gray',
-                              }}
-                            />
-                            {item.name}
-                          </li>
-                        </ul>
-                      )
-                    )}
+                      <Link
+                        to="/assisstant/chat"
+                        target="_blank"
+                        className="link_chat"
+                      >
+                        New Assisstant <GoPlus style={{ fontSize: '2rem' }} />
+                      </Link>
+                    </div>
+                    <div className="folder-wrapper">
+                      {selectedFolder.details.section1.recentFiles.map(
+                        (item, index) => (
+                          <ul key={index}>
+                            <li className="section-list-item">
+                              <FaFolderOpen
+                                style={{
+                                  marginRight: '8px',
+                                  fontSize: '1.5rem',
+                                  color: 'gray',
+                                }}
+                              />
+                              {item.name}
+                            </li>
+                          </ul>
+                        )
+                      )}
+                    </div>
+                    <hr />
                     <div className="section-folders">
                       {selectedFolder.details.section1.folders.map(
                         (folder, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '1.2rem',
-                            }}
-                          >
+                          <div key={i} className="folder-icon">
                             <FaFolderOpen
                               style={{
                                 marginLeft: '8px',
@@ -1271,29 +1279,39 @@ const DashboardHomeComp = () => {
                     </div>
                   </div>
                   <div className="section2">
-                    <span className="section-heading">
+                    <div className="section-heading">
                       {selectedFolder.details.section2.heading}
-                    </span>
-                    {selectedFolder.details.section2.recentFiles.map(
-                      (item2, indx) => (
-                        <ul key={indx}>
-                          <li className="section-list-item">
-                            <FaFolderOpen
-                              style={{
-                                marginRight: '8px',
-                                fontSize: '1.5rem',
-                                color: 'gray',
-                              }}
-                            />
-                            {item2.name}
-                          </li>
-                        </ul>
-                      )
-                    )}
+                      <Link
+                        to="/assessment/chat"
+                        target="_blank"
+                        className="link_chat"
+                      >
+                        New Assessment <GoPlus style={{ fontSize: '2rem' }} />
+                      </Link>
+                    </div>
+                    <div className="folder-wrapper">
+                      {selectedFolder.details.section2.recentFiles.map(
+                        (item2, indx) => (
+                          <ul key={indx}>
+                            <li className="section-list-item">
+                              <FaFolderOpen
+                                style={{
+                                  marginRight: '8px',
+                                  fontSize: '1.5rem',
+                                  color: 'gray',
+                                }}
+                              />
+                              {item2.name}
+                            </li>
+                          </ul>
+                        )
+                      )}
+                    </div>
+                    <hr />
                     <div className="section-folders">
                       {selectedFolder.details.section2.folders.map(
                         (folder2, i) => (
-                          <div key={i}>
+                          <div key={i} className="folder-icon">
                             <FaFolderOpen
                               style={{
                                 marginLeft: '8px',
@@ -1315,28 +1333,78 @@ const DashboardHomeComp = () => {
           </div>
         )}
       </div>
-
-      <div className="files-and-folders">
-        <div className="files">
-          <p className="files-heading">AI Assessments</p>
-          <div className="heading">
-            <p>Recent</p>
-            <p className="see-less">See less</p>
+      <section className="generate" style={{ marginTop: '2rem' }}>
+        <div className="container">
+          <div className="left-buttons">
+            <button className="arrow-btn">
+              <SlArrowLeft />
+            </button>
+            <button className="arrow-btn">
+              <SlArrowRight />
+            </button>
+            <p className="assistant-heading">AI Assistant</p>
           </div>
-          <div className="file-list">
-            {mockFiles.map((file, index) => (
-              <div key={index} className="file-item">
-                <PiFilesFill style={{ fontSize: '6rem', color: 'gray' }} />
-                <span title={file.name}>{truncateString(file.name, 6)}</span>
-              </div>
-            ))}
+
+          <div className="center-buttons">
+            <div className="left-buttons">
+              <CgMenuGridR className="icon" />
+              <TfiMenuAlt className="icon-small" />
+            </div>
+            <div className="right-buttons">
+              <BsFilterLeft className="filter-icon" />
+              <MdOutlineKeyboardArrowDown className="icon-small" />
+            </div>
+            <div className="right-buttons">
+              <BsFilterCircle className="icon-small" />
+              <MdOutlineKeyboardArrowDown className="icon-small" />
+            </div>
+            <div className="right-buttons">
+              <HiAdjustmentsHorizontal className="adjustments-icon" />
+            </div>
+            <div>
+              <Link
+                to="/assisstant/chat"
+                target="_blank"
+                style={{ textDecoration: 'none' }}
+              >
+                <button className="ass-btn-ass">
+                  <TiPlus />
+                  New Assistant
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="folders">
-          <p className="files-heading">AI Assistant</p>
-          <FileStructure />
+      </section>
+      {/* <RecentCard /> */}
+
+      <div className="folders">
+        <p className="files-heading"></p>
+        <FileStructure />
+      </div>
+      <div className="files">
+        <p className="files-heading">AI Assessments</p>
+        <div className="heading">
+          <p>Recent</p>
+          <p className="see-less">See less</p>
+        </div>
+        <div className="file-list">
+          {mockFiles.map((file, index) => (
+            <div key={index} className="file-item">
+              <PiFilesFill style={{ fontSize: '6rem', color: 'gray' }} />
+              <span title={file.name}>{truncateString(file.name, 6)}</span>
+              {/* <span
+                style={{
+                  color: 'rgba(0, 102, 255, 1)',
+                }}
+              >
+                2 Files
+              </span> */}
+            </div>
+          ))}
         </div>
       </div>
+      {/* <div className="files-and-folders"></div> */}
 
       {isNewWorkspaceModalOpen && (
         <div className="modal">
@@ -1372,38 +1440,53 @@ const DashboardHomeComp = () => {
         }
           .counting-cards{
           display:flex;
+          // flex-direction:column;
           align-items: center;
           justify-content: center;
           gap: 1rem;
           margin-bottom:1rem;
+          margin:1rem 2rem;
+           @media screen and (max-width: 1240px) {
+           display: grid;
+           grid-template-columns: repeat(2, 1fr);
+           gap: 1.5rem;
+           }
           }
-          .card{
+          .dashboard-card{
           display:flex;
           flex-direction: column;
-          padding:2rem 0;
-          cursor:pointer;
+          padding:1rem;
           align-items: center;
           justify-content: space-around;
-          width:25rem;
-          background-color: white;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 20px;
-          transition:all 0.1s linear;
-          border-radius:1rem;
-          &:hover{
-            background-color: var(--hover-color);
-          }
+          width:30rem;
+          height:15rem;
+          background-position:right;
+          transition:all 0.1s linear; 
+          border-radius:2rem !important;
+          background-color: white !important;
+           @media screen and (max-width: 1240px) {
+            width: auto;
+            height:20rem;
+           }
           }
           .count-heading{
-          font-size: 1.5rem;
+          font-size: 2rem;
           font-weight: 500;
           display:flex;
-          align-items: center;
-          justify-content: center;
+          flex-direction:row-reverse;  
+          align-items: flex-start;
+          width:100%;
+          padding:0 1rem;
+          justify-content: space-between;
           }
           .counts{
-          font-size: 2.5rem;
-          font-weight:500;
-          color:#0B1444;
+          font-weight: bold;
+    color: gray;
+    width: 100%;
+    margin-left: 2rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
           }
         .collection{
           }
@@ -1422,8 +1505,6 @@ const DashboardHomeComp = () => {
           gap:0.5rem;
           border:none;
           outline:none;
-          margin-left:1rem;
-          margin-bottom:2rem;
           border-radius:1rem;
           font-size:1.5rem;
           font-weight:600;
@@ -1432,24 +1513,31 @@ const DashboardHomeComp = () => {
             }
           .collection-heading{
           font-size: 2.5rem;
+          font-weight: 500;
+          }
+          .workspace-header{
           display:flex;
           align-items: center;
-          justify-content: center;
-          margin-top:2rem;
-          margin:0 1rem;
-          margin-bottom:2rem;
-          font-weight: 600;
-          background-color:#f2f9cf;
-          color:#0B1444;
-          padding:5rem;
-          border-radius:1rem;
+          justify-content: space-between;
+          padding:2rem 2rem;
+          // background-color:lightgray;
+          border-radius:1.5rem;
+          margin:1rem 2rem;
+          // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          border:1px solid lightgray;
+          }
+          .straight-line{
+          width:95%;
+          margin:auto;
+          margin-bottom:1.5rem;
+          color:#ccc;
           }
         .icon-container {
           position: relative;
           display: inline-flex;
           flex-direction: column;
           align-items: center;
-          padding: 0.5rem;
+          padding:0.5rem 1rem;
           border-radius: 0.5rem;
         }
         .three-dots {
@@ -1479,13 +1567,13 @@ const DashboardHomeComp = () => {
           }
           .modal-heading{
           font-size: 2rem;
-          padding:1rem 0;
+          padding-bottom:1rem;
           }
           .modal-sections{
           display:flex;
-          gap:2rem;
+          gap:1rem;
           }
-          }
+          
           .modal-closebtn{
           border:none;
           outline:none;
@@ -1494,6 +1582,7 @@ const DashboardHomeComp = () => {
           font-size:2rem;
           padding:0.5rem;
           border-radius:50%;
+          margin-bottom:1rem;
           }
           .section-list-item{
           display:flex;
@@ -1504,38 +1593,43 @@ const DashboardHomeComp = () => {
           cursor:pointer;
           border-radius:0.8rem;
           &:hover{
-          background-color: lightgray;
+          background-color: #f1f1f1;
           }
           }
+           .section1,
           .section2{
-          border-left:2px solid #ccc;
-          padding-left:2rem;
+          border:1px solid #ccc;
+          padding:1rem;
+          border-radius:1rem;
           }
-          .section-folders{
-          display:flex;
-          align-items: center;
-          gap:1.5rem;
-
-          }
+          .section-folders {
+         display: flex;
+         align-items: center;
+        
+         gap: 1rem;
+         width: 35rem;
+         overflow-x: auto;
+         scrollbar-width: thin;
+         scrollbar-color: gray transparent;
+         }
           .files{
-          width:50%;
+          // width:50%;
+          padding:0 2rem;
           border-right:2px solid lightgray;
-        //   padding:0 2rem;
           }
           .files-heading{
           font-size: 2.5rem;
           display:flex;
           font-weight:600;
-        //   margin-top:3rem;
-          margin-bottom:2rem;
-          padding:0 2rem;
+          margin-top:2rem;
+          padding:0 3rem;
           }
         .file-list {
           display: flex;
           flex-wrap:wrap;
           flex-direction: row;
-          justify-content:center;
-        //   gap: 1rem;
+          // justify-content:center;
+          gap: 1rem;
         }
         .file-item {
           display: flex;
@@ -1544,11 +1638,11 @@ const DashboardHomeComp = () => {
           color: gray;
           cursor: pointer;
           font-size: 1.25rem;
-          gap: 1rem;
+          gap: 0.1rem;
           padding: 0.5rem;
-          border-radius: 0.5rem;
+          border-radius: 0.8rem;
           &:hover {
-            background-color: lightgray;
+            background-color: #f0f0f0;
           }
         }
         .file-item span {
@@ -1557,10 +1651,12 @@ const DashboardHomeComp = () => {
           .section-heading{
           font-size: 1.5rem;
           font-weight: bold;
+          display:flex;
+          justify-content:space-between;
           }
           .folders{
-          width:50%;
-        //   padding:0 2rem;
+          // width:50%;
+          // gap:1rem;
           }
           input {
             width: 100%;
@@ -1597,8 +1693,116 @@ const DashboardHomeComp = () => {
           .files-and-folders{
           margin-top:5em;
           display:flex;
-          
           }
+          .folder-wrapper{
+          height:18rem;
+          overflow-y:auto;
+         scrollbar-width: thin;
+         scrollbar-color: lightgray transparent;
+        //  border:1px solid lightgray;
+        //  padding:1rem;
+        //  border-radius:1rem;
+         margin-top:1rem;
+          }
+            .folder-icon{
+            padding:0.5rem;
+            border-radius:0.8rem;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            font-size:1.3rem;
+            &:hover{
+            background-color:#f0f0f0;
+            cursor:pointer;
+            }
+            }
+            .link_chat{
+            display:flex;
+            align-items:center;
+            justify-content: center;
+            text-decoration:none;
+            border:none;
+            outline:none;
+            color:#0B1444;
+            padding:0.5rem 1rem;
+            border-radius:0.5rem;
+            background-color:#C3E11D;
+            }
+            .generate {
+  background-color: rgba(249, 249, 249, 1);
+}
+
+.generate .container {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1%;
+  height: 10vh;
+}
+
+.generate .arrow-btn {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.generate .assistant-heading {
+  font-family: 'Poppins';
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: 0.12px;
+  text-align: left;
+  color: black;
+}
+
+.generate .ass-btn-ass {
+  background-color: rgba(10, 10, 10, 1);
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  border-radius: 8px;
+  margin-left: 10px;
+  padding: 10px 20px;
+}
+
+.generate .left-buttons,
+.generate .center-buttons,
+.generate .right-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generate .center-buttons {
+  justify-content: space-between;
+}
+
+.generate .icon {
+  font-size: 26px;
+}
+
+.generate .icon-small {
+  margin-right: 30px;
+  margin-left: 5px;
+  font-size: 18px;
+}
+
+.generate .filter-icon {
+  font-size: 22px;
+}
+
+.generate .adjustments-icon {
+  margin-right: 30px;
+  font-size: 22px;
+}
+
       `}</style>
     </div>
   );
