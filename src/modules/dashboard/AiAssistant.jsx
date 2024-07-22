@@ -1,12 +1,14 @@
+import { useEffect, useState } from 'react';
+
 import Component from '@components';
 import useManagerChat from '@hooks/useManagerChat';
 import DashboardLayout from '@layout/DashboardLayout';
 import RecentCards from '../../components/dashboard/RecentCard';
-import { useEffect, useState } from 'react';
 
 const AiAssistant = () => {
   const { managerData, error } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     if (managerData) {
       setIsLoading(false);

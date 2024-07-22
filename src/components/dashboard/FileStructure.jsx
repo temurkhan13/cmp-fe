@@ -3,103 +3,99 @@ import { BiSolidFolderOpen } from 'react-icons/bi';
 const FileStructure = () => {
   const files = [
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing1',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing2',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing3',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Assistant',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing5',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing6',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing7',
     },
     {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing8',
     },
     {
-      icon: <BiSolidFolderOpen />,
-      name: 'Testing8',
-    },
-    {
-      icon: <BiSolidFolderOpen />,
+      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
       name: 'Testing8',
     },
   ];
@@ -123,7 +119,8 @@ const FileStructure = () => {
 
       <style>{`
         .folders-files {
-          padding: 20px;
+          // padding: 20px;
+          padding:0 2rem;
         }
         .heading {
           display: flex;
@@ -131,7 +128,9 @@ const FileStructure = () => {
           font-size:1.5em;
           font-weight:500;
           align-items: center;
-          // margin-bottom: 15px;
+          margin-right:4rem;
+          margin-left:2rem;
+
         }
         .see-less {
           font-weight: normal;
@@ -145,12 +144,17 @@ const FileStructure = () => {
             }
             .file {
               cursor: pointer;
-          margin: 10px;
+          margin:0.5rem;
           font-size:1.3rem;
           text-align: center;
+          padding:0.5rem;
+          &:hover{
+          background-color: #f0f0f0;
+          border-radius:0.8rem;
+          }
         }
           .icon{
-          font-size: 5rem;
+          // font-size: 5rem;
           color:gray;
           }
         .file-count {
