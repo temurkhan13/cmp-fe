@@ -101,7 +101,7 @@ const FileStructure = () => {
   ];
 
   return (
-    <section className="folders-files">
+    <section className="folders-files" style={{ marginTop: '2rem' }}>
       <div className="heading">
         <p>Yesterday</p>
         <p className="see-less">See less</p>
@@ -119,7 +119,6 @@ const FileStructure = () => {
 
       <style>{`
         .folders-files {
-          // padding: 20px;
           padding:0 2rem;
         }
         .heading {
@@ -130,7 +129,6 @@ const FileStructure = () => {
           align-items: center;
           margin-right:4rem;
           margin-left:2rem;
-
         }
         .see-less {
           font-weight: normal;
@@ -154,7 +152,6 @@ const FileStructure = () => {
           }
         }
           .icon{
-          // font-size: 5rem;
           color:gray;
           }
         .file-count {

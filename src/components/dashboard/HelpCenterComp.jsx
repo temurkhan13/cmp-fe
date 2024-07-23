@@ -27,158 +27,86 @@ const HelpCenterComp = () => {
     {
       name: 'Introduction to AI',
       href: '#section1',
-      icon: (
-        <FaApple
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaApple />,
     },
     {
       name: 'Machine Learning Overview',
       href: '#section2',
-      icon: (
-        <FaAndroid
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaAndroid />,
     },
     {
       name: 'Deep Learning Basics',
       href: '#section3',
-      icon: (
-        <FaWindows
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaWindows />,
     },
     {
       name: 'Neural Networks',
       href: '#section4',
-      icon: (
-        <FaLinux
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaLinux />,
     },
     {
       name: 'AI Applications',
       href: '#section5',
-      icon: (
-        <FaChrome
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaChrome />,
     },
     {
       name: 'Future of AI',
       href: '#section6',
-      icon: (
-        <FaFirefox
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaFirefox />,
     },
     {
       name: 'AI in Healthcare',
       href: '#section7',
-      icon: (
-        <FaSafari
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaSafari />,
     },
     {
       name: 'AI in Finance',
       href: '#section8',
-      icon: (
-        <FaEdge
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaEdge />,
     },
     {
       name: 'AI in Robotics',
       href: '#section9',
-      icon: (
-        <FaInternetExplorer
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaInternetExplorer />,
     },
     {
       name: 'Ethics in AI',
       href: '#section10',
-      icon: (
-        <FaOpera
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaOpera />,
     },
     {
       name: 'AI Research',
       href: '#section11',
-      icon: (
-        <FaMicrosoft
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaMicrosoft />,
     },
     {
       name: 'AI Startups',
       href: '#section12',
-      icon: (
-        <FaApple
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaApple />,
     },
     {
       name: 'AI Conferences',
       href: '#section13',
-      icon: (
-        <FaAndroid
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaAndroid />,
     },
     {
       name: 'AI Tools',
       href: '#section14',
-      icon: (
-        <FaWindows
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaWindows />,
     },
     {
       name: 'Getting Started with AI',
       href: '#section15',
-      icon: (
-        <FaLinux
-          size={26}
-          style={{ marginRight: '1rem', color: 'gray', marginLeft: '1rem' }}
-        />
-      ),
+      icon: <FaLinux />,
     },
   ];
 
   return (
     <div className="helpcenter-wrapper">
-      <div className={`helpcenter-sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <div
+        className={`helpcenter-sidebar ${sidebarOpen ? 'open' : ''}`}
+        onClick={!sidebarOpen ? toggleSidebar : null}
+      >
         <button onClick={toggleSidebar} className="sidebar-toggle">
           {sidebarOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -189,7 +117,16 @@ const HelpCenterComp = () => {
               index === options.length - 1 ? 'last' : ''
             }`}
           >
-            {option.icon}
+            <span
+              style={{
+                marginLeft: '0.5rem',
+                marginRight: '0.5rem',
+                color: 'gray',
+                fontSize: '1.8rem',
+              }}
+            >
+              {option.icon}
+            </span>
             <a href={option.href}>{option.name}</a>
           </div>
         ))}
@@ -212,168 +149,6 @@ const HelpCenterComp = () => {
             about intelligent automata... AI has various applications across
             different industries, including healthcare, finance, and more...
             Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI... Artificial Intelligence (AI) refers
-            to the simulation of human intelligence in machines... AI involves
-            creating systems that can perform tasks that typically require human
-            intelligence... The concept of AI dates back to ancient history,
-            with myths and stories about intelligent automata... AI has various
-            applications across different industries, including healthcare,
-            finance, and more... Technologies such as machine learning, deep
-            learning, and neural networks are integral to AI... Artificial
-            Intelligence (AI) refers to the simulation of human intelligence in
-            machines... AI involves creating systems that can perform tasks that
-            typically require human intelligence... The concept of AI dates back
-            to ancient history, with myths and stories about intelligent
-            automata... AI has various applications across different industries,
-            including healthcare, finance, and more... Technologies such as
-            machine learning, deep learning, and neural networks are integral to
-            AI... Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI...
-          </p>
-        </section>
-        <section id="section2">
-          <h2>AI Introduction</h2>
-          <p>
-            Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI... Artificial Intelligence (AI) refers
-            to the simulation of human intelligence in machines... AI involves
-            creating systems that can perform tasks that typically require human
-            intelligence... The concept of AI dates back to ancient history,
-            with myths and stories about intelligent automata... AI has various
-            applications across different industries, including healthcare,
-            finance, and more... Technologies such as machine learning, deep
-            learning, and neural networks are integral to AI... Artificial
-            Intelligence (AI) refers to the simulation of human intelligence in
-            machines... AI involves creating systems that can perform tasks that
-            typically require human intelligence... The concept of AI dates back
-            to ancient history, with myths and stories about intelligent
-            automata... AI has various applications across different industries,
-            including healthcare, finance, and more... Technologies such as
-            machine learning, deep learning, and neural networks are integral to
-            AI... Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI...
-          </p>
-        </section>
-        <section id="section3">
-          <h2>AI Introduction</h2>
-          <p>
-            Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI... Artificial Intelligence (AI) refers
-            to the simulation of human intelligence in machines... AI involves
-            creating systems that can perform tasks that typically require human
-            intelligence... The concept of AI dates back to ancient history,
-            with myths and stories about intelligent automata... AI has various
-            applications across different industries, including healthcare,
-            finance, and more... Technologies such as machine learning, deep
-            learning, and neural networks are integral to AI... Artificial
-            Intelligence (AI) refers to the simulation of human intelligence in
-            machines... AI involves creating systems that can perform tasks that
-            typically require human intelligence... The concept of AI dates back
-            to ancient history, with myths and stories about intelligent
-            automata... AI has various applications across different industries,
-            including healthcare, finance, and more... Technologies such as
-            machine learning, deep learning, and neural networks are integral to
-            AI... Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI...
-          </p>
-        </section>{' '}
-        <section id="section4">
-          <h2>AI Introduction</h2>
-          <p>
-            Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI... Artificial Intelligence (AI) refers
-            to the simulation of human intelligence in machines... AI involves
-            creating systems that can perform tasks that typically require human
-            intelligence... The concept of AI dates back to ancient history,
-            with myths and stories about intelligent automata... AI has various
-            applications across different industries, including healthcare,
-            finance, and more... Technologies such as machine learning, deep
-            learning, and neural networks are integral to AI... Artificial
-            Intelligence (AI) refers to the simulation of human intelligence in
-            machines... AI involves creating systems that can perform tasks that
-            typically require human intelligence... The concept of AI dates back
-            to ancient history, with myths and stories about intelligent
-            automata... AI has various applications across different industries,
-            including healthcare, finance, and more... Technologies such as
-            machine learning, deep learning, and neural networks are integral to
-            AI... Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI...
-          </p>
-        </section>{' '}
-        <section id="section5">
-          <h2>AI Introduction</h2>
-          <p>
-            Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI... Artificial Intelligence (AI) refers
-            to the simulation of human intelligence in machines... AI involves
-            creating systems that can perform tasks that typically require human
-            intelligence... The concept of AI dates back to ancient history,
-            with myths and stories about intelligent automata... AI has various
-            applications across different industries, including healthcare,
-            finance, and more... Technologies such as machine learning, deep
-            learning, and neural networks are integral to AI... Artificial
-            Intelligence (AI) refers to the simulation of human intelligence in
-            machines... AI involves creating systems that can perform tasks that
-            typically require human intelligence... The concept of AI dates back
-            to ancient history, with myths and stories about intelligent
-            automata... AI has various applications across different industries,
-            including healthcare, finance, and more... Technologies such as
-            machine learning, deep learning, and neural networks are integral to
-            AI... Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
             networks are integral to AI...
           </p>
         </section>
@@ -384,34 +159,33 @@ const HelpCenterComp = () => {
           align-items: flex-start;
           position: relative;
         }
-          .help-Heading{
-          padding:5rem;
-          width:100%;
-          font-size:3.5rem;
-          font-weight:600;
-          text-align:center;
-          margin-bottom:2rem;
-          color:white;
-          border-radius:2rem;
-          background-image:url(${heading});
-          background-repeat:no-repeat;
+        .help-Heading {
+          padding: 5rem;
+          width: 100%;
+          font-size: 3.5rem;
+          font-weight: 600;
+          text-align: center;
+          margin-bottom: 2rem;
+          color: white;
+          border-radius: 2rem;
+          background-image: url(${heading});
+          background-repeat: no-repeat;
           background-size: cover;
-          }
+        }
         .helpcenter-sidebar {
           position: fixed;
           top: 50%;
           right: 0;
           width: 25rem;
           height: 80vh;
-          // background-color: #f4f4f4;
-          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
           overflow-y: auto;
-          transition: transform 0.3s ease;
-          transform: translateY(-50%) translateX(79%);
           z-index: 1000;
           display: flex;
-          flex-direction: column;
           border-radius: 1rem;
+          flex-direction: column;
+          transition: transform 0.3s ease;
+          transform: translateY(-50%) translateX(84%);
+          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
         }
         .helpcenter-sidebar.open {
           transform: translateY(-50%) translateX(0);
@@ -419,7 +193,7 @@ const HelpCenterComp = () => {
         .sidebar-toggle {
           position: absolute;
           top: 1rem;
-          left: 2rem;
+          left: 1rem;
           background: none;
           border: none;
           cursor: pointer;
@@ -434,10 +208,14 @@ const HelpCenterComp = () => {
           transition: all 0.2s ease-in-out;
           padding: 1rem 0.8rem;
           border-radius: 0.8rem;
+          span{
+          display:flex;
+          }
         }
         .sidebar-option:hover {
           background-color: #ccc;
           color: black;
+          cursor: pointer;
         }
         .sidebar-option.first {
           margin-top: 4rem;

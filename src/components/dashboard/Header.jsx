@@ -18,8 +18,8 @@ const Header = () => {
   return (
     <header className="header">
       <div>
-        {/* <IoSearch className="SearchIcon" />
-        <input type="text" placeholder="Search in Ai assistant" /> */}
+        {/* <IoSearch className="SearchIcon" /> */}
+        {/* <input type="text" placeholder="Search in Ai assistant" /> */}
       </div>
 
       <div className="ProfileBar">
@@ -45,7 +45,7 @@ const Header = () => {
           display: flex;
           justify-content: space-between;
           padding: 1% 2%;
-          height: 10vh;
+          // height: 10vh;
         }
 
         .ProfileBar {
