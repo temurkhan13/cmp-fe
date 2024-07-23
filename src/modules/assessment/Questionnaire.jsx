@@ -7,7 +7,7 @@ import { TbExclamationCircle } from 'react-icons/tb';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import data from '../../data';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useInspire from '../../hooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 // import ReactMarkdown from 'react-markdown';
@@ -80,7 +80,9 @@ const Questionnaire = () => {
     <div className={styles.MainContainer}>
       <div className={styles.header}>
         <p>User Questionnaire</p>
-        <button>Exit</button>
+        <Link to="/dashboard">
+          <button>Exit</button>
+        </Link>
       </div>
 
       <div className={styles.Container}>
