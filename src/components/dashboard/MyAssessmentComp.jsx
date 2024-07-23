@@ -5,6 +5,7 @@ import useManagerChat from '@hooks/useManagerChat';
 
 // import Switch from 'react-switch';
 import { PiFilesFill } from 'react-icons/pi';
+import { Link } from 'react-router-dom';
 // import RecentCards from '../../components/dashboard/RecentCard';
 
 const MyAssessmentComp = () => {
@@ -74,8 +75,12 @@ const MyAssessmentComp = () => {
       <div className="section">
         <p className="sectionTitle">AI Assessment</p>
         <div className="buttonGroup">
-          <button className="customizeButton">Customize</button>
-          <button className="addButton">Add New</button>
+          <Link to="/questionnaire">
+            <button className="customizeButton">Customize</button>
+          </Link>
+          <Link to="/assessment/chat">
+            <button className="addButton">Add New</button>
+          </Link>
         </div>
         <div className="files">
           {/* <p className="files-heading">Ai Assessments</p> */}
