@@ -14,7 +14,7 @@ const RecentCards = ({ chats }) => (
     {chats.map(([folderName, chatData]) => (
       <div key={chatData.id} className="card-wrapper">
         <div className="card">
-          <div className="header">
+          <div className="card-header">
             <h2 className="userName">
               <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
             </h2>
@@ -90,7 +90,7 @@ const RecentCards = ({ chats }) => (
         transition: all 0.1s ease-in-out;
         }
       }
-      .header {
+      .card-header {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
