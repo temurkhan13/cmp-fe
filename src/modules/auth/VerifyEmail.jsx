@@ -47,12 +47,13 @@ const VerifyEmail = () => {
             <Form>
               <Components.Feature.VerifyCode
                 name="number"
+                type="number"
                 label="Verification Code"
                 place="Enter 6-digit code"
                 //handleVerification={(value) => verifyEmail({ value })}
                 handleVerification={(value) => 
                  {
-                  const response = dispatch(verify({ value }));
+                  const response = dispatch(verify(value));
                   if(response.data){
                     navigate('/choose-plain');
                   }

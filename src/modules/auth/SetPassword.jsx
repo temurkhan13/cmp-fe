@@ -32,17 +32,14 @@ const SetPassword = () => {
     try {
       // Dispatch async action to register email and get verification code
       const password = values.password;
-      const response = await dispatch(register({registrationData, password}));
-      
-      if (response.data && response.data.tokens && response.data.tokens.access) {
-        localStorage.setItem('token', response.data.tokens.access.token);
-          navigate('/verify-email', { state: { email: registrationData.email } });
-        if (response.data) {
+      dispatch(register({registrationData, password}));       
+
+      navigate('/verify-email', { state: { email: registrationData.email } });
           // Store the token in localStorage
-      //    localStorage.setItem('token', response.data.tokens.access.token);
-      //    navigate('/verify-email', { state: { email: registrationData.email } });
-        }
-    } 
+       //   localStorage.setItem('token', response.data.tokens.access.token);
+       //   navigate('/verify-email', { state: { email: registrationData.email } });
+        
+    
   }
     catch (error) {
       console.error('Registration failed:', error);
@@ -74,11 +71,13 @@ const SetPassword = () => {
           {(formik) => (
             <Form>
               <Components.Feature.FormInput
+              type = "password"
                 name="password"
                 label="Password"
                 place="Enter password"
               />
               <Components.Feature.FormInput
+              type = "password"
                 name="confirmPassword"
                 label="Confirm Password"
                 place="Confirm password"

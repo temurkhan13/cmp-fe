@@ -71,7 +71,10 @@ export const registerAsync = createAsyncThunk(
         jobTitle: registrationData.jobTitle,
 
       });
-      const { token } = response.data;
+      console.log(response); // Log the entire response object
+      console.log(response.data); // Log the data part of the response
+      const  token  = response.data.tokens.access.token;
+      console.log(token);
       localStorage.setItem('token', token); // Store token in localStorage
       return token;
     } catch (error) {
@@ -83,10 +86,22 @@ export const registerAsync = createAsyncThunk(
 // Async thunk action to handle email registration and get verification code
 export const codeVerifyAsync = createAsyncThunk(
     'auth/verification',
-    async (code, thunkAPI) => {
+    async (value, thunkAPI) => {
       try {
+
+        // Retrieve token from localStorage
+      const token = localStorage.getItem('token');
+
+      // Set up the request headers with the token
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+      
+
         const response = await axios.post(baseURL+'/verification',
-             {"verificationCode": parseInt( code.value.newValue) });
+             {"verificationCode": value}, config);
         return response.data;
       } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);

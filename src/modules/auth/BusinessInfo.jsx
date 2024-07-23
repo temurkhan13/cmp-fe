@@ -80,6 +80,7 @@ const BusinessInfo = () => {
                     name="companySize"
                     label="What size is your company?"
                     place="Select size"
+                    type = "number"
                     data={dummyCompanySize}
                   />
                   <Components.Feature.FormInput
