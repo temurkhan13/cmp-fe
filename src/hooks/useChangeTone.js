@@ -13,8 +13,7 @@ const useChangeTone = () => {
       
       const response = await axios.post("http://139.59.4.99:3000/api/chat/change-tone", {
         message: inputText,
-        tone: selectedTone,
-        
+        tone: selectedTone,        
       },
      { headers: {
         'Content-Type': 'multipart/form-data',
