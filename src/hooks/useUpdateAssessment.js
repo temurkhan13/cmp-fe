@@ -3,11 +3,11 @@ import apiClient from '../api/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-const useStartAssessment = () => {
+const useUpdateAssessment = () => {
   const [error, setError] = useState(null);
   const businessInfo = useSelector((state) => state.businessInfo);
 
-  const StartAssessment = async (message, assessmentName, Questions) => {
+  const UpdateAssessment = async (message, assessmentName, Questions) => {
     try {
       console.log('assessmentName', assessmentName);
       console.log('Questions', Questions);
@@ -30,8 +30,7 @@ const useStartAssessment = () => {
         generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
         businessInfo: businessInfoData,
         assessmentName: assessmentName,
-      },
-      {
+      },{
         headers: {
         Authorization : `Bearer ${token}`
       }, });
@@ -42,7 +41,7 @@ const useStartAssessment = () => {
     }
   };
 
-  return { error, StartAssessment };
+  return { error, UpdateAssessment };
 };
 
-export default useStartAssessment;
+export default useUpdateAssessment;

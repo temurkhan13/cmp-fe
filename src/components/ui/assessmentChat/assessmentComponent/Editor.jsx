@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { useState, useRef, useMemo, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
-import  wordTemplate  from '../../../../reports/word.html';
 import WordReportTemplate from '../../../reports/WordReportTemplate';
 import ReactDOMServer from 'react-dom/server';
+
+import mockMarkdown from '../../../reports/mockMarkdown';
 //import HTMLtoDOCX from "html-to-docx";
 
 
@@ -12,17 +13,7 @@ const Editor = ({ placeholder, height }) => {
   const [content, setContent] = useState('');
   
 
-  const markdownData = `
-# Welcome to Our Service
-
-We are glad to have you here. Please explore the features below.
-
-- **Feature 1**: Easy to use
-- **Feature 2**: Dynamic rendering
-- **Feature 3**: Customizable components
-
-Feel free to contact us for more information.
-`;
+  const markdownData = mockMarkdown[0];
 
 // Generate HTML for TrioPage
 const reportHtml = ReactDOMServer.renderToStaticMarkup(

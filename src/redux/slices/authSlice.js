@@ -11,8 +11,8 @@ const initialState = {
 };
 
 
-const baseURL = 'http://139.59.4.99:3000/api/auth';
-
+//const baseURL = 'http://139.59.4.99:3000/api/auth';
+const baseURL = 'http://192.168.18.24:3000/api/auth';
 
 // Async thunk action to handle login
 export const loginAsync = createAsyncThunk(
@@ -88,20 +88,16 @@ export const codeVerifyAsync = createAsyncThunk(
     'auth/verification',
     async (value, thunkAPI) => {
       try {
-
         // Retrieve token from localStorage
       const token = localStorage.getItem('token');
-
       // Set up the request headers with the token
       const config = {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       };
-      
-
         const response = await axios.post(baseURL+'/verification',
-             {"verificationCode": value}, config);
+             {"verificationCode": value.newValue}, config);
         return response.data;
       } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);

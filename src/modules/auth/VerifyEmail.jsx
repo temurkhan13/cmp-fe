@@ -54,6 +54,7 @@ const VerifyEmail = () => {
                 handleVerification={(value) => 
                  {
                   const response = dispatch(verify(value));
+                  console.log(response.data);
                   if(response.data){
                     navigate('/choose-plain');
                   }

@@ -87,6 +87,7 @@ const SignIn = () => {
                   place="Enter email"
                 />
                 <Components.Feature.FormInput
+                type="password"
                   name="password"
                   label="Password"
                   place="Enter password"

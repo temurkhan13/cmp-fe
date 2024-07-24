@@ -8,25 +8,31 @@ const cardData = [
   {
     icon: <BiSolidCollection style={{ fontSize: '3.5rem', color: 'gray ' }} />,
     title: 'WorkSpaces',
-    count: 30,
+    count: 2,
     background: card1,
   },
   {
     icon: <PiFilesFill style={{ fontSize: '3.5rem', color: 'gray' }} />,
     title: 'Assessments',
-    count: 30,
+    count: 2,
     background: card1,
   },
   {
     icon: <BiSolidFolderOpen style={{ fontSize: '3.5rem', color: 'gray' }} />,
     title: 'Chat Assistants',
-    count: 30,
+    count: 8,
+    background: card1,
+  },
+  {
+    icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
+    title: 'Sitemap',
+    count: 0,
     background: card1,
   },
   {
     icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
     title: 'Wireframes',
-    count: 30,
+    count: 0,
     background: card1,
   },
 ];

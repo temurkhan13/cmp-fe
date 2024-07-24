@@ -10,6 +10,7 @@ const Page = styled.div`
   border: 1px solid #ccc;
   box-sizing: border-box;
   page-break-after: always;
+  overflow: hidden;
 
   @media print {
     box-shadow: none;
@@ -32,6 +33,7 @@ const CoverPageContainer = styled(Page)`
 
 const ContentPageContainer = styled(Page)`
   font-size: 16px;
+  white-space: pre-wrap; /* Preserve white space formatting */
 `;
 
 const EndingPageContainer = styled(Page)`
@@ -45,18 +47,46 @@ const EndingPageContainer = styled(Page)`
   }
 `;
 
-const WordReportTemplate = ({ content }) => (
-  <div>
-    <CoverPageContainer>
-      <h1>Cover Page Title</h1>
-    </CoverPageContainer>
-    <ContentPageContainer
-      dangerouslySetInnerHTML={{ __html: marked(content) }}
-    />
-    <EndingPageContainer>
-      <h1>Ending Page</h1>
-    </EndingPageContainer>
-  </div>
-);
+const splitContentIntoPages = (htmlContent) => {
+  const lines = htmlContent.split('\n');
+  const pages = [];
+  let currentPage = '';
+
+  lines.forEach(line => {
+    if (currentPage.length + line.length > 1800) { // Approximate character limit per page
+      pages.push(currentPage);
+      currentPage = '';
+    }
+    currentPage += line + '\n';
+  });
+
+  if (currentPage) {
+    pages.push(currentPage);
+  }
+
+  return pages;
+};
+
+const WordReportTemplate = ({ content }) => {
+  const htmlContent = marked(content);
+  const pages = splitContentIntoPages(htmlContent);
+
+  return (
+    <div>
+      <CoverPageContainer>
+        <h1>Cover Page Title</h1>
+      </CoverPageContainer>
+      {pages.map((pageContent, index) => (
+        <ContentPageContainer
+          key={index}
+          dangerouslySetInnerHTML={{ __html: pageContent }}
+        />
+      ))}
+      <EndingPageContainer>
+        <h1>Ending Page</h1>
+      </EndingPageContainer>
+    </div>
+  );
+};
 
 export default WordReportTemplate;

@@ -25,10 +25,10 @@ import useImproveWriting from '../../../hooks/useImproveWriting';
 import useChangeTone from '../../../hooks/useChangeTone';
 
 // response length
-import useAuto from '../../../hooks/useAuto';
-import useLonger from '../../../hooks/useLonger';
-import useShorter from '../../../hooks/useShorter';
 import useComprehensive from '../../../hooks/useComprehensive';
+import useAuto from '../../../hooks/useAuto';
+import useShorter from '../../../hooks/useShorter';
+import useLonger from '../../../hooks/useLonger';
 import usestartAssessment from '../../../hooks/usestartAssessment';
 // chat upload pdf & text
 import useChat from '../../../hooks/useChat';
@@ -39,10 +39,11 @@ const MessagesSection = ({ selectedAssessment }) => {
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
+  //
   const [chat, setChat] = useState([]);
+  const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
-  const [popupVisible, setPopupVisible] = useState(false);
   const [responseLength, setResponseLength] = useState('');
   const [askAi, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
