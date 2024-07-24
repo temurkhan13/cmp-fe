@@ -5,7 +5,7 @@ import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
 
 const Node = ({ data }) => {
-  const [nodeData, setNodeData] = useState([]);
+  const [nodeData, setNodeData] = useState(data.nodeData);
   const [hideLabelInput, setHideLabelInput] = useState(false);
   const inputRef = useRef();
 
