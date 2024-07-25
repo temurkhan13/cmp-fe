@@ -146,7 +146,6 @@ const MessagesSection = () => {
         };
       }
       return message;
-
     });
 
     setChat(updatedChat);
@@ -257,7 +256,7 @@ const MessagesSection = () => {
         />
 
         {chat.length > 0 ? (
-          <div>
+          <div className="chat-scroll">
             {popupVisible && (
               <TonePopup
                 onToneChange={handleToneChange}
