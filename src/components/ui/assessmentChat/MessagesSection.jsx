@@ -176,12 +176,30 @@ const MessagesSection = ({ selectedAssessment }) => {
     setPopupVisible(false);
   };
 
-  // select the text from chat
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-    setSelectedText(selectedText);
-    setPopupVisible(!!selectedText);
+
+    // Check if the selected text is within a ChangeAI or user message
+    const messageElements = document.querySelectorAll('.chat-message .card');
+
+    let isValidSelection = false;
+    messageElements.forEach((element) => {
+      const contentElement = element.querySelector('.msg');
+      if (contentElement && contentElement.contains(selection.anchorNode)) {
+        const messageRole = element.querySelector('.Heading').textContent;
+        if (messageRole === 'ChangeAI' || messageRole === 'You') {
+          isValidSelection = true;
+        }
+      }
+    });
+
+    if (isValidSelection) {
+      setSelectedText(selectedText);
+      setPopupVisible(!!selectedText);
+    } else {
+      setPopupVisible(false);
+    }
   };
 
   // handle Tone change

@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
 import { IoMdDocument } from 'react-icons/io';
 import { MdInsertLink } from 'react-icons/md';
-import { GrPrevious } from 'react-icons/gr';
-import { GrNext } from 'react-icons/gr';
+import { GrPrevious, GrNext } from 'react-icons/gr';
 import { IoIosChatboxes } from 'react-icons/io';
+import NoDataAvailable from '../../../common/NoDataAvailable';
 
 const Media = ({ images, documents, links }) => {
-  const [activeTab, setActiveTab] = useState('Images'); // Initialize activeTab state to 'Images'
+  const [activeTab, setActiveTab] = useState('Images');
   const [popupImageIndex, setPopupImageIndex] = useState(null);
 
   const closePopup = () => {
@@ -36,63 +36,85 @@ const Media = ({ images, documents, links }) => {
         >
           Images
         </button>
-        <button onClick={() => setActiveTab('Documents')}>Documents</button>
-        <button onClick={() => setActiveTab('Links')}>Links</button>
+        <button
+          onClick={() => setActiveTab('Documents')}
+          className={activeTab === 'Documents' ? 'active' : ''}
+        >
+          Documents
+        </button>
+        <button
+          onClick={() => setActiveTab('Links')}
+          className={activeTab === 'Links' ? 'active' : ''}
+        >
+          Links
+        </button>
       </div>
       <div className="content">
         {activeTab === 'Images' && (
           <div className="image-gallery">
-            {images.map((src, index) => (
-              <img
-                key={index}
-                src={src}
-                alt={`img-${index}`}
-                className="gallery-image"
-                onClick={() => setPopupImageIndex(index)}
-              />
-            ))}
+            {images.length === 0 ? (
+              <NoDataAvailable message="No images available" />
+            ) : (
+              images.map((src, index) => (
+                <img
+                  key={index}
+                  src={src}
+                  alt={`img-${index}`}
+                  className="gallery-image"
+                  onClick={() => setPopupImageIndex(index)}
+                />
+              ))
+            )}
           </div>
         )}
         {activeTab === 'Documents' && (
           <div className="documents-list">
-            {documents.map((doc, index) => (
-              <div key={index} className="document-item">
-                <div className="document-icon">
-                  <IoMdDocument />
-                </div>
-                <div className="document-info">
-                  <div className="document-name">
-                    <div>{doc.name}</div>
-                    <div className="document-size">{doc.size}</div>
+            {documents.length === 0 ? (
+              <NoDataAvailable message="No documents available" />
+            ) : (
+              documents.map((doc, index) => (
+                <div key={index} className="document-item">
+                  <div className="document-icon">
+                    <IoMdDocument />
                   </div>
-                  <div className="document-details">{doc.date}</div>
+                  <div className="document-info">
+                    <div className="document-name">
+                      <div>{doc.name}</div>
+                      <div className="document-size">{doc.size}</div>
+                    </div>
+                    <div className="document-details">{doc.date}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
         {activeTab === 'Links' && (
           <div className="links-list">
-            {links.map((link, index) => (
-              <div key={index} className="link-item">
-                <button className="link-button">
-                  <MdInsertLink />
-                </button>
-                <div className="link-info">
-                  <div className="link-name">{link.name}</div>
-                  <div className="link-url">{link.url}</div>
+            {links.length === 0 ? (
+              <NoDataAvailable message="No links available" />
+            ) : (
+              links.map((link, index) => (
+                <div key={index} className="link-item">
+                  <button className="link-button">
+                    <MdInsertLink />
+                  </button>
+                  <div className="link-info">
+                    <div className="link-name">{link.name}</div>
+                    <div className="link-url">{link.url}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
       </div>
 
       {popupImageIndex !== null && (
-        <div className="popup">
+        <div className="popup" onClick={closePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn">
-              <RxCross2 onClick={closePopup} />
+            <button className="close-btn" onClick={closePopup}>
+              <RxCross2 />
               <IoIosChatboxes />
             </button>
             <img
@@ -101,10 +123,10 @@ const Media = ({ images, documents, links }) => {
               className="popup-image"
             />
             <button className="prev-btn" onClick={showPreviousImage}>
-              <GrNext />
+              <GrPrevious />
             </button>
             <button className="next-btn" onClick={showNextImage}>
-              <GrPrevious />
+              <GrNext />
             </button>
           </div>
         </div>
@@ -173,38 +195,37 @@ const Media = ({ images, documents, links }) => {
           animation: zoomIn 0.1s ease-in-out;
         }
         .popup-image {
-        width: 80vw;
-        height:80vh;
+          width: 80vw;
+          height: 80vh;
         }
         .close-btn {
           display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    justify-content: space-around;
-    position: absolute;
-    top: 0rem;
-    right: -10rem;
-    background-color: white;
-    color: gray;
-    border: none;
-    cursor: pointer;
-    font-size: 2rem;
-    padding: 1rem;
-    gap: 0.5rem;
-    border-radius: 1rem;
+          flex-direction: row-reverse;
+          align-items: center;
+          justify-content: space-around;
+          position: absolute;
+          top: 0rem;
+          right: -10rem;
+          background-color: white;
+          color: gray;
+          border: none;
+          cursor: pointer;
+          font-size: 2rem;
+          padding: 1rem;
+          gap: 0.5rem;
+          border-radius: 1rem;
         }
         .prev-btn, .next-btn {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          // background: white;
           border: none;
           cursor: pointer;
           font-size: 1.8rem;
           padding: 0.8rem;
-          display:flex;
+          display: flex;
           justify-content: center;
-          border-radius:50%;
+          border-radius: 50%;
         }
         .prev-btn {
           right: -8rem;
@@ -235,8 +256,8 @@ const Media = ({ images, documents, links }) => {
           display: flex;
           align-items: center;
           padding: 0.625rem; 
-          border-radius:1rem;
-          padding-bottom:1rem;
+          border-radius: 1rem;
+          padding-bottom: 1rem;
           &:hover {
             background-color: #f1f1f1;
             cursor: pointer;

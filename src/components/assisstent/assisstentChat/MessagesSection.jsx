@@ -25,7 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   updateChatMessages,
   addBookmark,
-} from '../../../redux/slices/chatSlice'; // Adjust the path to your actions file
+} from '../../../redux/slices/chatSlice';
 
 const MessagesSection = () => {
   const dispatch = useDispatch();
@@ -155,8 +155,27 @@ const MessagesSection = () => {
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-    setSelectedText(selectedText);
-    setPopupVisible(!!selectedText);
+
+    // Check if the selected text is within a ChangeAI or user message
+    const messageElements = document.querySelectorAll('.chat-message .card');
+
+    let isValidSelection = false;
+    messageElements.forEach((element) => {
+      const contentElement = element.querySelector('.msg');
+      if (contentElement && contentElement.contains(selection.anchorNode)) {
+        const messageRole = element.querySelector('.Heading').textContent;
+        if (messageRole === 'ChangeAI' || messageRole === 'You') {
+          isValidSelection = true;
+        }
+      }
+    });
+
+    if (isValidSelection) {
+      setSelectedText(selectedText);
+      setPopupVisible(!!selectedText);
+    } else {
+      setPopupVisible(false);
+    }
   };
 
   const handleToneChange = async (tone) => {
