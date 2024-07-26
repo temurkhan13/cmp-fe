@@ -6,122 +6,67 @@ import NewChatSidebarModal from '../../customModal/NewChatSidebarModal';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
-import { fetchSharedUsers, setCurrentChat } from '@store/chatSlice';
 
 import {
   addChat,
   updateChat,
-  deleteChat,
-  addComment,
-  updateComment,
-  deleteComment,
-  addReply,
-  updateReply,
-  deleteReply,
-  addBookmark,
-  deleteBookmark,
-  addMedia,
-  deleteMedia,
-  addTask,
-  updateTask,
-  deleteTask,
-  addVersion,
-  deleteVersion,
-  addImage,
-  deleteImage,
-  addDocument,
-  deleteDocument,
-  addLink,
-  deleteLink,
+  removeChat,
   setSelectedChatId,
-} from '../../../redux/slices/chatSlice';
+} from '../../../redux/slices/workspaceSlice';
 
 const NewChat = () => {
-  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
-  const [showMenu, setShowMenu] = useState({ index: null, msgIndex: null });
+  const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
   const { historyChat, error } = useChatHistory();
   const chatContainerRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 
-  //const sharedUsers = useSelector((state) => state.chat.sharedUsers);
-  //const currentChatId = useSelector((state) => state.chat.currentChat);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // State for sidebar collapse
+  const workspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
+  const folderId = useSelector((state) => state.workspace.selectedFolderId);
+  const chats = useSelector((state) => {
+    const workspace = state.workspace.workspaces.find(w => w.workspaceId === workspaceId);
+    if (workspace) {
+      const folder = workspace.folders.find(f => f.folderId === folderId);
+      return folder ? folder.chats : [];
+    }
+    return [];
+  });
+  const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
 
-  //full-redux
-  const chats = useSelector((state) => state.chat.chats);
-  const currentChatId = useSelector((state) => state.chat.currentChat);
-  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // State for sidebar collapse
 
   // Function to toggle sidebar collapse state
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
-  const openModal = (index, msgIndex) => {
-    setShowMenu({ index, msgIndex });
+  const openModal = (index, chatId) => {
+    setShowMenu({ index, chatId });
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setShowMenu({ index: null, msgIndex: null });
+    setShowMenu({ index: null, chatId: null });
     setIsModalOpen(false);
   };
 
-  //this is the older function for fetching chat data from api
-  // useEffect(() => {
-  //   const fetchInitialChatHistory = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const initialHistory = await historyChat();
-  //       setChatHistory(Array.isArray(initialHistory) ? initialHistory : []);
-  //     } catch (error) {
-  //       console.error('Error occurred while fetching initial chat history:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchInitialChatHistory();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (Array.isArray(chatHistory) && chatHistory.length > 0) {
-  //     setMessages(chatHistory);
-  //   }
-  // }, [chatHistory]);
-
   // Update selectedChat if the chat data changes
   useEffect(() => {
-    if (selectedChat) {
-      const updatedChat = chats.find(
-        (chat) => chat.chatId === selectedChat.chatId
-      );
-      setSelectedChatId(updatedChat || null);
+    if (selectedChatId) {
+      dispatch(setSelectedChatId(selectedChatId));
+      //const updatedChat = chats.find(chat => chat.chatId === selectedChatId);
+      //dispatch(setSelectedChatId(updatedChat ? updatedChat.chatId : null));
     }
-  }, [chats]);
-
-  // useEffect(() => {
-  //   if (currentChatId) {
-  //     console.log('Current chat ID:', currentChatId.chatId);
-  //     dispatch(fetchSharedUsers(currentChatId.chatId));
-  //   }
-  // }, [currentChatId, dispatch]);
+  }, [chats, dispatch, selectedChatId]);
 
   const handleChatSelect = (chatId) => {
-    console.log(chatId);
-    setSelectedChatId(chatId);
     dispatch(setSelectedChatId(chatId));
-
-    // dispatch(setCurrentChat({ chatId })); //previous Implementation
   };
 
-  // full-redux fun
   const handleAddChat = () => {
     const newChat = {
-      chatId: `chatId${chats.length + 1}`,
+      chatId: `chatId${Date.now()}`,
       chatTitle: 'How to Change Management',
       version: 1,
       generalMessages: [],
@@ -138,11 +83,8 @@ const NewChat = () => {
       commentingUsers: [],
       commentReplies: [],
     };
-    console.log(newChat.chatId);
-
-    dispatch(addChat(newChat));
+    dispatch(addChat({ workspaceId, folderId, chat: newChat }));
     dispatch(setSelectedChatId(newChat.chatId));
-    // setSelectedChatId(newChat.chatId);
   };
 
   const handleAddMessage = (content) => {
@@ -153,11 +95,11 @@ const NewChat = () => {
         content,
         timestamp: new Date().toISOString(),
       };
-      dispatch(addMessage({ chatId: selectedChatId, message: newMessage }));
+      dispatch(addMessage({ workspaceId, folderId, chatId: selectedChatId, message: newMessage }));
     }
   };
 
-  const selectedChat = chats.find((chat) => chat.chatId === selectedChatId);
+  const selectedChat = chats.find(chat => chat.chatId === selectedChatId);
 
   const handleScroll = async () => {
     const chatContainer = chatContainerRef.current;
@@ -167,16 +109,7 @@ const NewChat = () => {
       !loading
     ) {
       setLoading(true);
-      //TODO - onScroll will be implemented based on redux fetching we will try lazy load
-
-      // try {
-      //   const newHistoryItem = await historyChat();
-      //   setChatHistory((prevHistory) => [...prevHistory, ...newHistoryItem]);
-      // } catch (error) {
-      //   console.error('Error occurred while loading more chat history:', error);
-      // } finally {
-      //   setLoading(false);
-      // }
+      // TODO: Implement lazy loading for chat history
     }
   };
 
@@ -227,15 +160,13 @@ const NewChat = () => {
             style={{ cursor: 'pointer' }}
           />
         )}
-
-        {/* Click handler to toggle sidebar */}
       </div>
       {!sidebarCollapsed && ( // Render chat messages only if sidebar is not collapsed
         <>
           {Array.isArray(chats) &&
             chats.map((chat, index) => (
               <section
-                key={index}
+                key={chat.chatId}
                 onClick={() => handleChatSelect(chat.chatId)}
                 style={{
                   display: 'flex',
@@ -259,7 +190,7 @@ const NewChat = () => {
                   style={{ cursor: 'pointer', fontSize: '1.5rem ' }}
                 />
                 {showMenu.index === index &&
-                  showMenu.msgIndex === chat.chatId && (
+                  showMenu.chatId === chat.chatId && (
                     <NewChatSidebarModal
                       isOpen={isModalOpen}
                       closeModal={closeModal}

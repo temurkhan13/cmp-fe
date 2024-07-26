@@ -20,6 +20,11 @@ import businessInfoReducer from '../../store/businessInfoSlice';
 import chatReducer from '../slices/chatSlice';
 import userReducer from '../slices/userSlice';
 import authReducer from '../slices/authSlice';
+
+import workspaceReducer from '../slices/workspaceSlice';
+
+import folderReducer from '../slices/folderSlice';
+import setDefaultWorkspaceAndFolder from '../middleware/setDefaultWorkspaceAndFolder';
 //import chatReducer from './chatSlice';
 
 const persistConfig = {
@@ -32,10 +37,15 @@ const persistedReducer = persistReducer(persistConfig, businessInfoReducer);
 const store = configureStore({
   reducer: {
     businessInfo: persistedReducer,
-    chat: chatReducer,
+    workspace: workspaceReducer,
+   // folder: folderReducer,
+   // chat: chatReducer,
     user: userReducer,
     auth: authReducer
   },
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware().concat(setDefaultWorkspaceAndFolder),
+
 });
 
 const persistor = persistStore(store);

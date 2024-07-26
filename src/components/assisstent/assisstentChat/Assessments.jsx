@@ -46,30 +46,9 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
+import { useSelectedChat } from '../../../redux/selectors/useSelectedChat';
 
 
-const versions = [
-  {
-    date: 'Today at 14:13 AM',
-    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
-  },
-  {
-    date: 'April 28, 2024 | 8:00 PM',
-    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
-  },
-  {
-    date: 'Feb 28, 2024 | 8:00 PM',
-    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
-  },
-  {
-    date: 'Jan 28, 2024 | 8:00 PM',
-    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
-  },
-  {
-    date: 'Today at 14:13 AM',
-    users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
-  },
-];
 const images = [
   'https://picsum.photos/id/0/5000/3333',
   'https://picsum.photos/id/7/4728/3168',
@@ -92,53 +71,7 @@ const images = [
   'https://picsum.photos/id/27/3264/1836',
   'https://picsum.photos/id/29/4000/2670',
 ];
-const documents = [
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-  {
-    name: 'file_name_123',
-    date: 'April 18, 2024, 6:17 PM',
-    size: '2,345 KB',
-  },
-];
+
 const links = [
   {
     name: 'www.figma.com',
@@ -161,140 +94,14 @@ const links = [
     url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
   },
 ];
-const data = [
-  {
-    date: 'Today',
-    messages: [
-      {
-        avatar: <RxAvatar />,
-        sender: 'ChangeAI',
-        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
-        savedBy: 'You',
-      },
-    ],
-  },
-  {
-    date: 'Yesterday',
-    messages: [
-      {
-        avatar: <RxAvatar />,
-        sender: 'ChangeAI',
-        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
-        savedBy: 'Imran',
-      },
-    ],
-  },
-  {
-    date: 'Yesterday',
-    messages: [
-      {
-        avatar: <RxAvatar />,
-        sender: 'ChangeAI',
-        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
-        savedBy: 'Imran',
-      },
-    ],
-  },
-  {
-    date: 'Yesterday',
-    messages: [
-      {
-        avatar: <RxAvatar />,
-        sender: 'ChangeAI',
-        text: 'The ADKAR model is a framework designed to guide individuals and organizations through change. Developed by Jeff Hiatt, it provides a structured approach to understanding and managing change at both personal and organizational levels.',
-        savedBy: 'Imran',
-      },
-    ],
-  },
-];
-const Comment = {
-  id: 1,
-  time: 'Today',
-  avatar: <FaUserCircle />,
-  name: 'Jerald Huels',
-  text: 'Can you explain the ADKAR model? How it works?',
-  status: 'It’s Completed.',
-  replies: [
-    {
-      id: 11,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Imran',
-      text: 'Sure, let me explain.',
-    },
-    {
-      id: 12,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 13,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 14,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 15,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 16,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 17,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 18,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 19,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-    {
-      id: 20,
-      time: 'Today',
-      avatar: <FaUserCircle />,
-      name: 'Alex',
-      text: 'I can help too.',
-    },
-  ],
-};
+
+
 
 const Assessments = () => {
+  const { users, currentChat } = useSelectedChat();
 
-  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
-  const chats = useSelector((state) => state.chat.chats);
-  const users = useSelector((state) => state.user.users); // Assuming you have a `users` slice of state
 
-  const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+
 
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
@@ -358,7 +165,7 @@ const Assessments = () => {
         <AssessmentModal
           title="Media"
           bodyContent={
-            <Media images={images} documents={currentChat.documents} links={links} />
+            <Media images={currentChat.images} documents={currentChat.documents} links={currentChat.links} />
           }
           onClose={closeModal}
         />
