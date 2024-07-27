@@ -1,10 +1,10 @@
-import { TiPlus } from 'react-icons/ti';
-import { BsFilterLeft } from 'react-icons/bs';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { BsFilterCircle } from 'react-icons/bs';
-import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
-import { TfiMenuAlt } from 'react-icons/tfi';
+// import { BsFilterLeft } from 'react-icons/bs';
+// import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+// import { BsFilterCircle } from 'react-icons/bs';
+// import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
 // import { RxCross1 } from 'react-icons/rx';
+import { TiPlus } from 'react-icons/ti';
+import { TfiMenuAlt } from 'react-icons/tfi';
 import { SlArrowRight } from 'react-icons/sl';
 import { SlArrowLeft } from 'react-icons/sl';
 import { CgMenuGridR } from 'react-icons/cg';
@@ -66,16 +66,17 @@ const AssistantBar = () => {
                 justifyContent: 'center',
               }}
             >
-              <CgMenuGridR style={{ fontSize: '26px' }} />
+              <CgMenuGridR style={{ fontSize: '26px', cursor: 'pointer' }} />
               <TfiMenuAlt
                 style={{
                   marginRight: '30px',
                   marginLeft: '5px',
-                  fontSize: '18px',
+                  fontSize: '22px',
+                  cursor: 'pointer',
                 }}
               />
             </div>
-            <div>
+            {/* <div>
               <BsFilterLeft style={{ fontSize: '22px' }} />
               <MdOutlineKeyboardArrowDown
                 style={{ marginRight: '30px', fontSize: '18px' }}
@@ -86,13 +87,13 @@ const AssistantBar = () => {
               <MdOutlineKeyboardArrowDown
                 style={{ marginRight: '30px', fontSize: '18px' }}
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <HiAdjustmentsHorizontal
                 style={{ marginRight: '30px', fontSize: '22px' }}
               />
-              {/* <MdOutlineKeyboardArrowDown /> */}
-            </div>
+              <MdOutlineKeyboardArrowDown />
+            </div> */}
             <div>
               <button className={styles.assbtnAss}>
                 {/* <CgMenuGridR/> */}

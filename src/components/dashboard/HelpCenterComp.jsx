@@ -1,105 +1,79 @@
 import { useState } from 'react';
-import {
-  FaBars,
-  FaTimes,
-  FaApple,
-  FaAndroid,
-  FaWindows,
-  FaLinux,
-  FaChrome,
-  FaFirefox,
-  FaSafari,
-  FaEdge,
-  FaInternetExplorer,
-  FaOpera,
-  FaMicrosoft,
-} from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { MdDashboard, MdAssistant, MdAssessment } from 'react-icons/md';
+import { BsFilePlayFill } from 'react-icons/bs';
+import { FaSitemap, FaQuestionCircle } from 'react-icons/fa';
 import heading from '../../assets/dashboard/heading.svg';
 
 const HelpCenterComp = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   const options = [
+    { name: 'Dashboard', href: '#dashboard', icon: <MdDashboard /> },
+    { name: 'Assistant Chat', href: '#assistant', icon: <MdAssistant /> },
     {
-      name: 'Introduction to AI',
-      href: '#section1',
-      icon: <FaApple />,
+      name: 'Assessments/Reports',
+      href: '#assessments',
+      icon: <MdAssessment />,
     },
+    { name: 'Digital Playbook', href: '#playbook', icon: <BsFilePlayFill /> },
+    { name: 'Sitemaps', href: '#sitemaps', icon: <FaSitemap /> },
     {
-      name: 'Machine Learning Overview',
-      href: '#section2',
-      icon: <FaAndroid />,
-    },
-    {
-      name: 'Deep Learning Basics',
-      href: '#section3',
-      icon: <FaWindows />,
-    },
-    {
-      name: 'Neural Networks',
-      href: '#section4',
-      icon: <FaLinux />,
-    },
-    {
-      name: 'AI Applications',
-      href: '#section5',
-      icon: <FaChrome />,
-    },
-    {
-      name: 'Future of AI',
-      href: '#section6',
-      icon: <FaFirefox />,
-    },
-    {
-      name: 'AI in Healthcare',
-      href: '#section7',
-      icon: <FaSafari />,
-    },
-    {
-      name: 'AI in Finance',
-      href: '#section8',
-      icon: <FaEdge />,
-    },
-    {
-      name: 'AI in Robotics',
-      href: '#section9',
-      icon: <FaInternetExplorer />,
-    },
-    {
-      name: 'Ethics in AI',
-      href: '#section10',
-      icon: <FaOpera />,
-    },
-    {
-      name: 'AI Research',
-      href: '#section11',
-      icon: <FaMicrosoft />,
-    },
-    {
-      name: 'AI Startups',
-      href: '#section12',
-      icon: <FaApple />,
-    },
-    {
-      name: 'AI Conferences',
-      href: '#section13',
-      icon: <FaAndroid />,
-    },
-    {
-      name: 'AI Tools',
-      href: '#section14',
-      icon: <FaWindows />,
-    },
-    {
-      name: 'Getting Started with AI',
-      href: '#section15',
-      icon: <FaLinux />,
+      name: 'Frequently asked questions',
+      href: '#faqs',
+      icon: <FaQuestionCircle />,
     },
   ];
+
+  const sections = [
+    {
+      id: 'dashboard',
+      title: 'AI Introduction',
+      content: (
+        <div>
+          <p>Artificial Intelligence (AI) refers to the simulation...</p>
+          <img
+            src="path/to/image1.jpg"
+            alt="AI"
+            style={{ width: '100%', borderRadius: '8px' }}
+          />
+          <a href="#" style={{ color: '#007bff', textDecoration: 'underline' }}>
+            Learn more
+          </a>
+        </div>
+      ),
+      style: { backgroundColor: '#f0f8ff', padding: '2rem' },
+    },
+    {
+      id: 'assistant',
+      title: 'Assistant Chat',
+      content: (
+        <div>
+          <p>Discover how AI can assist in real-time conversations...</p>
+          <ul>
+            <li>Real-time responses</li>
+            <li>Seamless integration</li>
+          </ul>
+          <img
+            src="path/to/image2.jpg"
+            alt="Chat"
+            style={{ width: '100%', borderRadius: '8px' }}
+          />
+        </div>
+      ),
+      style: { backgroundColor: '#faebd7', padding: '2rem' },
+    },
+  ];
+
+  const handleOptionClick = (index) => {
+    setActiveSection(index);
+    // setSidebarOpen(false);
+  };
 
   return (
     <div className="helpcenter-wrapper">
@@ -116,6 +90,7 @@ const HelpCenterComp = () => {
             className={`sidebar-option ${index === 0 ? 'first' : ''} ${
               index === options.length - 1 ? 'last' : ''
             }`}
+            onClick={() => handleOptionClick(index)}
           >
             <span
               style={{
@@ -139,19 +114,19 @@ const HelpCenterComp = () => {
         <div className="help-Heading">
           Revolutionizing world through smart Innovation
         </div>
-        <section id="section1">
-          <h2>AI Introduction</h2>
-          <p>
-            Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines... AI involves creating systems that can
-            perform tasks that typically require human intelligence... The
-            concept of AI dates back to ancient history, with myths and stories
-            about intelligent automata... AI has various applications across
-            different industries, including healthcare, finance, and more...
-            Technologies such as machine learning, deep learning, and neural
-            networks are integral to AI...
-          </p>
-        </section>
+        {sections.map((section, index) => (
+          <section
+            key={section.id}
+            id={section.id}
+            className={`content-section ${
+              activeSection === index ? 'active' : ''
+            }`}
+            style={activeSection === index ? section.style : {}}
+          >
+            <h2>{section.title}</h2>
+            {section.content}
+          </section>
+        ))}
       </div>
       <style>{`
         .helpcenter-wrapper {
@@ -208,13 +183,13 @@ const HelpCenterComp = () => {
           transition: all 0.2s ease-in-out;
           padding: 1rem 0.8rem;
           border-radius: 0.8rem;
-          span{
-          display:flex;
+          span {
+            display: flex;
           }
         }
         .sidebar-option:hover {
           background-color: #ccc;
-          color: black;
+          color: #0B1444;
           cursor: pointer;
         }
         .sidebar-option.first {
@@ -226,7 +201,7 @@ const HelpCenterComp = () => {
         .sidebar-option a {
           text-decoration: none;
           font-size: 1.4rem;
-          color: #333;
+          color: #0B1444;
           margin-left: 0.5rem;
         }
         .section-content {
@@ -244,6 +219,15 @@ const HelpCenterComp = () => {
         }
         .section-content.sidebar-closed {
           margin-right: 6rem; 
+        }
+        .content-section {
+          display: none;
+          opacity: 0;
+          transition: opacity 0.5s ease-in-out;
+        }
+        .content-section.active {
+          display: block;
+          opacity: 1;
         }
         .helpcenter-sidebar::-webkit-scrollbar {
           width: 8px;

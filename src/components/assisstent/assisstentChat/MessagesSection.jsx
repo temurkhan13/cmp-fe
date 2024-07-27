@@ -61,20 +61,16 @@ const MessagesSection = () => {
       setChat(currentChat.generalMessages);
     }
   }, [currentChat]);
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
   const handleDrop = (e) => {
     e.preventDefault();
     setFile(e.dataTransfer.files[0]);
   };
-
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-
   const handleSendMessage = async () => {
     if (!text && !file) return;
 
@@ -112,7 +108,6 @@ const MessagesSection = () => {
       setLoading(false);
     }
   };
-
   const HandleAskAi = async (value) => {
     try {
       setLoading(true);
@@ -136,7 +131,6 @@ const MessagesSection = () => {
       setLoading(false);
     }
   };
-
   const applyFixedText = (newText) => {
     const updatedChat = chat.map((message) => {
       if (message.content) {
@@ -151,7 +145,6 @@ const MessagesSection = () => {
     setChat(updatedChat);
     setPopupVisible(false);
   };
-
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
@@ -177,7 +170,6 @@ const MessagesSection = () => {
       setPopupVisible(false);
     }
   };
-
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
     setLoading(true);
@@ -192,7 +184,6 @@ const MessagesSection = () => {
       setLoading(false);
     }
   };
-
   const handleResponseLengthChange = async (value) => {
     setResponseLength(value);
     setLoading(true);
@@ -217,11 +208,9 @@ const MessagesSection = () => {
       setLoading(false);
     }
   };
-
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
-
   const handleAddBookmark = (content, messageId) => {
     const bookmark = {
       bookmarkId: 'bookmarkId3',
@@ -240,7 +229,6 @@ const MessagesSection = () => {
     dispatch(addBookmark(selectedChatId, bookmark));
     console.log('bookmarked ' + bookmark.bookmarkId);
   };
-
   const handleInspireClick = async () => {
     // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
     // const inspiredText = await handleInspire(answers[currentQuestionKey]);
@@ -249,7 +237,6 @@ const MessagesSection = () => {
     //   [currentQuestionKey]: inspiredText,
     // });
   };
-
   useEffect(() => {
     document.addEventListener('mouseup', handleTextSelect);
     return () => {

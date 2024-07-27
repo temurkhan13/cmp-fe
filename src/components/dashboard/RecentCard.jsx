@@ -9,70 +9,75 @@ import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
 import { RxAvatar } from 'react-icons/rx';
 
-const RecentCards = ({ chats }) => (
-  <div className="cardsContainer">
-    {chats.map(([folderName, chatData]) => (
-      <div key={chatData.id} className="card-wrapper">
-        <div className="card">
-          <div className="card-header">
-            <h2 className="userName">
-              <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-            </h2>
-            <p>{chatData.content}</p>
-            <MdOutlineEdit />
-          </div>
-          <div className="content">
-            <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-              <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-              ChangeAI
-            </h3>
-            <p className="chatContent">{chatData.content}</p>
-          </div>
-          <div className="footer">
-            <div className="iconsContainer">
-              <ImFilesEmpty
-                style={{
-                  fontSize: '1.3rem',
-                  color: 'black',
-                }}
-              />
-              <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-              <AiOutlineDislike
-                style={{ fontSize: '1.3rem', color: 'black' }}
-              />
-              <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-              <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-            </div>
-            <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-          </div>
-        </div>
-        <div className="fileDetails">
-          <div className="fileName">
-            File Name <IoPeople color="gray" />
-          </div>
-          <div>
-            <span>in</span>
-            <span className="folderName">{folderName}</span>
-            <span>
-              • Modified 2 days ago
-              <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-            </span>
-          </div>
-        </div>
-      </div>
-    ))}
+const RecentCards = ({ chats }) => {
+  const truncateText = (text, maxLength) =>
+    text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 
-    <style>{`
-    .card-wrapper{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    }
+  return (
+    <div className="cardsContainer">
+      {chats.map(([folderName, chatData]) => (
+        <div key={chatData.id} className="card-wrapper">
+          <div className="card">
+            <div className="card-header">
+              <h2 className="userName">
+                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+              </h2>
+              <p>{truncateText(chatData.content, 55)}</p>
+              <MdOutlineEdit />
+            </div>
+            <div className="content">
+              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
+                ChangeAI
+              </h3>
+              <p className="chatContent">
+                {truncateText(chatData.content, 55)}
+              </p>
+            </div>
+            <div className="footer">
+              <div className="iconsContainer">
+                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
+                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
+                <AiOutlineDislike
+                  style={{ fontSize: '1.3rem', color: 'black' }}
+                />
+                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
+                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
+              </div>
+              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
+            </div>
+          </div>
+          <div className="fileDetails">
+            <div className="fileName">
+              File Name
+              <IoPeople
+                color="gray"
+                style={{ marginLeft: '0.3rem', fontSize: '' }}
+              />
+            </div>
+            <div>
+              <span>in</span>
+              <span className="folderName">{folderName}</span>
+              <span>
+                • Modified 2 days ago
+                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <style>{`
+      .card-wrapper{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
       .cardsContainer {
         display: flex;
         flex-wrap: wrap;
-        gap: 2rem;
-        padding:2rem;
+        gap: 1rem;
+        padding: 2rem;
       }
       .card {
         width: 25rem;
@@ -85,9 +90,9 @@ const RecentCards = ({ chats }) => (
         display: flex;
         flex-direction: column;
         align-items: center;
-        &:hover{
-        background-color: #f9f9f9;
-        transition: all 0.1s ease-in-out;
+        &:hover {
+          background-color: #f9f9f9;
+          transition: all 0.1s ease-in-out;
         }
       }
       .card-header {
@@ -100,19 +105,19 @@ const RecentCards = ({ chats }) => (
         font-size: 1.125rem;
         font-weight: bold;
       }
-        .content{
-        display:flex;
+      .content {
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        }
+      }
       .chatContent {
-        font-size: 0.875rem;
+        font-size: 1.2rem;
         margin: 0.5rem 0;
       }
-        .ai-heading{
+      .ai-heading {
         display: flex;
-        }
+      }
       .footer {
         display: flex;
         justify-content: space-between;
@@ -138,9 +143,10 @@ const RecentCards = ({ chats }) => (
         font-size: 1.1rem;
         margin-left: 0.5rem;
       }
-    `}</style>
-  </div>
-);
+      `}</style>
+    </div>
+  );
+};
 
 RecentCards.propTypes = {
   chats: PropTypes.arrayOf(

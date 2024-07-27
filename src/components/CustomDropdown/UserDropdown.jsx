@@ -3,6 +3,8 @@ import Dropdown from 'react-multilevel-dropdown';
 import { MdPeople, MdPerson } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
+import NoDataAvailable from '../../components/common/NoDataAvailable';
+
 const UserDropdown = ({ activeIcon, handleIconClick }) => {
   const selectedChatId = useSelector((state) => state.chat.selectedChatId);
   const chats = useSelector((state) => state.chat.chats);
@@ -35,7 +37,7 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
         <hr style={{ color: 'lightgray' }} />
         {nonOwnerUsers.length === 0 ? (
           <Dropdown.Item style={styles.dropdownItem}>
-            No other users available
+            <NoDataAvailable message="No User Available" />
           </Dropdown.Item>
         ) : (
           nonOwnerUsers.map((user) => {
