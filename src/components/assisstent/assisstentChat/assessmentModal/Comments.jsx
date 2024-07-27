@@ -7,9 +7,7 @@ import { IoFilter } from 'react-icons/io5';
 import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineAttachFile, MdAlternateEmail } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import {
   addComment,
   updateComment,
@@ -37,9 +35,6 @@ const Comments = ({ comments }) => {
   };
 
   const handleSaveEdit = (commentId) => {
-    //const commentIndex = comments.findIndex(c => c.commentId === commentId);
-    // comments[commentIndex].text = editedText;
-    console.log(commentId);
     const updatedComment = editedText;
     dispatch(updateComment({commentId, updatedComment}));
     setEditingComment(null);
@@ -49,14 +44,11 @@ const Comments = ({ comments }) => {
   const handleEditReply = (commentId, replyId) => {
     setEditingComment(replyId);
     const comment = comments.find((c) => c.commentId === commentId);
-    console.log(comment + '');
-    const reply = comment.replies.find((c) => c.replyId === replyId);
+    const reply = comment.replies.find((r) => r.replyId === replyId);
     setEditedText(reply.text);
   };
+
   const handleSaveReply = (commentId, replyId) => {
-    //const commentIndex = comments.findIndex(c => c.commentId === commentId);
-    // comments[commentIndex].text = editedText;
-    console.log(commentId);
     const updatedReply = editedText;
     dispatch(updateReply({ commentId, replyId, updatedReply }));
     setEditingComment(null);
@@ -71,7 +63,6 @@ const Comments = ({ comments }) => {
   };
 
   const handleDeleteComment = (commentId, isReply, parentCommentId) => {
-    const replyId = commentId;
     if (isReply) {
       const commentId = parentCommentId;
       dispatch(removeReply({ commentId, replyId }));
@@ -129,173 +120,182 @@ const Comments = ({ comments }) => {
       </div>
       <hr />
       <div className="chat-container">
-        {comments.map((comment) => (
-          <div key={comment.commentId}>
-            <div key={comment.commentId} className="comment-container">
-              <span className="comment-time">{comment.timestamp}</span>
-              <div className="comment">
-                <div className="avatar">
-                  <RxAvatar />
-                </div>
-                <div className="comment-content">
-                  <div className="comment-header">
-                    <span className="comment-author">
-                      {comment.userName}
-                      <span className="comment-time">{comment.timestamp}</span>
-                    </span>
-                    <Dropdown
-                      title={<FaEllipsisV className="options-icon" />}
-                      buttonClassName="dropdown-button"
-                    >
-                      <Dropdown.Item
-                        onClick={() => handleEditComment(comment.commentId)}
+        {comments.length === 0 ? (
+          <NoDataAvailable message="No comments available" />
+        ) : (
+          comments.map((comment) => (
+            <div key={comment.commentId}>
+              <div className="comment-container">
+                <span className="comment-time">{comment.timestamp}</span>
+                <div className="comment">
+                  <div className="avatar">
+                    <RxAvatar />
+                  </div>
+                  <div className="comment-content">
+                    <div className="comment-header">
+                      <span className="comment-author">
+                        {comment.userName}
+                        <span className="comment-time">
+                          {comment.timestamp}
+                        </span>
+                      </span>
+                      <Dropdown
+                        title={<FaEllipsisV className="options-icon" />}
+                        buttonClassName="dropdown-button"
                       >
-                        Edit Comment
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() =>
-                          handleDeleteComment(comment.commentId, false)
-                        }
-                      >
-                        Delete Comment
-                      </Dropdown.Item>
-                    </Dropdown>
-                  </div>
-                  <div className="comment-body">
-                    {editingComment === comment.commentId ? (
-                      <input
-                        type="text"
-                        value={editedText}
-                        onChange={(e) => setEditedText(e.target.value)}
-                        onBlur={() => handleSaveEdit(comment.commentId)}
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter')
-                            handleSaveEdit(comment.commentId);
-                        }}
-                      />
-                    ) : (
-                      <>
-                        <p className="comment-text">
-                          <span>|</span> {comment.text}
-                        </p>
-                        <span className="comment-status">{comment.status}</span>
-                      </>
-                    )}
-                  </div>
-                  <div
-                    className="replies-toggle"
-                    onClick={() => toggleReplies(comment.commentId)}
-                  >
-                    {showReplies[comment.commentId]
-                      ? 'Hide replies'
-                      : `Show ${comment.replies.length} replies`}
-                  </div>
-                </div>
-              </div>
-              {showReplies[comment.commentId] && (
-                <div className="replies-container">
-                  {comment.replies.map((reply) => (
-                    <div key={reply.replyId} className="reply">
-                      <span className="avatar">{reply.userName[0]}</span>
-                      <div className="reply-content">
-                        <div className="reply-header">
-                          <span className="reply-author">
-                            {reply.userName}
-                            <span className="comment-time">
-                              {reply.timestamp}
-                            </span>
+                        <Dropdown.Item
+                          onClick={() => handleEditComment(comment.commentId)}
+                        >
+                          Edit Comment
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() =>
+                            handleDeleteComment(comment.commentId, false)
+                          }
+                        >
+                          Delete Comment
+                        </Dropdown.Item>
+                      </Dropdown>
+                    </div>
+                    <div className="comment-body">
+                      {editingComment === comment.commentId ? (
+                        <input
+                          type="text"
+                          value={editedText}
+                          onChange={(e) => setEditedText(e.target.value)}
+                          onBlur={() => handleSaveEdit(comment.commentId)}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter')
+                              handleSaveEdit(comment.commentId);
+                          }}
+                        />
+                      ) : (
+                        <>
+                          <p className="comment-text">
+                            <span>|</span> {comment.text}
+                          </p>
+                          <span className="comment-status">
+                            {comment.status}
                           </span>
-                          <Dropdown
-                            title={<FaEllipsisV className="options-icon" />}
-                            buttonClassName="dropdown-button"
-                          >
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleEditReply(
-                                  comment.commentId,
-                                  reply.replyId
-                                )
-                              }
+                        </>
+                      )}
+                    </div>
+                    <div
+                      className="replies-toggle"
+                      onClick={() => toggleReplies(comment.commentId)}
+                    >
+                      {showReplies[comment.commentId]
+                        ? 'Hide replies'
+                        : `Show ${comment.replies.length} replies`}
+                    </div>
+                  </div>
+                </div>
+                {showReplies[comment.commentId] && (
+                  <div className="replies-container">
+                    {comment.replies.map((reply) => (
+                      <div key={reply.replyId} className="reply">
+                        <span className="avatar">{reply.userName[0]}</span>
+                        <div className="reply-content">
+                          <div className="reply-header">
+                            <span className="reply-author">
+                              {reply.userName}
+                              <span className="comment-time">
+                                {reply.timestamp}
+                              </span>
+                            </span>
+                            <Dropdown
+                              title={<FaEllipsisV className="options-icon" />}
+                              buttonClassName="dropdown-button"
                             >
-                              Edit Reply
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleDeleteComment(
-                                  reply.replyId,
-                                  true,
-                                  comment.commentId
-                                )
-                              }
-                            >
-                              Delete Reply
-                            </Dropdown.Item>
-                          </Dropdown>
-                        </div>
-                        <div className="reply-body">
-                          {editingComment === reply.replyId ? (
-                            <input
-                              type="text"
-                              value={editedText}
-                              onChange={(e) => setEditedText(e.target.value)}
-                              onBlur={() =>
-                                handleSaveReply(
-                                  comment.commentId,
-                                  reply.replyId
-                                )
-                              }
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter')
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleEditReply(
+                                    comment.commentId,
+                                    reply.replyId
+                                  )
+                                }
+                              >
+                                Edit Reply
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleDeleteComment(
+                                    reply.replyId,
+                                    true,
+                                    comment.commentId
+                                  )
+                                }
+                              >
+                                Delete Reply
+                              </Dropdown.Item>
+                            </Dropdown>
+                          </div>
+                          <div className="reply-body">
+                            {editingComment === reply.replyId ? (
+                              <input
+                                type="text"
+                                value={editedText}
+                                onChange={(e) => setEditedText(e.target.value)}
+                                onBlur={() =>
                                   handleSaveReply(
                                     comment.commentId,
                                     reply.replyId
-                                  );
-                              }}
-                            />
-                          ) : (
-                            <p className="reply-text">{reply.text}</p>
-                          )}
+                                  )
+                                }
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter')
+                                    handleSaveReply(
+                                      comment.commentId,
+                                      reply.replyId
+                                    );
+                                }}
+                              />
+                            ) : (
+                              <p className="reply-text">{reply.text}</p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            <div className="reply-wrapper">
-              <div className="user-image">
-                <RxAvatar style={{ fontSize: '3.5rem' }} />
-              </div>
-              <div className="reply-box">
-                <div className="input-wrapper">
-                  <input
-                    type="text"
-                    placeholder="Reply"
-                    value={editedText}
-                    onChange={(e) => setEditedText(e.target.value)}
-                    onBlur={() => handleAddReply(comment.commentId)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') handleAddReply(comment.commentId);
-                    }}
-                  />
-                  <div className="user-icon">
-                    <MdOutlineAttachFile />
-                  </div>
-                  <div className="mention-icon">
-                    <MdAlternateEmail />
-                  </div>
-                  <div
-                    className="send-icon"
-                    onClick={() => handleAddReply(comment.commentId)}
-                  >
-                    <RiSendPlane2Fill />
+              <div className="reply-wrapper">
+                <div className="user-image">
+                  <RxAvatar style={{ fontSize: '3.5rem' }} />
+                </div>
+                <div className="reply-box">
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Reply"
+                      value={editedText}
+                      onChange={(e) => setEditedText(e.target.value)}
+                      onBlur={() => handleAddReply(comment.commentId)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter')
+                          handleAddReply(comment.commentId);
+                      }}
+                    />
+                    <div className="user-icon">
+                      <MdOutlineAttachFile />
+                    </div>
+                    <div className="mention-icon">
+                      <MdAlternateEmail />
+                    </div>
+                    <div
+                      className="send-icon"
+                      onClick={() => handleAddReply(comment.commentId)}
+                    >
+                      <RiSendPlane2Fill />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
         <hr />
         <style>{`
           .chat-container {
@@ -482,17 +482,16 @@ const Comments = ({ comments }) => {
 Comments.propTypes = {
   comments: PropTypes.arrayOf(
     PropTypes.shape({
-      commentId: PropTypes.number.isRequired,
+      commentId: PropTypes.string.isRequired,
       userName: PropTypes.string.isRequired,
-      timestamp: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
+      timestamp: PropTypes.string.isRequired,
       replies: PropTypes.arrayOf(
         PropTypes.shape({
-          replyId: PropTypes.number.isRequired,
+          replyId: PropTypes.string.isRequired,
           userName: PropTypes.string.isRequired,
-          timestamp: PropTypes.string.isRequired,
           text: PropTypes.string.isRequired,
+          timestamp: PropTypes.string.isRequired,
         })
       ),
     })

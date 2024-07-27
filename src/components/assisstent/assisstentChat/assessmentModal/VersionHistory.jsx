@@ -1,44 +1,52 @@
 import PropTypes from 'prop-types';
 import { FaUserCircle } from 'react-icons/fa';
-
-
-
+import NoDataAvailable from '../../../common/NoDataAvailable';
 
 const VersionHistory = ({ versions, onClose }) => {
   const closeModal = () => {
     onClose();
   };
+
   return (
     <div className="version-history">
-      <button className="current-version">Current Version</button>
-      <div className="versions-container">
-        {versions.map((version, index) => (
-          <div key={index} className={`version ${index >= 3 ? 'blurred' : ''}`}>
-            {index >= 3 && <div className="overlay"></div>}
-            {index >= 3 && (
-              <button className="show-date-button">Upgrade</button>
-            )}
-            <div className="version-content">
-              <p className="date">{version.date}</p>
-              <div className="users">
-                {version.users.map((user, i) => (
-                  <div key={i} className="user">
-                    <FaUserCircle className="icon" />
-                    <span className="user-name">{user.name}</span>
+      {versions.length === 0 ? (
+        <NoDataAvailable message="No data available" />
+      ) : (
+        <>
+          <button className="current-version">Current Version</button>
+          <div className="versions-container">
+            {versions.map((version, index) => (
+              <div
+                key={index}
+                className={`version ${index >= 3 ? 'blurred' : ''}`}
+              >
+                {index >= 3 && <div className="overlay"></div>}
+                {index >= 3 && (
+                  <button className="show-date-button">Upgrade</button>
+                )}
+                <div className="version-content">
+                  <p className="date">{version.date}</p>
+                  <div className="users">
+                    {version.users.map((user, i) => (
+                      <div key={i} className="user">
+                        <FaUserCircle className="icon" />
+                        <span className="user-name">{user.name}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <hr className="straight-Line" />
-      <div className="footer-buttons">
-        <button className="cancel" onClick={closeModal}>
-          Cancel
-        </button>
-        <button className="restore-version">Restore Version</button>
-      </div>
+          <hr className="straight-Line" />
+          <div className="footer-buttons">
+            <button className="cancel" onClick={closeModal}>
+              Cancel
+            </button>
+            <button className="restore-version">Restore Version</button>
+          </div>
+        </>
+      )}
       <style>{`
         .version-history {
           padding: 1rem;
@@ -139,8 +147,8 @@ const VersionHistory = ({ versions, onClose }) => {
           width: 49%;
         }
         .restore-version {
-          background-color: #C3E11D;
-          border: 0.2rem solid #C3E11D;
+          background-color: #c3e11d;
+          border: 0.2rem solid #c3e11d;
           padding: 1rem;
           font-size: 1.3rem;
           font-weight: 500;
@@ -164,7 +172,7 @@ const VersionHistory = ({ versions, onClose }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #0066FF;
+          color: #0066ff;
           font-size: 1.2rem;
           font-weight: 600;
           cursor: pointer;

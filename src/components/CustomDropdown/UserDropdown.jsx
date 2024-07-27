@@ -39,7 +39,7 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
         <hr style={{ color: 'lightgray' }} />
         {nonOwnerUsers.length === 0 ? (
           <Dropdown.Item style={styles.dropdownItem}>
-            No other users available
+            <NoDataAvailable message="No User Available" />
           </Dropdown.Item>
         ) : (
           nonOwnerUsers.map((user) => {

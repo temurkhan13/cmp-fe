@@ -84,16 +84,13 @@ const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId
       console.log("chat: " + chat);
     }
   }, [currentChat]);
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
   const handleDrop = (e) => {
     e.preventDefault();
     setFile(e.dataTransfer.files[0]);
   };
-
   const handleDragOver = (e) => {
     e.preventDefault();
   };
@@ -247,10 +244,28 @@ useEffect(() => {
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-    setSelectedText(selectedText);
-    setPopupVisible(!!selectedText);
-  };
 
+    // Check if the selected text is within a ChangeAI or user message
+    const messageElements = document.querySelectorAll('.chat-message .card');
+
+    let isValidSelection = false;
+    messageElements.forEach((element) => {
+      const contentElement = element.querySelector('.msg');
+      if (contentElement && contentElement.contains(selection.anchorNode)) {
+        const messageRole = element.querySelector('.Heading').textContent;
+        if (messageRole === 'ChangeAI' || messageRole === 'You') {
+          isValidSelection = true;
+        }
+      }
+    });
+
+    if (isValidSelection) {
+      setSelectedText(selectedText);
+      setPopupVisible(!!selectedText);
+    } else {
+      setPopupVisible(false);
+    }
+  };
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
     setLoading(true);
@@ -266,7 +281,6 @@ useEffect(() => {
       setLoading(false);
     }
   };
-
   const handleResponseLengthChange = async (value) => {
     setResponseLength(value);
     setLoading(true);
@@ -291,11 +305,9 @@ useEffect(() => {
       setLoading(false);
     }
   };
-
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
-
   const handleAddBookmark = (content, messageId) => {
     const bookmark = {
       bookmarkId: 'bookmarkId3',
@@ -314,7 +326,6 @@ useEffect(() => {
     dispatch(addBookmark(bookmark));
     console.log('bookmarked ' + bookmark.bookmarkId);
   };
-
   const handleInspireClick = async () => {
     //Todo: will implement Inspire 
     // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;

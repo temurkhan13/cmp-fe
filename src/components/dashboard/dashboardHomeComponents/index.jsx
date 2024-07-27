@@ -71,7 +71,7 @@ const DashboardHomeComp = () => {
               <CgMenuGridR className="icon" />
               <TfiMenuAlt className="icon-small" />
             </div>
-            <div className="right-buttons">
+            {/* <div className="right-buttons">
               <BsFilterLeft className="filter-icon" />
               <MdOutlineKeyboardArrowDown className="icon-small" />
             </div>
@@ -81,14 +81,14 @@ const DashboardHomeComp = () => {
             </div>
             <div className="right-buttons">
               <HiAdjustmentsHorizontal className="adjustments-icon" />
-            </div>
+            </div> */}
             <div>
               <Link
                 to="/assisstant/chat"
                 target="_blank"
                 style={{ textDecoration: 'none' }}
               >
-                <button className="ass-btn-ass">
+                <button className="assiss-btn">
                   <TiPlus />
                   New Assistant
                 </button>
@@ -147,7 +147,7 @@ const DashboardHomeComp = () => {
           text-align: left;
           color: black;
         }
-        .generate .ass-btn-ass {
+        .generate .assiss-btn {
           background-color: rgba(10, 10, 10, 1);
           display: flex;
           text-align: center;

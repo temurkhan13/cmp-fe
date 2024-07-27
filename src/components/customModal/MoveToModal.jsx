@@ -7,6 +7,8 @@ import { IoMdCheckmark } from 'react-icons/io';
 import { FaRegFolderOpen } from 'react-icons/fa6';
 import { MdKeyboardArrowRight, MdKeyboardArrowDown } from 'react-icons/md';
 
+import NoDataAvailable from '../../components/common/NoDataAvailable';
+
 const MoveToModal = ({ folders }) => {
   const [openFolders, setOpenFolders] = useState({});
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -76,7 +78,7 @@ const MoveToModal = ({ folders }) => {
   };
 
   const renderFolders = (folders, parentName = '') => {
-    return folders.map((folder, index) => {
+    return folders.map((folder) => {
       const folderName = parentName
         ? `${parentName}/${folder.name}`
         : folder.name;
@@ -137,7 +139,13 @@ const MoveToModal = ({ folders }) => {
       </div>
       <hr style={styles.straightLine} />
       <div style={styles.title}>Suggested</div>
-      <div style={styles.container}>{renderFolders(filteredFolders)}</div>
+      <div style={styles.container}>
+        {filteredFolders.length > 0 ? (
+          renderFolders(filteredFolders)
+        ) : (
+          <NoDataAvailable message="No folders available" />
+        )}
+      </div>
       <hr style={styles.straightLine} />
       {isCreatingFolder ? (
         <input
