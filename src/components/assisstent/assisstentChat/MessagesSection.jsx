@@ -190,10 +190,59 @@ const applyFixedText = useCallback((newText) => {
   });
 
   setChat(updatedChat);
-  dispatch(updateMessage(selectedWorkspaceId, selectedChatId, updatedChat));
+  dispatch(updateMessage(updatedChat));
 
   setPopupVisible(false);
 }, [chat, selectedText, dispatch, selectedWorkspaceId, selectedChatId]);
+
+
+const adjustSelectionToWordBoundaries = () => {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+
+    // Adjust start boundary
+    let startOffset = range.startOffset;
+    let endOffset = range.endOffset;
+    const startContainer = range.startContainer;
+
+    while (startOffset > 0 && !/\s/.test(startContainer.textContent[startOffset - 1])) {
+      startOffset--;
+    }
+
+    // Adjust end boundary
+    while (endOffset < startContainer.textContent.length && !/\s/.test(startContainer.textContent[endOffset])) {
+      endOffset++;
+    }
+
+    range.setStart(startContainer, startOffset);
+    range.setEnd(startContainer, endOffset);
+  }
+};
+
+useEffect(() => {
+  const handleMouseUp = () => {
+    adjustSelectionToWordBoundaries();
+    const selection = window.getSelection();
+    if (selection.toString().trim() !== '') {
+      setSelectedText(selection.toString());
+      setPopupVisible(!!selectedText);
+      // setPopupPosition({
+      //   top: selection.getRangeAt(0).getBoundingClientRect().top + window.scrollY,
+      //   left: selection.getRangeAt(0).getBoundingClientRect().left + window.scrollX
+      // });
+      setPopupVisible(true);
+    } else {
+      setPopupVisible(false);
+    }
+  };
+
+  document.addEventListener('mouseup', handleMouseUp);
+  return () => {
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+}, []);
+
 
   const handleTextSelect = () => {
     const selection = window.getSelection();
@@ -206,6 +255,7 @@ const applyFixedText = useCallback((newText) => {
     setSelectedTone(tone);
     setLoading(true);
     try {
+      console.log("selected Text", selectedText)
       const response = await ChangeToneFun(selectedText, tone);
       if (response) {
         applyFixedText(response);
@@ -275,12 +325,12 @@ const applyFixedText = useCallback((newText) => {
     // });
   };
 
-  useEffect(() => {
-    document.addEventListener('mouseup', handleTextSelect);
-    return () => {
-      document.removeEventListener('mouseup', handleTextSelect);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('mouseup', handleTextSelect);
+  //   return () => {
+  //     document.removeEventListener('mouseup', handleTextSelect);
+  //   };
+  // }, []);
 
   return (
     <div className="chat-message-wrapper">
