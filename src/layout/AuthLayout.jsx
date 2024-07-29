@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import assets from "../assets";
+import { Outlet } from 'react-router-dom';
+import assets from '../assets';
 
 const AuthLayout = () => {
   const divStyle = {

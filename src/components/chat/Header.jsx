@@ -1,23 +1,23 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 // styling
-import styles from "../../style/chat/chatHeader.module.scss";
+import styles from '../../style/chat/chatHeader.module.scss';
 
 // react-icons
-import { IoSearchOutline } from "react-icons/io5";
-import { HiUser, HiOutlineDotsHorizontal } from "react-icons/hi";
-import { RiUserSharedLine } from "react-icons/ri";
+import { IoSearchOutline } from 'react-icons/io5';
+import { HiUser, HiOutlineDotsHorizontal } from 'react-icons/hi';
+import { RiUserSharedLine } from 'react-icons/ri';
 
 // images
-import Sidebar from "../../assets/dashboard/sidebarLogo.png";
-import UserProfilePic from "../../assets/chat/user.png";
-import Search from "./Search";
-import MultiUser from "./MultiUser";
-import Dots from "./Dots";
+import Sidebar from '../../assets/dashboard/sidebarLogo.png';
+import UserProfilePic from '../../assets/chat/user.png';
+import Search from './Search';
+import MultiUser from './MultiUser';
+import Dots from './Dots';
 
 const Header = () => {
   const [activeComponent, setActiveComponent] = useState(null);
-  const [inputValue, setInputValue] = useState("United");
+  const [inputValue, setInputValue] = useState('United');
 
   const handleToggleComponent = (component) => {
     setActiveComponent(activeComponent === component ? null : component);
@@ -30,17 +30,17 @@ const Header = () => {
   const IconMap = [
     {
       icon: IoSearchOutline,
-      name: "Search",
+      name: 'Search',
       component: <Search closeButton={() => handleDeactivateComponent()} />,
     },
     {
       icon: HiUser,
-      name: "MultiUser",
+      name: 'MultiUser',
       component: <MultiUser closeButton={() => handleDeactivateComponent()} />,
     },
     {
       icon: HiOutlineDotsHorizontal,
-      name: "Dots",
+      name: 'Dots',
       component: <Dots closeButton={() => handleDeactivateComponent()} />,
     },
   ];
@@ -70,7 +70,7 @@ const Header = () => {
                         : styles.NavLinks
                     }
                     style={{
-                      color: activeComponent === name ? "white" : "black",
+                      color: activeComponent === name ? 'white' : 'black',
                     }}
                     onClick={() => handleToggleComponent(name)}
                   />

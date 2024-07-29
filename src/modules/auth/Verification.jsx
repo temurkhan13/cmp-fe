@@ -50,7 +50,16 @@ const verification = () => {
       <center>
         <Components.Feature.Text className="primary m_1">
           Already have an account?
-          <Link to="/"> Log In</Link>
+          <Link
+            to="/"
+            style={{
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              color: '#0B1444',
+            }}
+          >
+            Log In
+          </Link>
         </Components.Feature.Text>
       </center>
     </Components.Feature.Container>

@@ -98,7 +98,7 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
 // Styles object using rem units
 const styles = {
   searchDropdown: {
-    border: '0.0625rem solid lightgray',
+    border: '0.0625rem solid #f1f1f1',
     borderRadius: '1rem',
     width: '35rem',
     padding: '1.5rem',
@@ -140,7 +140,7 @@ const styles = {
   crossIcon: {
     fontSize: '2.5rem',
     color: 'rgba(0, 0, 0, 0.6)',
-    backgroundColor: 'lightgray',
+    backgroundColor: '#f1f1f1',
     borderRadius: '50%',
     padding: '0.3rem',
     marginLeft: '0.3125rem',

@@ -108,6 +108,64 @@
 import { useState,useEffect } from "react";
 import apiClient from "@api/axios";
 
+import MockAdapter from "axios-mock-adapter";
+
+// Mock API setup
+const mock = new MockAdapter(apiClient, { delayResponse: 500 });
+// Sample data for mocking
+const chatMetadata = {
+  _id: "chatId1",
+  version: 1,
+  comments: [
+    {
+      commentId: "commentId1",
+      userId: "userId2",
+      content: "Nice message!",
+      timestamp: "2024-07-12T12:37:00Z",
+      replies: [
+        {
+          replyId: "replyId1",
+          userId: "userId3",
+          content: "I agree!",
+          timestamp: "2024-07-12T12:38:00Z"
+        }
+      ]
+    }
+  ],
+  bookmarks: [
+    {
+      bookmarkId: "bookmarkId1",
+      userId: "userId4",
+      timestamp: "2024-07-12T12:40:00Z"
+    }
+  ],
+  media: [
+    {
+      mediaId: "mediaId1",
+      url: "http://example.com/media.jpg",
+      timestamp: "2024-07-12T12:41:00Z"
+    }
+  ]
+};
+
+
+// Mock POST request for adding a comment
+mock.onPost('/chat/chatId1/comments').reply((config) => {
+  const { comment } = JSON.parse(config.data);
+  comment.commentId = `commentId${chatMetadata.comments.length + 1}`;
+  chatMetadata.comments.push(comment);
+  return [200, comment];
+});
+
+// Mock PUT request for updating chat version
+mock.onPut(/\/chat\/\w+\/version/).reply(config => {
+  const { version } = JSON.parse(config.data);
+  chatMetadata.version = version;
+  return [200, chatMetadata];
+});
+
+
+
 const useManagerChat = () => {
   const [error, setError] = useState(null);
   const [managerData, setData] = useState(null); // State to hold folders and chats
@@ -121,7 +179,7 @@ const useManagerChat = () => {
       setData(response.data); // Update state with server data
       setError(null);
     } catch (error) {
-      console.error('Error fetching initial data:', error);
+      console.error('Error fetching initial chat data:', error);
       setError(error.message);
     }
   };

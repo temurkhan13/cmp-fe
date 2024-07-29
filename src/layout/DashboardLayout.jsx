@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../../scss/modules/dashboard/dashboardLayout.scss';
 import PropTypes from 'prop-types';
+
 import 'boxicons/css/boxicons.min.css';
-import { CgMenuGridR } from 'react-icons/cg';
-import { MdOutlineAssistant } from 'react-icons/md';
-import { MdOutlineAssistantDirection } from 'react-icons/md';
-import { SiDigitalocean } from 'react-icons/si';
-import { RiBillLine } from 'react-icons/ri';
-import { FaHireAHelper } from 'react-icons/fa';
+import '../../scss/modules/dashboard/dashboardLayout.scss';
+import Sidebarlogo from '../assets/dashboard/sidebarLogo.png';
+
 import { RiFeedbackFill } from 'react-icons/ri';
 import { FaTrash } from 'react-icons/fa';
-import ProfileUser from '../assets/chat/user.png';
-import Sidebarlogo from '../assets/dashboard/sidebarLogo.png';
+import { MdDashboard } from 'react-icons/md';
+import { IoIosChatboxes } from 'react-icons/io';
+import { RiNewspaperLine } from 'react-icons/ri';
+import { AiFillQuestionCircle } from 'react-icons/ai';
+import { BiSolidSpreadsheet } from 'react-icons/bi';
+import { BsFilePlayFill } from 'react-icons/bs';
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -21,32 +22,32 @@ const DashboardLayout = ({ children }) => {
     {
       path: '/dashboard',
       name: 'Dashboard',
-      Icon: <CgMenuGridR />,
+      Icon: <MdDashboard />,
     },
     {
       path: '/dashboard/AiAssistant',
       name: 'Ai Assistant',
-      Icon: <MdOutlineAssistant />,
+      Icon: <IoIosChatboxes />,
     },
     {
       path: '/dashboard/myAssessments',
       name: 'My Assessments',
-      Icon: <MdOutlineAssistantDirection />,
+      Icon: <RiNewspaperLine />,
     },
     {
       path: '/dashboard/DigitalPlaybook',
       name: 'Digital Playbook',
-      Icon: <SiDigitalocean />,
+      Icon: <BsFilePlayFill />,
     },
     {
       path: '/dashboard/PlanBilling',
       name: 'Plan & Billing',
-      Icon: <RiBillLine />,
+      Icon: <BiSolidSpreadsheet />,
     },
     {
       path: '/dashboard/HelpCenter',
       name: 'Help Center',
-      Icon: <FaHireAHelper />,
+      Icon: <AiFillQuestionCircle />,
     },
     {
       path: '/dashboard/feedback',
@@ -120,14 +121,14 @@ const DashboardLayout = ({ children }) => {
             >
               <li>
                 <a>
-                  <i style={{ color: 'black' }}>{Icon}</i>
+                  <i style={{ color: 'gray' }}>{Icon}</i>
                   <span className="link_name">{name}</span>
                 </a>
                 <span className="tooltip">{name}</span>
               </li>
             </Link>
           ))}
-          <li className="profile">
+          {/* <li className="profile">
             <div className="profile_details">
               <img src={ProfileUser} alt="profile image" />
               <div className="profile_content">
@@ -136,7 +137,7 @@ const DashboardLayout = ({ children }) => {
               </div>
             </div>
             <i className="bx bx-log-out" id="log_out"></i>
-          </li>
+          </li> */}
         </ul>
       </div>
 

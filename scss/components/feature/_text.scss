@@ -83,5 +83,9 @@ p {
     font-size: 1.2rem;
     font-weight: 500;
     line-height: 1.8rem;
+    &:hover {
+      color: $color_Primary;
+      transition: all 0.1s ease-in-out;
+    }
   }
 }

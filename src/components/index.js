@@ -4,6 +4,8 @@ import * as UI from './ui';
 import * as Assistant from './assisstent';
 import * as Dashboard from './dashboard';
 import * as Sitemap from './sitemap';
+import * as Reports from './reports';
+
 const Components = {
   Common,
   Feature,
@@ -11,6 +13,7 @@ const Components = {
   Assistant,
   Dashboard,
   Sitemap
+  Reports,
 };
 
 export default Components;

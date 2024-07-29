@@ -1,11 +1,11 @@
-import { IoSearchOutline } from "react-icons/io5";
-import { IoFilterSharp } from "react-icons/io5";
-import UserImg from "../../assets/chat/user.png";
-import { IoMdAttach } from "react-icons/io";
-import { GoMention } from "react-icons/go";
-import { IoSend } from "react-icons/io5";
-import { IoMdCheckmark } from "react-icons/io";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { IoSearchOutline } from 'react-icons/io5';
+import { IoFilterSharp } from 'react-icons/io5';
+import UserImg from '../../assets/chat/user.png';
+import { IoMdAttach } from 'react-icons/io';
+import { GoMention } from 'react-icons/go';
+import { IoSend } from 'react-icons/io5';
+import { IoMdCheckmark } from 'react-icons/io';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 const Settings = () => {
   return (
@@ -27,7 +27,7 @@ const Settings = () => {
           <div>
             <div className="MessageUserName">
               <p>
-                {" "}
+                {' '}
                 Jerald Huels <span>1h</span>
               </p>
               <div>
@@ -43,7 +43,7 @@ const Settings = () => {
         <div
           className="row"
           style={{
-            justifyContent: "space-between",
+            justifyContent: 'space-between',
           }}
         >
           <img src={UserImg} alt="userImage" />

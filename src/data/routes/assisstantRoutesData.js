@@ -1,8 +1,8 @@
-import Module from "../../modules";
+import Module from '../../modules';
 const assisstantRoutesData = [
   {
-    title: "",
-    path: "/assisstant/chat",
+    title: '',
+    path: '/assisstant/chat',
     element: Module.Assisstant.Chat,
   },
 ];

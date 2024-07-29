@@ -130,18 +130,20 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
         />
         Customization
         <MdOutlineKeyboardArrowRight
-          style={{ margin: 'auto', fontSize: '1.6rem' }}
+          style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
         />
         <Dropdown.Submenu>
           <Dropdown.Item>
             Change Tone
             <MdOutlineKeyboardArrowRight
-              style={{ margin: 'auto', fontSize: '1.6rem' }}
+              style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
             />
             <Dropdown.Submenu>
               <Dropdown.Item>
                 Normal
-                <IoIosCheckmark style={{ margin: 'auto', fontSize: '2rem' }} />
+                <IoIosCheckmark
+                  style={{ marginLeft: 'auto', fontSize: '2rem' }}
+                />
               </Dropdown.Item>
               <hr style={styles.straightLine} />
               <Dropdown.Item>Professional</Dropdown.Item>
@@ -154,12 +156,14 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
           <Dropdown.Item>
             Response Length
             <MdOutlineKeyboardArrowRight
-              style={{ margin: 'auto', fontSize: '1.6rem' }}
+              style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
             />
             <Dropdown.Submenu>
               <Dropdown.Item>
                 Auto
-                <IoIosCheckmark style={{ margin: 'auto', fontSize: '2rem' }} />
+                <IoIosCheckmark
+                  style={{ marginLeft: 'auto', fontSize: '2rem' }}
+                />
               </Dropdown.Item>
               <hr style={styles.straightLine} />
               <Dropdown.Item>Small</Dropdown.Item>

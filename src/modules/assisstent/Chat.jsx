@@ -1,19 +1,14 @@
-import Components from "@components";
-import React, { useState } from 'react';
+import Components from '@components';
 
 const AiAssistantChat = () => {
-
-
- 
-
   return (
     <div className="assessmentChat">
       <Components.Common.Header />
       <section>
         <Components.Assistant.NewChat />
-        
+
         <Components.Assistant.MessagesSection />
-        
+
         <Components.Assistant.Assessments />
       </section>
     </div>

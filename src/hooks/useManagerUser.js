@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import apiClient from "@api/axios";
 
@@ -55,18 +54,20 @@ mock.onGet(/\/fetchUserShareData\/\d+/).reply((config) => {
   const chatData = mockData.find((chat) => chat.id === chatId);
   return [200, chatData ? chatData.members : []];
 });
-mock.onGet("/fetchSharedUsers").reply(200, initialSharedUsers);
-mock.onGet('/fetchUserShareData/1').reply(200, initialData);
-mock.onGet('/fetchUserShareData/2').reply(200, initialData);
-mock.onGet('/fetchUserShareData/3').reply(200, initialData);
-mock.onGet('/fetchUserShareData/4').reply(200, initialData);
+ mock.onGet("/fetchSharedUsers").reply(200, initialSharedUsers);
+ mock.onGet('/fetchUserShareData/1').reply(200, initialData);
+ mock.onGet('/fetchUserShareData/2').reply(200, initialData);
+ mock.onGet('/fetchUserShareData/3').reply(200, initialData);
+ mock.onGet('/fetchUserShareData/4').reply(200, initialData);
 mock.onPost("/inviteUser").reply(200, {});
 mock.onPost("/removeSharedUser").reply(200, {});
+
 mock.onGet(/\/fetchComments\?blockId=\d+/).reply(config => {
   const blockId = parseInt(new URLSearchParams(config.url.split('?')[1]).get('blockId'));
   const filteredComments = initialComments.filter(comment => comment.blockId === blockId);
   return [200, filteredComments];
 });
+
 mock.onPost("/addComment").reply(config => {
   const { blockId, comment } = JSON.parse(config.data);
   initialComments.push({ id: initialComments.length + 1, text: comment, blockId });
@@ -84,7 +85,7 @@ mock.onPost("/replyToComment").reply(200, {});
       return response; //for redux
       
     } catch (error) {
-      console.error('Error fetching initial data:', error);
+      console.error('Error fetching initial user data:', error);
     //  setError(error.message);
       throw error;
     }
@@ -108,7 +109,7 @@ const useManagerUser = (chatId) => {
       return response; //for redux
       
     } catch (error) {
-      console.error('Error fetching initial data:', error);
+      console.error('Error fetching initial userdata data:', error);
       setError(error.message);
       throw error;
     }

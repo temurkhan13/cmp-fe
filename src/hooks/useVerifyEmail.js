@@ -14,7 +14,8 @@ const useVerifyEmail = () => {
     setError(null);
 
     // Retrieve the token from the location state
-    const token = location.state?.token;
+    //const token = location.state?.token;
+    const token = localStorage.getItem('token');
 
     
     if (token) {

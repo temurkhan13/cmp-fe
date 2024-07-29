@@ -59,6 +59,7 @@
 
 import { useState } from 'react';
 import apiClient from '@api/axios';
+import axios from 'axios';
 
 const useChat = () => {
   const [error, setError] = useState(null);
@@ -77,12 +78,12 @@ const useChat = () => {
         formData.append('pdfPath', file);
       }
 
-      const response = await apiClient.post('/chat/', formData, {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('http://139.59.4.99:3000/api/chat/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-        },
-      });
-
+        Authorization : `Bearer ${token}`
+      }, });
       console.log('chatWithApi response', response.data.message);
       setLoading(false);
       setError(null);

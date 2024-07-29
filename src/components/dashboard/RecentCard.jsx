@@ -1,145 +1,156 @@
-import assets from '@assets';
 import PropTypes from 'prop-types';
-import { MdOutlineEdit } from 'react-icons/md';
-import { ImFilesEmpty } from 'react-icons/im';
-import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
-import { CiBookmark } from 'react-icons/ci';
-import { TfiReload } from 'react-icons/tfi';
 import { FaFileAlt } from 'react-icons/fa';
-import { HiDotsHorizontal } from 'react-icons/hi';
 import { IoPeople } from 'react-icons/io5';
+import { TfiReload } from 'react-icons/tfi';
+import { CiBookmark } from 'react-icons/ci';
+import { ImFilesEmpty } from 'react-icons/im';
+import { MdOutlineEdit } from 'react-icons/md';
+import { HiDotsHorizontal } from 'react-icons/hi';
+import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
+import { RxAvatar } from 'react-icons/rx';
 
-const RecentCard = ({ chat }) => {
-  if (!chat) {
-    return null;
-  }
-
-  const [folderName, chatData] = chat;
-
-  return (
-    <>
-      <div style={styles.cardContainer}>
-        <div style={styles.cardWrapper}>
-          <Header userImage={''} userName="You" content={chatData.content} />
-          <h3>
-            <img src={''} alt="ChangeAI" /> ChangeAI
-          </h3>
-          <p style={styles.chatContent}>{chatData.content}</p>
-          <Footer />
+const RecentCards = ({ chats }) => (
+  <div className="cardsContainer">
+    {chats.map(([folderName, chatData]) => (
+      <div key={chatData.id} className="card-wrapper">
+        <div className="card">
+          <div className="card-header">
+            <h2 className="userName">
+              <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+            </h2>
+            <p>{chatData.content}</p>
+            <MdOutlineEdit />
+          </div>
+          <div className="content">
+            <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+              <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
+              ChangeAI
+            </h3>
+            <p className="chatContent">{chatData.content}</p>
+          </div>
+          <div className="footer">
+            <div className="iconsContainer">
+              <ImFilesEmpty
+                style={{
+                  fontSize: '1.3rem',
+                  color: 'black',
+                }}
+              />
+              <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
+              <AiOutlineDislike
+                style={{ fontSize: '1.3rem', color: 'black' }}
+              />
+              <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
+              <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
+            </div>
+            <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
+          </div>
+        </div>
+        <div className="fileDetails">
+          <div className="fileName">
+            File Name <IoPeople color="gray" />
+          </div>
+          <div>
+            <span>in</span>
+            <span className="folderName">{folderName}</span>
+            <span>
+              • Modified 2 days ago
+              <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
+            </span>
+          </div>
         </div>
       </div>
-      <FileDetails folderName={folderName} />
-    </>
-  );
-};
+    ))}
 
-const Header = ({ userImage, userName, content }) => (
-  <div style={styles.header}>
-    <h2 style={styles.userName}>
-      <img src={userImage} alt="User" /> {userName}
-    </h2>
-    <p>{content}</p>
-    <MdOutlineEdit />
+    <style>{`
+    .card-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    }
+      .cardsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding:2rem;
+      }
+      .card {
+        width: 25rem;
+        border: 1px solid #ccc;
+        border-radius: 1.3rem;
+        background-color: #fff;
+        padding: 2rem;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &:hover{
+        background-color: #f9f9f9;
+        transition: all 0.1s ease-in-out;
+        }
+      }
+      .card-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+      }
+      .userName {
+        font-size: 1.125rem;
+        font-weight: bold;
+      }
+        .content{
+        display:flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        }
+      .chatContent {
+        font-size: 0.875rem;
+        margin: 0.5rem 0;
+      }
+        .ai-heading{
+        display: flex;
+        }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        width: 100%;
+      }
+      .iconsContainer {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .fileDetails {
+        width: 100%;
+        margin-top: 1rem;
+      }
+      .fileName {
+        font-size: 1.125rem;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+      .folderName {
+        color: #0066ff;
+        font-size: 1.1rem;
+        margin-left: 0.5rem;
+      }
+    `}</style>
   </div>
 );
 
-const Footer = () => (
-  <div style={styles.footer}>
-    <div style={styles.iconsContainer}>
-      <ImFilesEmpty fontSize="1.125rem" />
-      <AiOutlineLike fontSize="1.125rem" />
-      <AiOutlineDislike fontSize="1.125rem" />
-      <CiBookmark fontSize="1.125rem" />
-      <TfiReload fontSize="1.125rem" />
-    </div>
-    <FaFileAlt fontSize="2.1875rem" color="gray" />
-  </div>
-);
-
-const FileDetails = ({ folderName }) => (
-  <div>
-    <div style={styles.fileName}>
-      File Name <IoPeople color="gray" />
-    </div>
-    <div>
-      <span>in</span>
-      <span style={styles.folderName}>{folderName}</span>
-      <span>
-        • Modified 2 days ago <HiDotsHorizontal color="gray" />
-      </span>
-    </div>
-  </div>
-);
-
-const styles = {
-  cardContainer: {
-    width: '25rem',
-    // display: 'inline-block',
-    border: '0.0625rem solid #ccc',
-    borderRadius: '1.3rem',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    cursor: 'pointer',
-    backgroundColor: '#fff',
-    padding: '2rem',
-    overflow: 'hidden',
-  },
-  cardWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  fileName: {
-    fontSize: '1.125rem',
-    fontWeight: 'bold',
-    marginTop: '1rem',
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'start',
-    marginBottom: '0.5rem',
-  },
-  userName: {
-    fontSize: '1.125rem',
-    fontWeight: 'bold',
-  },
-  iconsContainer: {
-    display: 'flex',
-    gap: '0.5rem',
-  },
-  chatContent: {
-    fontSize: '0.875rem',
-    margin: '0.5rem 0',
-  },
-  footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: '1rem',
-  },
-  folderName: {
-    color: '#0066FF',
-    fontSize: '1.1rem',
-  },
+RecentCards.propTypes = {
+  chats: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        content: PropTypes.string.isRequired,
+      })
+    )
+  ).isRequired,
 };
 
-// Prop types validation
-RecentCard.propTypes = {
-  chat: PropTypes.arrayOf(PropTypes.any).isRequired,
-};
-
-Header.propTypes = {
-  userImage: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
-};
-
-Footer.propTypes = {};
-
-FileDetails.propTypes = {
-  folderName: PropTypes.string.isRequired,
-};
-
-export default RecentCard;
+export default RecentCards;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef  } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../../../styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { IoAttach } from 'react-icons/io5';
 import { IoSend } from 'react-icons/io5';
 import UserPic from '../../../assets/chat/user.png';
 import AiPic from '../../../assets/dashboard/sidebarLogo.png';
+import InpireMeIcon from '../../../assets/inspireBtn.svg';
 import { Example } from '../../../utils';
 import fileIcon from '../../../assets/dashboard/fileIcon.png';
 import TonePopup from '../../../components/assisstent/assisstentChat/TonePopup';
@@ -32,7 +33,7 @@ import usestartAssessment from '../../../hooks/usestartAssessment';
 // chat upload pdf & text
 import useChat from '../../../hooks/useChat';
 
-const MessagesSection = ({selectedAssessment}) => {
+const MessagesSection = ({ selectedAssessment }) => {
   const location = useLocation();
   const { Questions } = location.state || {};
 
@@ -69,7 +70,6 @@ const MessagesSection = ({selectedAssessment}) => {
     }
   };
 
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -105,7 +105,7 @@ const MessagesSection = ({selectedAssessment}) => {
           fileName: file ? file.name : null,
         },
       ]);
-      scrollToBottom()
+      scrollToBottom();
     }
 
     setLoading(true);
@@ -124,6 +124,15 @@ const MessagesSection = ({selectedAssessment}) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInspireClick = async () => {
+    // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
+    // const inspiredText = await handleInspire(answers[currentQuestionKey]);
+    // setAnswers({
+    //   ...answers,
+    //   [currentQuestionKey]: inspiredText,
+    // });
   };
 
   // Ask-Ai
@@ -284,7 +293,7 @@ const MessagesSection = ({selectedAssessment}) => {
         />
 
         {chat.length > 0 ? (
-          <div >
+          <div>
             {popupVisible && (
               <TonePopup
                 onToneChange={handleToneChange}
@@ -295,7 +304,10 @@ const MessagesSection = ({selectedAssessment}) => {
             )}
 
             {chat.map((item, index) => (
-              <div key={index} ref={index === chat.length - 1 ? messagesEndRef : null}>
+              <div
+                key={index}
+                ref={index === chat.length - 1 ? messagesEndRef : null}
+              >
                 <div>
                   {item.role === 'user' ? (
                     <div className="card">
@@ -305,7 +317,9 @@ const MessagesSection = ({selectedAssessment}) => {
                       <div>
                         <p className="Heading">You</p>
                         {item.content && (
-                          <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
+                          <div className="msg">
+                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                          </div>
                         )}
                         {item.file && (
                           <div className="file-preview">
@@ -330,7 +344,9 @@ const MessagesSection = ({selectedAssessment}) => {
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg"><ReactMarkdown>{item.content}</ReactMarkdown></div>
+                        <div className="msg">
+                          <ReactMarkdown>{item.content}</ReactMarkdown>
+                        </div>
                         <div>
                           <FaCopy />
                           <FaThumbsUp />
@@ -348,7 +364,7 @@ const MessagesSection = ({selectedAssessment}) => {
           <div className="defaultPage">
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
-              {selectedAssessment} selectedAssessment
+                {selectedAssessment} Champions Survey
               </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
@@ -364,6 +380,8 @@ const MessagesSection = ({selectedAssessment}) => {
                   borderRadius: '10px',
                   border: 'none',
                   outline: 'none',
+                  fontSize: '1.5rem',
+                  fontWeight: '500',
                 }}
               >
                 Start Assessment
@@ -385,6 +403,35 @@ const MessagesSection = ({selectedAssessment}) => {
           </label>
         </div>
         <div className="input-container">
+          <div
+            style={{
+              position: 'left',
+              bottom: '10px',
+              right: '10px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src={InpireMeIcon}
+              alt="Inspire Me"
+              onClick={handleInspireClick}
+            />
+            {loading && (
+              <div
+                style={{
+                  border: '2px solid rgba(0, 0, 0, 0.1)',
+                  borderTop: '2px solid #000',
+                  borderRadius: '50%',
+                  width: '16px',
+                  height: '16px',
+                  animation: 'spin 1s linear infinite',
+                  marginLeft: '8px',
+                }}
+              />
+            )}
+          </div>
           <input
             type="text"
             placeholder="Enter text here.."
@@ -393,9 +440,9 @@ const MessagesSection = ({selectedAssessment}) => {
           />
           <div className="icons">
             <label htmlFor="file-input">
-              <IoAttach />
+              <IoAttach className="send-icon " />
             </label>
-            <IoSend onClick={handleSendMessage} />
+            <IoSend onClick={handleSendMessage} className="send-icon " />
           </div>
         </div>
       </div>

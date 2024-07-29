@@ -34,19 +34,19 @@
 
 // export default MessageItemFile;
 
-import React from "react";
-import Components from "..";
-import assets from "../../assets";
+import PropTypes from 'prop-types';
+import Components from '..';
+import assets from '../../assets';
 
 const MessageItemFile = (props) => {
   // Function to determine the file icon based on the file extension
   const getFileIcon = (fileName) => {
-    const extension = fileName.split(".").pop().toLowerCase();
+    const extension = fileName.split('.').pop().toLowerCase();
     switch (extension) {
-      case "pdf":
+      case 'pdf':
         return assets.common.pdfIcon;
-      case "xls":
-      case "xlsx":
+      case 'xls':
+      case 'xlsx':
         return assets.common.fileIcon; // Assuming you have an icon for xls
       default:
         return assets.common.fileIcon;
@@ -80,6 +80,17 @@ const MessageItemFile = (props) => {
       </section>
     </div>
   );
+};
+
+MessageItemFile.propTypes = {
+  image: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  files: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      size: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default MessageItemFile;

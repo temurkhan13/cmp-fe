@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 
 const FileInput = () => {
   const [file, setFile] = useState(null);
@@ -25,7 +25,7 @@ const FileInput = () => {
   // Function to handle file upload
   const handleUpload = () => {
     // You can implement file upload logic here, such as using FormData or sending the file to an API endpoint
-    console.log("Uploading file:", file);
+    console.log('Uploading file:', file);
   };
 
   return (
