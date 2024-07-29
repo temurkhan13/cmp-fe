@@ -1,13 +1,13 @@
-import Module from "../../modules";
+import Module from '../../modules';
 const assessmentRoutesData = [
   {
-    title: "",
-    path: "/assessment/chat",
+    title: '',
+    path: '/assessment/chat',
     element: Module.Assessment.Chat,
   },
   {
-    title: "",
-    path: "/questionnaire",
+    title: '',
+    path: '/questionnaire',
     element: Module.Assessment.Questionnaire,
   },
 ];

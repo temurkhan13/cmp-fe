@@ -10,6 +10,7 @@
       }
       &:nth-child(2) {
         width: 100%;
+        overflow-y: auto;
         // background-color: aqua;
       }
       &:nth-child(3) {

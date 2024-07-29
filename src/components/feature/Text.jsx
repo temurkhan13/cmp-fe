@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from 'prop-types';
 
 const Text = (props) => {
   return (
@@ -13,6 +13,18 @@ const Text = (props) => {
       {props.children}
     </p>
   );
+};
+
+Text.propTypes = {
+  className: PropTypes.string.isRequired,
+  dangerouslySetInnerHTML: PropTypes.oneOfType([
+    PropTypes.shape({ __html: PropTypes.string }),
+  ]),
+  animation: PropTypes.string,
+  duration: PropTypes.number,
+  onClick: PropTypes.func,
+  style: PropTypes.object,
+  children: PropTypes.node.isRequired,
 };
 
 export default Text;

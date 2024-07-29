@@ -1,4 +1,4 @@
-import userImages from "../../assets/chat/user.png";
+import userImages from '../../assets/chat/user.png';
 
 const images = [
   userImages,

@@ -1,7 +1,14 @@
-import React, { useState } from "react";
-import { ErrorMessage, useField } from "formik";
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { ErrorMessage, useField } from 'formik';
 
-const VerifyCode = ({ label, place, className, handleVerification, ...props }) => {
+const VerifyCode = ({
+  label,
+  place,
+  className,
+  handleVerification,
+  ...props
+}) => {
   const [field, meta, helpers] = useField(props);
   const [value, setValue] = useState(field.value);
 
@@ -26,18 +33,31 @@ const VerifyCode = ({ label, place, className, handleVerification, ...props }) =
         type="text"
         inputMode="numeric"
         pattern="\d*"
-        className={`form-input ${className} ${meta.touched && meta.error && "is-invalid"}`}
+        className={`form-input ${className} ${
+          meta.touched && meta.error && 'is-invalid'
+        }`}
         {...field}
         autoComplete="off"
         value={value}
         onChange={handleChange}
         style={{
-          border: meta.touched && meta.error ? "1px solid rgba(255, 0, 0, 0.589)" : undefined,
+          border:
+            meta.touched && meta.error
+              ? '1px solid rgba(255, 0, 0, 0.589)'
+              : undefined,
         }}
       />
       <ErrorMessage component="div" name={field.name} className="form-error" />
     </div>
   );
+};
+
+VerifyCode.propTypes = {
+  label: PropTypes.string.isRequired,
+  place: PropTypes.string,
+  className: PropTypes.string,
+  handleVerification: PropTypes.func.isRequired,
+  // Spread props may contain other PropTypes from useField hook
 };
 
 export default VerifyCode;

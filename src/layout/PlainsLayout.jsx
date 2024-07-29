@@ -1,6 +1,6 @@
-import { Outlet } from "react-router-dom";
-import Components from "../components";
-import assets from "../assets";
+import { Outlet } from 'react-router-dom';
+import Components from '../components';
+import assets from '../assets';
 
 const PlainsLayout = () => {
   return (

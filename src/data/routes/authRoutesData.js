@@ -36,8 +36,8 @@ const authRoutesData = [
     element: Module.Auth.VerifyEmail,
   },
 
-  // 
-  // 
+  //
+  //
   // Forgot-Password
   // 1. Give Email
   {

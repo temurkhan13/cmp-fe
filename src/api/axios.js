@@ -33,12 +33,11 @@
 // export default apiClient;
 
 import axios from 'axios';
-
+//baseURL: 'http://localhost:5173/api',
 const apiClient = axios.create({
   baseURL: 'http://139.59.4.99:3000/api',
-  //baseURL: 'http://localhost:5173/api',
   headers: {
-    Accept: 'application/json',
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
 });
@@ -49,6 +48,9 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    console.log('Request URL:', config.baseURL + config.url); // Log the full URL
+    console.log('Request Headers:', config.headers); // Log headers
+    console.log('Request Data:', config.data); // Log request data
     return config;
   },
   (error) => {

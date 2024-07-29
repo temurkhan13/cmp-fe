@@ -1,20 +1,20 @@
-import { Formik, Form } from "formik";
-import Components from "../..";
-import data from "../../../data";
-import { Link } from "react-router-dom";
+import { Formik, Form } from 'formik';
+import Components from '../..';
+import data from '../../../data';
+import { Link } from 'react-router-dom';
 
 const PayWithCard = () => {
   const initalValues = {
-    email: "",
-    name: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvc: "",
-    country: "",
-    zipCode: "",
+    email: '',
+    name: '',
+    cardNumber: '',
+    expiryDate: '',
+    cvc: '',
+    country: '',
+    zipCode: '',
   };
 
-  const dummyCountry = ["Pakistan", "Turkey", "USA"];
+  const dummyCountry = ['Pakistan', 'Turkey', 'USA'];
 
   return (
     <div className="payWithCard">
@@ -79,7 +79,7 @@ const PayWithCard = () => {
                   />
                 </blockquote>
               </div>
-              <Link to="/business-info">
+              <Link to="/dashboard">
                 <Components.Feature.Button className="primary">
                   Subscribe
                 </Components.Feature.Button>

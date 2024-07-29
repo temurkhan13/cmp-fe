@@ -6,9 +6,14 @@ const useAuto = () => {
 
   const autoWritingFnc = async (inputText) => {
     try {
-      const response = await apiClient.post("/chat/auto", {
+      const token = localStorage.getItem('token');
+      const response = await apiClient.post("http://139.59.4.99:3000/api//chat/auto", {
         message: inputText,
-      });
+      },
+      { headers: {
+         'Content-Type': 'multipart/form-data',
+       Authorization : `Bearer ${token}`
+     }},);
       setError(null);
       return response.data.message;
     } catch (error) {
