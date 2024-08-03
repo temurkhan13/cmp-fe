@@ -4,11 +4,32 @@ import { PiFilesFill } from 'react-icons/pi';
 import { FaNetworkWired } from 'react-icons/fa';
 import { BiSolidCollection, BiSolidFolderOpen } from 'react-icons/bi';
 
-const cardData = [
+import { useSelector } from 'react-redux'; 
+
+
+
+
+
+const CountingCards = () => {
+
+
+const workspaces = useSelector((state) => state.workspace.workspaces);
+const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
+const folderSelect = useSelector((state) => state.workspace.folders);
+const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
+
+ // Count total workspaces
+ const totalWorkspaces = workspaces.length;
+
+ // Count total folders
+ const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
+
+
+ const cardData = [
   {
     icon: <BiSolidCollection style={{ fontSize: '3.5rem', color: 'gray ' }} />,
     title: 'WorkSpaces',
-    count: 2,
+    count: totalWorkspaces,
     background: card1,
   },
   {
@@ -36,8 +57,6 @@ const cardData = [
     background: card1,
   },
 ];
-
-const CountingCards = () => {
   return (
     <div className="counting-cards">
       {cardData.map((card, index) => (

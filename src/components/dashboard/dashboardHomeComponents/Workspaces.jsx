@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { GoPlus } from 'react-icons/go';
@@ -8,82 +8,122 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { BsWindowStack } from 'react-icons/bs';
 import { IoFolderOpen } from 'react-icons/io5';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectedWorkspaceId } from '../../../redux/slices/workspaceSlice';
+//import { setSelectedFolderId } from '../../../redux/slices/folderSlice';
+
 const Workspaces = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
 
-  const initialFolders = [
-    {
-      name: 'Workspace Folders',
-      details: {
-        section1: {
-          heading: 'Assisstant',
-          recentFiles: [
-            { name: 'DesignSpec_1.pdf' },
-            { name: 'Wireframe_1.sketch' },
-          ],
-          folders: [
-            { name: 'Logos_1' },
-            { name: 'UI_1' },
-            { name: 'Mockups_1' },
-            { name: 'Illustrations_1' },
-            { name: 'Animations_1' },
-          ],
-        },
-        section2: {
-          heading: 'Assessment',
-          recentFiles: [
-            { name: 'API_Doc_1.docx' },
-            { name: 'Backend_Arch_1.pptx' },
-          ],
-          folders: [
-            { name: 'Frontend_1' },
-            { name: 'Backend_1' },
-            { name: 'Database_1' },
-            { name: 'APIs_1' },
-            { name: 'Testing_1' },
-          ],
-        },
-      },
-    },
-    {
-      name: 'Workspace Folders',
-      details: {
-        section1: {
-          heading: 'Assisstant',
-          recentFiles: [
-            { name: 'DesignSpec_1.pdf' },
-            { name: 'Wireframe_1.sketch' },
-          ],
-          folders: [
-            { name: 'Logos_1' },
-            { name: 'UI_1' },
-            { name: 'Mockups_1' },
-            { name: 'Illustrations_1' },
-            { name: 'Animations_1' },
-          ],
-        },
-        section2: {
-          heading: 'Assessment',
-          recentFiles: [
-            { name: 'API_Doc_1.docx' },
-            { name: 'Backend_Arch_1.pptx' },
-          ],
-          folders: [
-            { name: 'Frontend_1' },
-            { name: 'Backend_1' },
-            { name: 'Database_1' },
-            { name: 'APIs_1' },
-            { name: 'Testing_1' },
-          ],
-        },
-      },
-    },
-  ];
 
-  const [folders, setFolders] = useState(initialFolders);
+  const dispatch = useDispatch();
+
+
+
+
+
+
+  const workspaces = useSelector((state) => state.workspace.workspaces);
+  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
+  //const folderSelect = useSelector((state) => state.workspace.folders);
+  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
+
+   // Count total workspaces
+   const totalWorkspaces = workspaces.length;
+
+   // Count total folders
+   const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
+ 
+
+  useEffect(() => {
+    console.log("workspace: " + totalWorkspaces + totalFolders);
+    if (workspaces.length > 0 && !selectedWorkspaceId) {
+      dispatch(setSelectedWorkspaceId(workspaces[0].workspaceId));
+      console.log(workspaces[0].workspaceId);
+    }
+  }, [workspaces, selectedWorkspaceId, dispatch]);
+
+  // useEffect(() => {
+  //   if (folderSelect.length > 0 && !selectedFolderId) {
+  //     console.log(workspaces[0].workspaceId);
+
+  //     dispatch(setSelectedFolderId(folderSelect[0].folderId));
+  //   }
+  // }, [folderSelect, selectedFolderId, dispatch]);
+
+  // const initialFolders = [
+  //   {
+  //     name: 'Workspace Folders',
+  //     details: {
+  //       section1: {
+  //         heading: 'Assisstant',
+  //         recentFiles: [
+  //           { name: 'DesignSpec_1.pdf' },
+  //           { name: 'Wireframe_1.sketch' },
+  //         ],
+  //         folders: [
+  //           { name: 'Logos_1' },
+  //           { name: 'UI_1' },
+  //           { name: 'Mockups_1' },
+  //           { name: 'Illustrations_1' },
+  //           { name: 'Animations_1' },
+  //         ],
+  //       },
+  //       section2: {
+  //         heading: 'Assessment',
+  //         recentFiles: [
+  //           { name: 'API_Doc_1.docx' },
+  //           { name: 'Backend_Arch_1.pptx' },
+  //         ],
+  //         folders: [
+  //           { name: 'Frontend_1' },
+  //           { name: 'Backend_1' },
+  //           { name: 'Database_1' },
+  //           { name: 'APIs_1' },
+  //           { name: 'Testing_1' },
+  //         ],
+  //       },
+  //     },
+  //   },
+  //   {
+  //     name: 'Workspace Folders',
+  //     details: {
+  //       section1: {
+  //         heading: 'Assisstant',
+  //         recentFiles: [
+  //           { name: 'DesignSpec_1.pdf' },
+  //           { name: 'Wireframe_1.sketch' },
+  //         ],
+  //         folders: [
+  //           { name: 'Logos_1' },
+  //           { name: 'UI_1' },
+  //           { name: 'Mockups_1' },
+  //           { name: 'Illustrations_1' },
+  //           { name: 'Animations_1' },
+  //         ],
+  //       },
+  //       section2: {
+  //         heading: 'Assessment',
+  //         recentFiles: [
+  //           { name: 'API_Doc_1.docx' },
+  //           { name: 'Backend_Arch_1.pptx' },
+  //         ],
+  //         folders: [
+  //           { name: 'Frontend_1' },
+  //           { name: 'Backend_1' },
+  //           { name: 'Database_1' },
+  //           { name: 'APIs_1' },
+  //           { name: 'Testing_1' },
+  //         ],
+  //       },
+  //     },
+  //   },
+  // ];
+
+ // const [folders, setFolders] = useState(folderSelect);
 
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
@@ -91,7 +131,7 @@ const Workspaces = () => {
   const handleNewWorkspaceSubmit = () => {
     if (newWorkspaceName.trim()) {
       const newFolder = { name: newWorkspaceName, details: {} };
-      setFolders([...folders, newFolder]);
+    //  setFolders([...folders, newFolder]);
       setNewWorkspaceName('');
       setIsNewWorkspaceModalOpen(false);
     }
@@ -115,17 +155,17 @@ const Workspaces = () => {
       </div>
 
       <div className="icons">
-        {folders.map((folder, index) => (
+        { workspaces.map((workspace, index) => (
           <div key={index} className="icon-container">
             <BsWindowStack
-              onClick={() => toggleModal(folder)}
+              onClick={() => toggleModal(workspace)}
               className="collection-icon"
             />
-            <span className="icon-label" title={folder.name}>
-              {truncateString(folder.name, 8)}
+            <span className="icon-label" title={workspace.workspaceName}>
+              {truncateString(workspace.workspaceName, 8)}
             </span>
           </div>
-        ))}
+        )) }
       </div>
 
       {isModalOpen && selectedFolder && (

@@ -13,15 +13,15 @@ import { useSelector } from 'react-redux';
 import {
   addComment,
   updateComment,
-  deleteComment,
+  removeComment,
   addReply,
   updateReply,
-  deleteReply,
-} from '../../../../redux/slices/chatSlice';
+  removeReply,
+} from '../../../../redux/slices/workspaceSlice';
 
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();
-  const chatId = useSelector((state) => state.chat.selectedChatId);
+  const chatId = useSelector((state) => state.workspace.selectedChatId);
 
   const [selectedComment, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
@@ -41,7 +41,7 @@ const Comments = ({ comments }) => {
     // comments[commentIndex].text = editedText;
     console.log(commentId);
     const updatedComment = editedText;
-    dispatch(updateComment({ chatId, commentId, updatedComment }));
+    dispatch(updateComment({commentId, updatedComment}));
     setEditingComment(null);
     setEditedText('');
   };
@@ -58,14 +58,14 @@ const Comments = ({ comments }) => {
     // comments[commentIndex].text = editedText;
     console.log(commentId);
     const updatedReply = editedText;
-    dispatch(updateReply({ chatId, commentId, replyId, updatedReply }));
+    dispatch(updateReply({ commentId, replyId, updatedReply }));
     setEditingComment(null);
     setEditedText('');
   };
 
   const handleAddReply = (commentId) => {
     const reply = editedText;
-    dispatch(addReply({ chatId, commentId, reply }));
+    dispatch(addReply({ commentId, reply }));
     setEditingComment(null);
     setEditedText('');
   };
@@ -74,7 +74,7 @@ const Comments = ({ comments }) => {
     const replyId = commentId;
     if (isReply) {
       const commentId = parentCommentId;
-      dispatch(deleteReply({ chatId, commentId, replyId }));
+      dispatch(removeReply({ commentId, replyId }));
       const parentComment = comments.find(
         (c) => c.commentId === parentCommentId
       );
@@ -83,7 +83,7 @@ const Comments = ({ comments }) => {
       );
       //dispatch(deleteComment(chatId,commentId));
     } else {
-      dispatch(deleteComment({ chatId, commentId }));
+      dispatch(removeComment({ commentId }));
       //const commentIndex = comments.findIndex(c => c.commentId === commentId);
       //comments.splice(commentIndex, 1);
       //dispatch(deleteComment(chatId,commentId));

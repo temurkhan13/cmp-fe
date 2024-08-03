@@ -3,12 +3,16 @@ import Dropdown from 'react-multilevel-dropdown';
 import { MdPeople, MdPerson } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
-const UserDropdown = ({ activeIcon, handleIconClick }) => {
-  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
-  const chats = useSelector((state) => state.chat.chats);
-  const users = useSelector((state) => state.user.users);
+import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 
-  const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+const UserDropdown = ({ activeIcon, handleIconClick }) => {
+
+  const { users, currentChat } = useSelectedChat();
+
+  //const selectedChatId = useSelector((state) => state.chat.selectedChatId);
+  //const chats = useSelector((state) => state.chat.chats);
+
+  //const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
 
   const userDetailsMap = currentChat
     ? currentChat.sharedUsers.reduce((acc, user) => {

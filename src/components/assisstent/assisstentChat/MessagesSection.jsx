@@ -22,22 +22,36 @@ import useShorter from '@hooks/useShorter';
 import useLonger from '@hooks/useLonger';
 import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  updateChatMessages,
-  addBookmark,
-} from '../../../redux/slices/chatSlice'; // Adjust the path to your actions file
+import { useCallback } from 'react';
+
+import { addMessage ,updateMessage, addBookmark } from '../../../redux/slices/workspaceSlice'; // Adjusted import
+
+import { v4 as uuidv4 } from 'uuid';
 
 const MessagesSection = () => {
+
   const dispatch = useDispatch();
-  const selectedChatId = useSelector((state) => state.chat.selectedChatId);
-  const chats = useSelector((state) => state.chat.chats);
+  const state = useSelector((state) => state.workspace);
+  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
+  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
+  const chats = useSelector((state) => state.workspace.workspaces
+    .find(workspace => workspace.workspaceId === selectedWorkspaceId)
+    ?.folders.find(folder => folder.folderId === selectedFolderId)
+    ?.chats || []);
+  const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
   const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+
+  const selectedWorkspace = state.workspaces.find(workspace => workspace.workspaceId === selectedWorkspaceId);
+const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId === selectedFolderId);
+
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
   const [chat, setChat] = useState(
     currentChat ? currentChat.generalMessages : []
   );
+
+
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
@@ -56,9 +70,18 @@ const MessagesSection = () => {
   const { error, chatWithdoc } = useChat();
 
   useEffect(() => {
+//     console.log('chats:', chats);
+//     console.log('selectedChatId:', selectedChatId, selectedWorkspaceId, selectedFolderId);
+//     console.log('Redux state:', state);
+//   console.log('currentChat:', currentChat);
+//   console.log('selectedWorkspace:', selectedWorkspace);
+// console.log('selectedFolder:', selectedFolder);
+// console.log('chats:', selectedFolder?.chats || []);
     if (currentChat) {
       console.log(currentChat);
       setChat(currentChat.generalMessages);
+      console.log("chat Messages: " + currentChat.generalMessages);
+      console.log("chat: " + chat);
     }
   }, [currentChat]);
 
@@ -75,84 +98,102 @@ const MessagesSection = () => {
     e.preventDefault();
   };
 
-  const handleSendMessage = async () => {
-    if (!text && !file) return;
+  // Memoize handleSendMessage function
+const handleSendMessage = useCallback(async () => {
+  if (!text && !file) return;
 
-    const newMessage = {
-      role: 'user',
+  const newMessage = {
+    messageId:uuidv4(),    
+      userId: "userId2",
+      role: "user",
       content: text || null,
-      //  file: file ? URL.createObjectURL(file) : null,
-      //  fileName: file ? file.name : null,
-    };
+      timestamp: "2024-07-12T12:01:00Z",
+      createdAt: "2024-07-12T12:01:00Z",
+      updatedAt: "2024-07-12T12:01:00Z"
+  };
 
-    const updatedChat = [...chat, newMessage];
+  const message = [...chat, newMessage];
+  console.log("user Message", chat);
+  setChat(message);
 
-    setChat(updatedChat);
-    dispatch(updateChatMessages(selectedChatId, updatedChat));
+  console.log("AI response Message:", message);
+  dispatch(addMessage(newMessage));
 
-    try {
-      setLoading(true);
-      const response = await chatWithdoc(text, file);
-      if (response) {
-        const aiMessage = {
-          role: 'ai',
-          content: response,
-        };
-        const finalChat = [...updatedChat, aiMessage];
-        setChat(finalChat);
-        dispatch(updateChatMessages(selectedChatId, finalChat));
-      }
-
-      setFile(null);
-      document.getElementById('file-input').value = '';
-      setText('');
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    const response = await chatWithdoc(text, file);
+    if (response) {
+      const aiMessage = {
+        messageId:uuidv4(),    
+      userId: "userId2",
+      role: "ai",
+      content: response,
+      timestamp: "2024-07-12T12:01:00Z",
+      createdAt: "2024-07-12T12:01:00Z",
+      updatedAt: "2024-07-12T12:01:00Z"
+      };
+      const finalChat = [...message, aiMessage];
+      setChat(finalChat);
+      console.log("AI response Message:", finalChat);
+      dispatch(addMessage(aiMessage));
     }
-  };
 
-  const HandleAskAi = async (value) => {
-    try {
-      setLoading(true);
-      setAskAI(value);
+    setFile(null);
+    document.getElementById('file-input').value = '';
+    setText('');
+  } catch (error) {
+    console.log(error.message);
+  } finally {
+    console.log(chat);
+    setLoading(false);
+  }
 
-      let response;
-      if (value === 'Fix Spelling & Grammar') {
-        response = await fixGrammar(selectedText);
-      } else if (value === 'Improve Writing') {
-        response = await improveWriting(selectedText);
-      } else if (value === 'Summarize') {
-        response = await summarize(selectedText);
-      }
+}, [text, file, chat, dispatch, chatWithdoc]);
 
-      if (response) {
-        applyFixedText(response);
-      }
-    } catch (error) {
-      console.error('Asi AI', error);
-    } finally {
-      setLoading(false);
+
+  // Memoize HandleAskAi function
+const HandleAskAi = useCallback(async (value) => {
+  try {
+    setLoading(true);
+    setAskAI(value);
+
+    let response;
+    if (value === 'Fix Spelling & Grammar') {
+      response = await fixGrammar(selectedText);
+    } else if (value === 'Improve Writing') {
+      response = await improveWriting(selectedText);
+    } else if (value === 'Summarize') {
+      response = await summarize(selectedText);
     }
-  };
 
-  const applyFixedText = (newText) => {
-    const updatedChat = chat.map((message) => {
-      if (message.content) {
-        return {
-          ...message,
-          content: message.content.replace(selectedText, newText),
-        };
-      }
-      return message;
-    });
+    if (response) {
+      applyFixedText(response);
+    }
+  } catch (error) {
+    console.error('Asi AI', error);
+  } finally {
+    setLoading(false);
+  }
+}, [fixGrammar, improveWriting, summarize, selectedText]);
 
-    setChat(updatedChat);
-    dispatch(updateChatMessages(selectedChatId, updatedChat));
 
-    setPopupVisible(false);
-  };
+  // Memoize applyFixedText function
+const applyFixedText = useCallback((newText) => {
+  const updatedChat = chat.map((message) => {
+    if (message.content) {
+      return {
+        ...message,
+        content: message.content.replace(selectedText, newText),
+      };
+    }
+    return message;
+  });
+
+  setChat(updatedChat);
+  dispatch(updateMessage(selectedWorkspaceId, selectedChatId, updatedChat));
+
+  setPopupVisible(false);
+}, [chat, selectedText, dispatch, selectedWorkspaceId, selectedChatId]);
 
   const handleTextSelect = () => {
     const selection = window.getSelection();
@@ -213,18 +254,19 @@ const MessagesSection = () => {
       date: '2024-07-12',
       messages: [
         {
-          messageId: 'messageId1',
+          messageId: messageId,
           sender: 'ChangeAI',
-          text: { content },
+          text: content,
           savedBy: 'You',
         },
       ],
     };
-    dispatch(addBookmark(selectedChatId, bookmark));
+    dispatch(addBookmark(bookmark));
     console.log('bookmarked ' + bookmark.bookmarkId);
   };
 
   const handleInspireClick = async () => {
+    //Todo: will implement Inspire 
     // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
     // const inspiredText = await handleInspire(answers[currentQuestionKey]);
     // setAnswers({
@@ -269,7 +311,7 @@ const MessagesSection = () => {
             {chat.map((item, index) => (
               <div key={index}>
                 <div>
-                  {item.role === 'user' ? (
+                  {item && item.role === 'user' ? (
                     <div className="card">
                       <div>
                         <img src={UserPic} alt="avatar" />
@@ -305,19 +347,16 @@ const MessagesSection = () => {
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        <div className="msg">
-                          <ReactMarkdown>{item.content}</ReactMarkdown>
-                        </div>
+                        {item && (
+                          <div className="msg">
+                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                          </div>
+                        )}
                         <div>
-                          <FaCopy
-                            onClick={handleAddBookmark(
-                              item.content,
-                              item.messageId
-                            )}
-                            style={{
-                              cursor: 'pointer',
-                            }}
-                          />
+                        <FaCopy
+                         onClick={() => handleAddBookmark(item.content, item.messageId)}
+                         style={{ cursor: 'pointer' }}
+                         />
                           <FaThumbsUp />
                           <FaThumbsDown />
 
