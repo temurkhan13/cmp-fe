@@ -1,13 +1,24 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { BiPlus, BiPlusCircle } from 'react-icons/bi';
 import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
+import { useReorder } from '../../hooks/useReorder';
 
 const Node = ({ data }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
-  const [hideLabelInput, setHideLabelInput] = useState(false);
+  const [hideLabelInput, setHideLabelInput] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef();
+
+  const [
+    draggedIndex,
+    draggedOverIndex,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragedEnd,
+  ] = useReorder();
 
   const updateNodeDataWithPropertyName = (id, property, newValue) => {
     const updatedArray = nodeData.map((item) =>
@@ -15,6 +26,22 @@ const Node = ({ data }) => {
     );
     setNodeData(updatedArray);
   };
+
+  const addNodeChild = (
+    heading = '',
+    description = '',
+    color = '#0000000c',
+    isEditing = false
+  ) => {
+    setNodeData((prev) => [
+      ...prev,
+      { id: uuidv4(), heading, description, color, isEditing },
+    ]);
+  };
+
+  useEffect(() => {
+    setNodeData(data.nodeData);
+  }, [data.nodeData]);
   return (
     <div
       style={{
@@ -26,7 +53,6 @@ const Node = ({ data }) => {
     >
       <div
         style={{
-          padding: 10,
           border: '1px solid rgba(10, 10, 10, 1)',
           background: 'white',
           borderRadius: 5,
@@ -49,7 +75,17 @@ const Node = ({ data }) => {
             flexDirection: 'column',
           }}
         >
-          <div style={{ width: '100%', textAlign: 'start' }}>
+          <div
+            className="custom-drag-handle"
+            style={{
+              width: '100%',
+              textAlign: 'start',
+              background: 'black',
+              borderTopLeftRadius: 4,
+              borderTopRightRadius: 4,
+              padding: '5px',
+            }}
+          >
             {!hideLabelInput ? (
               <input
                 ref={inputRef}
@@ -77,7 +113,7 @@ const Node = ({ data }) => {
                 style={{
                   fontSize: '18px',
                   fontWeight: '800',
-                  color: 'rgba(10, 10, 10, 1)',
+                  color: '#FFFFFF',
                   textAlign: 'start',
                   wordWrap: 'break-word',
                 }}
@@ -91,43 +127,117 @@ const Node = ({ data }) => {
             )}
           </div>
 
-          <>
-            {nodeData.map((data, index) => (
-              <NodeItem
-                key={data.id}
-                nodeData={data}
-                updateNodeDataWithPropertyName={updateNodeDataWithPropertyName}
-              ></NodeItem>
+          <ul
+            style={{
+              width: '100%',
+              height: '100%',
+              padding: '10px',
+            }}
+            onMouseEnter={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {nodeData?.map((data, index) => (
+              <li
+                style={{ listStyleType: 'none', marginBottom: '10px' }}
+                key={data?.id}
+                draggable
+                onMouseEnter={(e) => {
+                  e.stopPropagation();
+                  console.log('Clicked');
+                }}
+                onDragStart={(e) => {
+                  console.log(e);
+                  e.stopPropagation();
+                  handleDragStart(index);
+                }}
+                onDrop={(e) => {
+                  e.stopPropagation();
+
+                  handleDrop(e, nodeData, setNodeData);
+                }}
+                onDragOver={(e) => {
+                  e.stopPropagation();
+                  handleDragOver(e, index);
+                }}
+                onDragEnd={(e) => {
+                  e.stopPropagation();
+                  handleDragedEnd();
+                }}
+              >
+                <NodeItem
+                  key={data?.id}
+                  nodeData={data}
+                  addNodeChild={addNodeChild}
+                  updateNodeDataWithPropertyName={
+                    updateNodeDataWithPropertyName
+                  }
+                ></NodeItem>
+              </li>
             ))}
-          </>
+          </ul>
 
           <div
             style={{
               cursor: 'pointer',
-              width: '100%',
+              width: '95%',
               height: '36px',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: '6px',
               gap: '12px',
+              padding: '10px',
 
               background: 'rgba(0, 0, 0, 0.05)',
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setNodeData((prev) => [
-                ...prev,
-                { id: uuidv4(), heading: '', description: '', isEditing: true },
-              ]);
+              addNodeChild();
             }}
           >
             <BiPlus size={20}></BiPlus>
           </div>
           {/* <div style={{ position: 'absolute', top:'100' }}> */}
+          {(data.nodeData.length === 0 && data.showGenerateAIButton) && (
+            <button
+              style={{
+                width: '95%',
+                background: '#C3E11B',
+                border: 'none',
+                padding: '5px',
+                borderRadius: '6px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                marginTop: '5px',
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (data.nodeData.length === 0 && !data.isRoot) {
+                  setIsLoading(true);
+                  data.fetchNodeData(
+                    data.label,
+                    data.id,
+                    data.nodeData,
+                    data.siteMapId
+                  );
+                }
+              }}
+              disabled={isLoading}
+            >
+              Generate with AI
+            </button>
+          )}
           <BiPlusCircle
-            onClick={data.onAddChild}
-            size={30}
+            style={{
+              cursor: 'pointer',
+              padding: '10px',
+              fontSize: '50px',
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              data.onAddChild();
+            }}
             color="rgba(0, 102, 255, 1)"
           >
             Add Child

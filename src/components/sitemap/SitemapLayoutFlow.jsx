@@ -1,11 +1,9 @@
 import {
   ReactFlow,
-  Background,
   Controls,
   useNodesState,
   useEdgesState,
   useReactFlow,
-  ReactFlowProvider,
   Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -14,8 +12,6 @@ import { useCallback, useEffect, useState } from 'react';
 import Dagre from '@dagrejs/dagre';
 import { v4 as uuidv4 } from 'uuid';
 import assets from '../../assets';
-import { BiLoader, BiSend } from 'react-icons/bi';
-import { LuLoader2 } from 'react-icons/lu';
 const nodeTypes = {
   custom: Node,
 };
@@ -94,7 +90,9 @@ const SitemapLayoutFlow = () => {
     parentPosition,
     label = '',
     nodeData = [],
-    nodeKey = uuidv4()
+    nodeKey = uuidv4(),
+    siteMapId = '',
+    showGenerateAIButton = false
   ) => {
     const newNodeId = nodeKey;
     const position = { x: parentPosition.x + 0, y: parentPosition.y + 200 };
@@ -102,6 +100,7 @@ const SitemapLayoutFlow = () => {
       id: newNodeId,
       type: 'custom',
       position,
+      dragHandle: '.custom-drag-handle',
       data: {
         id: newNodeId,
         label,
@@ -113,6 +112,9 @@ const SitemapLayoutFlow = () => {
           }),
         isRoot: false,
         updateNodeLabelById: updateNodeLabelById,
+        fetchNodeData: onPatch,
+        siteMapId,
+        showGenerateAIButton,
       },
     };
     setNodes((nds) => [...nds, newNode]);
@@ -122,27 +124,6 @@ const SitemapLayoutFlow = () => {
     ]);
     setLayouted(false);
   };
-
-  function extractStructuredData(jsonData) {
-    const result = {
-      parent: jsonData.message,
-      stages: jsonData.stages.map((stage) => {
-        const { stage: stageName, response } = stage;
-        return {
-          stage: stageName,
-          sections: Object.entries(response.message[stageName]).map(
-            ([sectionName, content]) => {
-              return {
-                name: sectionName,
-                content: content,
-              };
-            }
-          ),
-        };
-      }),
-    };
-    return result;
-  }
 
   async function postData(url = '', data = {}) {
     const response = await fetch(url, {
@@ -154,7 +135,24 @@ const SitemapLayoutFlow = () => {
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
-  const onInit = async () => {
+
+  async function patchData(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  const onInit = async (
+    stage = 'Playbook Introduction',
+    nodeId = '',
+    nodeData = [],
+    sitemapId = ''
+  ) => {
     if (prompt === '') {
       alert('Please enter a message');
       return;
@@ -164,86 +162,137 @@ const SitemapLayoutFlow = () => {
       user_id: '11',
       chat_id: '22',
       message: prompt,
-      sitemapName: 'Playbook Introduction',
+      sitemapName: stage,
+      request: stage === 'Playbook Introduction' ? 'POST' : 'PATCH',
     };
 
-    let res = await postData(
-      'http://139.59.4.99:3000/api/dpb/sitemap',
-      payload
-    );
+    let res =
+      stage === 'Playbook Introduction'
+        ? await postData('http://139.59.4.99:3000/api/dpb/sitemap', payload)
+        : await patchData(
+            `http://139.59.4.99:3000/api/dpb/sitemap/${sitemapId}`,
+            payload
+          );
 
     setIsLoading(false);
     setPromptVisible(false);
-    const structuredData = extractStructuredData(res);
-    let { parent, stages } = structuredData;
+    let siteMapId = res.id;
 
-    const id = uuidv4();
-    const initialNode = [
-      {
-        id,
-        type: 'custom',
-        position: { x: 0, y: 0 },
-        data: {
-          id,
-          label: Object.keys(parent).at(0),
-          nodeData: Object.entries(parent[Object.keys(parent).at(0)])
-            .filter(([k, v]) => v !== '')
-            .reverse()
-            .map(([k, v]) => {
-              return {
-                id: uuidv4(),
-                heading: k,
-                description: v,
-                isEditing: false,
-              };
-            }),
-          description: 'This is the parent node',
-          onAddChild: () => {},
-          isRoot: true,
-        },
-      },
-    ];
-    initialNode[0].data.onAddChild = () => addChildNode(id, { x: 0, y: 0 });
-    initialNode[0].data.updateNodeLabelById = updateNodeLabelById;
-    setNodes(initialNode);
+    res.stages.forEach((stage) => {
+      addChildNode(
+        uuidv4(),
+        { x: 0, y: 0 },
+        stage.stage,
+        stage.nodeData.map(({ heading, description }) => {
+          return {
+            id: uuidv4(),
+            heading,
+            description,
+            isEditing: false,
+            color: '#0000000c',
+          };
+        }),
+        res.stages[0]._id,
+        siteMapId
+      );
 
-    stages.forEach((stage) => {
-      let nodeKey = uuidv4();
-      let nodesData = [
-        {
-          isEditing: false,
-          id: uuidv4(),
-        },
-      ];
-      stage.sections.forEach((section) => {
-        if (section.name === 'About') {
-          nodesData[0].heading = section.content;
-        } else if (section.name === 'Content') {
-          nodesData[0].description = section.content;
-        } else {
-          addChildNode(
-            nodeKey,
-            { x: 0, y: 0 },
-            section.name,
-            Object.entries(section.content)
-              .reverse()
-              .map(([k, v]) => {
-                return {
-                  id: uuidv4(),
-                  heading: k,
-                  description: v,
-                  isEditing: false,
-                };
-              })
-          );
-        }
+      let parentId = stage._id;
+      stage.nodes.forEach((node) => {
+        addChildNode(
+          parentId,
+          { x: 0, y: 0 },
+          node.heading,
+          [],
+          uuidv4(),
+          siteMapId,
+          true
+        );
       });
-      addChildNode(id, { x: 0, y: 0 }, stage.stage, nodesData, nodeKey);
     });
   };
-  // useEffect(() => {
-  //   onInit();
-  // }, []);
+
+  const onPatch = async (
+    stageLabel = 'Playbook Introduction',
+    nodeId = '',
+    nodeData = [],
+    sitemapId = ''
+  ) => {
+    if (prompt === '') {
+      alert('Please enter a message');
+      return;
+    }
+    setIsLoading(true);
+    const payload = {
+      user_id: '11',
+      chat_id: '22',
+      message: prompt,
+      sitemapName: stageLabel,
+      request: stageLabel === 'Playbook Introduction' ? 'POST' : 'PATCH',
+    };
+
+    let res =
+      stageLabel === 'Playbook Introduction'
+        ? await postData('http://139.59.4.99:3000/api/dpb/sitemap', payload)
+        : await patchData(
+            `http://139.59.4.99:3000/api/dpb/sitemap/${sitemapId}`,
+            payload
+          );
+
+    setIsLoading(false);
+    setPromptVisible(false);
+    let siteMapId = res.id;
+
+    res.stages.forEach((stage) => {
+      console.log(stageLabel, 'stage');
+      if (stage.stage !== stageLabel) {
+        return;
+      }
+
+      let nodeDataTemp = stage.nodeData.map(({ heading, description }) => {
+        return {
+          id: uuidv4(),
+          heading,
+          description,
+          isEditing: false,
+          color: '#0000000c',
+        };
+      });
+
+      setNodes((nds) => [
+        ...nds.map((node) => {
+          if (node.data.label === stage.stage) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                nodeData: nodeDataTemp,
+              },
+            };
+          }
+          return node;
+        }),
+      ]);
+
+      stage.nodes.forEach((node) => {
+        addChildNode(
+          nodeId,
+          { x: 0, y: 0 },
+          node.heading,
+          node.nodeData.map(({ heading, description }) => {
+            return {
+              id: uuidv4(),
+              heading,
+              description,
+              isEditing: false,
+              color: '#0000000c',
+            };
+          }),
+          uuidv4(),
+          siteMapId
+        );
+      });
+    });
+  };
 
   useEffect(() => {
     if (!layouted) {
@@ -284,7 +333,7 @@ const SitemapLayoutFlow = () => {
             <div
               style={{
                 width: '525px',
-                height: '338px',
+                height: '370px',
                 border: '1px solid rgba(10, 10, 10, 0.1)',
                 display: 'flex',
                 justifyContent: 'center',
@@ -324,41 +373,33 @@ const SitemapLayoutFlow = () => {
               >
                 <textarea
                   style={{
-                    border: 'none',
                     width: '100%',
                     outline: 'none',
                     resize: 'none',
                     borderRadius: '6px',
-                    height: '100%',
+                    height: '85%',
                     padding: '10px',
                     border: '1px solid rgba(10, 10, 10, 0.1)',
                   }}
                   placeholder="Message ChangeAI to generate a sitemap"
                   onChange={(e) => setPrompt(e.target.value)}
                 ></textarea>
-                {!isLoading ? (
-                  <BiSend
-                    onClick={onInit}
-                    style={{
-                      position: 'absolute',
-                      left: '93%',
-                      bottom: 10,
-                      cursor: 'pointer',
-                    }}
-                    size={25}
-                    color="rgba(10, 10, 10, 0.21)"
-                  ></BiSend>
-                ) : (
-                  <BiLoader
-                    size={25}
-                    style={{
-                      position: 'absolute',
-                      left: '93%',
-                      bottom: 10,
-                      cursor: 'pointer',
-                    }}
-                  ></BiLoader>
-                )}
+                <button
+                  style={{
+                    width: '100%',
+                    background: '#C3E11B',
+                    border: 'none',
+                    padding: '5px',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    marginTop: '5px',
+                  }}
+                  disabled={isLoading}
+                  onClick={() => onInit('Playbook Introduction')}
+                >
+                  Generate Sitemap
+                </button>
               </div>
             </div>
           ) : null}
