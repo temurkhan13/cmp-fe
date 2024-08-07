@@ -12,7 +12,7 @@ const Components = {
   UI,
   Assistant,
   Dashboard,
-  Sitemap
+  Sitemap,
   Reports,
 };
 
