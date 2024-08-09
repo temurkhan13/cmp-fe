@@ -16,7 +16,7 @@ const nodeTypes = {
   custom: Node,
 };
 
-const SitemapLayoutFlow = () => {
+const SitemapLayoutFlow = ({ id }) => {
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -110,7 +110,7 @@ const SitemapLayoutFlow = () => {
             x: position.x + 0,
             y: position.y + 200,
           }),
-        isRoot: false,
+        isRoot: parentId === 'root' ? true : false,
         updateNodeLabelById: updateNodeLabelById,
         fetchNodeData: onPatch,
         siteMapId,
@@ -147,6 +147,105 @@ const SitemapLayoutFlow = () => {
     return response.json(); // parses JSON response into native JavaScript objects
   }
 
+  async function getData(url = '') {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  const getSitemap = async () => {
+    if (!id) return;
+    const res = await getData(`http://139.59.4.99:3000/api/dpb/sitemap/${id}`);
+
+    if (res) {
+      let siteMapId = res.id;
+
+      res.stages.forEach((stage) => {
+        if (stage.stage === 'Playbook Introduction') {
+          addChildNode(
+            'root',
+            { x: 0, y: 0 },
+            stage.stage,
+            stage.nodeData.map(({ heading, description }) => {
+              return {
+                id: uuidv4(),
+                heading,
+                description,
+                isEditing: false,
+                color: '#0000000c',
+              };
+            }),
+            stage._id,
+            siteMapId
+          );
+
+          let parentId = stage._id;
+          stage.nodes.forEach((node) => {
+            addChildNode(
+              parentId,
+              { x: 0, y: 0 },
+              node.heading,
+              [],
+              res.stages.find(({ stage }) => stage === node.heading)._id,
+              siteMapId,
+              false
+            );
+          });
+        }
+
+        if (stage.stage !== 'Playbook Introduction') {
+          let nodeDataTemp = stage.nodeData.map(({ heading, description }) => {
+            return {
+              id: uuidv4(),
+              heading,
+              description,
+              isEditing: false,
+              color: '#0000000c',
+            };
+          });
+
+          setNodes((nds) => [
+            ...nds.map((node) => {
+              if (node.data.label === stage.stage) {
+                return {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    nodeData: nodeDataTemp,
+                  },
+                };
+              }
+              return node;
+            }),
+          ]);
+
+          stage.nodes.forEach((node) => {
+            addChildNode(
+              stage._id,
+              { x: 0, y: 0 },
+              node.heading,
+              node.nodeData.map(({ heading, description }) => {
+                return {
+                  id: uuidv4(),
+                  heading,
+                  description,
+                  isEditing: false,
+                  color: '#0000000c',
+                };
+              }),
+              node._id,
+              siteMapId
+            );
+          });
+        }
+      });
+    }
+  };
+
   const onInit = async (
     stage = 'Playbook Introduction',
     nodeId = '',
@@ -180,7 +279,7 @@ const SitemapLayoutFlow = () => {
 
     res.stages.forEach((stage) => {
       addChildNode(
-        uuidv4(),
+        'root',
         { x: 0, y: 0 },
         stage.stage,
         stage.nodeData.map(({ heading, description }) => {
@@ -243,7 +342,6 @@ const SitemapLayoutFlow = () => {
     let siteMapId = res.id;
 
     res.stages.forEach((stage) => {
-      console.log(stageLabel, 'stage');
       if (stage.stage !== stageLabel) {
         return;
       }
@@ -303,6 +401,10 @@ const SitemapLayoutFlow = () => {
     }
   }, [layouted, onLayout, nodes, edges]);
 
+  useEffect(() => {
+    getSitemap();
+  }, [id]);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -327,101 +429,103 @@ const SitemapLayoutFlow = () => {
         </button>
         {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
       </Panel>
-      <Panel position="top-right">
-        <div style={{ display: 'flex', gap: 10 }}>
-          {isPromptVisible ? (
+      {!id ? (
+        <Panel position="top-right">
+          <div style={{ display: 'flex', gap: 10 }}>
+            {isPromptVisible ? (
+              <div
+                style={{
+                  width: '525px',
+                  height: '370px',
+                  border: '1px solid rgba(10, 10, 10, 0.1)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  background: 'white',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100%',
+                    height: '20%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}
+                >
+                  <img src={assets.common.icon} alt="icon" />
+                  <span
+                    style={{
+                      fontSize: '20px',
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins',
+                    }}
+                  >
+                    Change AI
+                  </span>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '80%',
+                    position: 'relative',
+                  }}
+                >
+                  <textarea
+                    style={{
+                      width: '100%',
+                      outline: 'none',
+                      resize: 'none',
+                      borderRadius: '6px',
+                      height: '85%',
+                      padding: '10px',
+                      border: '1px solid rgba(10, 10, 10, 0.1)',
+                    }}
+                    placeholder="Message ChangeAI to generate a sitemap"
+                    onChange={(e) => setPrompt(e.target.value)}
+                  ></textarea>
+                  <button
+                    style={{
+                      width: '100%',
+                      background: '#C3E11B',
+                      border: 'none',
+                      padding: '5px',
+                      borderRadius: '6px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      marginTop: '5px',
+                    }}
+                    disabled={isLoading}
+                    onClick={() => onInit('Playbook Introduction')}
+                  >
+                    Generate Sitemap
+                  </button>
+                </div>
+              </div>
+            ) : null}
             <div
               style={{
-                width: '525px',
-                height: '370px',
-                border: '1px solid rgba(10, 10, 10, 0.1)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
-                padding: '10px',
-                borderRadius: '6px',
-                background: 'white',
+                width: '40px',
+                height: '40px',
+                marginTop: '10px',
+                cursor: 'pointer',
               }}
+              onClick={() => setPromptVisible(!isPromptVisible)}
             >
-              <div
-                style={{
-                  width: '100%',
-                  height: '20%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                }}
-              >
-                <img src={assets.common.icon} alt="icon" />
-                <span
-                  style={{
-                    fontSize: '20px',
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins',
-                  }}
-                >
-                  Change AI
-                </span>
-              </div>
-              <div
-                style={{
-                  width: '100%',
-                  height: '80%',
-                  position: 'relative',
-                }}
-              >
-                <textarea
-                  style={{
-                    width: '100%',
-                    outline: 'none',
-                    resize: 'none',
-                    borderRadius: '6px',
-                    height: '85%',
-                    padding: '10px',
-                    border: '1px solid rgba(10, 10, 10, 0.1)',
-                  }}
-                  placeholder="Message ChangeAI to generate a sitemap"
-                  onChange={(e) => setPrompt(e.target.value)}
-                ></textarea>
-                <button
-                  style={{
-                    width: '100%',
-                    background: '#C3E11B',
-                    border: 'none',
-                    padding: '5px',
-                    borderRadius: '6px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    marginTop: '5px',
-                  }}
-                  disabled={isLoading}
-                  onClick={() => onInit('Playbook Introduction')}
-                >
-                  Generate Sitemap
-                </button>
-              </div>
+              <img
+                src={assets.common.icon}
+                alt="logo"
+                style={{ width: '100%', height: '100p%' }}
+              />
             </div>
-          ) : null}
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              marginTop: '10px',
-              cursor: 'pointer',
-            }}
-            onClick={() => setPromptVisible(!isPromptVisible)}
-          >
-            <img
-              src={assets.common.icon}
-              alt="logo"
-              style={{ width: '100%', height: '100p%' }}
-            />
           </div>
-        </div>
 
-        {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
-      </Panel>
+          {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
+        </Panel>
+      ) : null}
       {/* <Background /> */}
       <Controls />
     </ReactFlow>
