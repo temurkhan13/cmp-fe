@@ -1,7 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SitemapImg } from '../../assets/dashboard';
+import { useNavigate } from 'react-router-dom';
 
 function List() {
+  let navigate = useNavigate();
+  const [sitemaps, setSitemaps] = useState([]);
+  const [pagination, setPagination] = useState({});
+
+  async function getData(url = 'http://139.59.4.99:3000/api/dpb/sitemap') {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  const onInit = async () => {
+    let res = await getData();
+
+    if (res.results) {
+      setSitemaps(res.results);
+    }
+  };
+
+  useEffect(() => {
+    onInit();
+  }, []);
   return (
     <div
       style={{
@@ -74,7 +100,7 @@ function List() {
           margin: '16px 0',
         }}
       >
-        {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5].map(() => {
+        {sitemaps.map(({ id }) => {
           return (
             <div
               style={{
@@ -83,6 +109,10 @@ function List() {
                 gap: '16px',
                 marginRight: '16px',
                 marginBottom: '16px',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                navigate(`/sitemap/${id}`);
               }}
             >
               <img src={SitemapImg} height="120px" width="268px"></img>
