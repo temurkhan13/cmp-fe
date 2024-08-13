@@ -9,19 +9,16 @@ const CommentPopup = ({ onClose }) => {
   const [comment, setComment] = useState('');
 
   const handleSend = () => {
-    // Handle sending the comment here
-    console.log('Comment sent:', comment);
-    setComment('');
-    onClose(); // Close the comment popup
-  };
-
-  const handleInputClick = (e) => {
-    e.stopPropagation();
+    if (comment.trim()) {
+      console.log('Comment sent:', comment);
+      setComment('');
+      onClose(); // Close the comment popup
+    }
   };
 
   return (
     <>
-      <div className="commentPopup" onClick={handleInputClick}>
+      <div className="commentPopup" onClick={(e) => e.stopPropagation()}>
         <div className="user-image">
           <RxAvatar style={{ fontSize: '3.5rem' }} />
         </div>
@@ -32,12 +29,12 @@ const CommentPopup = ({ onClose }) => {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Reply"
-              onClick={handleInputClick}
+              onClick={(e) => e.stopPropagation()}
             />
-            <div onClick={handleInputClick} className="user-icon">
+            <div className="user-icon">
               <MdOutlineAttachFile />
             </div>
-            <div onClick={handleInputClick} className="mention-icon">
+            <div className="mention-icon">
               <MdAlternateEmail />
             </div>
             <div onClick={handleSend} className="send-icon">
@@ -48,44 +45,43 @@ const CommentPopup = ({ onClose }) => {
       </div>
       <style>{`
         .commentPopup {
-      position: absolute;
-        display:flex;
+          position: absolute;
+          display: flex;
           box-shadow: 0px 4px 24px 0px #0000001F;
+          background-color: white;
           position: fixed;
           top: 5rem;
-          padding:2rem;
-          border-radius:1rem;
-          }
-          .comment-box{
-            display:flex;
-            border:1px solid lightgray;
-          border-radius:0.7rem;
-
-          }
-          .user-image{
-          margin-right:1rem;
-          }
-            .input-wrapper{
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:0.5rem;
-            font-size:1.6rem;
-            margin-right:1rem;
-
-            }
-            .input-wrapper input {
-            margin-left:1rem;
-            border:none;
-            outline:none;
-            }
-             .user-icon, .mention-icon, .send-icon{
-             font-size:2rem;
-              cursor:pointer;}
-              .send-icon{
-              color:gray;
-              }
-              
+          padding: 2rem;
+          border-radius: 1rem;
+        }
+        .comment-box {
+          display: flex;
+          border: 1px solid lightgray;
+          border-radius: 0.7rem;
+        }
+        .user-image {
+          margin-right: 1rem;
+        }
+        .input-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          font-size: 1.6rem;
+          margin-right: 1rem;
+        }
+        .input-wrapper input {
+          margin-left: 1rem;
+          border: none;
+          outline: none;
+        }
+        .user-icon, .mention-icon, .send-icon {
+          font-size: 2rem;
+          cursor: pointer;
+        }
+        .send-icon {
+          color: gray;
+        }
       `}</style>
     </>
   );
