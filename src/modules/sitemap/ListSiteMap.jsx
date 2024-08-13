@@ -1,14 +1,13 @@
 import React from 'react';
 import Components from '../../components';
+import DashboardLayout from '../../layout/DashboardLayout';
 
 function ListSiteMap() {
   return (
-    <div className="assessmentChat">
+    <DashboardLayout>
       <Components.Common.Header />
-      <div style={{ height: '90vh', width: '100%' }}>
-        <Components.Sitemap.SitemapList />
-      </div>
-    </div>
+      <Components.Sitemap.SitemapList />
+    </DashboardLayout>
   );
 }
 
