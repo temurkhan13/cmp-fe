@@ -1,4 +1,5 @@
-const mockMarkdown = [`
+const mockMarkdown = [
+  `
      # Change Vision: Digital Transformation Initiative
 
 ---
@@ -143,6 +144,7 @@ Embracing digital transformation is critical to our organization's continued suc
 ![Success Vision](https://via.placeholder.com/600x200)
 
 ---
-    `];
+    `,
+];
 
 export default mockMarkdown;

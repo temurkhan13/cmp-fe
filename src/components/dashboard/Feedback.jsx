@@ -188,9 +188,6 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
           align-items: center;
           gap: 1rem;
         }
-        .rating-number:hover {
-          background-color: #ccc;
-        }
         .active-rating-1, .active-rating-2, .active-rating-3, .active-rating-4, .active-rating-5 {
           display: flex;
           justify-content: center;
