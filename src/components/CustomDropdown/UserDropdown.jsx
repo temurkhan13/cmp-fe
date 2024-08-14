@@ -4,6 +4,7 @@ import { MdPeople, MdPerson } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
+import NoDataAvailable from '../common/NoDataAvailable';
 
 const UserDropdown = ({ activeIcon, handleIconClick }) => {
 

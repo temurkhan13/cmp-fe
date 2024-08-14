@@ -122,7 +122,6 @@ const SitemapLayoutFlow = ({ id }) => {
       ...eds,
       { id: `e${parentId}-${newNodeId}`, source: parentId, target: newNodeId },
     ]);
-    setLayouted(false);
   };
 
   async function postData(url = '', data = {}) {
@@ -280,7 +279,7 @@ const SitemapLayoutFlow = ({ id }) => {
     res.stages.forEach((stage) => {
       addChildNode(
         'root',
-        { x: 0, y: 0 },
+        { x: 1200, y: 0 },
         stage.stage,
         stage.nodeData.map(({ heading, description }) => {
           return {
@@ -296,10 +295,10 @@ const SitemapLayoutFlow = ({ id }) => {
       );
 
       let parentId = stage._id;
-      stage.nodes.forEach((node) => {
+      stage.nodes.forEach((node, index) => {
         addChildNode(
           parentId,
-          { x: 0, y: 0 },
+          { x: (index + 1) * 400, y: 700 },
           node.heading,
           [],
           uuidv4(),
@@ -339,6 +338,7 @@ const SitemapLayoutFlow = ({ id }) => {
 
     setIsLoading(false);
     setPromptVisible(false);
+    setLayouted(false)
     let siteMapId = res.id;
 
     res.stages.forEach((stage) => {
