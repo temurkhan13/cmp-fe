@@ -80,9 +80,9 @@ const Node = ({ data }) => {
             style={{
               width: '100%',
               textAlign: 'start',
-              background: 'black',
               borderTopLeftRadius: 4,
               borderTopRightRadius: 4,
+              background: 'black',
               padding: '5px',
             }}
           >
@@ -95,7 +95,8 @@ const Node = ({ data }) => {
                   outline: 'none',
                   borderRadius: '6px',
                   padding: '5px',
-                  background: 'rgba(0, 0, 0, 0.05)',
+                  background: 'white',
+                  color: 'black',
                 }}
                 onBlur={() => {
                   if (data.label.length !== 0) {
@@ -199,7 +200,7 @@ const Node = ({ data }) => {
             <BiPlus size={20}></BiPlus>
           </div>
           {/* <div style={{ position: 'absolute', top:'100' }}> */}
-          {(data.nodeData.length === 0 && data.showGenerateAIButton) && (
+          {data.nodeData.length === 0 && data.showGenerateAIButton && (
             <button
               style={{
                 width: '95%',

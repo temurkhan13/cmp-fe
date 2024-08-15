@@ -27,6 +27,7 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
         padding: '5px',
         width: '100%',
         borderRadius: '6px',
+        cursor: 'pointer',
       }}
     >
       <div
@@ -37,6 +38,7 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
           alignItems: 'center',
           justifyContent: 'flex-end',
           marginBottom: '5px',
+          cursor: 'pointer',
         }}
       >
         {isEditing ? (
@@ -82,7 +84,7 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
         </div>
       ) : (
         <div>
-          <input
+          <textarea
             style={{
               border: 'none',
               width: '100%',
@@ -90,17 +92,17 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
               borderRadius: '6px',
               padding: '5px',
               background: 'rgba(0, 102, 255, 0.21)',
+
             }}
             value={heading}
             onChange={(e) =>
               updateNodeDataWithPropertyName(id, 'heading', e.target.value)
             }
             placeholder="Section name"
-          ></input>
+          ></textarea>
           <textarea
             style={{
               border: 'none',
-              resize: 'none',
               marginTop: '5px',
               width: '100%',
               outline: 'none',
@@ -108,7 +110,9 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
               padding: '5px',
               background: 'rgba(0, 102, 255, 0.21)',
               color: 'rgba(0, 102, 255, 1)',
+              height: '100px',
             }}
+            
             value={description}
             onChange={(e) =>
               updateNodeDataWithPropertyName(id, 'description', e.target.value)

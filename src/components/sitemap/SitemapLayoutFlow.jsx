@@ -12,6 +12,13 @@ import { useCallback, useEffect, useState } from 'react';
 import Dagre from '@dagrejs/dagre';
 import { v4 as uuidv4 } from 'uuid';
 import assets from '../../assets';
+import { FaHistory } from 'react-icons/fa';
+import { IoIosChatboxes } from 'react-icons/io';
+import AssessmentModal from '../assisstent/assisstentChat/assessmentModal';
+import VersionHistory from '../assisstent/assisstentChat/assessmentModal/VersionHistory';
+import Media from '../assisstent/assisstentChat/assessmentModal/Media';
+import Comments from '../assisstent/assisstentChat/assessmentModal/Comments';
+import Loading from './Loading';
 const nodeTypes = {
   custom: Node,
 };
@@ -24,6 +31,15 @@ const SitemapLayoutFlow = ({ id }) => {
   const [prompt, setPrompt] = useState('');
   const [isPromptVisible, setPromptVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const closeModal = () => {
+    setIsVersionHistoryModalOpen(false);
+    setIsCommentsModalOpen(false);
+  };
+
+  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
+    useState(false);
+  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
 
   const getLayoutedElements = (nodes, edges, options) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -256,6 +272,7 @@ const SitemapLayoutFlow = ({ id }) => {
       return;
     }
     setIsLoading(true);
+    setPromptVisible(false);
     const payload = {
       user_id: '11',
       chat_id: '22',
@@ -338,7 +355,7 @@ const SitemapLayoutFlow = ({ id }) => {
 
     setIsLoading(false);
     setPromptVisible(false);
-    setLayouted(false)
+    setLayouted(false);
     let siteMapId = res.id;
 
     res.stages.forEach((stage) => {
@@ -362,6 +379,7 @@ const SitemapLayoutFlow = ({ id }) => {
             return {
               ...node,
               data: {
+                ...nodeData,
                 ...node.data,
                 nodeData: nodeDataTemp,
               },
@@ -413,6 +431,9 @@ const SitemapLayoutFlow = ({ id }) => {
       onEdgesChange={onEdgesChange}
       fitView
       nodeTypes={nodeTypes}
+      minZoom={0.1} // Set a low minZoom for deeper zoom-out
+      maxZoom={10} // Set a high maxZoom for more zoom-in levels
+      defaultZoom={1} // Default initial zoom level
     >
       <Panel position="top-left">
         <button
@@ -508,22 +529,95 @@ const SitemapLayoutFlow = ({ id }) => {
             ) : null}
             <div
               style={{
-                width: '40px',
-                height: '40px',
-                marginTop: '10px',
-                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: '10px',
+                background: 'white',
+                border: '1px solid lightgray',
+                borderRadius: '6px',
+                padding: '0 5px',
+                height: '150px',
               }}
-              onClick={() => setPromptVisible(!isPromptVisible)}
             >
-              <img
-                src={assets.common.icon}
-                alt="logo"
-                style={{ width: '100%', height: '100p%' }}
-              />
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  marginTop: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  if (nodes.length > 0) {
+                    return;
+                  }
+                  setPromptVisible(!isPromptVisible);
+                }}
+              >
+                <img
+                  src={assets.common.icon}
+                  alt="logo"
+                  style={{ width: '100%', height: '100p%' }}
+                />
+              </div>
+              <div>
+                <span
+                  // className={`iconButton ${
+                  //   // isVersionHistoryModalOpen ? 'active' : ''
+                  // }`}
+                  onClick={() => setIsVersionHistoryModalOpen(true)}
+                >
+                  <FaHistory className="icon" size={25} />
+                  {/* <span className="tooltip">Version History</span> */}
+                </span>
+              </div>
+              <div>
+                <span
+                  // className={`iconButton ${
+                  //   isCommentsModalOpen ? 'active' : ''
+                  // }`}
+                  onClick={() => setIsCommentsModalOpen(true)}
+                >
+                  <IoIosChatboxes className="icon" size={28} />
+                  {/* <span className="tooltip">Comments</span> */}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
+
+          {isVersionHistoryModalOpen && (
+            <AssessmentModal
+              title="Version History"
+              bodyContent={<VersionHistory versions={[]} />}
+              onClose={closeModal}
+            />
+          )}
+          {isCommentsModalOpen && (
+            <AssessmentModal
+              title="Comments"
+              bodyContent={<Comments comments={[]} />}
+              onClose={closeModal}
+            />
+          )}
+        </Panel>
+      ) : null}
+      {isLoading ? (
+        <Panel position="center">
+          <div
+            style={{
+              height: '90vh',
+              // width: '1600px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              // backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            <Loading />
+          </div>
         </Panel>
       ) : null}
       {/* <Background /> */}
