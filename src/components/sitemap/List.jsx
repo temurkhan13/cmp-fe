@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { SitemapImg } from '../../assets/dashboard';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus, BiPlusCircle } from 'react-icons/bi';
+import Loading from './Loading';
 
 function List() {
   let navigate = useNavigate();
   const [sitemaps, setSitemaps] = useState([]);
   const [pagination, setPagination] = useState({});
+  const [loading, setLoading] = useState(false);
 
   async function getData(url = 'http://139.59.4.99:3000/api/dpb/sitemap') {
     const response = await fetch(url, {
@@ -19,10 +21,12 @@ function List() {
   }
 
   const onInit = async () => {
+    setLoading(true);
     let res = await getData();
 
     if (res.results) {
       setSitemaps(res.results);
+      setLoading(false);
     }
   };
 
@@ -50,53 +54,69 @@ function List() {
           Recent files
         </span>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
-          flexWrap: 'wrap',
-          width: '100%',
-          margin: '16px 0',
-        }}
-      >
-        {sitemaps.map(({ id }) => {
-          return (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
-                marginRight: '16px',
-                marginBottom: '16px',
-                cursor: 'pointer',
-              }}
-              onClick={() => {
-                navigate(`/sitemap/${id}`);
-              }}
-            >
-              <img src={SitemapImg} height="120px" width="268px"></img>
-              <span
+      {loading ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            width: '100%',
+            margin: '16px 0',
+          }}
+        >
+          <Loading />
+        </div>
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            width: '100%',
+            margin: '16px 0',
+          }}
+        >
+          {sitemaps.slice(-4).map(({ id }) => {
+            return (
+              <div
                 style={{
-                  fontSize: '16px',
-                  fontWeight: '500',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  marginRight: '16px',
+                  marginBottom: '16px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  navigate(`/sitemap/${id}`);
                 }}
               >
-                Filename
-              </span>
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: 'rgba(10, 10, 10, 0.46)',
-                }}
-              >
-                Modifies 2 days ago
-              </span>
-            </div>
-          );
-        })}
-      </div>
+                <img src={SitemapImg} height="120px" width="268px"></img>
+                <span
+                  style={{
+                    fontSize: '16px',
+                    fontWeight: '500',
+                  }}
+                >
+                  Filename
+                </span>
+                <span
+                  style={{
+                    fontSize: '14px',
+                    color: 'rgba(10, 10, 10, 0.46)',
+                  }}
+                >
+                  Modifies 2 days ago
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
       <div
         style={{
           margin: '16px 0',
@@ -172,41 +192,69 @@ function List() {
           margin: '16px 0',
         }}
       >
-        {sitemaps.map(({ id }) => {
-          return (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
-                marginRight: '16px',
-                marginBottom: '16px',
-                cursor: 'pointer',
-              }}
-              onClick={() => {
-                navigate(`/sitemap/${id}`);
-              }}
-            >
-              <img src={SitemapImg} height="120px" width="268px"></img>
-              <span
-                style={{
-                  fontSize: '16px',
-                  fontWeight: '500',
-                }}
-              >
-                Filename
-              </span>
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: 'rgba(10, 10, 10, 0.46)',
-                }}
-              >
-                Modifies 2 days ago
-              </span>
-            </div>
-          );
-        })}
+        {loading ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              width: '100%',
+              margin: '16px 0',
+            }}
+          >
+            <Loading />
+          </div>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+              width: '100%',
+              margin: '16px 0',
+            }}
+          >
+            {sitemaps.map(({ id }) => {
+              return (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '16px',
+                    marginRight: '16px',
+                    marginBottom: '16px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    navigate(`/sitemap/${id}`);
+                  }}
+                >
+                  <img src={SitemapImg} height="120px" width="268px"></img>
+                  <span
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: '500',
+                    }}
+                  >
+                    Filename
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '14px',
+                      color: 'rgba(10, 10, 10, 0.46)',
+                    }}
+                  >
+                    Modifies 2 days ago
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
