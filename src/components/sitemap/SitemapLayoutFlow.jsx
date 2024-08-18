@@ -5,6 +5,7 @@ import {
   useEdgesState,
   useReactFlow,
   Panel,
+  addEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import Node from './Node';
@@ -19,10 +20,13 @@ import VersionHistory from '../assisstent/assisstentChat/assessmentModal/Version
 import Media from '../assisstent/assisstentChat/assessmentModal/Media';
 import Comments from '../assisstent/assisstentChat/assessmentModal/Comments';
 import Loading from './Loading';
+import Edge from './Edge';
 const nodeTypes = {
   custom: Node,
 };
-
+const edgeTypes = {
+  'custom-edge': Edge,
+};
 const SitemapLayoutFlow = ({ id }) => {
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -36,6 +40,14 @@ const SitemapLayoutFlow = ({ id }) => {
     setIsVersionHistoryModalOpen(false);
     setIsCommentsModalOpen(false);
   };
+
+  const onConnect = useCallback(
+    (connection) => {
+      const edge = { ...connection, type: 'custom-edge' };
+      setEdges((eds) => addEdge(edge, eds));
+    },
+    [setEdges]
+  );
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
@@ -136,7 +148,12 @@ const SitemapLayoutFlow = ({ id }) => {
     setNodes((nds) => [...nds, newNode]);
     setEdges((eds) => [
       ...eds,
-      { id: `e${parentId}-${newNodeId}`, source: parentId, target: newNodeId },
+      {
+        id: `e${parentId}-${newNodeId}`,
+        source: parentId,
+        target: newNodeId,
+        type: 'custom-edge',
+      },
     ]);
   };
 
@@ -429,8 +446,10 @@ const SitemapLayoutFlow = ({ id }) => {
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
       fitView
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
       defaultZoom={1} // Default initial zoom level
