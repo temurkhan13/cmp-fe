@@ -92,9 +92,12 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
               borderRadius: '6px',
               padding: '5px',
               background: 'rgba(0, 102, 255, 0.21)',
-
             }}
             value={heading}
+            onKeyDown={(e) =>
+              e.key === 'Enter' &&
+              updateNodeDataWithPropertyName(id, 'isEditing', false)
+            }
             onChange={(e) =>
               updateNodeDataWithPropertyName(id, 'heading', e.target.value)
             }
@@ -112,7 +115,11 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
               color: 'rgba(0, 102, 255, 1)',
               height: '100px',
             }}
-            
+            onKeyDown={(e) => {
+              console.log(e.key);
+              e.key === 'Enter' &&
+                updateNodeDataWithPropertyName(id, 'isEditing', false);
+            }}
             value={description}
             onChange={(e) =>
               updateNodeDataWithPropertyName(id, 'description', e.target.value)

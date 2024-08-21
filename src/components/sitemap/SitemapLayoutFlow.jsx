@@ -27,6 +27,26 @@ const nodeTypes = {
 const edgeTypes = {
   'custom-edge': Edge,
 };
+
+const DEFAULT_NODE = [
+  {
+    id: 'root',
+    type: 'custom',
+    position: { x: 0, y: 0 },
+    data: {
+      id: 'root',
+      label: 'Add Title',
+      nodeData: [],
+      onAddChild: () => {},
+      isRoot: true,
+      updateNodeLabelById: () => {},
+      fetchNodeData: () => {},
+      siteMapId: '',
+      showGenerateAIButton: false,
+    },
+  },
+];
+
 const SitemapLayoutFlow = ({ id }) => {
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -452,7 +472,7 @@ const SitemapLayoutFlow = ({ id }) => {
       edgeTypes={edgeTypes}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
-      defaultZoom={1} // Default initial zoom level
+      defaultZoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
         <button
@@ -526,6 +546,9 @@ const SitemapLayoutFlow = ({ id }) => {
                     }}
                     placeholder="Message ChangeAI to generate a sitemap"
                     onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && onInit('Playbook Introduction')
+                    }
                   ></textarea>
                   <button
                     style={{
@@ -539,6 +562,9 @@ const SitemapLayoutFlow = ({ id }) => {
                       marginTop: '5px',
                     }}
                     disabled={isLoading}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && onInit('Playbook Introduction')
+                    }
                     onClick={() => onInit('Playbook Introduction')}
                   >
                     Generate Sitemap
