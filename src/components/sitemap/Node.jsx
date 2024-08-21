@@ -4,10 +4,10 @@ import { BiPlus, BiPlusCircle } from 'react-icons/bi';
 import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
 import { useReorder } from '../../hooks/useReorder';
-
+import './node.scss';
 const Node = ({ data }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
-  const [hideLabelInput, setHideLabelInput] = useState(true);
+  const [hideLabelInput, setHideLabelInput] = useState(data.label.length !== 0);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef();
 
@@ -44,6 +44,7 @@ const Node = ({ data }) => {
   }, [data.nodeData]);
   return (
     <div
+      className="node"
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -57,6 +58,7 @@ const Node = ({ data }) => {
           background: 'white',
           borderRadius: 5,
           width: '250px',
+          minHeight: '200px',
           //   position:'relative'
         }}
       >
@@ -96,7 +98,7 @@ const Node = ({ data }) => {
                   borderRadius: '6px',
                   padding: '5px',
                   background: 'white',
-                  color: 'black',
+                  color: 'white',
                 }}
                 onBlur={() => {
                   if (data.label.length !== 0) {
@@ -178,71 +180,74 @@ const Node = ({ data }) => {
             ))}
           </ul>
 
-          <div
-            style={{
-              cursor: 'pointer',
-              width: '95%',
-              height: '36px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: '6px',
-              gap: '12px',
-              padding: '10px',
-
-              background: 'rgba(0, 0, 0, 0.05)',
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              addNodeChild();
-            }}
-          >
-            <BiPlus size={20}></BiPlus>
-          </div>
-          {/* <div style={{ position: 'absolute', top:'100' }}> */}
-          {data.nodeData.length === 0 && data.showGenerateAIButton && (
-            <button
+          <div className="button-wrapper">
+            <div
               style={{
+                cursor: 'pointer',
                 width: '95%',
-                background: '#C3E11B',
-                border: 'none',
-                padding: '5px',
+                height: '36px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 borderRadius: '6px',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                marginTop: '5px',
+                gap: '12px',
+                padding: '10px',
+
+                background: 'rgba(0, 0, 0, 0.05)',
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                if (data.nodeData.length === 0 && !data.isRoot) {
-                  setIsLoading(true);
-                  data.fetchNodeData(
-                    data.label,
-                    data.id,
-                    data.nodeData,
-                    data.siteMapId
-                  );
-                }
+                addNodeChild();
               }}
-              disabled={isLoading}
             >
-              Generate with AI
-            </button>
-          )}
-          <BiPlusCircle
-            style={{
-              cursor: 'pointer',
-              padding: '10px',
-              fontSize: '50px',
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              data.onAddChild();
-            }}
-            color="rgba(0, 102, 255, 1)"
-          >
-            Add Child
-          </BiPlusCircle>
+              <BiPlus size={20}></BiPlus>
+            </div>
+            {/* <div style={{ position: 'absolute', top:'100' }}> */}
+            {data.nodeData.length === 0 && data.showGenerateAIButton && (
+              <button
+                style={{
+                  width: '95%',
+                  background: '#C3E11B',
+                  border: 'none',
+                  padding: '5px',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  marginTop: '5px',
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (data.nodeData.length === 0 && !data.isRoot) {
+                    setIsLoading(true);
+                    data.fetchNodeData(
+                      data.label,
+                      data.id,
+                      data.nodeData,
+                      data.siteMapId
+                    );
+                  }
+                }}
+                disabled={isLoading}
+              >
+                Generate with AI
+              </button>
+            )}
+            <BiPlusCircle
+              style={{
+                cursor: 'pointer',
+                padding: '10px',
+                fontSize: '50px',
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                data.onAddChild();
+              }}
+              color="rgba(0, 102, 255, 1)"
+            >
+              Add Child
+            </BiPlusCircle>
+          </div>
+
           {/* </div> */}
           <Handle type="source" position={Position.Bottom} style={{}} />
         </div>
