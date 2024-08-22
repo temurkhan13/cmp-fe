@@ -27,34 +27,16 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
 
  const cardData = [
   {
-    icon: <BiSolidCollection style={{ fontSize: '3.5rem', color: 'gray ' }} />,
     title: 'WorkSpaces',
     count: totalWorkspaces,
-    background: card1,
   },
   {
-    icon: <PiFilesFill style={{ fontSize: '3.5rem', color: 'gray' }} />,
     title: 'Assessments',
-    count: 2,
-    background: card1,
+    count: 234,
   },
   {
-    icon: <BiSolidFolderOpen style={{ fontSize: '3.5rem', color: 'gray' }} />,
     title: 'Chat Assistants',
-    count: 8,
-    background: card1,
-  },
-  {
-    icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
-    title: 'Sitemap',
-    count: 0,
-    background: card1,
-  },
-  {
-    icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
-    title: 'Wireframes',
-    count: 0,
-    background: card1,
+    count: 23,
   },
 ];
   return (
@@ -64,14 +46,9 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
           key={index}
           className="dashboard-card"
           style={{
-            background: `url(${card.background}) no-repeat`,
-            backgroundSize: 'cover',
+            border: '1px solid black'
           }}
         >
-          <div className="count-heading">
-            <div>{card.icon}</div>
-            <div>{card.title}</div>
-          </div>
           <div
             className="counts"
             style={{
@@ -79,6 +56,10 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
             }}
           >
             {card.count}
+          </div>
+          <div className="count-heading">
+            <div>{card.icon}</div>
+            <div>{card.title}</div>
           </div>
         </div>
       ))}
@@ -105,7 +86,7 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
           padding: 1rem;
           align-items: center;
           justify-content: space-around;
-          width: 30rem;
+          width: 40rem;
           height: 15rem;
           background-position: right;
           transition: all 0.1s linear;
@@ -132,8 +113,8 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
         }
 
         .counts {
-          font-weight: bold;
-          color: gray;
+          font-weight: 700;
+          color: black;
           width: 100%;
           margin-left: 2rem;
           display: flex;
