@@ -7,78 +7,76 @@ import ReactDOMServer from 'react-dom/server';
 import mockMarkdown from '../../../reports/mockMarkdown';
 //import HTMLtoDOCX from "html-to-docx";
 
-
 const Editor = ({ placeholder, height }) => {
   const editor = useRef(null);
   const [content, setContent] = useState('');
-  
 
   const markdownData = mockMarkdown[0];
 
-// Generate HTML for TrioPage
-const reportHtml = ReactDOMServer.renderToStaticMarkup(
-  <WordReportTemplate content={markdownData}/>
-);
+  // Generate HTML for TrioPage
+  const reportHtml = ReactDOMServer.renderToStaticMarkup(
+    <WordReportTemplate content={markdownData} />
+  );
 
+  const htmlToDocx = (html) => {};
 
+  const downloadDocx = async (content) => {
+    try {
+      const doc = htmlToDocx(content);
 
-
-const htmlToDocx = (html) => {
-  
-
-};
-
-
-
-
-
-
-const downloadDocx = async (content) => {
-  try {
-    const doc = htmlToDocx(content);
-
-    // Convert the DOCX document to a Blob
-    const blob = await Packer.toBlob(doc);
-    saveAs(blob, 'document.docx');
-  } catch (error) {
-    console.error('Error generating DOCX file:', error);
-  }
-};
-
+      // Convert the DOCX document to a Blob
+      const blob = await Packer.toBlob(doc);
+      saveAs(blob, 'document.docx');
+    } catch (error) {
+      console.error('Error generating DOCX file:', error);
+    }
+  };
 
   useEffect(() => {
-setContent(reportHtml);
-  },[reportHtml]);
+    setContent(reportHtml);
+  }, [reportHtml]);
 
   const config = useMemo(
     () => ({
       readonly: false,
       placeholder: placeholder || 'Start typing...',
       height: height || '100%', // Set the height here
-      "showCharsCounter": false,
-      "showWordsCounter": false,
-      "showXPathInStatusbar": false,
+      showCharsCounter: false,
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
       toolbarButtonSize: 'large',
       toolbarAdaptive: true,
-      extraPlugins: ["export-docs"],
-    export: {
-      fileProxy: "/export-to-pdf", // Ensure this endpoint is correctly set up on your server
-      download: true, // Enable download directly from the editor
-    },
+      extraPlugins: ['export-docs'],
+      export: {
+        fileProxy: '/export-to-pdf', // Ensure this endpoint is correctly set up on your server
+        download: true, // Enable download directly from the editor
+      },
       aiAssistant: {
-        aiTranslateToFrenchPrompt:"",
+        aiTranslateToFrenchPrompt: '',
 
-      aiAssistantCallback(propmt, htmlFragment) {
-
-      return Promise.resolve('AI Assistant is not configured');
-      }
-  },
+        aiAssistantCallback(propmt, htmlFragment) {
+          return Promise.resolve('AI Assistant is not configured');
+        },
+      },
       buttons: [
-        'bold', 'italic', 'underline', '|',
-        'ul', 'ol', '|',
-        'outdent', 'indent', '|',
-        'font', 'fontsize', 'brush', 'paragraph', '|',
-        'image', 'table', '|',
+        'bold',
+        'italic',
+        'underline',
+        '|',
+        'ul',
+        'ol',
+        '|',
+        'outdent',
+        'indent',
+        '|',
+        'font',
+        'fontsize',
+        'brush',
+        'paragraph',
+        '|',
+        'image',
+        'table',
+        '|',
         {
           name: 'export',
           iconURL: 'http://localhost:5173/src/assets/common/icon.svg',
@@ -86,32 +84,35 @@ setContent(reportHtml);
             const content = editor.getEditorValue();
             console.log(content);
             downloadDocx(content);
-          //  const blob = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-          // const docxContent = HTMLDocx.asBlob(content);
-          // const link = document.createElement('a');
-          // link.href = URL.createObjectURL(docxContent);
-          // link.download = 'document.docx';
-          // link.click();
-          }
+            //  const blob = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+            // const docxContent = HTMLDocx.asBlob(content);
+            // const link = document.createElement('a');
+            // link.href = URL.createObjectURL(docxContent);
+            // link.download = 'document.docx';
+            // link.click();
+          },
         },
-        'fullsize', 'print', '|',
-        'source'
+        'fullsize',
+        'print',
+        '|',
+        'source',
       ],
     }),
     [placeholder, height]
   );
 
   return (
-    <div>    <JoditEditor
-      ref={editor}
-      value={content}
-      config={config}
-      tabIndex={1}
-      onBlur={(newContent) => setContent(newContent)}
-      onChange={() => {}}
-    />
-</div>
-
+    <div>
+      {' '}
+      <JoditEditor
+        ref={editor}
+        value={content}
+        config={config}
+        tabIndex={1}
+        onBlur={(newContent) => setContent(newContent)}
+        onChange={() => {}}
+      />
+    </div>
   );
 };
 
