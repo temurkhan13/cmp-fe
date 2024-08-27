@@ -16,6 +16,7 @@ import {
   updateReply,
   removeReply,
 } from '../../../../redux/slices/workspaceSlice';
+import NoDataAvailable from '../../../common/NoDataAvailable';
 
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();

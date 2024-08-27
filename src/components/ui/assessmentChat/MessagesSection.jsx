@@ -366,7 +366,7 @@ const MessagesSection = ({ selectedAssessment }) => {
         />
 
         {chat.length > 0 ? (
-          <div>
+          <div className="chat-scroll">
             {popupVisible && (
               <TonePopup
                 onToneChange={handleToneChange}

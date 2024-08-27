@@ -29,6 +29,9 @@ const Routess = () => {
           {data.routes.dashboardRoutesData.map((el) => (
             <Route path={el.path} element={<el.element />} key={uuidv4()} />
           ))}
+          {data.routes.sitemapRoutesData.map((el) => (
+            <Route path={el.path} element={<el.element />} key={uuidv4()} />
+          ))}
         </Routes>
       </Router>
     </>
