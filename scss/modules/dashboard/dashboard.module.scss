@@ -65,12 +65,13 @@
     .assbtnAss {
       background-color: rgba(10, 10, 10, 1);
       display: flex;
-      text-align: center;
+      // text-align: center;
       align-items: center;
       justify-content: space-between;
       color: white;
+      gap: 0.5rem;
       border-radius: 8px;
-      margin-left: 10px;
+      // margin-left: 10px;
       padding: 10px 20px;
     }
   }

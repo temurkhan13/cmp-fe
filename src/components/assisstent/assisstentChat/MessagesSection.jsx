@@ -84,16 +84,13 @@ const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId
       console.log("chat: " + chat);
     }
   }, [currentChat]);
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
   const handleDrop = (e) => {
     e.preventDefault();
     setFile(e.dataTransfer.files[0]);
   };
-
   const handleDragOver = (e) => {
     e.preventDefault();
   };
@@ -190,22 +187,90 @@ const applyFixedText = useCallback((newText) => {
   });
 
   setChat(updatedChat);
-  dispatch(updateMessage(selectedWorkspaceId, selectedChatId, updatedChat));
+  dispatch(updateMessage(updatedChat));
 
   setPopupVisible(false);
 }, [chat, selectedText, dispatch, selectedWorkspaceId, selectedChatId]);
 
+
+const adjustSelectionToWordBoundaries = () => {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+
+    // Adjust start boundary
+    let startOffset = range.startOffset;
+    let endOffset = range.endOffset;
+    const startContainer = range.startContainer;
+
+    while (startOffset > 0 && !/\s/.test(startContainer.textContent[startOffset - 1])) {
+      startOffset--;
+    }
+
+    // Adjust end boundary
+    while (endOffset < startContainer.textContent.length && !/\s/.test(startContainer.textContent[endOffset])) {
+      endOffset++;
+    }
+
+    range.setStart(startContainer, startOffset);
+    range.setEnd(startContainer, endOffset);
+  }
+};
+
+useEffect(() => {
+  const handleMouseUp = () => {
+    adjustSelectionToWordBoundaries();
+    const selection = window.getSelection();
+    if (selection.toString().trim() !== '') {
+      setSelectedText(selection.toString());
+      setPopupVisible(!!selectedText);
+      // setPopupPosition({
+      //   top: selection.getRangeAt(0).getBoundingClientRect().top + window.scrollY,
+      //   left: selection.getRangeAt(0).getBoundingClientRect().left + window.scrollX
+      // });
+      setPopupVisible(true);
+    } else {
+      setPopupVisible(false);
+    }
+  };
+
+  document.addEventListener('mouseup', handleMouseUp);
+  return () => {
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+}, []);
+
+
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-    setSelectedText(selectedText);
-    setPopupVisible(!!selectedText);
-  };
 
+    // Check if the selected text is within a ChangeAI or user message
+    const messageElements = document.querySelectorAll('.chat-message .card');
+
+    let isValidSelection = false;
+    messageElements.forEach((element) => {
+      const contentElement = element.querySelector('.msg');
+      if (contentElement && contentElement.contains(selection.anchorNode)) {
+        const messageRole = element.querySelector('.Heading').textContent;
+        if (messageRole === 'ChangeAI' || messageRole === 'You') {
+          isValidSelection = true;
+        }
+      }
+    });
+
+    if (isValidSelection) {
+      setSelectedText(selectedText);
+      setPopupVisible(!!selectedText);
+    } else {
+      setPopupVisible(false);
+    }
+  };
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
     setLoading(true);
     try {
+      console.log("selected Text", selectedText)
       const response = await ChangeToneFun(selectedText, tone);
       if (response) {
         applyFixedText(response);
@@ -216,7 +281,6 @@ const applyFixedText = useCallback((newText) => {
       setLoading(false);
     }
   };
-
   const handleResponseLengthChange = async (value) => {
     setResponseLength(value);
     setLoading(true);
@@ -241,11 +305,9 @@ const applyFixedText = useCallback((newText) => {
       setLoading(false);
     }
   };
-
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
-
   const handleAddBookmark = (content, messageId) => {
     const bookmark = {
       bookmarkId: 'bookmarkId3',
@@ -264,7 +326,6 @@ const applyFixedText = useCallback((newText) => {
     dispatch(addBookmark(bookmark));
     console.log('bookmarked ' + bookmark.bookmarkId);
   };
-
   const handleInspireClick = async () => {
     //Todo: will implement Inspire 
     // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
@@ -275,12 +336,12 @@ const applyFixedText = useCallback((newText) => {
     // });
   };
 
-  useEffect(() => {
-    document.addEventListener('mouseup', handleTextSelect);
-    return () => {
-      document.removeEventListener('mouseup', handleTextSelect);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('mouseup', handleTextSelect);
+  //   return () => {
+  //     document.removeEventListener('mouseup', handleTextSelect);
+  //   };
+  // }, []);
 
   return (
     <div className="chat-message-wrapper">

@@ -35,7 +35,7 @@ const DashboardLayout = ({ children }) => {
       Icon: <RiNewspaperLine />,
     },
     {
-      path: '/dashboard/DigitalPlaybook',
+      path: '/sitemap/list',
       name: 'Digital Playbook',
       Icon: <BsFilePlayFill />,
     },

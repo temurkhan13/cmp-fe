@@ -4,6 +4,7 @@ import { LuPencil } from 'react-icons/lu';
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
 import { IoAttach } from 'react-icons/io5';
 import { IoSend } from 'react-icons/io5';
+import { CiEdit } from 'react-icons/ci';
 import UserPic from '../../../assets/chat/user.png';
 import AiPic from '../../../assets/dashboard/sidebarLogo.png';
 import InpireMeIcon from '../../../assets/inspireBtn.svg';
@@ -32,6 +33,35 @@ import useLonger from '../../../hooks/useLonger';
 import usestartAssessment from '../../../hooks/usestartAssessment';
 // chat upload pdf & text
 import useChat from '../../../hooks/useChat';
+
+const TopBar = ({ progress, solvedQuestions, totalQuestions }) => {
+  const getColor = (progress) => {
+    if (progress <= 50) return 'red';
+    if (progress <= 70) return 'orange';
+    if (progress <= 90) return 'yellow';
+    return 'green';
+  };
+
+  return (
+    <div className="assessment-topbar">
+      <div className="progress" style={{ color: getColor(progress) }}>
+        Progress: {progress}%
+      </div>
+
+      <div>
+        Q&A:{' '}
+        <span className="qa">
+          {' '}
+          {solvedQuestions}/{totalQuestions}
+        </span>
+      </div>
+      <button className="edit-report-button">
+        Edit Report
+        <CiEdit size={20} />
+      </button>
+    </div>
+  );
+};
 
 const MessagesSection = ({ selectedAssessment }) => {
   const location = useLocation();
@@ -177,12 +207,30 @@ const MessagesSection = ({ selectedAssessment }) => {
     setPopupVisible(false);
   };
 
-  // select the text from chat
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-    setSelectedText(selectedText);
-    setPopupVisible(!!selectedText);
+
+    // Check if the selected text is within a ChangeAI or user message
+    const messageElements = document.querySelectorAll('.chat-message .card');
+
+    let isValidSelection = false;
+    messageElements.forEach((element) => {
+      const contentElement = element.querySelector('.msg');
+      if (contentElement && contentElement.contains(selection.anchorNode)) {
+        const messageRole = element.querySelector('.Heading').textContent;
+        if (messageRole === 'ChangeAI' || messageRole === 'You') {
+          isValidSelection = true;
+        }
+      }
+    });
+
+    if (isValidSelection) {
+      setSelectedText(selectedText);
+      setPopupVisible(!!selectedText);
+    } else {
+      setPopupVisible(false);
+    }
   };
 
   // handle Tone change
@@ -272,6 +320,7 @@ const MessagesSection = ({ selectedAssessment }) => {
 
   return (
     <div className="chat-message-wrapper">
+      <TopBar progress={67} solvedQuestions="4" totalQuestions="6" />
       <div
         className="spinner"
         style={{ display: loading || assessmentLoading ? 'flex' : 'none' }}
@@ -446,6 +495,38 @@ const MessagesSection = ({ selectedAssessment }) => {
           </div>
         </div>
       </div>
+      <style>{`
+      .assessment-topbar{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    gap: 2rem;
+    border-radius: 1rem;
+    border-bottom: 1px solid gray;
+    padding-bottom: 1rem;
+    position:absolute;
+    top:2rem;
+      }
+    .edit-report-button{
+        padding: 1rem 1rem;
+    border-radius: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: rgb(195, 225, 29);
+    gap: 5px;
+    font-weight:500;
+    border:none;
+    }
+    .qa{
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.9rem;
+    justify-content: center;
+    gap: 5px;
+    border:1px solid gray;
+    }
+      `}</style>
     </div>
   );
 };
