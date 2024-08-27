@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 import '@styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
-import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
+import {
+  FaCopy,
+  FaThumbsUp,
+  FaThumbsDown,
+  FaSync,
+  FaCommentAlt,
+} from 'react-icons/fa';
 import { IoAttach, IoSend } from 'react-icons/io5';
 import { FaFile } from 'react-icons/fa6';
 import InpireMeIcon from '../../../assets/inspireBtn.svg';
@@ -10,6 +16,7 @@ import AiPic from '@assets/dashboard/sidebarLogo.png';
 import { Example } from '@utils';
 import fileIcon from '@assets/dashboard/fileIcon.png';
 import TonePopup from './TonePopup';
+import CommentPopup from './CommentPopup';
 import { ScaleLoader } from 'react-spinners';
 import ReactMarkdown from 'react-markdown';
 import useGrammarFix from '@hooks/useGrammarFix';
@@ -24,26 +31,39 @@ import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 
-import { addMessage ,updateMessage, addBookmark } from '../../../redux/slices/workspaceSlice'; // Adjusted import
+import {
+  addMessage,
+  updateMessage,
+  addBookmark,
+} from '../../../redux/slices/workspaceSlice'; // Adjusted import
 
 import { v4 as uuidv4 } from 'uuid';
 
 const MessagesSection = () => {
-
   const dispatch = useDispatch();
   const state = useSelector((state) => state.workspace);
-  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
-  const chats = useSelector((state) => state.workspace.workspaces
-    .find(workspace => workspace.workspaceId === selectedWorkspaceId)
-    ?.folders.find(folder => folder.folderId === selectedFolderId)
-    ?.chats || []);
+  const selectedWorkspaceId = useSelector(
+    (state) => state.workspace.selectedWorkspaceId
+  );
+  const selectedFolderId = useSelector(
+    (state) => state.workspace.selectedFolderId
+  );
+  const chats = useSelector(
+    (state) =>
+      state.workspace.workspaces
+        .find((workspace) => workspace.workspaceId === selectedWorkspaceId)
+        ?.folders.find((folder) => folder.folderId === selectedFolderId)
+        ?.chats || []
+  );
   const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
   const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
 
-  const selectedWorkspace = state.workspaces.find(workspace => workspace.workspaceId === selectedWorkspaceId);
-const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId === selectedFolderId);
-
+  const selectedWorkspace = state.workspaces.find(
+    (workspace) => workspace.workspaceId === selectedWorkspaceId
+  );
+  const selectedFolder = selectedWorkspace?.folders.find(
+    (folder) => folder.folderId === selectedFolderId
+  );
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
@@ -51,13 +71,13 @@ const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId
     currentChat ? currentChat.generalMessages : []
   );
 
-
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [responseLength, setResponseLength] = useState('');
   const [askAi, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showCommentPopup, setShowCommentPopup] = useState(false);
 
   const { fixGrammar } = useGrammarFix();
   const { improveWriting } = useImproveWriting();
@@ -70,18 +90,18 @@ const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId
   const { error, chatWithdoc } = useChat();
 
   useEffect(() => {
-//     console.log('chats:', chats);
-//     console.log('selectedChatId:', selectedChatId, selectedWorkspaceId, selectedFolderId);
-//     console.log('Redux state:', state);
-//   console.log('currentChat:', currentChat);
-//   console.log('selectedWorkspace:', selectedWorkspace);
-// console.log('selectedFolder:', selectedFolder);
-// console.log('chats:', selectedFolder?.chats || []);
+    //     console.log('chats:', chats);
+    //     console.log('selectedChatId:', selectedChatId, selectedWorkspaceId, selectedFolderId);
+    //     console.log('Redux state:', state);
+    //   console.log('currentChat:', currentChat);
+    //   console.log('selectedWorkspace:', selectedWorkspace);
+    // console.log('selectedFolder:', selectedFolder);
+    // console.log('chats:', selectedFolder?.chats || []);
     if (currentChat) {
       console.log(currentChat);
       setChat(currentChat.generalMessages);
-      console.log("chat Messages: " + currentChat.generalMessages);
-      console.log("chat: " + chat);
+      console.log('chat Messages: ' + currentChat.generalMessages);
+      console.log('chat: ' + chat);
     }
   }, [currentChat]);
   const handleFileChange = (e) => {
@@ -94,152 +114,164 @@ const selectedFolder = selectedWorkspace?.folders.find(folder => folder.folderId
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-
-  // Memoize handleSendMessage function
-const handleSendMessage = useCallback(async () => {
-  if (!text && !file) return;
-
-  const newMessage = {
-    messageId:uuidv4(),    
-      userId: "userId2",
-      role: "user",
-      content: text || null,
-      timestamp: "2024-07-12T12:01:00Z",
-      createdAt: "2024-07-12T12:01:00Z",
-      updatedAt: "2024-07-12T12:01:00Z"
+  const handleCommentClick = (e) => {
+    e.stopPropagation();
+    setShowCommentPopup((prev) => !prev);
+    setAskAI(false);
+    setPopupVisible(false);
   };
+  // Memoize handleSendMessage function
+  const handleSendMessage = useCallback(async () => {
+    if (!text && !file) return;
 
-  const message = [...chat, newMessage];
-  console.log("user Message", chat);
-  setChat(message);
+    const newMessage = {
+      messageId: uuidv4(),
+      userId: 'userId2',
+      role: 'user',
+      content: text || null,
+      timestamp: '2024-07-12T12:01:00Z',
+      createdAt: '2024-07-12T12:01:00Z',
+      updatedAt: '2024-07-12T12:01:00Z',
+    };
 
-  console.log("AI response Message:", message);
-  dispatch(addMessage(newMessage));
+    const message = [...chat, newMessage];
+    console.log('user Message', chat);
+    setChat(message);
 
-  try {
-    setLoading(true);
-    const response = await chatWithdoc(text, file);
-    if (response) {
-      const aiMessage = {
-        messageId:uuidv4(),    
-      userId: "userId2",
-      role: "ai",
-      content: response,
-      timestamp: "2024-07-12T12:01:00Z",
-      createdAt: "2024-07-12T12:01:00Z",
-      updatedAt: "2024-07-12T12:01:00Z"
-      };
-      const finalChat = [...message, aiMessage];
-      setChat(finalChat);
-      console.log("AI response Message:", finalChat);
-      dispatch(addMessage(aiMessage));
+    console.log('AI response Message:', message);
+    dispatch(addMessage(newMessage));
+
+    try {
+      setLoading(true);
+      const response = await chatWithdoc(text, file);
+      if (response) {
+        const aiMessage = {
+          messageId: uuidv4(),
+          userId: 'userId2',
+          role: 'ai',
+          content: response,
+          timestamp: '2024-07-12T12:01:00Z',
+          createdAt: '2024-07-12T12:01:00Z',
+          updatedAt: '2024-07-12T12:01:00Z',
+        };
+        const finalChat = [...message, aiMessage];
+        setChat(finalChat);
+        console.log('AI response Message:', finalChat);
+        dispatch(addMessage(aiMessage));
+      }
+
+      setFile(null);
+      document.getElementById('file-input').value = '';
+      setText('');
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      console.log(chat);
+      setLoading(false);
     }
-
-    setFile(null);
-    document.getElementById('file-input').value = '';
-    setText('');
-  } catch (error) {
-    console.log(error.message);
-  } finally {
-    console.log(chat);
-    setLoading(false);
-  }
-
-}, [text, file, chat, dispatch, chatWithdoc]);
-
+  }, [text, file, chat, dispatch, chatWithdoc]);
 
   // Memoize HandleAskAi function
-const HandleAskAi = useCallback(async (value) => {
-  try {
-    setLoading(true);
-    setAskAI(value);
+  const HandleAskAi = useCallback(
+    async (value) => {
+      try {
+        setLoading(true);
+        setAskAI(value);
 
-    let response;
-    if (value === 'Fix Spelling & Grammar') {
-      response = await fixGrammar(selectedText);
-    } else if (value === 'Improve Writing') {
-      response = await improveWriting(selectedText);
-    } else if (value === 'Summarize') {
-      response = await summarize(selectedText);
-    }
+        let response;
+        if (value === 'Fix Spelling & Grammar') {
+          response = await fixGrammar(selectedText);
+        } else if (value === 'Improve Writing') {
+          response = await improveWriting(selectedText);
+        } else if (value === 'Summarize') {
+          response = await summarize(selectedText);
+        }
 
-    if (response) {
-      applyFixedText(response);
-    }
-  } catch (error) {
-    console.error('Asi AI', error);
-  } finally {
-    setLoading(false);
-  }
-}, [fixGrammar, improveWriting, summarize, selectedText]);
-
+        if (response) {
+          applyFixedText(response);
+        }
+      } catch (error) {
+        console.error('Asi AI', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fixGrammar, improveWriting, summarize, selectedText]
+  );
 
   // Memoize applyFixedText function
-const applyFixedText = useCallback((newText) => {
-  const updatedChat = chat.map((message) => {
-    if (message.content) {
-      return {
-        ...message,
-        content: message.content.replace(selectedText, newText),
-      };
-    }
-    return message;
-  });
+  const applyFixedText = useCallback(
+    (newText) => {
+      const updatedChat = chat.map((message) => {
+        if (message.content) {
+          return {
+            ...message,
+            content: message.content.replace(selectedText, newText),
+          };
+        }
+        return message;
+      });
 
-  setChat(updatedChat);
-  dispatch(updateMessage(updatedChat));
+      setChat(updatedChat);
+      dispatch(updateMessage(updatedChat));
 
-  setPopupVisible(false);
-}, [chat, selectedText, dispatch, selectedWorkspaceId, selectedChatId]);
-
-
-const adjustSelectionToWordBoundaries = () => {
-  const selection = window.getSelection();
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-
-    // Adjust start boundary
-    let startOffset = range.startOffset;
-    let endOffset = range.endOffset;
-    const startContainer = range.startContainer;
-
-    while (startOffset > 0 && !/\s/.test(startContainer.textContent[startOffset - 1])) {
-      startOffset--;
-    }
-
-    // Adjust end boundary
-    while (endOffset < startContainer.textContent.length && !/\s/.test(startContainer.textContent[endOffset])) {
-      endOffset++;
-    }
-
-    range.setStart(startContainer, startOffset);
-    range.setEnd(startContainer, endOffset);
-  }
-};
-
-useEffect(() => {
-  const handleMouseUp = () => {
-    adjustSelectionToWordBoundaries();
-    const selection = window.getSelection();
-    if (selection.toString().trim() !== '') {
-      setSelectedText(selection.toString());
-      setPopupVisible(!!selectedText);
-      // setPopupPosition({
-      //   top: selection.getRangeAt(0).getBoundingClientRect().top + window.scrollY,
-      //   left: selection.getRangeAt(0).getBoundingClientRect().left + window.scrollX
-      // });
-      setPopupVisible(true);
-    } else {
       setPopupVisible(false);
+    },
+    [chat, selectedText, dispatch, selectedWorkspaceId, selectedChatId]
+  );
+
+  const adjustSelectionToWordBoundaries = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+
+      // Adjust start boundary
+      let startOffset = range.startOffset;
+      let endOffset = range.endOffset;
+      const startContainer = range.startContainer;
+
+      while (
+        startOffset > 0 &&
+        !/\s/.test(startContainer.textContent[startOffset - 1])
+      ) {
+        startOffset--;
+      }
+
+      // Adjust end boundary
+      while (
+        endOffset < startContainer.textContent.length &&
+        !/\s/.test(startContainer.textContent[endOffset])
+      ) {
+        endOffset++;
+      }
+
+      range.setStart(startContainer, startOffset);
+      range.setEnd(startContainer, endOffset);
     }
   };
 
-  document.addEventListener('mouseup', handleMouseUp);
-  return () => {
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-}, []);
+  useEffect(() => {
+    const handleMouseUp = () => {
+      adjustSelectionToWordBoundaries();
+      const selection = window.getSelection();
+      if (selection.toString().trim() !== '') {
+        setSelectedText(selection.toString());
+        setPopupVisible(!!selectedText);
+        // setPopupPosition({
+        //   top: selection.getRangeAt(0).getBoundingClientRect().top + window.scrollY,
+        //   left: selection.getRangeAt(0).getBoundingClientRect().left + window.scrollX
+        // });
+        setPopupVisible(true);
+      } else {
+        setPopupVisible(false);
+      }
+    };
 
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
 
   const handleTextSelect = () => {
     const selection = window.getSelection();
@@ -270,7 +302,7 @@ useEffect(() => {
     setSelectedTone(tone);
     setLoading(true);
     try {
-      console.log("selected Text", selectedText)
+      console.log('selected Text', selectedText);
       const response = await ChangeToneFun(selectedText, tone);
       if (response) {
         applyFixedText(response);
@@ -327,7 +359,7 @@ useEffect(() => {
     console.log('bookmarked ' + bookmark.bookmarkId);
   };
   const handleInspireClick = async () => {
-    //Todo: will implement Inspire 
+    //Todo: will implement Inspire
     // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
     // const inspiredText = await handleInspire(answers[currentQuestionKey]);
     // setAnswers({
@@ -414,13 +446,18 @@ useEffect(() => {
                           </div>
                         )}
                         <div>
-                        <FaCopy
-                         onClick={() => handleAddBookmark(item.content, item.messageId)}
-                         style={{ cursor: 'pointer' }}
-                         />
-                          <FaThumbsUp />
-                          <FaThumbsDown />
-
+                          <FaCopy
+                            onClick={() =>
+                              handleAddBookmark(item.content, item.messageId)
+                            }
+                            style={{ cursor: 'pointer' }}
+                          />
+                          <FaThumbsUp style={{ cursor: 'pointer' }} />
+                          <FaThumbsDown style={{ cursor: 'pointer' }} />
+                          <FaCommentAlt
+                            onClick={handleCommentClick}
+                            style={{ cursor: 'pointer' }}
+                          />
                           <FaSync />
                         </div>
                       </div>
@@ -533,6 +570,9 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      {showCommentPopup && (
+        <CommentPopup onClose={() => setShowCommentPopup(false)} />
+      )}
     </div>
   );
 };
