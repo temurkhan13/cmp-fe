@@ -4,6 +4,7 @@ import { MdPeople, MdPerson } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
+import NoDataAvailable from '../common/NoDataAvailable';
 
 const UserDropdown = ({ activeIcon, handleIconClick }) => {
 
@@ -39,7 +40,7 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
         <hr style={{ color: 'lightgray' }} />
         {nonOwnerUsers.length === 0 ? (
           <Dropdown.Item style={styles.dropdownItem}>
-            No other users available
+            <NoDataAvailable message="No User Available" />
           </Dropdown.Item>
         ) : (
           nonOwnerUsers.map((user) => {

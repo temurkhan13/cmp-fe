@@ -2,6 +2,24 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import string from 'vite-plugin-string';
 
+
+
+// To get the local IP address
+import os from 'os';
+
+const getLocalIPAddress = () => {
+  const interfaces = os.networkInterfaces();
+  for (const interfaceName in interfaces) {
+    const iface = interfaces[interfaceName];
+    for (const alias of iface) {
+      if (alias.family === 'IPv4' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+};
+
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(),
@@ -52,6 +70,12 @@ export default defineConfig({
     },
   },
   server: {
+    server: {
+      host: getLocalIPAddress() || '0.0.0.0',
+      port: 5173, // You can change the port if needed
+      strictPort: true, // Ensure the selected port is used, if not available, it will fail
+    },
+
     proxy: {
       '/api': {
         target: 'http://139.59.4.99:3000',

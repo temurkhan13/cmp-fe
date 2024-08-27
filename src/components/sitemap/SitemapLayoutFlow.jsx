@@ -1,0 +1,674 @@
+import {
+  ReactFlow,
+  Controls,
+  useNodesState,
+  useEdgesState,
+  useReactFlow,
+  Panel,
+  addEdge,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import Node from './Node';
+import { useCallback, useEffect, useState } from 'react';
+import Dagre from '@dagrejs/dagre';
+import { v4 as uuidv4 } from 'uuid';
+import assets from '../../assets';
+import { FaHistory } from 'react-icons/fa';
+import { IoIosChatboxes } from 'react-icons/io';
+import AssessmentModal from '../assisstent/assisstentChat/assessmentModal';
+import VersionHistory from '../assisstent/assisstentChat/assessmentModal/VersionHistory';
+import Media from '../assisstent/assisstentChat/assessmentModal/Media';
+import Comments from '../assisstent/assisstentChat/assessmentModal/Comments';
+import Loading from './Loading';
+import Edge from './Edge';
+const nodeTypes = {
+  custom: Node,
+};
+const edgeTypes = {
+  'custom-edge': Edge,
+};
+
+const DEFAULT_NODE = [
+  {
+    id: 'root',
+    type: 'custom',
+    position: { x: 0, y: 0 },
+    data: {
+      id: 'root',
+      label: 'Add Title',
+      nodeData: [],
+      onAddChild: () => {},
+      isRoot: true,
+      updateNodeLabelById: () => {},
+      fetchNodeData: () => {},
+      siteMapId: '',
+      showGenerateAIButton: false,
+    },
+  },
+];
+
+const SitemapLayoutFlow = ({ id }) => {
+  const { fitView } = useReactFlow();
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [layouted, setLayouted] = useState(true);
+  const [prompt, setPrompt] = useState('');
+  const [isPromptVisible, setPromptVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const closeModal = () => {
+    setIsVersionHistoryModalOpen(false);
+    setIsCommentsModalOpen(false);
+  };
+
+  const onConnect = useCallback(
+    (connection) => {
+      const edge = { ...connection, type: 'custom-edge' };
+      setEdges((eds) => addEdge(edge, eds));
+    },
+    [setEdges]
+  );
+
+  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
+    useState(false);
+  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+
+  const getLayoutedElements = (nodes, edges, options) => {
+    const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+    g.setGraph({ rankdir: options.direction });
+
+    edges.forEach((edge) => g.setEdge(edge.source, edge.target));
+    nodes.forEach((node) =>
+      g.setNode(node.id, {
+        ...node,
+        width: node.measured?.width ?? 0,
+        height: node.measured?.height ?? 0,
+      })
+    );
+
+    Dagre.layout(g);
+
+    return {
+      nodes: nodes.map((node) => {
+        const position = g.node(node.id);
+        // We are shifting the dagre node position (anchor=center center) to the top left
+        // so it matches the React Flow node anchor point (top left).
+        const x = position.x - (node.measured?.width ?? 0) / 2;
+        const y = position.y - (node.measured?.height ?? 0) / 2;
+
+        return { ...node, position: { x, y } };
+      }),
+      edges,
+    };
+  };
+
+  const onLayout = useCallback(
+    (direction) => {
+      const layouted = getLayoutedElements(nodes, edges, { direction });
+
+      setNodes([...layouted.nodes]);
+      setEdges([...layouted.edges]);
+
+      window.requestAnimationFrame(() => {
+        fitView();
+      });
+    },
+    [nodes, edges]
+  );
+
+  const updateNodeLabelById = (id, newLabel) => {
+    setNodes((prev) => [
+      ...prev.map((node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              label: newLabel,
+            },
+          };
+        }
+        return node;
+      }),
+    ]);
+  };
+
+  const addChildNode = (
+    parentId,
+    parentPosition,
+    label = '',
+    nodeData = [],
+    nodeKey = uuidv4(),
+    siteMapId = '',
+    showGenerateAIButton = false
+  ) => {
+    const newNodeId = nodeKey;
+    const position = { x: parentPosition.x + 0, y: parentPosition.y + 200 };
+    const newNode = {
+      id: newNodeId,
+      type: 'custom',
+      position,
+      dragHandle: '.custom-drag-handle',
+      data: {
+        id: newNodeId,
+        label,
+        nodeData,
+        onAddChild: () =>
+          addChildNode(newNodeId, {
+            x: position.x + 0,
+            y: position.y + 200,
+          }),
+        isRoot: parentId === 'root' ? true : false,
+        updateNodeLabelById: updateNodeLabelById,
+        fetchNodeData: onPatch,
+        siteMapId,
+        showGenerateAIButton,
+      },
+    };
+    setNodes((nds) => [...nds, newNode]);
+    setEdges((eds) => [
+      ...eds,
+      {
+        id: `e${parentId}-${newNodeId}`,
+        source: parentId,
+        target: newNodeId,
+        type: 'custom-edge',
+      },
+    ]);
+  };
+
+  async function postData(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  async function patchData(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  async function getData(url = '') {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  const getSitemap = async () => {
+    if (!id) return;
+    const res = await getData(`http://139.59.4.99:3000/api/dpb/sitemap/${id}`);
+
+    if (res) {
+      let siteMapId = res.id;
+
+      res.stages.forEach((stage) => {
+        if (stage.stage === 'Playbook Introduction') {
+          addChildNode(
+            'root',
+            { x: 0, y: 0 },
+            stage.stage,
+            stage.nodeData.map(({ heading, description }) => {
+              return {
+                id: uuidv4(),
+                heading,
+                description,
+                isEditing: false,
+                color: '#0000000c',
+              };
+            }),
+            stage._id,
+            siteMapId
+          );
+
+          let parentId = stage._id;
+          stage.nodes.forEach((node) => {
+            addChildNode(
+              parentId,
+              { x: 0, y: 0 },
+              node.heading,
+              [],
+              res.stages.find(({ stage }) => stage === node.heading)._id,
+              siteMapId,
+              false
+            );
+          });
+        }
+
+        if (stage.stage !== 'Playbook Introduction') {
+          let nodeDataTemp = stage.nodeData.map(({ heading, description }) => {
+            return {
+              id: uuidv4(),
+              heading,
+              description,
+              isEditing: false,
+              color: '#0000000c',
+            };
+          });
+
+          setNodes((nds) => [
+            ...nds.map((node) => {
+              if (node.data.label === stage.stage) {
+                return {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    nodeData: nodeDataTemp,
+                  },
+                };
+              }
+              return node;
+            }),
+          ]);
+
+          stage.nodes.forEach((node) => {
+            addChildNode(
+              stage._id,
+              { x: 0, y: 0 },
+              node.heading,
+              node.nodeData.map(({ heading, description }) => {
+                return {
+                  id: uuidv4(),
+                  heading,
+                  description,
+                  isEditing: false,
+                  color: '#0000000c',
+                };
+              }),
+              node._id,
+              siteMapId
+            );
+          });
+        }
+      });
+    }
+  };
+
+  const onInit = async (
+    stage = 'Playbook Introduction',
+    nodeId = '',
+    nodeData = [],
+    sitemapId = ''
+  ) => {
+    if (prompt === '') {
+      alert('Please enter a message');
+      return;
+    }
+    setIsLoading(true);
+    setPromptVisible(false);
+    const payload = {
+      user_id: '11',
+      chat_id: '22',
+      message: prompt,
+      sitemapName: stage,
+      request: stage === 'Playbook Introduction' ? 'POST' : 'PATCH',
+    };
+
+    let res =
+      stage === 'Playbook Introduction'
+        ? await postData('http://139.59.4.99:3000/api/dpb/sitemap', payload)
+        : await patchData(
+            `http://139.59.4.99:3000/api/dpb/sitemap/${sitemapId}`,
+            payload
+          );
+
+    setIsLoading(false);
+    setPromptVisible(false);
+    let siteMapId = res.id;
+
+    res.stages.forEach((stage) => {
+      addChildNode(
+        'root',
+        { x: 1200, y: 0 },
+        stage.stage,
+        stage.nodeData.map(({ heading, description }) => {
+          return {
+            id: uuidv4(),
+            heading,
+            description,
+            isEditing: false,
+            color: '#0000000c',
+          };
+        }),
+        res.stages[0]._id,
+        siteMapId
+      );
+
+      let parentId = stage._id;
+      stage.nodes.forEach((node, index) => {
+        addChildNode(
+          parentId,
+          { x: (index + 1) * 400, y: 700 },
+          node.heading,
+          [],
+          uuidv4(),
+          siteMapId,
+          true
+        );
+      });
+    });
+  };
+
+  const onPatch = async (
+    stageLabel = 'Playbook Introduction',
+    nodeId = '',
+    nodeData = [],
+    sitemapId = ''
+  ) => {
+    if (prompt === '') {
+      alert('Please enter a message');
+      return;
+    }
+    setIsLoading(true);
+    const payload = {
+      user_id: '11',
+      chat_id: '22',
+      message: prompt,
+      sitemapName: stageLabel,
+      request: stageLabel === 'Playbook Introduction' ? 'POST' : 'PATCH',
+    };
+
+    let res =
+      stageLabel === 'Playbook Introduction'
+        ? await postData('http://139.59.4.99:3000/api/dpb/sitemap', payload)
+        : await patchData(
+            `http://139.59.4.99:3000/api/dpb/sitemap/${sitemapId}`,
+            payload
+          );
+
+    setIsLoading(false);
+    setPromptVisible(false);
+    setLayouted(false);
+    let siteMapId = res.id;
+
+    res.stages.forEach((stage) => {
+      if (stage.stage !== stageLabel) {
+        return;
+      }
+
+      let nodeDataTemp = stage.nodeData.map(({ heading, description }) => {
+        return {
+          id: uuidv4(),
+          heading,
+          description,
+          isEditing: false,
+          color: '#0000000c',
+        };
+      });
+
+      setNodes((nds) => [
+        ...nds.map((node) => {
+          if (node.data.label === stage.stage) {
+            return {
+              ...node,
+              data: {
+                ...nodeData,
+                ...node.data,
+                nodeData: nodeDataTemp,
+              },
+            };
+          }
+          return node;
+        }),
+      ]);
+
+      stage.nodes.forEach((node) => {
+        addChildNode(
+          nodeId,
+          { x: 0, y: 0 },
+          node.heading,
+          node.nodeData.map(({ heading, description }) => {
+            return {
+              id: uuidv4(),
+              heading,
+              description,
+              isEditing: false,
+              color: '#0000000c',
+            };
+          }),
+          uuidv4(),
+          siteMapId
+        );
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (!layouted) {
+      setTimeout(() => {
+        onLayout('TB');
+      }, 1000);
+      setLayouted(true);
+    }
+  }, [layouted, onLayout, nodes, edges]);
+
+  useEffect(() => {
+    getSitemap();
+  }, [id]);
+
+  return (
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      fitView
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      minZoom={0.1} // Set a low minZoom for deeper zoom-out
+      maxZoom={10} // Set a high maxZoom for more zoom-in levels
+      defaultZoom={0.2} // Default initial zoom level
+    >
+      <Panel position="top-left">
+        <button
+          onClick={() => onLayout('TB')}
+          style={{
+            background: 'white',
+            padding: '10px',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+        >
+          Layout
+        </button>
+        {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
+      </Panel>
+      {!id ? (
+        <Panel position="top-right">
+          <div style={{ display: 'flex', gap: 10 }}>
+            {isPromptVisible ? (
+              <div
+                style={{
+                  width: '525px',
+                  height: '370px',
+                  border: '1px solid rgba(10, 10, 10, 0.1)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  background: 'white',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100%',
+                    height: '20%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}
+                >
+                  <img src={assets.common.icon} alt="icon" />
+                  <span
+                    style={{
+                      fontSize: '20px',
+                      fontWeight: 'bold',
+                      fontFamily: 'Poppins',
+                    }}
+                  >
+                    Change AI
+                  </span>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '80%',
+                    position: 'relative',
+                  }}
+                >
+                  <textarea
+                    style={{
+                      width: '100%',
+                      outline: 'none',
+                      resize: 'none',
+                      borderRadius: '6px',
+                      height: '85%',
+                      padding: '10px',
+                      border: '1px solid rgba(10, 10, 10, 0.1)',
+                    }}
+                    placeholder="Message ChangeAI to generate a sitemap"
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && onInit('Playbook Introduction')
+                    }
+                  ></textarea>
+                  <button
+                    style={{
+                      width: '100%',
+                      background: '#C3E11B',
+                      border: 'none',
+                      padding: '5px',
+                      borderRadius: '6px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      marginTop: '5px',
+                    }}
+                    disabled={isLoading}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && onInit('Playbook Introduction')
+                    }
+                    onClick={() => onInit('Playbook Introduction')}
+                  >
+                    Generate Sitemap
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: '10px',
+                background: 'white',
+                border: '1px solid lightgray',
+                borderRadius: '6px',
+                padding: '0 5px',
+                height: '150px',
+              }}
+            >
+              <div
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  marginTop: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  if (nodes.length > 0) {
+                    return;
+                  }
+                  setPromptVisible(!isPromptVisible);
+                }}
+              >
+                <img
+                  src={assets.common.icon}
+                  alt="logo"
+                  style={{ width: '100%', height: '100p%' }}
+                />
+              </div>
+              <div>
+                <span
+                  // className={`iconButton ${
+                  //   // isVersionHistoryModalOpen ? 'active' : ''
+                  // }`}
+                  onClick={() => setIsVersionHistoryModalOpen(true)}
+                >
+                  <FaHistory className="icon" size={25} />
+                  {/* <span className="tooltip">Version History</span> */}
+                </span>
+              </div>
+              <div>
+                <span
+                  // className={`iconButton ${
+                  //   isCommentsModalOpen ? 'active' : ''
+                  // }`}
+                  onClick={() => setIsCommentsModalOpen(true)}
+                >
+                  <IoIosChatboxes className="icon" size={28} />
+                  {/* <span className="tooltip">Comments</span> */}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
+
+          {isVersionHistoryModalOpen && (
+            <AssessmentModal
+              title="Version History"
+              bodyContent={<VersionHistory versions={[]} />}
+              onClose={closeModal}
+            />
+          )}
+          {isCommentsModalOpen && (
+            <AssessmentModal
+              title="Comments"
+              bodyContent={<Comments comments={[]} />}
+              onClose={closeModal}
+            />
+          )}
+        </Panel>
+      ) : null}
+      {isLoading ? (
+        <Panel position="center">
+          <div
+            style={{
+              height: '90vh',
+              // width: '1600px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              // backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            <Loading />
+          </div>
+        </Panel>
+      ) : null}
+      {/* <Background /> */}
+      <Controls />
+    </ReactFlow>
+  );
+};
+
+export default SitemapLayoutFlow;

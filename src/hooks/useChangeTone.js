@@ -7,13 +7,14 @@ const useChangeTone = () => {
 
 
 
-  const ChangeToneFun = async (inputText, selectedTone) => {
+  const ChangeToneFun = async (selectedText, tone) => {
     try {
       const token = localStorage.getItem('token');
       
+      console.log("Change Tone text: "+selectedText)
       const response = await axios.post("http://139.59.4.99:3000/api/chat/change-tone", {
-        message: inputText,
-        tone: selectedTone,        
+        message: {selectedText},
+        tone: tone,        
       },
      { headers: {
         'Content-Type': 'multipart/form-data',

@@ -113,7 +113,7 @@ const workspaceSlice = createSlice({
       const chat = findChatById(folder, state.selectedChatId);
       const message = chat.generalMessages.find(msg => msg.messageId === action.payload.message.messageId);
       if (message) {
-        Object.assign(message, action.payload.message);
+        Object.assign(message, action.payload);
       }
     },
     removeMessage: (state, action) => {
