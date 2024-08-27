@@ -4,59 +4,41 @@ import { PiFilesFill } from 'react-icons/pi';
 import { FaNetworkWired } from 'react-icons/fa';
 import { BiSolidCollection, BiSolidFolderOpen } from 'react-icons/bi';
 
-import { useSelector } from 'react-redux'; 
-
-
-
-
+import { useSelector } from 'react-redux';
 
 const CountingCards = () => {
+  const workspaces = useSelector((state) => state.workspace.workspaces);
+  const selectedWorkspaceId = useSelector(
+    (state) => state.workspace.selectedWorkspaceId
+  );
+  const folderSelect = useSelector((state) => state.workspace.folders);
+  const selectedFolderId = useSelector(
+    (state) => state.workspace.selectedFolderId
+  );
 
+  // Count total workspaces
+  const totalWorkspaces = workspaces.length;
 
-const workspaces = useSelector((state) => state.workspace.workspaces);
-const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-const folderSelect = useSelector((state) => state.workspace.folders);
-const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
+  // Count total folders
+  const totalFolders = workspaces.reduce(
+    (acc, workspace) => acc + workspace.folders.length,
+    0
+  );
 
- // Count total workspaces
- const totalWorkspaces = workspaces.length;
-
- // Count total folders
- const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
-
-
- const cardData = [
-  {
-    icon: <BiSolidCollection style={{ fontSize: '3.5rem', color: 'gray ' }} />,
-    title: 'WorkSpaces',
-    count: totalWorkspaces,
-    background: card1,
-  },
-  {
-    icon: <PiFilesFill style={{ fontSize: '3.5rem', color: 'gray' }} />,
-    title: 'Assessments',
-    count: 2,
-    background: card1,
-  },
-  {
-    icon: <BiSolidFolderOpen style={{ fontSize: '3.5rem', color: 'gray' }} />,
-    title: 'Chat Assistants',
-    count: 8,
-    background: card1,
-  },
-  {
-    icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
-    title: 'Sitemap',
-    count: 0,
-    background: card1,
-  },
-  {
-    icon: <FaNetworkWired style={{ fontSize: '3.5rem', color: 'gray' }} />,
-    title: 'Wireframes',
-    count: 0,
-    background: card1,
-  },
-];
+  const cardData = [
+    {
+      title: 'WorkSpaces',
+      count: totalWorkspaces,
+    },
+    {
+      title: 'Assessments',
+      count: 234,
+    },
+    {
+      title: 'Chat Assistants',
+      count: 23,
+    },
+  ];
   return (
     <div className="counting-cards">
       {cardData.map((card, index) => (
@@ -64,14 +46,9 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
           key={index}
           className="dashboard-card"
           style={{
-            background: `url(${card.background}) no-repeat`,
-            backgroundSize: 'cover',
+            border: '1px solid black',
           }}
         >
-          <div className="count-heading">
-            <div>{card.icon}</div>
-            <div>{card.title}</div>
-          </div>
           <div
             className="counts"
             style={{
@@ -79,6 +56,10 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
             }}
           >
             {card.count}
+          </div>
+          <div className="count-heading">
+            <div>{card.icon}</div>
+            <div>{card.title}</div>
           </div>
         </div>
       ))}
@@ -105,7 +86,7 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
           padding: 1rem;
           align-items: center;
           justify-content: space-around;
-          width: 30rem;
+          width: 40rem;
           height: 15rem;
           background-position: right;
           transition: all 0.1s linear;
@@ -132,8 +113,8 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
         }
 
         .counts {
-          font-weight: bold;
-          color: gray;
+          font-weight: 700;
+          color: black;
           width: 100%;
           margin-left: 2rem;
           display: flex;
