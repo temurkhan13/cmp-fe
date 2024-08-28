@@ -40,6 +40,11 @@ const dashboardRoutesData = [
     path: '/dashboard/trash',
     element: Module.Dashboard.Trash,
   },
+  {
+    title: '',
+    path: '/dashboard/settings',
+    element: Module.Dashboard.Settings,
+  },
 ];
 
 export default dashboardRoutesData;
