@@ -4,41 +4,41 @@ import { PiFilesFill } from 'react-icons/pi';
 import { FaNetworkWired } from 'react-icons/fa';
 import { BiSolidCollection, BiSolidFolderOpen } from 'react-icons/bi';
 
-import { useSelector } from 'react-redux'; 
-
-
-
-
+import { useSelector } from 'react-redux';
 
 const CountingCards = () => {
+  const workspaces = useSelector((state) => state.workspace.workspaces);
+  const selectedWorkspaceId = useSelector(
+    (state) => state.workspace.selectedWorkspaceId
+  );
+  const folderSelect = useSelector((state) => state.workspace.folders);
+  const selectedFolderId = useSelector(
+    (state) => state.workspace.selectedFolderId
+  );
 
+  // Count total workspaces
+  const totalWorkspaces = workspaces.length;
 
-const workspaces = useSelector((state) => state.workspace.workspaces);
-const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-const folderSelect = useSelector((state) => state.workspace.folders);
-const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
+  // Count total folders
+  const totalFolders = workspaces.reduce(
+    (acc, workspace) => acc + workspace.folders.length,
+    0
+  );
 
- // Count total workspaces
- const totalWorkspaces = workspaces.length;
-
- // Count total folders
- const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
-
-
- const cardData = [
-  {
-    title: 'WorkSpaces',
-    count: totalWorkspaces,
-  },
-  {
-    title: 'Assessments',
-    count: 234,
-  },
-  {
-    title: 'Chat Assistants',
-    count: 23,
-  },
-];
+  const cardData = [
+    {
+      title: 'WorkSpaces',
+      count: totalWorkspaces,
+    },
+    {
+      title: 'Assessments',
+      count: 234,
+    },
+    {
+      title: 'Chat Assistants',
+      count: 23,
+    },
+  ];
   return (
     <div className="counting-cards">
       {cardData.map((card, index) => (
@@ -46,7 +46,7 @@ const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId
           key={index}
           className="dashboard-card"
           style={{
-            border: '1px solid black'
+            border: '1px solid black',
           }}
         >
           <div
