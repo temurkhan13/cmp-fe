@@ -52,8 +52,9 @@ const splitContentIntoPages = (htmlContent) => {
   const pages = [];
   let currentPage = '';
 
-  lines.forEach(line => {
-    if (currentPage.length + line.length > 1800) { // Approximate character limit per page
+  lines.forEach((line) => {
+    if (currentPage.length + line.length > 1800) {
+      // Approximate character limit per page
       pages.push(currentPage);
       currentPage = '';
     }
