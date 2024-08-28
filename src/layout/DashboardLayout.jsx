@@ -14,6 +14,7 @@ import { RiNewspaperLine } from 'react-icons/ri';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BiSolidSpreadsheet } from 'react-icons/bi';
 import { BsFilePlayFill } from 'react-icons/bs';
+import { IoSettingsSharp } from 'react-icons/io5';
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -58,6 +59,11 @@ const DashboardLayout = ({ children }) => {
       path: '/dashboard/Trash',
       name: 'Trash',
       Icon: <FaTrash />,
+    },
+    {
+      path: '/dashboard/settings',
+      name: 'Settings',
+      Icon: <IoSettingsSharp />,
     },
   ];
   const toggleSidebar = () => {

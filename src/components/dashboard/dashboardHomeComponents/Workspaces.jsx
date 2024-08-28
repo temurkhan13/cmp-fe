@@ -18,28 +18,28 @@ const Workspaces = () => {
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
 
-
   const dispatch = useDispatch();
 
-
-
-
-
-
   const workspaces = useSelector((state) => state.workspace.workspaces);
-  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
+  const selectedWorkspaceId = useSelector(
+    (state) => state.workspace.selectedWorkspaceId
+  );
   //const folderSelect = useSelector((state) => state.workspace.folders);
-  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
+  const selectedFolderId = useSelector(
+    (state) => state.workspace.selectedFolderId
+  );
 
-   // Count total workspaces
-   const totalWorkspaces = workspaces.length;
+  // Count total workspaces
+  const totalWorkspaces = workspaces.length;
 
-   // Count total folders
-   const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
- 
+  // Count total folders
+  const totalFolders = workspaces.reduce(
+    (acc, workspace) => acc + workspace.folders.length,
+    0
+  );
 
   useEffect(() => {
-    console.log("workspace: " + totalWorkspaces + totalFolders);
+    console.log('workspace: ' + totalWorkspaces + totalFolders);
     if (workspaces.length > 0 && !selectedWorkspaceId) {
       dispatch(setSelectedWorkspaceId(workspaces[0].workspaceId));
       console.log(workspaces[0].workspaceId);
@@ -123,7 +123,7 @@ const Workspaces = () => {
   //   },
   // ];
 
- // const [folders, setFolders] = useState(folderSelect);
+  // const [folders, setFolders] = useState(folderSelect);
 
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
@@ -131,7 +131,7 @@ const Workspaces = () => {
   const handleNewWorkspaceSubmit = () => {
     if (newWorkspaceName.trim()) {
       const newFolder = { name: newWorkspaceName, details: {} };
-    //  setFolders([...folders, newFolder]);
+      //  setFolders([...folders, newFolder]);
       setNewWorkspaceName('');
       setIsNewWorkspaceModalOpen(false);
     }
@@ -155,7 +155,7 @@ const Workspaces = () => {
       </div>
 
       <div className="icons">
-        { workspaces.map((workspace, index) => (
+        {workspaces.map((workspace, index) => (
           <div key={index} className="icon-container">
             <BsWindowStack
               onClick={() => toggleModal(workspace)}
@@ -165,7 +165,7 @@ const Workspaces = () => {
               {truncateString(workspace.workspaceName, 8)}
             </span>
           </div>
-        )) }
+        ))}
       </div>
 
       {isModalOpen && selectedFolder && (
