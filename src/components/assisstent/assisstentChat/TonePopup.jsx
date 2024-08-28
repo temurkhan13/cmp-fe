@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { RiMagicFill } from 'react-icons/ri';
-import { GoCommentDiscussion } from 'react-icons/go';
 import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
 import { FaLocationArrow } from 'react-icons/fa6';
 import PropTypes from 'prop-types';
-import CommentPopup from './CommentPopup';
 
 const TonePopup = ({
   onToneChange,
@@ -14,16 +12,9 @@ const TonePopup = ({
   onClose,
 }) => {
   const [showAskAi, setShowAskAi] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [showCommentPopup, setShowCommentPopup] = useState(false);
 
   const handleOptionClick = () => {
     onClose(); // Close the popup when any option is clicked
-  };
-
-  const handlePopupToggle = (e) => {
-    e.stopPropagation();
-    setPopupVisible(!popupVisible);
   };
 
   const handleAskAiToggle = (e) => {
@@ -31,20 +22,9 @@ const TonePopup = ({
     setShowAskAi(!showAskAi);
   };
 
-  const handleCommentClick = (e) => {
-    e.stopPropagation();
-    setShowCommentPopup(true);
-    setShowAskAi(false);
-    setPopupVisible(false);
-  };
-
-  const handleCommentClose = () => {
-    setShowCommentPopup(false);
-  };
-
   return (
     <div className="PopupBox">
-      {!showAskAi && !showCommentPopup ? (
+      {!showAskAi ? (
         <div className="navbar">
           <div className="dropdown">
             <button
@@ -53,11 +33,6 @@ const TonePopup = ({
               style={{ color: 'rgba(0, 102, 255, 1)', fontWeight: 400 }}
             >
               <RiMagicFill /> Ask AI
-            </button>
-          </div>
-          <div className="dropdown">
-            <button className="dropbtn" onClick={handleCommentClick}>
-              <GoCommentDiscussion /> Comment
             </button>
           </div>
           <div className="dropdown">
@@ -165,7 +140,7 @@ const TonePopup = ({
             </div>
           </div>
         </div>
-      ) : showAskAi ? (
+      ) : (
         <div className="navbar">
           <div
             className="dropdown"
@@ -237,8 +212,7 @@ const TonePopup = ({
             </div>
           </div>
         </div>
-      ) : null}
-      {showCommentPopup && <CommentPopup onClose={handleCommentClose} />}
+      )}
     </div>
   );
 };
@@ -247,7 +221,7 @@ TonePopup.propTypes = {
   onToneChange: PropTypes.func.isRequired,
   onResponseLengthChange: PropTypes.func.isRequired,
   HandleAskAi: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired, // Add onClose prop
+  onClose: PropTypes.func.isRequired,
 };
 
 export default TonePopup;
