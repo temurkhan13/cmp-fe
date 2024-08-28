@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import '../../../styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
-import { IoAttach } from 'react-icons/io5';
+import { IoAttach, IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { IoSend } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci';
 import UserPic from '../../../assets/chat/user.png';
@@ -26,32 +26,42 @@ import useImproveWriting from '../../../hooks/useImproveWriting';
 import useChangeTone from '../../../hooks/useChangeTone';
 
 // response length
-import useComprehensive from '../../../hooks/useComprehensive';
 import useAuto from '../../../hooks/useAuto';
-import useShorter from '../../../hooks/useShorter';
 import useLonger from '../../../hooks/useLonger';
+import useShorter from '../../../hooks/useShorter';
+import useComprehensive from '../../../hooks/useComprehensive';
 import usestartAssessment from '../../../hooks/usestartAssessment';
 // chat upload pdf & text
 import useChat from '../../../hooks/useChat';
 
-const TopBar = ({ progress, solvedQuestions, totalQuestions }) => {
+const TopBar = ({
+  progress,
+  solvedQuestions,
+  totalQuestions,
+  topbarHeading,
+}) => {
   const getColor = (progress) => {
-    if (progress <= 50) return 'red';
-    if (progress <= 70) return 'orange';
-    if (progress <= 90) return 'yellow';
-    return 'green';
+    if (progress <= 50) return '#C3E11D';
+    if (progress <= 70) return '#C3E11D';
+    if (progress <= 90) return '#C3E11D';
+    return '#C3E11D';
   };
 
   return (
     <div className="assessment-topbar">
-      <div className="progress" style={{ color: getColor(progress) }}>
-        Progress: {progress}%
+      <div className="topbar-heading">{topbarHeading}</div>
+      <div className="report">
+        <span>Progress:</span>
+        <span
+          className="progress"
+          style={{ backgroundColor: getColor(progress) }}
+        >
+          {progress}%
+        </span>
       </div>
-
-      <div>
-        Q&A:{' '}
+      <div className="qa-container">
+        <span>Q&A:</span>
         <span className="qa">
-          {' '}
           {solvedQuestions}/{totalQuestions}
         </span>
       </div>
@@ -62,22 +72,21 @@ const TopBar = ({ progress, solvedQuestions, totalQuestions }) => {
     </div>
   );
 };
-
 const MessagesSection = ({ selectedAssessment }) => {
   const location = useLocation();
   const { Questions } = location.state || {};
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
-  //
   const [chat, setChat] = useState([]);
-  const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
+  const [popupVisible, setPopupVisible] = useState(false);
   const [responseLength, setResponseLength] = useState('');
   const [askAi, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
+  const [showTopBar, setShowTopBar] = useState(false);
 
   // custom hooks
   const { StartAssessment } = usestartAssessment();
@@ -320,7 +329,22 @@ const MessagesSection = ({ selectedAssessment }) => {
 
   return (
     <div className="chat-message-wrapper">
-      <TopBar progress={67} solvedQuestions="4" totalQuestions="6" />
+      <div className="toggle-top-bar">
+        <button
+          onClick={() => setShowTopBar(!showTopBar)}
+          className="topbar-btn"
+        >
+          {showTopBar ? <IoChevronUp /> : <IoChevronDown />}
+        </button>
+      </div>
+      {showTopBar && (
+        <TopBar
+          topbarHeading="Change Management"
+          progress={50}
+          solvedQuestions={2}
+          totalQuestions={6}
+        />
+      )}
       <div
         className="spinner"
         style={{ display: loading || assessmentLoading ? 'flex' : 'none' }}
@@ -496,36 +520,72 @@ const MessagesSection = ({ selectedAssessment }) => {
         </div>
       </div>
       <style>{`
-      .assessment-topbar{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    gap: 2rem;
-    border-radius: 1rem;
-    border-bottom: 1px solid gray;
-    padding-bottom: 1rem;
-    position:absolute;
-    top:2rem;
-      }
-    .edit-report-button{
-        padding: 1rem 1rem;
-    border-radius: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background-color: rgb(195, 225, 29);
-    gap: 5px;
-    font-weight:500;
-    border:none;
-    }
-    .qa{
-    padding: 0.5rem 0.5rem;
-    border-radius: 0.9rem;
-    justify-content: center;
-    gap: 5px;
-    border:1px solid gray;
-    }
+        .assessment-topbar {
+          display: flex;
+          align-items: center;
+          // flex-direction: column;
+          justify-content: space-around;
+          background-color: white;
+          gap: 1rem;
+          border-radius: 1rem;
+          padding: 1rem;
+          box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 15px;
+          position: absolute;
+          width:80%;
+          top:8.5rem;
+          left:35 %;
+          transition: all 0.3s ease-in-out;
+        }
+        .topbar-heading{
+        font-size: 1.5rem;
+
+          }
+        .report,
+        .qa-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          // width: 100%;
+          font-weight: 500;
+          // border-bottom: 1px solid lightgray;
+          padding-bottom:1rem;
+        }
+        .progress,
+        .qa {
+          padding: 0.5rem;
+          border-radius: 1rem;
+          background-color: #C3E11D;
+          font-weight: 500;
+          text-align: center;
+          min-width: 5rem;
+          }
+          .edit-report-button {
+          padding: 1rem;
+          border-radius: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          background-color: #C3E11D;
+          gap: 5px;
+          font-weight: 500;
+          border: none;
+          // width:100%;
+        }
+        .topbar-btn{
+          position:absolute;
+          top:5rem;
+          border:none;
+          outline:none;
+          font-size:2rem;
+          background-color: lightgray;
+          padding:0.5rem 1rem;
+          border-radius:1rem;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+
+          }
       `}</style>
     </div>
   );

@@ -1,110 +1,145 @@
-// import { BsFilterLeft } from 'react-icons/bs';
-// import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-// import { BsFilterCircle } from 'react-icons/bs';
-// import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
-// import { RxCross1 } from 'react-icons/rx';
 import { TiPlus } from 'react-icons/ti';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import { SlArrowRight } from 'react-icons/sl';
-import { SlArrowLeft } from 'react-icons/sl';
+import { SlArrowRight, SlArrowLeft } from 'react-icons/sl';
 import { CgMenuGridR } from 'react-icons/cg';
 import StartIcon from '../../assets/dashboard/StarICon.png';
-import styles from '../../../scss/modules/dashboard/dashboard.module.scss';
 
-const AssistantBar = () => {
+const AssistantBar = ({ setView }) => {
   return (
     <>
-      <main className={styles.main}>
-        {/* <RxCross1
-          style={{
-            borderRadius: '30px',
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            fontSize: '15px',
-          }}
-        /> */}
+      <main className="main">
         <input type="text" placeholder="Enter a prompt to generate new file" />
-
-        <button className={styles.assbtn}>
+        <button className="assbtn">
           <img src={StartIcon} alt="StartIcon" />
           Generate
         </button>
       </main>
-
-      <section className={styles.generate}>
-        <div className={styles.Container}>
-          <div
-            style={{
-              display: 'flex',
-              textAlign: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <button className={styles.arrowBtn}>
+      <section className="generate">
+        <div className="container">
+          <div className="navContainer">
+            <button className="arrowBtn">
               <SlArrowLeft />
             </button>
-            <button className={styles.arrowBtn}>
+            <button className="arrowBtn">
               <SlArrowRight />
             </button>
-            <p className={styles.assistantHeading}>AI Assistant</p>
+            <p className="assistantHeading">AI Assistant</p>
           </div>
-
-          <div
-            style={{
-              display: 'flex',
-              textAlign: 'center',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                textAlign: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <CgMenuGridR style={{ fontSize: '26px', cursor: 'pointer' }} />
+          <div className="controlContainer">
+            <div className="menuContainer">
+              <CgMenuGridR
+                className="menuIcon"
+                onClick={() => setView('grid')}
+              />
               <TfiMenuAlt
-                style={{
-                  marginRight: '30px',
-                  marginLeft: '5px',
-                  fontSize: '22px',
-                  cursor: 'pointer',
-                }}
+                className="menuIconAlt"
+                onClick={() => setView('list')}
               />
             </div>
-            {/* <div>
-              <BsFilterLeft style={{ fontSize: '22px' }} />
-              <MdOutlineKeyboardArrowDown
-                style={{ marginRight: '30px', fontSize: '18px' }}
-              />
-            </div>
-            <div>
-              <BsFilterCircle style={{ fontSize: '20px' }} />
-              <MdOutlineKeyboardArrowDown
-                style={{ marginRight: '30px', fontSize: '18px' }}
-              />
-            </div> */}
-            {/* <div>
-              <HiAdjustmentsHorizontal
-                style={{ marginRight: '30px', fontSize: '22px' }}
-              />
-              <MdOutlineKeyboardArrowDown />
-            </div> */}
-            <div>
-              <button className={styles.assbtnAss}>
-                {/* <CgMenuGridR/> */}
-                <TiPlus />
-                New Assistant
-              </button>
-            </div>
-            {/* <div></div> */}
+            <button className="assbtnAss">
+              <TiPlus />
+              New Assistant
+            </button>
           </div>
         </div>
       </section>
+      <style>{`
+        .main {
+          background-color: rgba(184, 241, 86, 0.21);
+          grid-area: main;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          height: 30vh;
+        }
+        .main input {
+          font-family: 'Poppins';
+          width: 400px;
+          height: 44px;
+          border-radius: 8px;
+          outline: none;
+          border: none;
+          padding: 10px;
+          border: 1px solid lightgray;
+        }
+        .assbtn {
+          background-color: rgba(10, 10, 10, 1);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: white;
+          height: 44px;
+          width: 130px;
+          border-radius: 8px;
+          margin-left: 10px;
+          padding: 10px 20px;
+        }
+        .generate {
+          background-color: rgba(249, 249, 249, 1);
+        }
+        .generate .container {
+          display: flex;
+          text-align: center;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1%;
+          height: 10vh;
+        }
+        .arrowBtn {
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+          border: none;
+          outline: none;
+          background: transparent;
+        }
+        .assistantHeading {
+          font-family: 'Poppins';
+          font-size: 20px;
+          font-weight: 600;
+          line-height: 36px;
+          letter-spacing: 0.12px;
+          text-align: left;
+          color: black;
+        }
+        .assbtnAss {
+          background-color: rgba(10, 10, 10, 1);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: white;
+          gap: 0.5rem;
+          border-radius: 8px;
+          padding: 10px 20px;
+        }
+        .navContainer {
+          display: flex;
+          text-align: center;
+          justify-content: center;
+        }
+        .controlContainer {
+          display: flex;
+          text-align: center;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .menuContainer {
+          display: flex;
+          align-items: center;
+          text-align: center;
+          justify-content: center;
+        }
+        .menuIcon {
+          font-size: 26px;
+          cursor: pointer;
+        }
+        .menuIconAlt {
+          margin: 0 30px 0 5px;
+          font-size: 22px;
+          cursor: pointer;
+        }
+      `}</style>
     </>
   );
 };

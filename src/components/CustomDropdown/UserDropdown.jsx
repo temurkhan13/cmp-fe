@@ -7,7 +7,6 @@ import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 import NoDataAvailable from '../common/NoDataAvailable';
 
 const UserDropdown = ({ activeIcon, handleIconClick }) => {
-
   const { users, currentChat } = useSelectedChat();
 
   //const selectedChatId = useSelector((state) => state.chat.selectedChatId);
