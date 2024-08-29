@@ -34,13 +34,13 @@ const PersonalInfo = () => {
   const validateForm = () => {
     const errors = {};
 
-    if (firstName && !/^[A-Za-z]{3,32}$/.test(firstName)) {
-      errors.firstName = 'First name must be between 3 and 32 letters.';
-    }
-
-    if (lastName && !/^[A-Za-z]{3,32}$/.test(lastName)) {
-      errors.lastName = 'Last name must be between 3 and 32 letters.';
-    }
+    //     if (firstName && !/^[A-Za-z]{3,32}$/.test(firstName)) {
+    //       errors.firstName = 'First name must be between 3 and 32 letters.';
+    //     }
+    //
+    //     if (lastName && !/^[A-Za-z]{3,32}$/.test(lastName)) {
+    //       errors.lastName = 'Last name must be between 3 and 32 letters.';
+    //     }
 
     if (email && !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       errors.email = 'Invalid email address.';
