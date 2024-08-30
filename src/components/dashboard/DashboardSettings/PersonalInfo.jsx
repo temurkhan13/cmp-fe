@@ -261,7 +261,7 @@ const PersonalInfo = () => {
         }
 
         p {
-          margin-bottom: 1rem;
+          // margin-bottom: 1rem;
           color: #777;
           font-size:1.3rem;
         }
