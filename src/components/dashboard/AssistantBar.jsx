@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { TiPlus } from 'react-icons/ti';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { SlArrowRight, SlArrowLeft } from 'react-icons/sl';
@@ -142,6 +143,11 @@ const AssistantBar = ({ setView }) => {
       `}</style>
     </>
   );
+};
+
+// Define prop types for the component
+AssistantBar.propTypes = {
+  setView: PropTypes.func.isRequired, // setView should be a function and is required
 };
 
 export default AssistantBar;
