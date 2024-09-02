@@ -27,129 +27,16 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
 
   const dispatch = useDispatch();
 
-<<<<<<< Updated upstream
-
-
-
-
-
-  const workspaces = useSelector((state) => state.workspace.workspaces);
-  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-  //const folderSelect = useSelector((state) => state.workspace.folders);
-  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
-
-   // Count total workspaces
-   const totalWorkspaces = workspaces.length;
-
-   // Count total folders
-   const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
- 
-
-  useEffect(() => {
-    console.log("workspace: " + totalWorkspaces + totalFolders);
-    if (workspaces.length > 0 && !selectedWorkspaceId) {
-      dispatch(setSelectedWorkspaceId(workspaces[0].workspaceId));
-      console.log(workspaces[0].workspaceId);
-    }
-  }, [workspaces, selectedWorkspaceId, dispatch]);
-
-  // useEffect(() => {
-  //   if (folderSelect.length > 0 && !selectedFolderId) {
-  //     console.log(workspaces[0].workspaceId);
-
-  //     dispatch(setSelectedFolderId(folderSelect[0].folderId));
-  //   }
-  // }, [folderSelect, selectedFolderId, dispatch]);
-
-  // const initialFolders = [
-  //   {
-  //     name: 'Workspace Folders',
-  //     details: {
-  //       section1: {
-  //         heading: 'Assisstant',
-  //         recentFiles: [
-  //           { name: 'DesignSpec_1.pdf' },
-  //           { name: 'Wireframe_1.sketch' },
-  //         ],
-  //         folders: [
-  //           { name: 'Logos_1' },
-  //           { name: 'UI_1' },
-  //           { name: 'Mockups_1' },
-  //           { name: 'Illustrations_1' },
-  //           { name: 'Animations_1' },
-  //         ],
-  //       },
-  //       section2: {
-  //         heading: 'Assessment',
-  //         recentFiles: [
-  //           { name: 'API_Doc_1.docx' },
-  //           { name: 'Backend_Arch_1.pptx' },
-  //         ],
-  //         folders: [
-  //           { name: 'Frontend_1' },
-  //           { name: 'Backend_1' },
-  //           { name: 'Database_1' },
-  //           { name: 'APIs_1' },
-  //           { name: 'Testing_1' },
-  //         ],
-  //       },
-  //     },
-  //   },
-  //   {
-  //     name: 'Workspace Folders',
-  //     details: {
-  //       section1: {
-  //         heading: 'Assisstant',
-  //         recentFiles: [
-  //           { name: 'DesignSpec_1.pdf' },
-  //           { name: 'Wireframe_1.sketch' },
-  //         ],
-  //         folders: [
-  //           { name: 'Logos_1' },
-  //           { name: 'UI_1' },
-  //           { name: 'Mockups_1' },
-  //           { name: 'Illustrations_1' },
-  //           { name: 'Animations_1' },
-  //         ],
-  //       },
-  //       section2: {
-  //         heading: 'Assessment',
-  //         recentFiles: [
-  //           { name: 'API_Doc_1.docx' },
-  //           { name: 'Backend_Arch_1.pptx' },
-  //         ],
-  //         folders: [
-  //           { name: 'Frontend_1' },
-  //           { name: 'Backend_1' },
-  //           { name: 'Database_1' },
-  //           { name: 'APIs_1' },
-  //           { name: 'Testing_1' },
-  //         ],
-  //       },
-  //     },
-  //   },
-  // ];
-
- // const [folders, setFolders] = useState(folderSelect);
-=======
  const [addWorkspace] = useAddWorkspaceMutation();
 
->>>>>>> Stashed changes
 
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
-<<<<<<< Updated upstream
-  const handleNewWorkspaceSubmit = () => {
-    if (newWorkspaceName.trim()) {
-      const newFolder = { name: newWorkspaceName, details: {} };
-    //  setFolders([...folders, newFolder]);
-=======
   const handleNewWorkspaceSubmit = async (e) => {
     e.preventDefault();
     try {
       await addWorkspace({ workspaceName: newWorkspaceName }).unwrap();
->>>>>>> Stashed changes
       setNewWorkspaceName('');
       setIsNewWorkspaceModalOpen(false);
     } catch (error) {
