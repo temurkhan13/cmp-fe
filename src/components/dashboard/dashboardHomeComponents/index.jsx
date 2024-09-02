@@ -36,10 +36,6 @@ import { useNavigate } from 'react-router-dom';
 import { selectAllChats } from '../../../redux/selectors/selectors';
 
 const DashboardHomeComp = () => {
-<<<<<<< Updated upstream
-  const truncateString = (str, num) =>
-    str.length > num ? str.slice(0, num) + '...' : str;
-=======
 
   const dispatch = useDispatch();
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
@@ -100,7 +96,6 @@ const DashboardHomeComp = () => {
       modifiedDate: 'Modified 2 days ago',
     },
   ];
->>>>>>> Stashed changes
 
   const mockFiles = [
     { name: 'AI Overview' },
@@ -133,8 +128,6 @@ const DashboardHomeComp = () => {
     { name: 'AI in Healthcare Applications' },
   ];
 
-<<<<<<< Updated upstream
-=======
   const renderCard = (chat) => (
 
     <div className="card">
@@ -198,7 +191,6 @@ const DashboardHomeComp = () => {
     </div>
   );
 
->>>>>>> Stashed changes
   return (
     <div className="dashboard">
       <CountingCards  activeWorkspace= {selectedWorkspace}/>
@@ -213,12 +205,7 @@ const DashboardHomeComp = () => {
             </button>
             <p className="assistant-heading">Change AI Assistance</p>
           </div>
-<<<<<<< Updated upstream
-
-          <div className="center-buttons">
-=======
           {/* <div className="center-buttons">
->>>>>>> Stashed changes
             <div className="left-buttons">
               <CgMenuGridR className="icon" />
               <TfiMenuAlt className="icon-small" />
@@ -233,7 +220,7 @@ const DashboardHomeComp = () => {
             </div>
             <div className="right-buttons">
               <HiAdjustmentsHorizontal className="adjustments-icon" />
-            </div> */}
+            </div> 
             <div>
               <Link
                 to="/assisstant/chat"
@@ -250,48 +237,14 @@ const DashboardHomeComp = () => {
         </div>
       </section>
       <div
-        className="card-wrapper"
-        style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
-      >
-<<<<<<< Updated upstream
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="card">
-            <div className="card-header">
-              <h2 className="userName">
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-              </h2>
-              <p>
-                Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                molestiae! Nemo, repellat?
-              </p>
-              <MdOutlineEdit />
-            </div>
-            <div className="content">
-              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                ChangeAI
-              </h3>
-              <p className="chatContent">
-                <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-              </p>
-            </div>
-            <div className="footer">
-              <div className="iconsContainer">
-                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineDislike
-                  style={{ fontSize: '1.3rem', color: 'black' }}
-                />
-                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-              </div>
-              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-            </div>
-=======
+         className="card-wrapper"
+         style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
+       >
         {chats && chats.map((chat, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+         <div key={index}
+       >
+         <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
             {renderCard(chat)}
->>>>>>> Stashed changes
           </div>
           <div className="fileDetails">
             <div className="fileName">
@@ -310,8 +263,10 @@ const DashboardHomeComp = () => {
               </span>
             </div>
           </div>
+          </div>
+        ))}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card">
             <div className="card-header">
               <h2 className="userName">
@@ -570,8 +525,8 @@ const DashboardHomeComp = () => {
               </span>
             </div>
           </div>
-        </div>
-      </div>
+        </div> */}
+      
 
       <div className="files">
         <p className="files-heading">AI Assessments</p>
