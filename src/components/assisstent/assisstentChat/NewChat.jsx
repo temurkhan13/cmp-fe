@@ -182,8 +182,8 @@ const NewChat = () => {
           {Array.isArray(chats) &&
             chats.map((chat, index) => (
               <section
-                key={chat.chatId}
-                onClick={() => handleChatSelect(chat.chatId)}
+                key={chat._id}
+                onClick={() => handleChatSelect(chat._id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

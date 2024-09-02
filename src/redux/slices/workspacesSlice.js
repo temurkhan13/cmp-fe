@@ -8,8 +8,8 @@ const workspacesSlice = createSlice({
     workspaces: [],
     selectedWorkspace: null,
     currentWorkspaceId: null,
-    currentFolderId:"66d0d85586fd86ca22a5cb8d",
-    currentChatId:"66c4a598a1742b61ec880423",
+    currentFolderId:"66a500bef6d2341978d6d4b9",
+    currentChatId:"66a500bef6d2341978d6d4ba",
    },
   reducers: {
     setSelectedWorkspace: (state, action) => {

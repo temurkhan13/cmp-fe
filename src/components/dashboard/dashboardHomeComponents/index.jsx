@@ -248,7 +248,7 @@ const DashboardHomeComp = () => {
           </div>
           <div className="fileDetails">
             <div className="fileName">
-              File Name
+              {chat.chatTitle}
               <IoPeople
                 color="gray"
                 style={{ marginLeft: '0.3rem', fontSize: '' }}

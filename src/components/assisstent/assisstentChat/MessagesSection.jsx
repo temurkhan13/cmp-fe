@@ -37,39 +37,53 @@ import {
   addBookmark,
 } from '../../../redux/slices/workspaceSlice'; // Adjusted import
 
+import { useAddMessageMutation, useUpdateMessageMutation, useRemoveMessageMutation, useAddBookmarkMutation } from '../../../redux/api/workspaceApi';
+import { selectCurrentChat } from '../../../redux/selectors/selectors';
+
+
 import { v4 as uuidv4 } from 'uuid';
 
 const MessagesSection = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.workspace);
-  const selectedWorkspaceId = useSelector(
-    (state) => state.workspace.selectedWorkspaceId
-  );
-  const selectedFolderId = useSelector(
-    (state) => state.workspace.selectedFolderId
-  );
-  const chats = useSelector(
-    (state) =>
-      state.workspace.workspaces
-        .find((workspace) => workspace.workspaceId === selectedWorkspaceId)
-        ?.folders.find((folder) => folder.folderId === selectedFolderId)
-        ?.chats || []
-  );
-  const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
-  const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+  // const state = useSelector((state) => state.workspace);
+  // const selectedWorkspaceId = useSelector(
+  //   (state) => state.workspace.selectedWorkspaceId
+  // );
+  // const selectedFolderId = useSelector(
+  //   (state) => state.workspace.selectedFolderId
+  // );
+  // const chats = useSelector(
+  //   (state) =>
+  //     state.workspace.workspaces
+  //       .find((workspace) => workspace.workspaceId === selectedWorkspaceId)
+  //       ?.folders.find((folder) => folder.folderId === selectedFolderId)
+  //       ?.chats || []
+  // );
+  // const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
+  // const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
 
-  const selectedWorkspace = state.workspaces.find(
-    (workspace) => workspace.workspaceId === selectedWorkspaceId
-  );
-  const selectedFolder = selectedWorkspace?.folders.find(
-    (folder) => folder.folderId === selectedFolderId
-  );
+  // const selectedWorkspace = state.workspaces.find(
+  //   (workspace) => workspace.workspaceId === selectedWorkspaceId
+  // );
+  // const selectedFolder = selectedWorkspace?.folders.find(
+  //   (folder) => folder.folderId === selectedFolderId
+  // );
 
-  const [file, setFile] = useState([]);
-  const [text, setText] = useState('');
-  const [chat, setChat] = useState(
-    currentChat ? currentChat.generalMessages : []
-  );
+  //api Integration
+const [addMessage] = useAddMessageMutation();
+const [updateMessage] = useUpdateMessageMutation();
+const [addBookmark] = useAddBookmarkMutation();
+   const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
+   const folderId = useSelector((state) => state.workspaces.currentFolderId);
+   const chatId = useSelector((state) => state.workspaces.currentChatId);
+   
+   const currentChat = useSelector(selectCurrentChat);
+
+   const [file, setFile] = useState([]);
+   const [text, setText] = useState('');
+   const [chat, setChat] = useState(
+     currentChat ? currentChat.generalMessages : []
+   );
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
@@ -89,21 +103,24 @@ const MessagesSection = () => {
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
 
+  
   useEffect(() => {
-    //     console.log('chats:', chats);
-    //     console.log('selectedChatId:', selectedChatId, selectedWorkspaceId, selectedFolderId);
-    //     console.log('Redux state:', state);
-    //   console.log('currentChat:', currentChat);
-    //   console.log('selectedWorkspace:', selectedWorkspace);
-    // console.log('selectedFolder:', selectedFolder);
-    // console.log('chats:', selectedFolder?.chats || []);
+    if(chatId === null){
+      setChat([]);
+      return;
+    }
     if (currentChat) {
       console.log(currentChat);
-      setChat(currentChat.generalMessages);
-      console.log('chat Messages: ' + currentChat.generalMessages);
-      console.log('chat: ' + chat);
+      setChat(currentChat.generalMessages || []);
+      console.log("chat Messages: " + currentChat.generalMessages);
+      console.log("chat: " + chat);
     }
-  }, [currentChat]);
+    // if(chatId === null){
+    //   setChat([]);
+    // }
+  }, [currentChat, chatId]);
+
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -120,56 +137,21 @@ const MessagesSection = () => {
     setAskAI(false);
     setPopupVisible(false);
   };
-  // Memoize handleSendMessage function
-  const handleSendMessage = useCallback(async () => {
-    if (!text && !file) return;
+  const handleSendMessage = async() => {
 
-    const newMessage = {
-      messageId: uuidv4(),
-      userId: 'userId2',
-      role: 'user',
-      content: text || null,
-      timestamp: '2024-07-12T12:01:00Z',
-      createdAt: '2024-07-12T12:01:00Z',
-      updatedAt: '2024-07-12T12:01:00Z',
-    };
-
-    const message = [...chat, newMessage];
-    console.log('user Message', chat);
-    setChat(message);
-
-    console.log('AI response Message:', message);
-    dispatch(addMessage(newMessage));
-
-    try {
-      setLoading(true);
-      const response = await chatWithdoc(text, file);
-      if (response) {
-        const aiMessage = {
-          messageId: uuidv4(),
-          userId: 'userId2',
-          role: 'ai',
-          content: response,
-          timestamp: '2024-07-12T12:01:00Z',
-          createdAt: '2024-07-12T12:01:00Z',
-          updatedAt: '2024-07-12T12:01:00Z',
-        };
-        const finalChat = [...message, aiMessage];
-        setChat(finalChat);
-        console.log('AI response Message:', finalChat);
-        dispatch(addMessage(aiMessage));
-      }
-
-      setFile(null);
-      document.getElementById('file-input').value = '';
-      setText('');
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      console.log(chat);
-      setLoading(false);
-    }
-  }, [text, file, chat, dispatch, chatWithdoc]);
+    
+    // e.preventDefault();
+     if (!workspaceId) {
+       alert('Please select a workspace');
+       return;
+     }
+     try {
+       await addMessage({ workspaceId: workspaceId, folderId: folderId, chatId:(chatId?chatId:"newChat"), message:text, files:file }).unwrap();
+      // setChatContent('');
+     } catch (error) {
+       console.error('Failed to add chat:', error);
+     }
+   };
 
   // Memoize HandleAskAi function
   const HandleAskAi = useCallback(
@@ -199,74 +181,62 @@ const MessagesSection = () => {
     [fixGrammar, improveWriting, summarize, selectedText]
   );
 
+  
   // Memoize applyFixedText function
-  const applyFixedText = useCallback(
-    (newText) => {
-      const updatedChat = chat.map((message) => {
-        if (message.content) {
-          return {
-            ...message,
-            content: message.content.replace(selectedText, newText),
-          };
-        }
-        return message;
-      });
-
-      setChat(updatedChat);
-      dispatch(updateMessage(updatedChat));
-
-      setPopupVisible(false);
-    },
-    [chat, selectedText, dispatch, selectedWorkspaceId, selectedChatId]
-  );
-
-  const adjustSelectionToWordBoundaries = () => {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-
-      // Adjust start boundary
-      let startOffset = range.startOffset;
-      let endOffset = range.endOffset;
-      const startContainer = range.startContainer;
-
-      while (
-        startOffset > 0 &&
-        !/\s/.test(startContainer.textContent[startOffset - 1])
-      ) {
-        startOffset--;
-      }
-
-      // Adjust end boundary
-      while (
-        endOffset < startContainer.textContent.length &&
-        !/\s/.test(startContainer.textContent[endOffset])
-      ) {
-        endOffset++;
-      }
-
-      range.setStart(startContainer, startOffset);
-      range.setEnd(startContainer, endOffset);
+const applyFixedText = useCallback((newText) => {
+  const updatedChat = chat.map((message) => {
+   // console.log(message);
+    if (message.content) {
+      return {
+        ...message,
+        content: message.content.replace(selectedText, newText),
+      };
     }
-  };
+    return message;
+  });
+  console.log("chatttt :"+ chat);
+  setChat(updatedChat);
+//  dispatch(updateMessage(updatedChat));
+
+  setPopupVisible(false);
+}, [chat, selectedText, dispatch, workspaceId, chatId]);
+
+  // const adjustSelectionToWordBoundaries = () => {
+  //   const selection = window.getSelection();
+  //   if (selection.rangeCount > 0) {
+  //     const range = selection.getRangeAt(0);
+
+  //     // Adjust start boundary
+  //     let startOffset = range.startOffset;
+  //     let endOffset = range.endOffset;
+  //     const startContainer = range.startContainer;
+
+  //     while (
+  //       startOffset > 0 &&
+  //       !/\s/.test(startContainer.textContent[startOffset - 1])
+  //     ) {
+  //       startOffset--;
+  //     }
+
+  //     // Adjust end boundary
+  //     while (
+  //       endOffset < startContainer.textContent.length &&
+  //       !/\s/.test(startContainer.textContent[endOffset])
+  //     ) {
+  //       endOffset++;
+  //     }
+
+  //     range.setStart(startContainer, startOffset);
+  //     range.setEnd(startContainer, endOffset);
+  //   }
+  // };
 
   useEffect(() => {
     const handleMouseUp = () => {
-      adjustSelectionToWordBoundaries();
-      const selection = window.getSelection();
-      if (selection.toString().trim() !== '') {
-        setSelectedText(selection.toString());
-        setPopupVisible(!!selectedText);
-        // setPopupPosition({
-        //   top: selection.getRangeAt(0).getBoundingClientRect().top + window.scrollY,
-        //   left: selection.getRangeAt(0).getBoundingClientRect().left + window.scrollX
-        // });
-        setPopupVisible(true);
-      } else {
-        setPopupVisible(false);
-      }
+      handleTextSelect();
+     
     };
-
+  
     document.addEventListener('mouseup', handleMouseUp);
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
@@ -276,28 +246,27 @@ const MessagesSection = () => {
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-
-    // Check if the selected text is within a ChangeAI or user message
-    const messageElements = document.querySelectorAll('.chat-message .card');
-
+  
+    // Check if the selected text is within an element with class '.msg'
+    const messageElements = document.querySelectorAll('.msg');
     let isValidSelection = false;
-    messageElements.forEach((element) => {
-      const contentElement = element.querySelector('.msg');
-      if (contentElement && contentElement.contains(selection.anchorNode)) {
-        const messageRole = element.querySelector('.Heading').textContent;
-        if (messageRole === 'ChangeAI' || messageRole === 'You') {
-          isValidSelection = true;
-        }
+  
+    messageElements.forEach((msgElement) => {
+      // Check if the selected text starts from within the msgElement
+      if (msgElement.contains(selection.anchorNode) && msgElement.contains(selection.focusNode)) {
+        isValidSelection = true;
       }
     });
-
+  
+    // Set the popup visibility and selection state based on isValidSelection
     if (isValidSelection) {
       setSelectedText(selectedText);
-      setPopupVisible(!!selectedText);
+      setPopupVisible(!!selectedText); // Show popup if there's a valid selection
     } else {
-      setPopupVisible(false);
+      setPopupVisible(false); // Hide popup if selection is invalid
     }
   };
+  
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
     setLoading(true);
@@ -401,10 +370,12 @@ const MessagesSection = () => {
               />
             )}
 
-            {chat.map((item, index) => (
+            
+
+{chat.map((message, index) => (
               <div key={index}>
                 <div>
-                  {item && item.role === 'user' ? (
+                  {message && message.sender ? (
                     <div className="card">
                       <div>
                         <img src={UserPic} alt="avatar" />
@@ -412,19 +383,19 @@ const MessagesSection = () => {
                       <div>
                         <p className="Heading">You</p>
                         {/* <div className="msg">{item.content}</div> */}
-                        {item.content && (
+                        {message.text && (
                           <div className="msg">
-                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                            <ReactMarkdown>{message.text}</ReactMarkdown>
                           </div>
                         )}
-                        {item.file && (
+                        {message.file && (
                           <div className="file-preview">
                             <a
-                              href={item.file}
+                              href={message.file}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {item.fileName}
+                              {message.fileName}
                             </a>
                           </div>
                         )}
@@ -440,30 +411,30 @@ const MessagesSection = () => {
                       </div>
                       <div>
                         <p className="Heading">ChangeAI</p>
-                        {item && (
+                        {message && (
                           <div className="msg">
-                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                            <ReactMarkdown>{message.text}</ReactMarkdown>
                           </div>
                         )}
                         <div>
-                          <FaCopy
-                            onClick={() =>
-                              handleAddBookmark(item.content, item.messageId)
-                            }
-                            style={{ cursor: 'pointer' }}
-                          />
-                          <FaThumbsUp style={{ cursor: 'pointer' }} />
-                          <FaThumbsDown style={{ cursor: 'pointer' }} />
-                          <FaCommentAlt
-                            onClick={handleCommentClick}
-                            style={{ cursor: 'pointer' }}
-                          />
-                          <FaSync />
+                        <FaCopy
+                         onClick={() => handleAddBookmark(message.text, message._Id)}
+                         style={{ cursor: 'pointer' }}
+                         />
+                          <FaThumbsUp />
+                          <FaThumbsDown />
+
+                          <FaSync
+                          onClick={handleCommentClick}
+                          style={{ cursor: 'pointer' }}
+                            />       
+                          
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
+            
               </div>
             ))}
           </div>
