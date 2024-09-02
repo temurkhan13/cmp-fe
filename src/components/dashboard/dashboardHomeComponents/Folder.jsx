@@ -10,12 +10,23 @@ import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { BsFilterCircle } from 'react-icons/bs';
 import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import { SlArrowRight } from 'react-icons/sl';
+import { SlFolder } from 'react-icons/sl';
 import { SlArrowLeft } from 'react-icons/sl';
 import { CgMenuGridR } from 'react-icons/cg';
 import { PiFilesFill } from 'react-icons/pi';
+import { FaFolderTree } from "react-icons/fa6";
 
-const Folder = () => {
+import { RxCross2 } from 'react-icons/rx';
+
+import React, { useEffect, useState } from 'react';
+import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
+
+const Folder = ({activeWorkspace}) => {
+
+  const [addFolder ] = useAddFolderMutation();
+
+  const [newFolderName, setNewFolderName] = useState('');
+  const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
@@ -50,24 +61,39 @@ const Folder = () => {
     { name: 'AI in Healthcare Applications' },
   ];
 
+  const handleNewFolderSubmit = async (e) => {
+    e.preventDefault();
+    try {
+
+      console.log(newFolderName);
+      await addFolder({workspaceId : activeWorkspace.id, folderName: newFolderName }).unwrap();
+      setNewFolderName('');
+      setIsNewFolderModalOpen(false);
+    } catch (error) {
+      console.error('Failed to add Project:', error);
+    }
+  };
+
   return (
     <div className="dashboard">
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
           <div className="left-buttons">
-            <button className="arrow-btn">
+            {/* <button className="arrow-btn">
               <SlArrowLeft />
             </button>
             <button className="arrow-btn">
               <SlArrowRight />
-            </button>
-            <p className="assistant-heading">Folders</p>
+            </button> */}
+            <button className="arrow-btn">
+            <FaFolderTree /></button>
+            <p className="assistant-heading">Projects</p>
           </div>
 
           <div className="center-buttons">
             <div className="left-buttons">
-              <CgMenuGridR className="icon" />
-              <TfiMenuAlt className="icon-small" />
+              {/* <CgMenuGridR className="icon" />
+              <TfiMenuAlt className="icon-small" /> */}
             </div>
             {/* <div className="right-buttons">
               <BsFilterLeft className="filter-icon" />
@@ -80,22 +106,48 @@ const Folder = () => {
             <div className="right-buttons">
               <HiAdjustmentsHorizontal className="adjustments-icon" />
             </div> */}
+            
+            {isNewFolderModalOpen && (
+        <div className="modal">
+          <div className="modal-wrapper">
+            <h3 className="modal-heading">Create New Project</h3>
+            <button
+              className="modal-closebtn"
+              onClick={() => setIsNewFolderModalOpen(false)}
+            >
+              <RxCross2 />
+            </button>
+          </div>
+          <div className="input-wrapper">
+            <input
+              type="text"
+              className="workspace-input"
+              value={newFolderName}
+              onChange={(e) => setNewFolderName(e.target.value)}
+              placeholder="Enter project name"
+            />
+            <button
+              onClick={handleNewFolderSubmit}
+              className="create-workspace-btn"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      )}
             <div>
-              <Link
-                to="/assisstant/chat"
-                target="_blank"
-                style={{ textDecoration: 'none' }}
-              >
-                <button className="assiss-btn">
+                <button className="assiss-btn"
+                onClick={() => setIsNewFolderModalOpen(true)}
+                >
                   <TiPlus />
-                  New Folder
+                  New Project
                 </button>
-              </Link>
+              
             </div>
           </div>
         </div>
       </section>
-      <FileStructure />
+      <FileStructure workspace = {activeWorkspace}/>
       <style>{`
         .dashboard {
           display: flex;

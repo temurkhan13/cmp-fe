@@ -33,6 +33,7 @@ const useVerifyEmail = () => {
         {"verificationCode": parseInt( code.value.newValue) }
       );
       setLoading(false);
+      console.log(response);
       if (response.data) {
         navigate('/choose-plain');
       }
