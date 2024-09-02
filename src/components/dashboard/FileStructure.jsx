@@ -1,113 +1,125 @@
 import { BiSolidFolderOpen } from 'react-icons/bi';
 
-const FileStructure = () => {
-  const files = [
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing1',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing2',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing3',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Assistant',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing5',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing1',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing2',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing3',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Assistant',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing5',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing1',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing2',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing3',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Assistant',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing5',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing1',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing2',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing3',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Assistant',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing5',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing6',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing7',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing8',
-    },
-    {
-      icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
-      name: 'Testing8',
-    },
-  ];
+const FileStructure = ({workspace}) => {
+  // const files = [
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing1',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing2',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing3',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Assistant',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing5',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing1',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing2',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing3',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Assistant',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing5',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing1',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing2',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing3',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Assistant',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing5',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing1',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing2',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing3',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Assistant',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing5',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing6',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing7',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing8',
+  //   },
+  //   {
+  //     icon: <BiSolidFolderOpen style={{ fontSize: '5rem' }} />,
+  //     name: 'Testing8',
+  //   },
+  // ];
 
   return (
     <section className="folders-files" style={{ marginTop: '2rem' }}>
       <div className="heading">
-        <p>Yesterday</p>
-        <p className="see-less">See less</p>
+        <p> Your &ldquo;{workspace && workspace.workspaceName}&rdquo; contains following projects:</p>
+        {/* <p className="see-less">See less</p> */}
       </div>
 
       <div className="files-container">
+        {workspace && workspace.folders.map((folder , index) => (
+          <div key={index} className="file">
+            <span className="icon"> <BiSolidFolderOpen style={{ fontSize: '5rem' }} /></span>
+            {/* <p>{workspace.workspaceName} : {workspace.id}  </p> */}
+            <p>{folder.folderName}</p>
+            <p className="file-count">{folder.chats.length + folder.assessments.length} files</p>
+          </div>
+          
+        ))}
+      </div>
+
+      {/* <div className="files-container">
         {files.map(({ name, icon }, index) => (
           <div key={index} className="file">
             <span className="icon">{icon}</span>
@@ -115,7 +127,7 @@ const FileStructure = () => {
             <p className="file-count">2 files</p>
           </div>
         ))}
-      </div>
+      </div> */}
 
       <style>{`
         .folders-files {

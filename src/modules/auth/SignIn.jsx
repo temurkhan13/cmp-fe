@@ -29,6 +29,7 @@ const SignIn = () => {
       // Dispatch async action to register email and get verification code
       const response = await dispatch(login({email,password}));
       console.log(response);
+      
       navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);

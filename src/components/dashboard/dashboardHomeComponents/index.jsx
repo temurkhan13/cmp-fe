@@ -21,10 +21,86 @@ import { FaFileAlt } from 'react-icons/fa';
 import { RxAvatar } from 'react-icons/rx';
 import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
+import { SlQuestion } from 'react-icons/sl';
+import { RxLaptop } from 'react-icons/rx';
+
+
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi';
+
+import { setSelectedWorkspace, selectWorkspace } from '../../../redux/slices/workspacesSlice';
+import { selectAllWorkspaces } from '../../../redux/selectors/selectors';
+import { useNavigate } from 'react-router-dom';
+import { selectAllChats } from '../../../redux/selectors/selectors';
 
 const DashboardHomeComp = () => {
+<<<<<<< Updated upstream
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
+=======
+
+  const dispatch = useDispatch();
+  const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
+  const workspacess = useSelector(selectAllWorkspaces);
+  const selectedWorkspace = useSelector(selectWorkspace);
+  const chats = useSelector(selectAllChats);
+
+  const navigate = useNavigate(); // Hook to navigate programmatically
+
+  const handleChatClick = (chatId) => {
+    navigate(`/assisstant/chat/${chatId}`); // Redirect to the chat's specific route
+  };
+  const handleAssessmentClick = (chatId) => {
+    navigate(`/assisstant/chat/${chatId}`); // Redirect to the chat's specific route
+  };
+  useEffect(() => {
+    if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
+      const firstWorkspace = workspaces[0];
+      dispatch(setSelectedWorkspace(firstWorkspace));
+    }
+  }, [workspaces, selectedWorkspace, dispatch]);
+
+
+
+
+  const cardData = [
+    {
+      userName: 'You',
+      avatar: <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />,
+      userComment:
+        'Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum molestiae! Nemo, repellat?',
+      aiHeading: 'ChangeAI',
+      chatContent: 'Lorem ipsum, dolor sit amet consectetur adipisi',
+      fileName: 'File Name',
+      folderName: 'folderName',
+      modifiedDate: 'Modified 2 days ago',
+    },
+    {
+      userName: 'You',
+      avatar: <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />,
+      userComment:
+        'Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum molestiae! Nemo, repellat?',
+      aiHeading: 'ChangeAI',
+      chatContent: 'Lorem ipsum, dolor sit amet consectetur adipisi',
+      fileName: 'File Name',
+      folderName: 'folderName',
+      modifiedDate: 'Modified 2 days ago',
+    },
+    {
+      userName: 'You',
+      avatar: <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />,
+      userComment:
+        'Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum molestiae! Nemo, repellat?',
+      aiHeading: 'ChangeAI',
+      chatContent: 'Lorem ipsum, dolor sit amet consectetur adipisi',
+      fileName: 'File Name',
+      folderName: 'folderName',
+      modifiedDate: 'Modified 2 days ago',
+    },
+  ];
+>>>>>>> Stashed changes
 
   const mockFiles = [
     { name: 'AI Overview' },
@@ -57,25 +133,92 @@ const DashboardHomeComp = () => {
     { name: 'AI in Healthcare Applications' },
   ];
 
+<<<<<<< Updated upstream
+=======
+  const renderCard = (chat) => (
+
+    <div className="card">
+      { chat && chat.generalMessages && chat.generalMessages[0] && chat.generalMessages[0].sender ?(
+      <div className="card-header">
+        <h2 className="userName">
+        <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+        </h2>
+        <p>{chat.text }</p>
+        <MdOutlineEdit />
+      </div>
+      ) : (
+      <div className="content">
+        <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+         <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }}/> Change AI
+        </h3>
+        <p className="chatContent">{chat.generalMessages && chat.generalMessages[0] && chat.generalMessages[0].text}</p>
+      </div>
+      )}
+      { chat && chat.generalMessages && chat.generalMessages[1] && chat.generalMessages[1].sender ?(
+      <div className="card-header">
+        <h2 className="userName">
+        <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+        </h2>
+        <p>{chat.text }</p>
+        <MdOutlineEdit />
+      </div>
+      ) : (
+      <div className="content">
+        <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+         <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }}/> Change AI
+        </h3>
+        <p className="chatContent">{chat.generalMessages && chat.generalMessages[1] && chat.generalMessages[1].text}</p>
+      </div>
+      )}
+      <div className="footer">
+        <div className="iconsContainer">
+          <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
+          <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
+          <AiOutlineDislike style={{ fontSize: '1.3rem', color: 'black' }} />
+          <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
+          <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
+        </div>
+        <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
+      </div>
+      <div className="fileDetails">
+        <div className="fileName">
+          {chat.chatTitle}
+          <IoPeople color="gray" style={{ marginLeft: '0.3rem' }} />
+        </div>
+        {/* <div>
+          <span>in</span>
+          <span className="folderName">{data.folderName}</span>
+          <span>
+            • {data.modifiedDate}
+            <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
+          </span>
+        </div> */}
+      </div>
+      
+    </div>
+  );
+
+>>>>>>> Stashed changes
   return (
     <div className="dashboard">
-      <CountingCards />
+      <CountingCards  activeWorkspace= {selectedWorkspace}/>
       <Account />
-      <Workspaces />
-      <Folder />
+      <Workspaces activeWorkspace= {selectedWorkspace} workspaces={workspacess}/>
+      <Folder activeWorkspace= {selectedWorkspace}/>
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
           <div className="left-buttons">
             <button className="arrow-btn">
-              <SlArrowLeft />
+              <SlQuestion />
             </button>
-            <button className="arrow-btn">
-              <SlArrowRight />
-            </button>
-            <p className="assistant-heading">AI Assistant</p>
+            <p className="assistant-heading">Change AI Assistance</p>
           </div>
+<<<<<<< Updated upstream
 
           <div className="center-buttons">
+=======
+          {/* <div className="center-buttons">
+>>>>>>> Stashed changes
             <div className="left-buttons">
               <CgMenuGridR className="icon" />
               <TfiMenuAlt className="icon-small" />
@@ -103,13 +246,14 @@ const DashboardHomeComp = () => {
                 </button>
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
       <div
         className="card-wrapper"
         style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
       >
+<<<<<<< Updated upstream
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card">
             <div className="card-header">
@@ -143,6 +287,11 @@ const DashboardHomeComp = () => {
               </div>
               <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
             </div>
+=======
+        {chats && chats.map((chat, index) => (
+          <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+            {renderCard(chat)}
+>>>>>>> Stashed changes
           </div>
           <div className="fileDetails">
             <div className="fileName">

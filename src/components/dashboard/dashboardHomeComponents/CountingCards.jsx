@@ -5,39 +5,49 @@ import { FaNetworkWired } from 'react-icons/fa';
 import { BiSolidCollection, BiSolidFolderOpen } from 'react-icons/bi';
 
 import { useSelector } from 'react-redux';
+import { selectAllFolders } from '../../../redux/selectors/selectors';
 
-const CountingCards = () => {
-  const workspaces = useSelector((state) => state.workspace.workspaces);
-  const selectedWorkspaceId = useSelector(
-    (state) => state.workspace.selectedWorkspaceId
-  );
-  const folderSelect = useSelector((state) => state.workspace.folders);
-  const selectedFolderId = useSelector(
-    (state) => state.workspace.selectedFolderId
-  );
+const CountingCards = ({activeWorkspace}) => {
+  const workspaces = useSelector((state) => state.workspaces.workspaces);
 
-  // Count total workspaces
-  const totalWorkspaces = workspaces.length;
+  const projects = useSelector(selectAllFolders);
 
-  // Count total folders
-  const totalFolders = workspaces.reduce(
-    (acc, workspace) => acc + workspace.folders.length,
-    0
-  );
+  //const workspaces = useSelector((state) => state.workspace.workspaces);
+  // const selectedWorkspaceId = useSelector(
+  //   (state) => state.workspace.selectedWorkspaceId
+  // );
+  // const folderSelect = useSelector((state) => state.workspace.folders);
+  // const selectedFolderId = useSelector(
+  //   (state) => state.workspace.selectedFolderId
+  // );
 
+  // // Count total workspaces
+  // const totalWorkspaces = workspaces.length;
+
+  // // Count total folders
+  // const totalFolders = workspaces.reduce(
+  //   (acc, workspace) => acc + workspace.folders.length,
+  //   0
+  // );
+
+
+ // Count total workspaces
+ const totalWorkspaces = workspaces ? workspaces.length : 0;
+const totalProjects = projects? projects.length : 0;
+const Workspace = activeWorkspace ? activeWorkspace.workspaceName : "";
   const cardData = [
     {
-      title: 'WorkSpaces',
+      title: 'Active Workspace',
+      count: Workspace,
+    },
+    {
+      title: 'Projects',
+      count: totalProjects,
+    },
+    {
+      title: 'Total Workspaces',
       count: totalWorkspaces,
-    },
-    {
-      title: 'Assessments',
-      count: 234,
-    },
-    {
-      title: 'Chat Assistants',
-      count: 23,
-    },
+    },    
   ];
   return (
     <div className="counting-cards">
