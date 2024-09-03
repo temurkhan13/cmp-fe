@@ -58,6 +58,28 @@ export const selectCurrentChat = createSelector(
 // Selector for all comments in the current chat
 export const selectAllComments = createSelector(
   selectCurrentChat,
-  (currentChat) => currentChat?.comments || []
+  (currentChat) => {
+    if (!currentChat || !currentChat.generalMessages) {
+      return [];
+    }
+    // Flatten the comments from all generalMessages
+    return currentChat.generalMessages.reduce((allComments, message) => {
+      return allComments.concat(message.comments);
+    }, []);
+  }
+);
+
+// Selector for all comments in the current chat
+export const selectAllBookmarks = createSelector(
+  selectCurrentChat,
+  (currentChat) => {
+    if (!currentChat || !currentChat.generalMessages) {
+      return [];
+    }
+    // Flatten the comments from all generalMessages
+    return currentChat.generalMessages.reduce((allBookmarks, message) => {
+      return allBookmarks.concat(message.bookmarks);
+    }, []);
+  }
 );
 

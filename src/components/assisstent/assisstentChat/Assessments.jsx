@@ -46,7 +46,8 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
-import { useSelectedChat } from '../../../redux/selectors/useSelectedChat';
+//import { useSelectedChat } from '../../../redux/selectors/useSelectedChat';
+import { selectCurrentChat, selectAllComments } from '../../../redux/selectors/selectors';
 
 
 const images = [
@@ -98,8 +99,9 @@ const links = [
 
 
 const Assessments = () => {
-  const { users, currentChat } = useSelectedChat();
-
+ // const { users, currentChat } = useSelectedChat();
+  const currentChat = useSelector(selectCurrentChat);
+  const comments = useSelector(selectAllComments);
 
 
 
@@ -173,7 +175,7 @@ const Assessments = () => {
       {isCommentsModalOpen && (
         <AssessmentModal
           title="Comments"
-          bodyContent={<Comments comments={currentChat.comments} />}
+          bodyContent={<Comments comments={comments} />}
           onClose={closeModal}
         />
       )}
