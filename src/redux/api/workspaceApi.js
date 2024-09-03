@@ -101,8 +101,8 @@ export const workspaceApi = createApi({
     }),
 
     updateMessage: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, message }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${message.messageId}`,
+      query: ({ workspaceId, folderId, chatId, messageId, message }) => ({
+        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${messageId}`,
         method: 'PUT',
         body: message,
       }),
@@ -173,17 +173,17 @@ export const workspaceApi = createApi({
 
     // Comments
     addComment: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, messageId, comment }) => ({
+      query: ({ workspaceId, folderId, chatId, messageId, text }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment`,
         method: 'POST',
-        body: comment,
+        body: {text},
       }),
     }),
     updateComment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, comment }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${comment.commentId}`,
         method: 'PUT',
-        body: comment,
+        body: "text:"+{comment},
       }),
     }),
     removeComment: builder.mutation({
@@ -224,10 +224,10 @@ export const workspaceApi = createApi({
 
     // Bookmarks
     addBookmark: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, bookmark }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/bookmarks`,
+      query: ({ workspaceId, folderId, chatId, messageId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark`,
         method: 'POST',
-        body: bookmark,
+       // body: bookmark,
       }),
     }),
     updateBookmark: builder.mutation({
