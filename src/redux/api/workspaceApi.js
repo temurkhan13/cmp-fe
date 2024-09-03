@@ -40,7 +40,7 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderName }) => ({
         url: `workspace/${workspaceId}/folder`,
         method: 'POST',
-        body: {folderName},
+        body: { folderName },
       }),
     }),
     updateFolder: builder.mutation({
@@ -62,7 +62,7 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chat }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat`,
         method: 'POST',
-       // body: chat,
+        // body: chat,
       }),
     }),
     updateChat: builder.mutation({
@@ -84,14 +84,14 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chatId, message, files }) => {
         const formData = new FormData();
         formData.append('text', message);
-        
+
         // Append a single file or multiple files
         if (files && files.length > 0) {
           files.forEach((file, index) => {
             formData.append(`file${index}`, file);
           });
         }
-    
+
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message`,
           method: 'PATCH',
@@ -99,7 +99,7 @@ export const workspaceApi = createApi({
         };
       },
     }),
-    
+
     updateMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, message }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${message.messageId}`,
@@ -119,14 +119,14 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chatId, message, files }) => {
         const formData = new FormData();
         formData.append('text', message);
-        
+
         // Append a single file or multiple files
         if (files && files.length > 0) {
           files.forEach((file, index) => {
             formData.append(`file${index}`, file);
           });
         }
-    
+
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/message`,
           method: 'PATCH',
@@ -134,7 +134,7 @@ export const workspaceApi = createApi({
         };
       },
     }),
-    
+
     updateAssessment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, message }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/messages/${message.messageId}`,
@@ -202,7 +202,14 @@ export const workspaceApi = createApi({
       }),
     }),
     updateReply: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, commentId, replyId, updatedReply }) => ({
+      query: ({
+        workspaceId,
+        folderId,
+        chatId,
+        commentId,
+        replyId,
+        updatedReply,
+      }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
         method: 'PUT',
         body: { text: updatedReply },

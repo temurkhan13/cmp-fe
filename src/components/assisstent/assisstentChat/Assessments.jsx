@@ -48,7 +48,6 @@ import { useSelector } from 'react-redux';
 
 import { useSelectedChat } from '../../../redux/selectors/useSelectedChat';
 
-
 const images = [
   'https://picsum.photos/id/0/5000/3333',
   'https://picsum.photos/id/7/4728/3168',
@@ -95,14 +94,8 @@ const links = [
   },
 ];
 
-
-
 const Assessments = () => {
   const { users, currentChat } = useSelectedChat();
-
-
-
-
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
@@ -165,7 +158,11 @@ const Assessments = () => {
         <AssessmentModal
           title="Media"
           bodyContent={
-            <Media images={currentChat.images} documents={currentChat.documents} links={currentChat.links} />
+            <Media
+              images={currentChat.images}
+              documents={currentChat.documents}
+              links={currentChat.links}
+            />
           }
           onClose={closeModal}
         />

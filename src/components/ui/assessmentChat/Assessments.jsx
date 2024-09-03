@@ -476,13 +476,13 @@ const Assessments = () => {
             <FaBookmark className="icon" />
             <span className="tooltip">Bookmark</span>
           </span>
-          <span
+          {/* <span
             className={`iconButton ${activeIcon === 'video' ? 'active' : ''}`}
             onClick={() => handleIconClick('video')}
           >
             <RiVideoFill className="icon" />
             <span className="tooltip">Video</span>
-          </span>
+          </span> */}
         </div>
       </section>
 
@@ -537,13 +537,13 @@ const Assessments = () => {
           onClose={() => setActiveIcon(null)}
         />
       )}
-      {activeIcon === 'video' && (
+      {/* {activeIcon === 'video' && (
         <AssessmentModal
           title="Video"
           bodyContent="Video content goes here"
           onClose={() => setActiveIcon(null)}
         />
-      )}
+      )} */}
 
       <style>{`
         .iconSection {
