@@ -24,19 +24,20 @@ import { HiDotsHorizontal } from 'react-icons/hi';
 import { SlQuestion } from 'react-icons/sl';
 import { RxLaptop } from 'react-icons/rx';
 
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi';
 
-import { setSelectedWorkspace, selectWorkspace } from '../../../redux/slices/workspacesSlice';
+import {
+  setSelectedWorkspace,
+  selectWorkspace,
+} from '../../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../../redux/selectors/selectors';
 import { useNavigate } from 'react-router-dom';
 import { selectAllChats } from '../../../redux/selectors/selectors';
 
 const DashboardHomeComp = () => {
-
   const dispatch = useDispatch();
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
   const workspacess = useSelector(selectAllWorkspaces);
@@ -57,9 +58,6 @@ const DashboardHomeComp = () => {
       dispatch(setSelectedWorkspace(firstWorkspace));
     }
   }, [workspaces, selectedWorkspace, dispatch]);
-
-
-
 
   const cardData = [
     {
@@ -129,39 +127,54 @@ const DashboardHomeComp = () => {
   ];
 
   const renderCard = (chat) => (
-
     <div className="card">
-      { chat && chat.generalMessages && chat.generalMessages[0] && chat.generalMessages[0].sender ?(
-      <div className="card-header">
-        <h2 className="userName">
-        <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-        </h2>
-        <p>{chat.text }</p>
-        <MdOutlineEdit />
-      </div>
+      {chat &&
+      chat.generalMessages &&
+      chat.generalMessages[0] &&
+      chat.generalMessages[0].sender ? (
+        <div className="card-header">
+          <h2 className="userName">
+            <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+          </h2>
+          <p>{chat.text}</p>
+          <MdOutlineEdit />
+        </div>
       ) : (
-      <div className="content">
-        <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-         <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }}/> Change AI
-        </h3>
-        <p className="chatContent">{chat.generalMessages && chat.generalMessages[0] && chat.generalMessages[0].text}</p>
-      </div>
+        <div className="content">
+          <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+            <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
+            AI
+          </h3>
+          <p className="chatContent">
+            {chat.generalMessages &&
+              chat.generalMessages[0] &&
+              chat.generalMessages[0].text}
+          </p>
+        </div>
       )}
-      { chat && chat.generalMessages && chat.generalMessages[1] && chat.generalMessages[1].sender ?(
-      <div className="card-header">
-        <h2 className="userName">
-        <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-        </h2>
-        <p>{chat.text }</p>
-        <MdOutlineEdit />
-      </div>
+      {chat &&
+      chat.generalMessages &&
+      chat.generalMessages[1] &&
+      chat.generalMessages[1].sender ? (
+        <div className="card-header">
+          <h2 className="userName">
+            <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+          </h2>
+          <p>{chat.text}</p>
+          <MdOutlineEdit />
+        </div>
       ) : (
-      <div className="content">
-        <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-         <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }}/> Change AI
-        </h3>
-        <p className="chatContent">{chat.generalMessages && chat.generalMessages[1] && chat.generalMessages[1].text}</p>
-      </div>
+        <div className="content">
+          <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+            <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
+            AI
+          </h3>
+          <p className="chatContent">
+            {chat.generalMessages &&
+              chat.generalMessages[1] &&
+              chat.generalMessages[1].text}
+          </p>
+        </div>
       )}
       <div className="footer">
         <div className="iconsContainer">
@@ -187,16 +200,18 @@ const DashboardHomeComp = () => {
           </span>
         </div> */}
       </div>
-      
     </div>
   );
 
   return (
     <div className="dashboard">
-      <CountingCards  activeWorkspace= {selectedWorkspace}/>
+      <CountingCards activeWorkspace={selectedWorkspace} />
       <Account />
-      <Workspaces activeWorkspace= {selectedWorkspace} workspaces={workspacess}/>
-      <Folder activeWorkspace= {selectedWorkspace}/>
+      <Workspaces
+        activeWorkspace={selectedWorkspace}
+        workspaces={workspacess}
+      />
+      <Folder activeWorkspace={selectedWorkspace} />
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
           <div className="left-buttons">
@@ -237,36 +252,39 @@ const DashboardHomeComp = () => {
         </div>
       </section>
       <div
-         className="card-wrapper"
-         style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
-       >
-        {chats && chats.map((chat, index) => (
-         <div key={index}
-       >
-         <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-            {renderCard(chat)}
-          </div>
-          <div className="fileDetails">
-            <div className="fileName">
-              {chat.chatTitle}
-              <IoPeople
-                color="gray"
-                style={{ marginLeft: '0.3rem', fontSize: '' }}
-              />
+        className="card-wrapper"
+        style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
+      >
+        {chats &&
+          chats.map((chat, index) => (
+            <div key={index}>
+              <div
+                key={index}
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
+                {renderCard(chat)}
+              </div>
+              <div className="fileDetails">
+                <div className="fileName">
+                  {chat.chatTitle}
+                  <IoPeople
+                    color="gray"
+                    style={{ marginLeft: '0.3rem', fontSize: '' }}
+                  />
+                </div>
+                <div>
+                  <span>in</span>
+                  <span className="folderName">folderName</span>
+                  <span>
+                    • Modified 2 days ago
+                    <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <span>in</span>
-              <span className="folderName">folderName</span>
-              <span>
-                • Modified 2 days ago
-                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-              </span>
-            </div>
-          </div>
-          </div>
-        ))}
-        </div>
-        {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
+          ))}
+      </div>
+      {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card">
             <div className="card-header">
               <h2 className="userName">
@@ -526,7 +544,6 @@ const DashboardHomeComp = () => {
             </div>
           </div>
         </div> */}
-      
 
       <div className="files">
         <p className="files-heading">AI Assessments</p>
@@ -538,321 +555,6 @@ const DashboardHomeComp = () => {
           className="card-wrapper"
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '1rem',
-            }}
-          >
-            <div className="card">
-              <div className="card-header">
-                <h2 className="userName">
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />{' '}
-                  You
-                </h2>
-                <p>
-                  Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                  molestiae! Nemo, repellat?
-                </p>
-                <MdOutlineEdit />
-              </div>
-              <div className="content">
-                <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                  ChangeAI
-                </h3>
-                <p className="chatContent">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-                </p>
-              </div>
-              <div className="footer">
-                <div className="iconsContainer">
-                  <ImFilesEmpty
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineLike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineDislike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                  <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-                </div>
-                <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-              </div>
-            </div>
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople
-                  color="gray"
-                  style={{ marginLeft: '0.3rem', fontSize: '' }}
-                />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '1rem',
-            }}
-          >
-            <div className="card">
-              <div className="card-header">
-                <h2 className="userName">
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />{' '}
-                  You
-                </h2>
-                <p>
-                  Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                  molestiae! Nemo, repellat?
-                </p>
-                <MdOutlineEdit />
-              </div>
-              <div className="content">
-                <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                  ChangeAI
-                </h3>
-                <p className="chatContent">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-                </p>
-              </div>
-              <div className="footer">
-                <div className="iconsContainer">
-                  <ImFilesEmpty
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineLike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineDislike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                  <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-                </div>
-                <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-              </div>
-            </div>
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople
-                  color="gray"
-                  style={{ marginLeft: '0.3rem', fontSize: '' }}
-                />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '1rem',
-            }}
-          >
-            <div className="card">
-              <div className="card-header">
-                <h2 className="userName">
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />{' '}
-                  You
-                </h2>
-                <p>
-                  Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                  molestiae! Nemo, repellat?
-                </p>
-                <MdOutlineEdit />
-              </div>
-              <div className="content">
-                <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                  ChangeAI
-                </h3>
-                <p className="chatContent">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-                </p>
-              </div>
-              <div className="footer">
-                <div className="iconsContainer">
-                  <ImFilesEmpty
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineLike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineDislike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                  <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-                </div>
-                <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-              </div>
-            </div>
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople
-                  color="gray"
-                  style={{ marginLeft: '0.3rem', fontSize: '' }}
-                />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '1rem',
-            }}
-          >
-            <div className="card">
-              <div className="card-header">
-                <h2 className="userName">
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />{' '}
-                  You
-                </h2>
-                <p>
-                  Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                  molestiae! Nemo, repellat?
-                </p>
-                <MdOutlineEdit />
-              </div>
-              <div className="content">
-                <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                  ChangeAI
-                </h3>
-                <p className="chatContent">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-                </p>
-              </div>
-              <div className="footer">
-                <div className="iconsContainer">
-                  <ImFilesEmpty
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineLike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineDislike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                  <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-                </div>
-                <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-              </div>
-            </div>{' '}
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople
-                  color="gray"
-                  style={{ marginLeft: '0.3rem', fontSize: '' }}
-                />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '1rem',
-            }}
-          >
-            <div className="card">
-              <div className="card-header">
-                <h2 className="userName">
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />{' '}
-                  You
-                </h2>
-                <p>
-                  Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                  molestiae! Nemo, repellat?
-                </p>
-                <MdOutlineEdit />
-              </div>
-              <div className="content">
-                <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                  ChangeAI
-                </h3>
-                <p className="chatContent">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-                </p>
-              </div>
-              <div className="footer">
-                <div className="iconsContainer">
-                  <ImFilesEmpty
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineLike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineDislike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                  <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-                </div>
-                <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-              </div>
-            </div>{' '}
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople
-                  color="gray"
-                  style={{ marginLeft: '0.3rem', fontSize: '' }}
-                />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                </span>
-              </div>
-            </div>
-          </div>{' '}
           <div
             style={{
               display: 'flex',
@@ -1020,9 +722,6 @@ const DashboardHomeComp = () => {
           background-color: #f0f0f0;
         }
         }
-      `}</style>
-
-      <style>{`
       .card-wrapper{
         display: flex;
         // justify-content: space-around;

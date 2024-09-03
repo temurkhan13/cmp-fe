@@ -12,11 +12,13 @@ import { useSelector, useDispatch } from 'react-redux';
 //import { setSelectedWorkspaceId } from '../../../redux/slices/workspaceSlice';
 //import { setSelectedFolderId } from '../../../redux/slices/folderSlice';
 
-
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
-import { useAddWorkspaceMutation, useGetWorkspacesQuery } from '../../../redux/api/workspaceApi'; // Adjust the import path as needed
+import {
+  useAddWorkspaceMutation,
+  useGetWorkspacesQuery,
+} from '../../../redux/api/workspaceApi'; // Adjust the import path as needed
 
-const Workspaces = ({activeWorkspace, workspaces}) => {
+const Workspaces = ({ activeWorkspace, workspaces }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
@@ -24,11 +26,9 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
 
-
   const dispatch = useDispatch();
 
- const [addWorkspace] = useAddWorkspaceMutation();
-
+  const [addWorkspace] = useAddWorkspaceMutation();
 
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
@@ -46,7 +46,7 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
 
   const handleWorkspaceSwitch = (workspace) => {
     console.log('Switching to workspace:', workspace);
-    dispatch(setReduxSelectedWorkspace(workspace))
+    dispatch(setReduxSelectedWorkspace(workspace));
     // Your logic to switch the workspace
   };
 
@@ -68,7 +68,7 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
       </div>
 
       <div className="icons">
-        { workspaces.map((workspace, index) => (
+        {workspaces.map((workspace, index) => (
           <div key={index} className="icon-container">
             <BsWindowStack
               onClick={() => toggleModal(workspace)}
@@ -78,7 +78,7 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
               {truncateString(workspace.workspaceName, 8)}
             </span>
           </div>
-        )) }
+        ))}
       </div>
 
       {isModalOpen && selectedWorkspace && (
@@ -93,7 +93,10 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
             </button>
           </div>
           <div className="modal-content">
-            <ModalSections selectedWorkspace={selectedWorkspace} handleWorkspaceSwitch={handleWorkspaceSwitch} />
+            <ModalSections
+              selectedWorkspace={selectedWorkspace}
+              handleWorkspaceSwitch={handleWorkspaceSwitch}
+            />
           </div>
         </div>
       )}
@@ -221,6 +224,7 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
         }
         .modal-sections{
           display: flex;
+          flex-direction: column;
         }
           .section-folders {
     display: flex;
@@ -232,7 +236,9 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
            .link_chat{
            display:flex;
            align-items: center;
+           justify-content:center;
            gap:0.3rem;
+           border:none;
            font-size:1.4rem;
            color:#0B1444;
            border-radius:1rem;
@@ -311,30 +317,28 @@ const Workspaces = ({activeWorkspace, workspaces}) => {
 };
 
 const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
-
-  
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
   return (
     <ul className="modal-sections">
-        <button
-          className="link_chat"
-          onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
-        >
-          Switch Workspace <AiOutlinePlus className="icon" />
-        </button>
-        <div className="folder-wrapper">
-      {selectedWorkspace && selectedWorkspace.folders.map((folder , index) => (
-         <li key={index} className="section-list-item">
-                <IoFolderOpen
-                  className="file-icon"
-                  style={{ color: 'gray', fontSize: '2rem' }}
-                />
-                <p>{folder.folderName}</p>
-                </li>
-          
-      ))}
+      <button
+        className="link_chat"
+        onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
+      >
+        Switch Workspace <AiOutlinePlus className="icon" />
+      </button>
+      <div className="folder-wrapper">
+        {selectedWorkspace &&
+          selectedWorkspace.folders.map((folder, index) => (
+            <li key={index} className="section-list-item">
+              <IoFolderOpen
+                className="file-icon"
+                style={{ color: 'gray', fontSize: '2rem' }}
+              />
+              <p>{folder.folderName}</p>
+            </li>
+          ))}
       </div>
     </ul>
   );
