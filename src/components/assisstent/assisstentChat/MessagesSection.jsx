@@ -76,6 +76,7 @@ const [addBookmark] = useAddBookmarkMutation();
    const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
    const folderId = useSelector((state) => state.workspaces.currentFolderId);
    const chatId = useSelector((state) => state.workspaces.currentChatId);
+   const [messageId, setMessageId] = useState();
    
    const currentChat = useSelector(selectCurrentChat);
 
@@ -138,8 +139,6 @@ const [addBookmark] = useAddBookmarkMutation();
     setPopupVisible(false);
   };
   const handleSendMessage = async() => {
-
-    
     // e.preventDefault();
      if (!workspaceId) {
        alert('Please select a workspace');
@@ -186,17 +185,17 @@ const [addBookmark] = useAddBookmarkMutation();
 const applyFixedText = useCallback((newText) => {
   const updatedChat = chat.map((message) => {
    // console.log(message);
-    if (message.content) {
+    if (message.text) {
       return {
         ...message,
-        content: message.content.replace(selectedText, newText),
+        text: message.text.replace(selectedText, newText),
       };
     }
     return message;
   });
   console.log("chatttt :"+ chat);
   setChat(updatedChat);
-//  dispatch(updateMessage(updatedChat));
+  //dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
 
   setPopupVisible(false);
 }, [chat, selectedText, dispatch, workspaceId, chatId]);
@@ -250,11 +249,13 @@ const applyFixedText = useCallback((newText) => {
     // Check if the selected text is within an element with class '.msg'
     const messageElements = document.querySelectorAll('.msg');
     let isValidSelection = false;
+    let selectedMessageId = null;
   
     messageElements.forEach((msgElement) => {
       // Check if the selected text starts from within the msgElement
       if (msgElement.contains(selection.anchorNode) && msgElement.contains(selection.focusNode)) {
         isValidSelection = true;
+        selectedMessageId = msgElement.getAttribute('data-message-id'); // Get the messageId
       }
     });
   
@@ -262,10 +263,16 @@ const applyFixedText = useCallback((newText) => {
     if (isValidSelection) {
       setSelectedText(selectedText);
       setPopupVisible(!!selectedText); // Show popup if there's a valid selection
+      if (selectedMessageId) {
+        console.log(`Selected Message ID: ${selectedMessageId}`);
+        setMessageId(selectedMessageId);
+        // You can now use `selectedMessageId` as needed
+      }
     } else {
       setPopupVisible(false); // Hide popup if selection is invalid
     }
   };
+  
   
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
@@ -309,23 +316,25 @@ const applyFixedText = useCallback((newText) => {
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
-  const handleAddBookmark = (content, messageId) => {
-    const bookmark = {
-      bookmarkId: 'bookmarkId3',
-      userId: 'userId4',
-      timestamp: '2024-07-12T12:40:00Z',
-      date: '2024-07-12',
-      messages: [
-        {
-          messageId: messageId,
-          sender: 'ChangeAI',
-          text: content,
-          savedBy: 'You',
-        },
-      ],
-    };
-    dispatch(addBookmark(bookmark));
-    console.log('bookmarked ' + bookmark.bookmarkId);
+  const handleAddBookmark = async(messageId) => {
+    // const bookmark = {
+    //   bookmarkId: 'bookmarkId3',
+    //   userId: 'userId4',
+    //   timestamp: '2024-07-12T12:40:00Z',
+    //   date: '2024-07-12',
+    //   messages: [
+    //     {
+    //       messageId: messageId,
+    //       sender: 'ChangeAI',
+    //       text: content,
+    //       savedBy: 'You',
+    //     },
+    //   ],
+    // };
+    //dispatch(addBookmark(bookmark));
+    console.log('bookmarked: ' + messageId);
+    await addBookmark({workspaceId,folderId,chatId,messageId});
+   // console.log('bookmarked ' + bookmark.bookmarkId);
   };
   const handleInspireClick = async () => {
     //Todo: will implement Inspire
@@ -384,7 +393,7 @@ const applyFixedText = useCallback((newText) => {
                         <p className="Heading">You</p>
                         {/* <div className="msg">{item.content}</div> */}
                         {message.text && (
-                          <div className="msg">
+                          <div className="msg" data-message-id={message._id}>
                             <ReactMarkdown>{message.text}</ReactMarkdown>
                           </div>
                         )}
@@ -412,21 +421,23 @@ const applyFixedText = useCallback((newText) => {
                       <div>
                         <p className="Heading">ChangeAI</p>
                         {message && (
-                          <div className="msg">
+                          <div className="msg" data-message-id={message._id}>
                             <ReactMarkdown>{message.text}</ReactMarkdown>
                           </div>
                         )}
                         <div>
                         <FaCopy
-                         onClick={() => handleAddBookmark(message.text, message._Id)}
+                         onClick={() => handleAddBookmark(message._id)}
                          style={{ cursor: 'pointer' }}
                          />
                           <FaThumbsUp />
                           <FaThumbsDown />
-
+                          <FaCommentAlt
+                          data-message-id={message._id}
+                            onClick={handleCommentClick}
+                            style={{ cursor: 'pointer' }}
+                          />
                           <FaSync
-                          onClick={handleCommentClick}
-                          style={{ cursor: 'pointer' }}
                             />       
                           
                         </div>
@@ -542,7 +553,7 @@ const applyFixedText = useCallback((newText) => {
         </div>
       </div>
       {showCommentPopup && (
-        <CommentPopup onClose={() => setShowCommentPopup(false)} />
+        <CommentPopup onClose={() => setShowCommentPopup(false)} workspaceId = {workspaceId} folderId = {folderId} chatId = {chatId} messageId ={ messageId} />
       )}
     </div>
   );
