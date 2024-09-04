@@ -9,136 +9,49 @@ import { BsWindowStack } from 'react-icons/bs';
 import { IoFolderOpen } from 'react-icons/io5';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedWorkspaceId } from '../../../redux/slices/workspaceSlice';
+//import { setSelectedWorkspaceId } from '../../../redux/slices/workspaceSlice';
 //import { setSelectedFolderId } from '../../../redux/slices/folderSlice';
 
-const Workspaces = () => {
+import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
+import {
+  useAddWorkspaceMutation,
+  useGetWorkspacesQuery,
+} from '../../../redux/api/workspaceApi'; // Adjust the import path as needed
+
+const Workspaces = ({ activeWorkspace, workspaces }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
-  const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
 
+  const [selectedWorkspace, setSelectedWorkspace] = useState(null);
+  const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
-
-
-
-
-
-  const workspaces = useSelector((state) => state.workspace.workspaces);
-  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-  //const folderSelect = useSelector((state) => state.workspace.folders);
-  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
-
-   // Count total workspaces
-   const totalWorkspaces = workspaces.length;
-
-   // Count total folders
-   const totalFolders = workspaces.reduce((acc, workspace) => acc + workspace.folders.length, 0);
- 
-
-  useEffect(() => {
-    console.log("workspace: " + totalWorkspaces + totalFolders);
-    if (workspaces.length > 0 && !selectedWorkspaceId) {
-      dispatch(setSelectedWorkspaceId(workspaces[0].workspaceId));
-      console.log(workspaces[0].workspaceId);
-    }
-  }, [workspaces, selectedWorkspaceId, dispatch]);
-
-  // useEffect(() => {
-  //   if (folderSelect.length > 0 && !selectedFolderId) {
-  //     console.log(workspaces[0].workspaceId);
-
-  //     dispatch(setSelectedFolderId(folderSelect[0].folderId));
-  //   }
-  // }, [folderSelect, selectedFolderId, dispatch]);
-
-  // const initialFolders = [
-  //   {
-  //     name: 'Workspace Folders',
-  //     details: {
-  //       section1: {
-  //         heading: 'Assisstant',
-  //         recentFiles: [
-  //           { name: 'DesignSpec_1.pdf' },
-  //           { name: 'Wireframe_1.sketch' },
-  //         ],
-  //         folders: [
-  //           { name: 'Logos_1' },
-  //           { name: 'UI_1' },
-  //           { name: 'Mockups_1' },
-  //           { name: 'Illustrations_1' },
-  //           { name: 'Animations_1' },
-  //         ],
-  //       },
-  //       section2: {
-  //         heading: 'Assessment',
-  //         recentFiles: [
-  //           { name: 'API_Doc_1.docx' },
-  //           { name: 'Backend_Arch_1.pptx' },
-  //         ],
-  //         folders: [
-  //           { name: 'Frontend_1' },
-  //           { name: 'Backend_1' },
-  //           { name: 'Database_1' },
-  //           { name: 'APIs_1' },
-  //           { name: 'Testing_1' },
-  //         ],
-  //       },
-  //     },
-  //   },
-  //   {
-  //     name: 'Workspace Folders',
-  //     details: {
-  //       section1: {
-  //         heading: 'Assisstant',
-  //         recentFiles: [
-  //           { name: 'DesignSpec_1.pdf' },
-  //           { name: 'Wireframe_1.sketch' },
-  //         ],
-  //         folders: [
-  //           { name: 'Logos_1' },
-  //           { name: 'UI_1' },
-  //           { name: 'Mockups_1' },
-  //           { name: 'Illustrations_1' },
-  //           { name: 'Animations_1' },
-  //         ],
-  //       },
-  //       section2: {
-  //         heading: 'Assessment',
-  //         recentFiles: [
-  //           { name: 'API_Doc_1.docx' },
-  //           { name: 'Backend_Arch_1.pptx' },
-  //         ],
-  //         folders: [
-  //           { name: 'Frontend_1' },
-  //           { name: 'Backend_1' },
-  //           { name: 'Database_1' },
-  //           { name: 'APIs_1' },
-  //           { name: 'Testing_1' },
-  //         ],
-  //       },
-  //     },
-  //   },
-  // ];
-
- // const [folders, setFolders] = useState(folderSelect);
+  const [addWorkspace] = useAddWorkspaceMutation();
 
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
-  const handleNewWorkspaceSubmit = () => {
-    if (newWorkspaceName.trim()) {
-      const newFolder = { name: newWorkspaceName, details: {} };
-    //  setFolders([...folders, newFolder]);
+  const handleNewWorkspaceSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await addWorkspace({ workspaceName: newWorkspaceName }).unwrap();
       setNewWorkspaceName('');
       setIsNewWorkspaceModalOpen(false);
+    } catch (error) {
+      console.error('Failed to add workspace:', error);
     }
   };
 
-  const toggleModal = (folder) => {
-    setSelectedFolder(folder);
+  const handleWorkspaceSwitch = (workspace) => {
+    console.log('Switching to workspace:', workspace);
+    dispatch(setReduxSelectedWorkspace(workspace));
+    // Your logic to switch the workspace
+  };
+
+  const toggleModal = (workspace) => {
+    setSelectedWorkspace(workspace);
     setIsModalOpen(!isModalOpen);
   };
 
@@ -155,7 +68,7 @@ const Workspaces = () => {
       </div>
 
       <div className="icons">
-        { workspaces.map((workspace, index) => (
+        {workspaces.map((workspace, index) => (
           <div key={index} className="icon-container">
             <BsWindowStack
               onClick={() => toggleModal(workspace)}
@@ -165,13 +78,13 @@ const Workspaces = () => {
               {truncateString(workspace.workspaceName, 8)}
             </span>
           </div>
-        )) }
+        ))}
       </div>
 
-      {isModalOpen && selectedFolder && (
+      {isModalOpen && selectedWorkspace && (
         <div className="modal">
           <div className="modal-wrapper">
-            <h3 className="modal-heading">{selectedFolder.name}</h3>
+            <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
             <button
               className="modal-closebtn"
               onClick={() => setIsModalOpen(false)}
@@ -180,7 +93,10 @@ const Workspaces = () => {
             </button>
           </div>
           <div className="modal-content">
-            <ModalSections selectedFolder={selectedFolder} />
+            <ModalSections
+              selectedWorkspace={selectedWorkspace}
+              handleWorkspaceSwitch={handleWorkspaceSwitch}
+            />
           </div>
         </div>
       )}
@@ -308,6 +224,7 @@ const Workspaces = () => {
         }
         .modal-sections{
           display: flex;
+          flex-direction: column;
         }
           .section-folders {
     display: flex;
@@ -319,7 +236,9 @@ const Workspaces = () => {
            .link_chat{
            display:flex;
            align-items: center;
+           justify-content:center;
            gap:0.3rem;
+           border:none;
            font-size:1.4rem;
            color:#0B1444;
            border-radius:1rem;
@@ -397,57 +316,33 @@ const Workspaces = () => {
   );
 };
 
-const ModalSections = ({ selectedFolder }) => {
+const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
   return (
     <ul className="modal-sections">
-      {Object.entries(selectedFolder.details).map(([sectionKey, section]) => (
-        <div key={sectionKey} className="section">
-          <div className="section-heading">
-            {section.heading}
-            <Link
-              to={`/${
-                sectionKey == 'section1' ? 'assisstant' : 'assessment'
-              }/chat`}
-              target="_blank"
-              className="link_chat"
-            >
-              New {sectionKey === 'section1' ? 'Assistant' : 'Assessment'}
-              <GoPlus className="icon" />
-            </Link>
-          </div>
-          <div className="folder-wrapper">
-            {section.recentFiles.map((file, index) => (
-              <li key={index} className="section-list-item">
-                <IoFolderOpen
-                  className="file-icon"
-                  style={{ color: 'gray', fontSize: '2rem' }}
-                />
-                {file.name}
-              </li>
-            ))}
-          </div>
-          <div className="section-folders">
-            {section.folders.map((folder, index) => (
-              <div key={index} className="folder-icon">
-                <FaFolderOpen
-                  className="folder-icon-img"
-                  style={{ fontSize: '4rem', color: 'gray' }}
-                />
-                <div title={folder.name} className="folder-label">
-                  {truncateString(folder.name, 6)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+      <button
+        className="link_chat"
+        onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
+      >
+        Switch Workspace <AiOutlinePlus className="icon" />
+      </button>
+      <div className="folder-wrapper">
+        {selectedWorkspace &&
+          selectedWorkspace.folders.map((folder, index) => (
+            <li key={index} className="section-list-item">
+              <IoFolderOpen
+                className="file-icon"
+                style={{ color: 'gray', fontSize: '2rem' }}
+              />
+              <p>{folder.folderName}</p>
+            </li>
+          ))}
+      </div>
     </ul>
   );
 };
-
 ModalSections.propTypes = {
   selectedFolder: PropTypes.shape({
     name: PropTypes.string.isRequired,
