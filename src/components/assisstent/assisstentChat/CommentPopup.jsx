@@ -4,13 +4,17 @@ import { MdOutlineAttachFile } from 'react-icons/md';
 import { MdAlternateEmail } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import PropTypes from 'prop-types';
+import { useAddCommentMutation } from '../../../redux/api/workspaceApi';
 
-const CommentPopup = ({ onClose }) => {
+const CommentPopup = ({ onClose, workspaceId, folderId, chatId, messageId }) => {
   const [comment, setComment] = useState('');
+  const [addComment] = useAddCommentMutation();
 
-  const handleSend = () => {
+  const handleSend = async() => {
     if (comment.trim()) {
-      console.log('Comment sent:', comment);
+      console.log('Comment sent:', comment,messageId);
+      const text = comment;
+      await addComment({workspaceId, folderId, chatId, messageId, text});
       setComment('');
       onClose(); // Close the comment popup
     }

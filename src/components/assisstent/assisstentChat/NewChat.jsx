@@ -7,34 +7,38 @@ import { HiOutlinePlusSm } from 'react-icons/hi';
 import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
 
-import {
-  addChat,
-  updateChat,
-  removeChat,
-  setSelectedChatId,
-} from '../../../redux/slices/workspaceSlice';
+// import {
+//   addChat,
+//   updateChat,
+//   removeChat,
+//   setSelectedChatId,
+// } from '../../../redux/slices/workspaceSlice';
+
+
+//import { useAddChatMutation } from '../../../redux/api/workspaceApi';
+//import { useAddMessageMutation } from '../../../redux/api/workspaceApi';
+//import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi'; // Adjust the import path as needed
+import { selectAllChats, selectAllWorkspaces, selectCurrentWorkspace } from '../../../redux/selectors/selectors';
+import {setCurrentChatId} from '../../../redux/slices/workspacesSlice';
 
 const NewChat = () => {
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
-  const { historyChat, error } = useChatHistory();
+  //const { historyChat, error } = useChatHistory();
   const chatContainerRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const workspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-  const folderId = useSelector((state) => state.workspace.selectedFolderId);
-  const chats = useSelector((state) => {
-    const workspace = state.workspace.workspaces.find(w => w.workspaceId === workspaceId);
-    if (workspace) {
-      const folder = workspace.folders.find(f => f.folderId === folderId);
-      return folder ? folder.chats : [];
-    }
-    return [];
-  });
-  const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
-
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // State for sidebar collapse
+
+    //new Apis Implementation
+    //const [addMessage] = useAddMessageMutation();
+    const chats = useSelector(selectAllChats);
+  
+   // const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
+   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
+   // const chatId = useSelector((state) => state.workspaces.currentChatId);
+  
 
   // Function to toggle sidebar collapse state
   const toggleSidebar = () => {
@@ -52,54 +56,65 @@ const NewChat = () => {
   };
 
   // Update selectedChat if the chat data changes
-  useEffect(() => {
-    if (selectedChatId) {
-      dispatch(setSelectedChatId(selectedChatId));
-      //const updatedChat = chats.find(chat => chat.chatId === selectedChatId);
-      //dispatch(setSelectedChatId(updatedChat ? updatedChat.chatId : null));
-    }
-  }, [chats, dispatch, selectedChatId]);
+  // useEffect(() => {
+  //   if (selectedChatId) {
+  //     dispatch(setSelectedChatId(selectedChatId));
+  //     //const updatedChat = chats.find(chat => chat.chatId === selectedChatId);
+  //     //dispatch(setSelectedChatId(updatedChat ? updatedChat.chatId : null));
+  //   }
+  // }, [chats, dispatch, selectedChatId]);
 
+  //chat Select
   const handleChatSelect = (chatId) => {
-    dispatch(setSelectedChatId(chatId));
+    console.log("dispatch ChatId" + chatId);
+    const currentUrl = window.location.pathname;
+    const newUrl = currentUrl.replace(/\/assisstant\/chat\/[^/]+$/, `/assisstant/chat/${chatId}`);
+    window.history.replaceState(null, '', newUrl);
+   // setSearchParams( chatId );
+    dispatch(setCurrentChatId(chatId));
+   // dispatch(setSelectedChatId(chatId));
   };
 
   const handleAddChat = () => {
-    const newChat = {
-      chatId: `chatId${Date.now()}`,
-      chatTitle: 'How to Change Management',
-      version: 1,
-      generalMessages: [],
-      sharedUsers: [],
-      comments: [],
-      bookmarks: [],
-      media: [],
-      tasks: [],
-      versions: [],
-      images: [],
-      documents: [],
-      links: [],
-      bookmarkData: [],
-      commentingUsers: [],
-      commentReplies: [],
-    };
-    dispatch(addChat({ workspaceId, folderId, chat: newChat }));
-    dispatch(setSelectedChatId(newChat.chatId));
+    dispatch(setCurrentChatId(null));
+    return;
+    // const newChat = {
+    //   chatId: `chatId${Date.now()}`,
+    //   chatTitle: 'How to Change Management',
+    //   version: 1,
+    //   generalMessages: [],
+    //   sharedUsers: [],
+    //   comments: [],
+    //   bookmarks: [],
+    //   media: [],
+    //   tasks: [],
+    //   versions: [],
+    //   images: [],
+    //   documents: [],
+    //   links: [],
+    //   bookmarkData: [],
+    //   commentingUsers: [],
+    //   commentReplies: [],
+    // };
+    // dispatch(addChat({ workspaceId, folderId, chat: newChat }));
+    // dispatch(setSelectedChatId(newChat.chatId));
   };
 
-  const handleAddMessage = (content) => {
-    if (selectedChatId) {
-      const newMessage = {
-        messageId: `msg${Date.now()}`,
-        userId: 'currentUserId', // Replace with actual user ID
-        content,
-        timestamp: new Date().toISOString(),
-      };
-      dispatch(addMessage({ workspaceId, folderId, chatId: selectedChatId, message: newMessage }));
-    }
-  };
+  // const handleAddMessage = (content) => {
+  //   if (selectedChatId) {
+  //     const newMessage = {
+  //       messageId: `msg${Date.now()}`,
+  //       userId: 'currentUserId', // Replace with actual user ID
+  //       content,
+  //       timestamp: new Date().toISOString(),
+  //     };
+  //     dispatch(addMessage({ workspaceId, folderId, chatId: selectedChatId, message: newMessage }));
+  //   }
+  // };
 
-  const selectedChat = chats.find(chat => chat.chatId === selectedChatId);
+  
+
+  //const selectedChat = chats.find(chat => chat.chatId === selectedChatId);
 
   const handleScroll = async () => {
     const chatContainer = chatContainerRef.current;
@@ -113,6 +128,7 @@ const NewChat = () => {
     }
   };
 
+  
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     chatContainer.addEventListener('scroll', handleScroll);
@@ -166,8 +182,8 @@ const NewChat = () => {
           {Array.isArray(chats) &&
             chats.map((chat, index) => (
               <section
-                key={chat.chatId}
-                onClick={() => handleChatSelect(chat.chatId)}
+                key={chat._id}
+                onClick={() => handleChatSelect(chat._id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -200,7 +216,6 @@ const NewChat = () => {
               </section>
             ))}
           {loading && <div>Loading...</div>}
-          {error && <div>Error: {error}</div>}
         </>
       )}
     </div>
