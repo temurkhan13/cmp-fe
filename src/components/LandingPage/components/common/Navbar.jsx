@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { dropdown, Logo1 } from '../../assets';
 import { FaArrowRight, FaBars, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownHomeOpen, setDropdownHomeOpen] = useState(false);
   const [dropdownAboutOpen, setDropdownAboutOpen] = useState(false);
@@ -100,7 +102,14 @@ const Navbar = () => {
           </li>
         </ul>
         <div className="navbar-buttons">
-          <button className="btn">Login</button>
+          <button
+            className="btn"
+            onClick={() => {
+              navigate('/log-in');
+            }}
+          >
+            Login
+          </button>
           <button className="btn btn-primary">
             Get Started <FaArrowRight />
           </button>
