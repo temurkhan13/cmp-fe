@@ -1,25 +1,39 @@
-import React from 'react'
-import { teamslide1, teamslide2, video } from '../../../assets'
-import { FaArrowRight } from 'react-icons/fa'
+import React from 'react';
+import { teamslide1, teamslide2, video } from '../../../assets';
+import { FaArrowRight } from 'react-icons/fa';
 
 const Team = () => {
   return (
-    <div className='team'>
-      <h1>An <span className='text-gradient'>END-TO-END</span> business <br /> platform for your team</h1>
-      <div className='both'>
+    <div className="team">
+      <h1>
+        An <span className="text-gradient">END-TO-END</span> business <br />{' '}
+        platform for your team
+      </h1>
+      <div className="both">
         <div>
-            <img width={'100%'} src={video} alt="" />
+          <img width={'100%'} src={video} alt="" />
         </div>
-        <div className='slide flex flex-col'>
-            <div className='div1'>
-                <button><FaArrowRight className='rotateIcon'/></button>
-                <h2>4x your data response rate <br/> with generative AI and instant <br/> output formats.</h2>
-            </div>
-            <div className='div2'>
-                <h2><img src={teamslide1} alt="" /></h2>
-                <h2><img src={teamslide2} alt="" /></h2>
-                <h2><img src={teamslide1} alt="" /></h2>
-            </div>
+        <div className="slide flex flex-col">
+          <div className="div1">
+            <button>
+              <FaArrowRight className="rotateIcon" />
+            </button>
+            <h2>
+              4x your data response rate <br /> with generative AI and instant{' '}
+              <br /> output formats.
+            </h2>
+          </div>
+          <div className="div2">
+            <h2>
+              <img src={teamslide1} alt="" />
+            </h2>
+            <h2>
+              <img src={teamslide2} alt="" />
+            </h2>
+            <h2>
+              <img src={teamslide1} alt="" />
+            </h2>
+          </div>
         </div>
       </div>
       <style>
@@ -32,6 +46,7 @@ const Team = () => {
         font-weight: 600;
         line-height: 48.41px;
         text-align: center;
+        color: #00316E;
         }
         .team h1 span{
         font-size:48px;
@@ -114,7 +129,7 @@ const Team = () => {
         `}
       </style>
     </div>
-  )
-}
+  );
+};
 
-export default Team
+export default Team;

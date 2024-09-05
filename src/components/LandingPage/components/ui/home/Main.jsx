@@ -64,10 +64,11 @@ const Main = () => {
   return (
     <div className="main-container">
       <h1 className="heading-small hidden lg:block">
-        Develop your documentation at{' '}
-        <span className="text-gradient font-bold">Change AI</span>
+        Develop your documentation
+        <br /> with <span />
+        <span className="change-ai-heading">Change AI</span>
       </h1>
-      <div className="card-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="card-grid">
         {cards.map((x) => (
           <MainCard
             title={x.title}
@@ -81,92 +82,73 @@ const Main = () => {
       <div className="image-container">
         <img src={getImage()} alt="Main visual" />
       </div>
-      <style>
-        {`
+      <style>{`
         .main-container {
-  margin-top: 100px;
-}
+          margin-top: 6.25rem;
+        }
 
-@media (min-width: 640px) {
-  .main-container {
-    margin-top: 250px;
-  }
-}
+        @media (min-width: 640px) {
+          .main-container {
+            margin-top: 15.625rem;
+          }
+        }
 
-@media (min-width: 1024px) {
-  .main-container {
-    margin-top: 400px;
-  }
-}
+        @media (min-width: 1024px) {
+          .main-container {
+            margin-top: 25rem;
+          }
+        }
 
-/* Headings */
-.heading-large {
-  font-size: 40px;
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 56px;
-}
+        /* Headings */
+        .heading-small {
+          font-size: 2.5rem;
+          text-align: center;
+          font-weight: 600;
+          margin-bottom: 3rem;
+        }
 
-.heading-medium {
-  font-size: 30px;
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 56px;
-}
+        .change-ai-heading {
+          font-size: 4rem;
+          background: linear-gradient(90deg, #47beba 0%, #c3e11d 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+        }
 
-.heading-small {
-  font-size: 25px;
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 56px;
-}
+        /* Grid layout */
+        .card-grid {
+          width: 95%;
+          margin: auto;
+          display: grid;
+          gap: 1.5625rem;
+          grid-template-columns: repeat(1, 1fr);
+        }
 
-/* Text gradient */
-.text-gradient {
-  background: linear-gradient(to right, #ff7e5f, #feb47b); /* Adjust colors as needed */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+        @media (min-width: 768px) {
+          .card-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
 
-/* Grid layout */
-.card-grid {
-  width: 80%;
-  margin: auto;
-  display: grid;
-  gap: 25px;
-}
+        @media (min-width: 1024px) {
+          .card-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
 
-.card-grid.grid-cols-1 {
-  grid-template-columns: repeat(1, 1fr);
-}
+        .image-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 1.25rem;
+        }
 
-@media (min-width: 786px) {
-  .card-grid.grid-cols-1 {
-  grid-template-columns: repeat(2, 1fr);
-}
-}
-
-@media (min-width: 1024px) {
-  .card-grid.grid-cols-1 {
-  grid-template-columns: repeat(3, 1fr);
-}
-}
-
-
-/* Image container */
-.image-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.image-container img {
-  width: 70%;
-  border-radius: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust shadow as needed */
-}
-        `}
-      </style>
+        .image-container img {
+          width: 70%;
+          border-radius: 1.5rem;
+          box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+        }
+      `}</style>
     </div>
   );
 };

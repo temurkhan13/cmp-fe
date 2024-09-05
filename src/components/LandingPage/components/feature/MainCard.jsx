@@ -1,19 +1,17 @@
-import React from 'react';
-
 const MainCard = (props) => {
   return (
     <div
-      className="cards"
+      className="change-ai-cards"
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
     >
       <div className="border-content">
         <h1>{props.title}</h1>
-        <h5>{props.desc}</h5>
+        <p className="paragraph">{props.desc}</p>
       </div>
       <style>
         {`
-.cards {
+.change-ai-cards {
   background-color: #ffffff;
   padding: 15px 20px;
   display: flex;
@@ -21,10 +19,20 @@ const MainCard = (props) => {
   flex-direction: column;
   gap: 8px;
   transition: all ease 0.2s;
-}
-.cards:hover{
-scale: 1.05;
-box-shadow: 0px 0px 4px 1px #C3E11D;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  margin-bottom:3rem;
+  }
+  .paragraph{
+    margin-top:0.5rem;
+    font-size:1.3rem;
+    }
+  .change-ai-cards:hover {
+  transform: scale(1.05);
+ border-radius: 20px;
+  background: linear-gradient(white, white) padding-box,
+  linear-gradient( 258.56deg, #C3E11D 1.97%, #E0E0E0 16.82%) border-box;
+  border: 1px solid transparent;
+border-image-source: linear-gradient(258.56deg, #C3E11D 1.97%, #E0E0E0 16.82%);
 }
 
 .border-content {
