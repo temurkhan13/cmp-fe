@@ -18,9 +18,19 @@ import {
 } from '../../../../redux/slices/workspaceSlice';
 import NoDataAvailable from '../../../common/NoDataAvailable';
 
+import {useAddReplyMutation,
+  useUpdateReplyMutation,
+  useRemoveReplyMutation } from '../../../../redux/api/workspaceApi';
+
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();
-  const chatId = useSelector((state) => state.workspace.selectedChatId);
+  //const chatId = useSelector((state) => state.workspace.selectedChatId);
+
+  const [addReply] = useSelector(useAddReplyMutation);
+  
+  const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
+   const folderId = useSelector((state) => state.workspaces.currentFolderId);
+   const chatId = useSelector((state) => state.workspaces.currentChatId);
 
   const [selectedComment, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
@@ -56,9 +66,10 @@ const Comments = ({ comments }) => {
     setEditedText('');
   };
 
-  const handleAddReply = (commentId) => {
+  const handleAddReply = async (messageId,commentId) => {
     const reply = editedText;
-    dispatch(addReply({ commentId, reply }));
+    await addReply(workspaceId,folderId,chatId,messageId,commentId,reply);
+    //dispatch(addReply({ commentId, reply }));
     setEditingComment(null);
     setEditedText('');
   };
@@ -66,7 +77,7 @@ const Comments = ({ comments }) => {
   const handleDeleteComment = (commentId, isReply, parentCommentId) => {
     if (isReply) {
       const commentId = parentCommentId;
-      dispatch(removeReply({ commentId, replyId }));
+    //  dispatch(removeReply({ commentId, replyId }));
       const parentComment = comments.find(
         (c) => c.commentId === parentCommentId
       );

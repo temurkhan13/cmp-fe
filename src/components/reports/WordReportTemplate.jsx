@@ -1,6 +1,7 @@
 import React from 'react';
 import { marked } from 'marked';
 import styled from 'styled-components';
+import Sidebarlogo from '@assets/dashboard/sidebarLogo.png';
 
 const Page = styled.div`
   width: 21cm;
@@ -22,14 +23,42 @@ const Page = styled.div`
 
 const CoverPageContainer = styled(Page)`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  color: yellowgreen;
+  background-color: aliceblue;
+  position: relative;
+  height: 100vh;
+  padding: 2rem;
+
+  .header {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+  }
+
+  .logo {
+    max-width: 9.375rem; /* 150px in rem */
+    height: auto;
+  }
 
   h1 {
-    font-size: 36px;
+    font-size: 2.25rem; /* 36px in rem */
+    text-align: center;
+    margin: 0;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    text-align: right;
+    line-height: 1.5;
   }
 `;
+
+
 
 const ContentPageContainer = styled(Page)`
   font-size: 16px;
@@ -75,8 +104,17 @@ const WordReportTemplate = ({ content }) => {
   return (
     <div>
       <CoverPageContainer>
-        <h1>Cover Page Title</h1>
-      </CoverPageContainer>
+      <div className="header">
+        <img src={Sidebarlogo} alt="Logo" className="logo" />
+      </div>
+      <h1>Change Vision/ Case For Change</h1>
+      <div className="footer">
+        <p>1234 Street Name</p>
+        <p>City, State, ZIP</p>
+        <p>(123) 456-7890</p>
+        <p>www.yourwebsite.com</p>
+      </div>
+    </CoverPageContainer>
       {pages.map((pageContent, index) => (
         <ContentPageContainer
           key={index}
