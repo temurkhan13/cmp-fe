@@ -54,7 +54,7 @@ const FileStructure = ({ workspace }) => {
                   navigate('/assisstant/chat');
                 }}
               >
-                Create Assistant Project <FiPlus />
+                New Assistant <FiPlus />
               </button>
               <button
                 className="folder-modal-button"
@@ -62,7 +62,7 @@ const FileStructure = ({ workspace }) => {
                   navigate('/assessment/chat');
                 }}
               >
-                Create Assessment Project <FiPlus />
+                New Assessment <FiPlus />
               </button>
             </div>
             <button onClick={closeModal} className="folder-modal-close-btn">

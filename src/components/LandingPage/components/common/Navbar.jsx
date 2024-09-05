@@ -126,6 +126,7 @@ const Navbar = () => {
           position: relative;
           padding: 10px 20px;
           z-index: 1000;
+          margin-top:1rem;
           background-color:transparent !important;
         }
 
@@ -181,7 +182,7 @@ const Navbar = () => {
         .navbar-buttons {
           display: flex;
           gap: 10px;
-          font-size:1.5rem !important;
+          font-size:1.5rem;
         }
 
         .btn {
@@ -191,7 +192,7 @@ const Navbar = () => {
           border-radius: 4px;
           color: black;
           cursor: pointer;
-          font-size: 1.4rem;
+          font-size: 1.5rem;
           font-weight: 500;
         }
 
