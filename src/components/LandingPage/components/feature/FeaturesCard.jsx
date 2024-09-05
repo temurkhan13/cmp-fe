@@ -1,12 +1,13 @@
+import { IoIosArrowRoundForward } from 'react-icons/io';
 const FeaturesCard = (props) => {
   return (
     <div className="featurecard">
       <img className="image" src={props.img} alt="" />
       <div className="featurecontent">
         <h2 className="title">{props.title}</h2>
-        <h5 className="description">{props.desc}</h5>
+        <p className="description">{props.desc}</p>
         <button className="learn-more">
-          Learn more <i className="fa fa-arrow-right"></i>
+          Learn more <IoIosArrowRoundForward size={20} />
         </button>
       </div>
       <style>
@@ -18,9 +19,11 @@ const FeaturesCard = (props) => {
   gap: 0.25rem;
   border-width: 2px;
   border-radius: 20px;
-  padding: 1rem 1rem; 
   background-color: #ffffff;
   transition: all 0.3s ease;
+  padding: 4rem;
+  border:none;
+  gap:1rem;
   box-shadow: 0px 0px 1px black;
 }
 
@@ -31,11 +34,13 @@ const FeaturesCard = (props) => {
 }
 
 .featurecard img {
+// margin:1rem 0rem 0rem 0rem;
   object-fit: contain;
 }
 
 .featurecard .featurecontent {
   display: flex;
+  padding:0rem 1rem;
   flex-direction: column;
   justify-content: center;
 }
@@ -43,7 +48,7 @@ const FeaturesCard = (props) => {
 .featurecard h2 {
   color: #00316e;
   font-weight: bold;
-  font-size: 1.5rem !important; 
+  font-size: 2rem !important; 
 }
 
 .featurecard h5 {
@@ -68,6 +73,9 @@ const FeaturesCard = (props) => {
   color: #00316f;
   font-size: 0.75rem;
 }
+  .learn-more{
+  font-size:1.4rem !important;
+  }
 
     `}
       </style>
