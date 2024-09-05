@@ -263,9 +263,16 @@ const MyAssessmentComp = () => {
 
         .userName,
         .fileName {
-          font-size: 1.125rem;
-          font-weight: bold;
+            font-size: 1.125rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
         }
+    .icon{
+    color: black !important;
+    font-size: 2rem !important;
+    }
 
         .content {
           margin-top: 1rem;
@@ -293,11 +300,12 @@ const MyAssessmentComp = () => {
         }
 
         .footerIcon {
-          font-size: 1.5rem;
+        color:black !important;
+          font-size: 1.5rem !important;
         }
 
         .largeFileIcon {
-          font-size: 2rem;
+          font-size: 4rem !important;
         }
 
         .fileDetails {
@@ -318,8 +326,8 @@ const MyAssessmentComp = () => {
         .dotsIcon,
         .editIcon {
           cursor: pointer;
-          font-size: 1.25rem;
-          color: #888;
+          font-size: 1.4rem !important;
+          color: gray !important;
         }
       `}</style>
     </div>
