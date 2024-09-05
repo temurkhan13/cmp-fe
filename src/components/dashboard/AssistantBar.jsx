@@ -3,9 +3,11 @@ import { TiPlus } from 'react-icons/ti';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { SlArrowRight, SlArrowLeft } from 'react-icons/sl';
 import { CgMenuGridR } from 'react-icons/cg';
+import { useNavigate } from 'react-router-dom';
 import StartIcon from '../../assets/dashboard/StarICon.png';
 
 const AssistantBar = ({ setView }) => {
+  const navigate = useNavigate();
   return (
     <>
       <main className="main">
@@ -37,7 +39,12 @@ const AssistantBar = ({ setView }) => {
                 onClick={() => setView('list')}
               />
             </div>
-            <button className="assbtnAss">
+            <button
+              className="assbtnAss"
+              onClick={() => {
+                navigate('/assisstant/chat');
+              }}
+            >
               <TiPlus />
               New Assistant
             </button>

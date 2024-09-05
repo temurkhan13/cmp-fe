@@ -46,20 +46,24 @@ const VerifyEmail = () => {
           {(formik) => (
             <Form>
               <Components.Feature.VerifyCode
-                name="number"
-                type="number"
-                label="Verification Code"
-                place="Enter 6-digit code"
-                //handleVerification={(value) => verifyEmail({ value })}
-                handleVerification={(value) => 
-                 {
-                  const response = dispatch(verify(value));
-                  console.log(response.data);
-                  if(response.data){
-                    navigate('/choose-plain');
-                  }
-                }}
-              />
+  name="number"
+  type="number"
+  label="Verification Code"
+  place="Enter 6-digit code"
+  handleVerification={async (value) => {
+    try {
+      const response = await dispatch(verify(value)).unwrap();
+      console.log(response.success);
+    //  if (response.success) {
+        navigate('/choose-plain');
+    //  }
+    } catch (error) {
+      console.error("Verification failed:", error);
+      // Handle error appropriately (e.g., show an error message to the user)
+    }
+  }}
+/>
+
               {/*error && (
                 <div
                   style={{

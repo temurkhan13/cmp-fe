@@ -5,14 +5,15 @@ import axios from 'axios';
 // Define initial state
 const initialState = {
   token: localStorage.getItem('token'),
+  accessToken: localStorage.getItem('token'),
   isLoggedIn: localStorage.getItem('token') ? true : false,
   isLoading: false,
   error: null,
 };
 
 
-//const baseURL = 'http://139.59.4.99:3000/api/auth';
-const baseURL = 'http://192.168.18.24:3000/api/auth';
+const baseURL = 'http://139.59.4.99:3000/api/auth';
+//const baseURL = 'http://localhost:3000/api/auth';
 
 // Async thunk action to handle login
 export const loginAsync = createAsyncThunk(
@@ -205,3 +206,4 @@ export default authSlice.reducer;
 export const { rehydrateToken } = authSlice.actions;
 // Export async actions
 export { loginAsync as login, registerEmailAsync as registerEmail, registerAsync as register, logoutAsync as logout, codeVerifyAsync as verify };
+export const selectAccessToken = (state) => state.auth.token;

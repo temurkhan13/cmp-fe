@@ -1,37 +1,85 @@
-// src/redux/selectors/chatSelectors.js
 import { createSelector } from '@reduxjs/toolkit';
 
-export const selectChats = (state) => state.chat.chats;
-export const selectActiveWorkspaceId = (state) => state.chat.selectedWorkspaceId;
-export const selectActiveFolderId = (state) => state.chat.selectedFolderId;
-export const selectActiveChatId = (state) => state.chat.selectedChatId;
+// Selector for all workspaces
+//export const selectAllWorkspaces = (state) => state.workspaceApi.queries['getWorkspaces(undefined)']?.data || [];
+export const selectAllWorkspaces = (state) => state.workspaces.workspaces;
 
-export const selectActiveWorkspace = createSelector(
-  [selectChats, selectActiveWorkspaceId],
-  (chats, activeWorkspaceId) => chats.find((workspace) => workspace.workspaceId === activeWorkspaceId)
-);
-
-export const selectActiveFolder = createSelector(
-  [selectActiveWorkspace, selectActiveFolderId],
-  (activeWorkspace, activeFolderId) => {
-    if (activeWorkspace) {
-      return activeWorkspace.folders.find((folder) => folder.folderId === activeFolderId);
+// Selector for the current workspace
+export const selectCurrentWorkspace = createSelector(
+  selectAllWorkspaces,
+  (state) => state.workspaces.currentWorkspaceId,
+  (workspaces, currentWorkspaceId) => {
+    if (!Array.isArray(workspaces)) {
+      return null; // Handle the case where workspaces is not an array
     }
-    return null;
+    // Find the workspace by id or return the first one if not found
+    return workspaces.find((ws) => ws.id === currentWorkspaceId) || workspaces[0] || null;
   }
 );
 
-export const selectChatsForActiveFolder = createSelector(
-  [selectActiveFolder],
-  (activeFolder) => {
-    if (activeFolder) {
-      return activeFolder.chats;
-    }
-    return [];
+// Selector for all folders in the current workspace
+export const selectAllFolders = createSelector(
+  selectCurrentWorkspace,
+  (currentWorkspace) => currentWorkspace?.folders || []
+);
+
+// Selector for the current folder
+export const selectCurrentFolder = createSelector(
+  selectAllFolders,
+  (state) => state.workspace.currentFolderId,
+  (folders, currentFolderId) => folders.find((folder) => folder.id === currentFolderId) || folders[0]
+);
+
+// Selector for all chats in the current folder
+export const selectAllChats = createSelector(
+  selectCurrentFolder,
+  (currentFolder) => currentFolder?.chats || []
+);
+
+// Selector for the current chat
+// export const selectCurrentChat = createSelector(
+//   selectAllChats,
+//   (state) => state.workspace.currentChatId,
+//   (chats, currentChatId) => chats.find((chat) => chat._id === currentChatId) || null
+// );
+
+
+export const selectCurrentChat = createSelector(
+  selectAllChats,
+  (state) => state.workspaces.currentChatId,
+  (chats, currentChatId) => {
+    console.log("Chats:", chats);
+    console.log("Current Chat ID:", currentChatId);
+    
+    return chats.find((chat) => chat._id === currentChatId) || null;
   }
 );
 
-export const selectActiveChat = createSelector(
-  [selectChatsForActiveFolder, selectActiveChatId],
-  (chats, activeChatId) => chats.find((chat) => chat.chatId === activeChatId)
+// Selector for all comments in the current chat
+export const selectAllComments = createSelector(
+  selectCurrentChat,
+  (currentChat) => {
+    if (!currentChat || !currentChat.generalMessages) {
+      return [];
+    }
+    // Flatten the comments from all generalMessages
+    return currentChat.generalMessages.reduce((allComments, message) => {
+      return allComments.concat(message.comments);
+    }, []);
+  }
 );
+
+// Selector for all comments in the current chat
+export const selectAllBookmarks = createSelector(
+  selectCurrentChat,
+  (currentChat) => {
+    if (!currentChat || !currentChat.generalMessages) {
+      return [];
+    }
+    // Flatten the comments from all generalMessages
+    return currentChat.generalMessages.reduce((allBookmarks, message) => {
+      return allBookmarks.concat(message.bookmarks);
+    }, []);
+  }
+);
+
