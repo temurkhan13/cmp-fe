@@ -3,7 +3,7 @@ const authRoutesData = [
   // singIn
   {
     title: '',
-    path: '/',
+    path: 'log-in',
     element: Module.Auth.SignIn,
   },
 

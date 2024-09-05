@@ -27,6 +27,10 @@ import folderReducer from '../slices/folderSlice';
 import setDefaultWorkspaceAndFolder from '../middleware/setDefaultWorkspaceAndFolder';
 //import chatReducer from './chatSlice';
 
+
+import workspacesReducer from '../slices/workspacesSlice';
+import { workspaceApi } from '../api/workspaceApi'; // Adjust the import path as needed
+
 const persistConfig = {
   key: 'root',
   storage,
@@ -38,12 +42,16 @@ const store = configureStore({
   reducer: {
     businessInfo: persistedReducer,
     workspace: workspaceReducer,
+
+    workspaces: workspacesReducer,
    // folder: folderReducer,
    // chat: chatReducer,
     user: userReducer,
     auth: authReducer
   },
-  // middleware: (getDefaultMiddleware) =>
+   middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(workspaceApi.middleware),
+
   //   getDefaultMiddleware().concat(setDefaultWorkspaceAndFolder),
 
 });

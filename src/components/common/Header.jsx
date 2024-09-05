@@ -63,7 +63,7 @@ const Header = () => {
       <div>
         <Components.Feature.HeaderDropDown />
         <Components.Feature.Button className="secondry">
-          Ai Assistant Test File
+          Workspace 1
         </Components.Feature.Button>
       </div>
       <section>
