@@ -95,7 +95,7 @@ const Main = () => {
 
         @media (min-width: 1024px) {
           .main-container {
-            margin-top: 25rem;
+            margin-top: 45rem;
           }
         }
 
