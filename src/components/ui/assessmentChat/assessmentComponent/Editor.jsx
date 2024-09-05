@@ -5,13 +5,35 @@ import WordReportTemplate from '../../../reports/WordReportTemplate';
 import ReactDOMServer from 'react-dom/server';
 
 import mockMarkdown from '../../../reports/mockMarkdown';
+import htmlToPdfmake from "html-to-pdfmake";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 //import HTMLtoDOCX from "html-to-docx";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Editor = ({ placeholder, height }) => {
   const editor = useRef(null);
   const [content, setContent] = useState('');
 
   const markdownData = mockMarkdown[0];
+
+  const downloadPdf = () => {
+    const editorContent = editor.current.value;
+
+    // Replace images with base64 data URLs or another way to handle images
+    const updatedContent = editorContent.replace(/<img src="([^"]+)"[^>]*>/g, (match, src) => {
+      // Convert image URL to base64 or handle accordingly
+      return `<img src="${src}" style="max-width:100%;"/>`;
+    });
+
+    // Convert the updated HTML content to a PDF format
+    const html = htmlToPdfmake(updatedContent);
+    const documentDefinition = { content: html };
+
+    // Create and download the PDF
+    pdfMake.createPdf(documentDefinition).download("jodit-editor-content.pdf");
+  };
+
 
   // Generate HTML for TrioPage
   const reportHtml = ReactDOMServer.renderToStaticMarkup(
@@ -104,6 +126,7 @@ const Editor = ({ placeholder, height }) => {
   return (
     <div>
       {' '}
+      <button onClick={downloadPdf}>Download as PDF</button>
       <JoditEditor
         ref={editor}
         value={content}

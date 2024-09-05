@@ -17,7 +17,6 @@ const useChangeTone = () => {
         tone: tone,        
       },
      { headers: {
-        'Content-Type': 'multipart/form-data',
       Authorization : `Bearer ${token}`
     }},);
       setError(null);
