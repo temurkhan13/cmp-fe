@@ -134,6 +134,29 @@ export const workspaceApi = createApi({
         };
       },
     }),
+    // AddAssessment
+    addAssessmentSample: builder.mutation({
+      query: ({ workspaceId, folderId, chatId, message, files, assessmentName }) => {
+        const formData = new FormData();
+        formData.append('text', message);
+
+        // Append a single file or multiple files
+        if (files && files.length > 0) {
+          files.forEach((file, index) => {
+            formData.append(`file${index}`, file);
+          });
+        }
+        const bodyData = {
+        "assessmentName": assessmentName,//"Change Vision/Case for Change",
+        "message": {message}};
+
+        return {
+          url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/assessment`,
+          method: 'PATCH',
+          body: bodyData,
+        };
+      },
+    }),
 
     updateAssessment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, message }) => ({

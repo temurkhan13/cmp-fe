@@ -16,8 +16,8 @@ const verification = () => {
           Verify your Email
         </Components.Feature.Heading>
         <Components.Feature.Text className="primary--light">
-          We sent you a six-digit confirmation code to . Please enter it
-          below to confirm your email address.
+          We sent you a six-digit confirmation code to . Please enter it below
+          to confirm your email address.
         </Components.Feature.Text>
       </header>
       <section>
@@ -56,7 +56,7 @@ const verification = () => {
                   color: 'rgba(10, 10, 10, 0.68)',
                 }}
               >
-                Didn't receive a code?{' '}
+                Didn&apos;t receive a code?
                 <span
                   style={{
                     fontFamily: 'Poppins',

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineAttachFile } from 'react-icons/md';
 import { MdAlternateEmail } from 'react-icons/md';
@@ -6,15 +6,35 @@ import { RiSendPlane2Fill } from 'react-icons/ri';
 import PropTypes from 'prop-types';
 import { useAddCommentMutation } from '../../../redux/api/workspaceApi';
 
-const CommentPopup = ({ onClose, workspaceId, folderId, chatId, messageId }) => {
+const CommentPopup = ({
+  onClose,
+  workspaceId,
+  folderId,
+  chatId,
+  messageId,
+}) => {
   const [comment, setComment] = useState('');
   const [addComment] = useAddCommentMutation();
+  const popupRef = useRef(null);
 
-  const handleSend = async() => {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        onClose(); // Close the comment popup when clicking outside
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
+  const handleSend = async () => {
     if (comment.trim()) {
-      console.log('Comment sent:', comment,messageId);
+      console.log('Comment sent:', comment, messageId);
       const text = comment;
-      await addComment({workspaceId, folderId, chatId, messageId, text});
+      await addComment({ workspaceId, folderId, chatId, messageId, text });
       setComment('');
       onClose(); // Close the comment popup
     }
@@ -22,7 +42,11 @@ const CommentPopup = ({ onClose, workspaceId, folderId, chatId, messageId }) => 
 
   return (
     <>
-      <div className="commentPopup" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="commentPopup"
+        ref={popupRef}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="user-image">
           <RxAvatar style={{ fontSize: '3.5rem' }} />
         </div>
@@ -93,6 +117,10 @@ const CommentPopup = ({ onClose, workspaceId, folderId, chatId, messageId }) => 
 
 CommentPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
+  workspaceId: PropTypes.string.isRequired,
+  folderId: PropTypes.string.isRequired,
+  chatId: PropTypes.string.isRequired,
+  messageId: PropTypes.string.isRequired,
 };
 
 export default CommentPopup;

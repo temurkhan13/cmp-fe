@@ -6,7 +6,7 @@
   border-radius: 1rem;
   overflow-y: hidden;
   overflow-y: scroll;
-  transition: height 0.2s ease-in-out, width 0.2s ease-in-out; // Add transition for smooth closing animation
+  transition: height 0.2s ease-in-out, width 0.2s ease-in-out;
 
   &::-webkit-scrollbar {
     width: 0.6rem;
@@ -100,4 +100,12 @@
 
 .header-collapsed-title {
   display: none;
+}
+section.chat-item-section {
+  color: black !important;
+}
+.chat-item-section:hover {
+  background-color: #f0f0f0;
+  border-radius: 0.8rem;
+  cursor: pointer;
 }

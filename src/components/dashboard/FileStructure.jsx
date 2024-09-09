@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types'; // Import PropTypes for prop validation
 import { BiSolidFolderOpen } from 'react-icons/bi';
 import { FiPlus } from 'react-icons/fi';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
 
 const FileStructure = ({ workspace }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
 
@@ -51,6 +54,7 @@ const FileStructure = ({ workspace }) => {
               <button
                 className="folder-modal-button"
                 onClick={() => {
+                  dispatch(setSelectedReduxFolder(selectedFolder));
                   navigate('/assisstant/chat');
                 }}
               >
@@ -59,6 +63,7 @@ const FileStructure = ({ workspace }) => {
               <button
                 className="folder-modal-button"
                 onClick={() => {
+                  dispatch(setSelectedReduxFolder(selectedFolder));
                   navigate('/assessment/chat');
                 }}
               >

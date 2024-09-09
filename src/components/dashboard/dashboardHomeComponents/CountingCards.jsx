@@ -7,7 +7,7 @@ import { BiSolidCollection, BiSolidFolderOpen } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import { selectAllFolders } from '../../../redux/selectors/selectors';
 
-const CountingCards = ({activeWorkspace}) => {
+const CountingCards = ({ activeWorkspace }) => {
   const workspaces = useSelector((state) => state.workspaces.workspaces);
 
   const projects = useSelector(selectAllFolders);
@@ -30,11 +30,10 @@ const CountingCards = ({activeWorkspace}) => {
   //   0
   // );
 
-
- // Count total workspaces
- const totalWorkspaces = workspaces ? workspaces.length : 0;
-const totalProjects = projects? projects.length : 0;
-const Workspace = activeWorkspace ? activeWorkspace.workspaceName : "";
+  // Count total workspaces
+  const totalWorkspaces = workspaces ? workspaces.length : 0;
+  const totalProjects = projects ? projects.length : 0;
+  const Workspace = activeWorkspace ? activeWorkspace.workspaceName : '';
   const cardData = [
     {
       title: 'Active Workspace',
@@ -47,7 +46,7 @@ const Workspace = activeWorkspace ? activeWorkspace.workspaceName : "";
     {
       title: 'Total Workspaces',
       count: totalWorkspaces,
-    },    
+    },
   ];
   return (
     <div className="counting-cards">
@@ -76,11 +75,11 @@ const Workspace = activeWorkspace ? activeWorkspace.workspaceName : "";
       <style>{`
          .counting-cards {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 1rem;
-          margin-bottom: 1rem;
-          margin: 1rem 2rem;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 1rem;
+    margin: 1rem 2.3rem;
         }
 
         @media screen and (max-width: 1240px) {

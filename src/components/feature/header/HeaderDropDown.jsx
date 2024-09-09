@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import assets from '../../../assets';
+import { useNavigate } from 'react-router-dom';
 
 import Dropdown from 'react-multilevel-dropdown';
 import { RiArrowUpSLine, RiArrowDownSLine } from 'react-icons/ri';
@@ -7,6 +8,7 @@ import { BsArrowReturnLeft } from 'react-icons/bs';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 
 const HeaderDropDown = () => {
+  const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
   const [showIcon, setShowIcon] = useState(false);
 
@@ -15,7 +17,8 @@ const HeaderDropDown = () => {
   };
 
   const handleGoToDashboardClick = () => {
-    setShowIcon(!showIcon);
+    // setShowIcon(!showIcon);
+    navigate('/dashboard');
   };
 
   const headerTitle = (

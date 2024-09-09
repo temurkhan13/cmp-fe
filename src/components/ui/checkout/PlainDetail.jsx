@@ -1,5 +1,5 @@
-import Components from "../..";
-import { IoMdArrowBack } from "react-icons/io";
+import Components from '../..';
+import { IoMdArrowBack } from 'react-icons/io';
 
 const PlainDetail = () => {
   const goBack = () => {
@@ -21,8 +21,7 @@ const PlainDetail = () => {
             Subscription To Membership Plan
           </Components.Feature.Heading>
           <Components.Feature.Text className="primary--gray">
-            Lorem ipsum dolor sit amet consectetur. Eget imperdiet eu enim
-            lobortis sed.
+            Purchase this memebership plan to get the benefit of the CMP.
           </Components.Feature.Text>
         </header>
         <div className="mbt_Tertiary">
@@ -30,7 +29,7 @@ const PlainDetail = () => {
             Membership Plan (Pro)
           </Components.Feature.Text>
           <Components.Feature.Text className="primary--gray-bold">
-            <span>$79.99</span>
+            <span>£0</span>
             /month
           </Components.Feature.Text>
         </div>
@@ -39,7 +38,7 @@ const PlainDetail = () => {
             Sales Tax
           </Components.Feature.Text>
           <Components.Feature.Text className="primary-dark">
-            $1.10 USD
+            £1.10 USD
           </Components.Feature.Text>
         </section>
         <blockquote>
@@ -47,7 +46,7 @@ const PlainDetail = () => {
             Total Due Today
           </Components.Feature.Text>
           <Components.Feature.Text className="titory--bold">
-            $80.10 USD
+            £80.10 USD
           </Components.Feature.Text>
         </blockquote>
       </div>

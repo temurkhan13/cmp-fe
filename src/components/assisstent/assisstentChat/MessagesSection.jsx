@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '@styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import {
@@ -37,9 +37,13 @@ import {
   addBookmark,
 } from '../../../redux/slices/workspaceSlice'; // Adjusted import
 
-import { useAddMessageMutation, useUpdateMessageMutation, useRemoveMessageMutation, useAddBookmarkMutation } from '../../../redux/api/workspaceApi';
+import {
+  useAddMessageMutation,
+  useUpdateMessageMutation,
+  useRemoveMessageMutation,
+  useAddBookmarkMutation,
+} from '../../../redux/api/workspaceApi';
 import { selectCurrentChat } from '../../../redux/selectors/selectors';
-
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -70,21 +74,30 @@ const MessagesSection = () => {
   // );
 
   //api Integration
-const [addMessage] = useAddMessageMutation();
-const [updateMessage] = useUpdateMessageMutation();
-const [addBookmark] = useAddBookmarkMutation();
-   const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
-   const folderId = useSelector((state) => state.workspaces.currentFolderId);
-   const chatId = useSelector((state) => state.workspaces.currentChatId);
-   const [messageId, setMessageId] = useState();
-   
-   const currentChat = useSelector(selectCurrentChat);
+  const [addMessage] = useAddMessageMutation();
+  const [updateMessage] = useUpdateMessageMutation();
+  const [addBookmark] = useAddBookmarkMutation();
+  const workspaceId = useSelector(
+    (state) => state.workspaces.currentWorkspaceId
+  );
+  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const chatId = useSelector((state) => state.workspaces.currentChatId);
+  const [messageId, setMessageId] = useState();
 
-   const [file, setFile] = useState([]);
-   const [text, setText] = useState('');
-   const [chat, setChat] = useState(
-     currentChat ? currentChat.generalMessages : []
-   );
+  const currentChat = useSelector(selectCurrentChat);
+
+  const [file, setFile] = useState([]);
+  const [text, setText] = useState('');
+  const [chat, setChat] = useState(
+    currentChat ? currentChat.generalMessages : []
+  );
+
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
@@ -104,23 +117,21 @@ const [addBookmark] = useAddBookmarkMutation();
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
 
-  
   useEffect(() => {
-    if(chatId === null){
+    if (chatId === null) {
       setChat([]);
       return;
     }
     if (currentChat) {
       console.log(currentChat);
       setChat(currentChat.generalMessages || []);
-      console.log("chat Messages: " + currentChat.generalMessages);
-      console.log("chat: " + chat);
+      console.log('chat Messages: ' + currentChat.generalMessages);
+      console.log('chat: ' + chat);
     }
     // if(chatId === null){
     //   setChat([]);
     // }
   }, [currentChat, chatId]);
-
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -138,19 +149,25 @@ const [addBookmark] = useAddBookmarkMutation();
     setAskAI(false);
     setPopupVisible(false);
   };
-  const handleSendMessage = async() => {
+  const handleSendMessage = async () => {
     // e.preventDefault();
-     if (!workspaceId) {
-       alert('Please select a workspace');
-       return;
-     }
-     try {
-       await addMessage({ workspaceId: workspaceId, folderId: folderId, chatId:(chatId?chatId:"newChat"), message:text, files:file }).unwrap();
+    if (!workspaceId) {
+      alert('Please select a workspace');
+      return;
+    }
+    try {
+      await addMessage({
+        workspaceId: workspaceId,
+        folderId: folderId,
+        chatId: chatId ? chatId : 'newChat',
+        message: text,
+        files: file,
+      }).unwrap();
       // setChatContent('');
-     } catch (error) {
-       console.error('Failed to add chat:', error);
-     }
-   };
+    } catch (error) {
+      console.error('Failed to add chat:', error);
+    }
+  };
 
   // Memoize HandleAskAi function
   const HandleAskAi = useCallback(
@@ -180,25 +197,27 @@ const [addBookmark] = useAddBookmarkMutation();
     [fixGrammar, improveWriting, summarize, selectedText]
   );
 
-  
   // Memoize applyFixedText function
-const applyFixedText = useCallback((newText) => {
-  const updatedChat = chat.map((message) => {
-   // console.log(message);
-    if (message.text) {
-      return {
-        ...message,
-        text: message.text.replace(selectedText, newText),
-      };
-    }
-    return message;
-  });
-  console.log("chatttt :"+ chat);
-  setChat(updatedChat);
-  //dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
+  const applyFixedText = useCallback(
+    (newText) => {
+      const updatedChat = chat.map((message) => {
+        // console.log(message);
+        if (message.text) {
+          return {
+            ...message,
+            text: message.text.replace(selectedText, newText),
+          };
+        }
+        return message;
+      });
+      console.log('chatttt :' + chat);
+      setChat(updatedChat);
+      //dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
 
-  setPopupVisible(false);
-}, [chat, selectedText, dispatch, workspaceId, chatId]);
+      setPopupVisible(false);
+    },
+    [chat, selectedText, dispatch, workspaceId, chatId]
+  );
 
   // const adjustSelectionToWordBoundaries = () => {
   //   const selection = window.getSelection();
@@ -233,9 +252,8 @@ const applyFixedText = useCallback((newText) => {
   useEffect(() => {
     const handleMouseUp = () => {
       handleTextSelect();
-     
     };
-  
+
     document.addEventListener('mouseup', handleMouseUp);
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
@@ -245,20 +263,23 @@ const applyFixedText = useCallback((newText) => {
   const handleTextSelect = () => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
-  
+
     // Check if the selected text is within an element with class '.msg'
     const messageElements = document.querySelectorAll('.msg');
     let isValidSelection = false;
     let selectedMessageId = null;
-  
+
     messageElements.forEach((msgElement) => {
       // Check if the selected text starts from within the msgElement
-      if (msgElement.contains(selection.anchorNode) && msgElement.contains(selection.focusNode)) {
+      if (
+        msgElement.contains(selection.anchorNode) &&
+        msgElement.contains(selection.focusNode)
+      ) {
         isValidSelection = true;
         selectedMessageId = msgElement.getAttribute('data-message-id'); // Get the messageId
       }
     });
-  
+
     // Set the popup visibility and selection state based on isValidSelection
     if (isValidSelection) {
       setSelectedText(selectedText);
@@ -272,8 +293,7 @@ const applyFixedText = useCallback((newText) => {
       setPopupVisible(false); // Hide popup if selection is invalid
     }
   };
-  
-  
+
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
     setLoading(true);
@@ -316,7 +336,7 @@ const applyFixedText = useCallback((newText) => {
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
-  const handleAddBookmark = async(messageId) => {
+  const handleAddBookmark = async (messageId) => {
     // const bookmark = {
     //   bookmarkId: 'bookmarkId3',
     //   userId: 'userId4',
@@ -333,8 +353,8 @@ const applyFixedText = useCallback((newText) => {
     // };
     //dispatch(addBookmark(bookmark));
     console.log('bookmarked: ' + messageId);
-    await addBookmark({workspaceId,folderId,chatId,messageId});
-   // console.log('bookmarked ' + bookmark.bookmarkId);
+    await addBookmark({ workspaceId, folderId, chatId, messageId });
+    // console.log('bookmarked ' + bookmark.bookmarkId);
   };
   const handleInspireClick = async () => {
     //Todo: will implement Inspire
@@ -352,7 +372,9 @@ const applyFixedText = useCallback((newText) => {
   //     document.removeEventListener('mouseup', handleTextSelect);
   //   };
   // }, []);
-
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
   return (
     <div className="chat-message-wrapper">
       <div className="spinner" style={{ display: loading ? 'flex' : 'none' }}>
@@ -379,10 +401,11 @@ const applyFixedText = useCallback((newText) => {
               />
             )}
 
-            
-
-{chat.map((message, index) => (
-              <div key={index}>
+            {chat.map((message, index) => (
+              <div
+                key={index}
+                ref={index === chat.length - 1 ? messagesEndRef : null}
+              >
                 <div>
                   {message && message.sender ? (
                     <div className="card">
@@ -426,26 +449,23 @@ const applyFixedText = useCallback((newText) => {
                           </div>
                         )}
                         <div>
-                        <FaCopy
-                         onClick={() => handleAddBookmark(message._id)}
-                         style={{ cursor: 'pointer' }}
-                         />
+                          <FaCopy
+                            onClick={() => handleAddBookmark(message._id)}
+                            style={{ cursor: 'pointer' }}
+                          />
                           <FaThumbsUp />
                           <FaThumbsDown />
                           <FaCommentAlt
-                          data-message-id={message._id}
+                            data-message-id={message._id}
                             onClick={handleCommentClick}
                             style={{ cursor: 'pointer' }}
                           />
-                          <FaSync
-                            />       
-                          
+                          <FaSync />
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
-            
               </div>
             ))}
           </div>
@@ -553,7 +573,13 @@ const applyFixedText = useCallback((newText) => {
         </div>
       </div>
       {showCommentPopup && (
-        <CommentPopup onClose={() => setShowCommentPopup(false)} workspaceId = {workspaceId} folderId = {folderId} chatId = {chatId} messageId ={ messageId} />
+        <CommentPopup
+          onClose={() => setShowCommentPopup(false)}
+          workspaceId={workspaceId}
+          folderId={folderId}
+          chatId={chatId}
+          messageId={messageId}
+        />
       )}
     </div>
   );

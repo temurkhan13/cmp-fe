@@ -46,7 +46,9 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
-import { useSelectedChat } from '../../../redux/selectors/useSelectedChat';
+//import { useSelectedChat } from '../../../redux/selectors/useSelectedChat';
+import { selectCurrentChat, selectAllComments } from '../../../redux/selectors/selectors';
+
 
 const images = [
   'https://picsum.photos/id/0/5000/3333',
@@ -94,8 +96,15 @@ const links = [
   },
 ];
 
+
+
 const Assessments = () => {
-  const { users, currentChat } = useSelectedChat();
+ // const { users, currentChat } = useSelectedChat();
+  const currentChat = useSelector(selectCurrentChat);
+  const comments = useSelector(selectAllComments);
+
+
+
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
@@ -158,11 +167,7 @@ const Assessments = () => {
         <AssessmentModal
           title="Media"
           bodyContent={
-            <Media
-              images={currentChat.images}
-              documents={currentChat.documents}
-              links={currentChat.links}
-            />
+            <Media images={currentChat.images} documents={currentChat.documents} links={currentChat.links} />
           }
           onClose={closeModal}
         />
