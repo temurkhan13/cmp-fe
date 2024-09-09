@@ -36,16 +36,11 @@ const cards = [
 ];
 
 const Main = () => {
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(cards[0].title); // Set default to the first card
 
   const handleMouseEnter = (card) => {
     console.log(`Mouse entered: ${card}`);
-    setHoveredCard(card);
-  };
-
-  const handleMouseLeave = () => {
-    console.log('Mouse left');
-    setHoveredCard(null);
+    setHoveredCard(card); // Only update the hovered card when a new card is hovered
   };
 
   const getImage = () => {
@@ -74,8 +69,7 @@ const Main = () => {
             title={x.title}
             desc={x.desc}
             onMouseEnter={() => handleMouseEnter(x.title)}
-            onMouseLeave={handleMouseLeave}
-            key={x.title}
+            key={x.title} // Removed onMouseLeave
           />
         ))}
       </div>
@@ -114,6 +108,7 @@ const Main = () => {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           color: transparent;
+        
         }
 
         /* Grid layout */

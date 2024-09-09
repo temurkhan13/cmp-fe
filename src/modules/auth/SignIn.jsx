@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../redux/slices/authSlice';
 import { useSelector } from 'react-redux';
 
-
 const SignIn = () => {
   //const { login, loading, error } = useLogin();
 
@@ -18,18 +17,17 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const initalValues = {
-    'email': '',
-    'password': '',
+    email: '',
+    password: '',
   };
 
-
-  const handleLoginSubmit = async (email,password) => {
-   // e.preventDefault();
+  const handleLoginSubmit = async (email, password) => {
+    // e.preventDefault();
     try {
       // Dispatch async action to register email and get verification code
-      const response = await dispatch(login({email,password}));
+      const response = await dispatch(login({ email, password }));
       console.log(response);
-      
+
       navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
@@ -75,8 +73,8 @@ const SignIn = () => {
             validationSchema={data.validation.validationAuth.validationSignIn}
             onSubmit={(values, { resetForm }) => {
               console.log(values);
-              handleLoginSubmit(values.email,values.password);
-             // login(values.email, values.password);
+              handleLoginSubmit(values.email, values.password);
+              // login(values.email, values.password);
               resetForm();
             }}
           >
@@ -86,14 +84,15 @@ const SignIn = () => {
                   name="email"
                   label="Email"
                   place="Enter email"
+                  type="email"
                 />
                 <Components.Feature.FormInput
-                type="password"
+                  type="password"
                   name="password"
                   label="Password"
                   place="Enter password"
                 />
-                { error && (<p style={{color:"red"}}>{error}</p>)}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
                 <section className="signIn_remember  mb_Tertiary">
                   <div>
                     <input type="checkbox" />
@@ -101,14 +100,16 @@ const SignIn = () => {
                       Remember Me
                     </Components.Feature.Text>
                   </div>
-                  <Link to="forgot-password/verification">Forgot Password?</Link>
+                  <Link to="/forgot-password/verification">
+                    Forgot Password?
+                  </Link>
                 </section>
                 <Components.Feature.Button
                   className="primary"
                   type="submit"
                   disabled={isLoading}
                 >
-                  { isLoading ? 'Logging in...' : 'Log In' }
+                  {isLoading ? 'Logging in...' : 'Log In'}
                 </Components.Feature.Button>
               </Form>
             )}
@@ -116,7 +117,7 @@ const SignIn = () => {
         </section>
         <center>
           <Components.Feature.Text className="primary m_1">
-            Don’t have an account? <Link to="sign-up">Sign Up</Link>
+            Don’t have an account? <Link to="/sign-up">Sign Up</Link>
           </Components.Feature.Text>
         </center>
       </Components.Feature.Container>

@@ -76,7 +76,7 @@ const SignUp = () => {
         <Components.Feature.Text className="primary m_1">
           Already have an account?
           <Link
-            to="/"
+            to="/log-in"
             style={{
               textDecoration: 'none',
               fontWeight: 'bold',
