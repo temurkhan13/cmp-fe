@@ -126,6 +126,15 @@ const DashboardHomeComp = () => {
     { name: 'AI in Healthcare Applications' },
   ];
 
+  // Helper function to truncate text
+  const truncateText = (text, maxLength) => {
+    if (!text) return '';
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + '...'
+      : text;
+  };
+
+  // Modified renderCard function
   const renderCard = (chat) => (
     <div className="card">
       {chat &&
@@ -136,7 +145,7 @@ const DashboardHomeComp = () => {
           <h2 className="userName">
             <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
           </h2>
-          <p>{chat.text}</p>
+          <p>{truncateText(chat.text, 55)}</p>
           <MdOutlineEdit />
         </div>
       ) : (
@@ -146,9 +155,12 @@ const DashboardHomeComp = () => {
             AI
           </h3>
           <p className="chatContent">
-            {chat.generalMessages &&
-              chat.generalMessages[0] &&
-              chat.generalMessages[0].text}
+            {truncateText(
+              chat.generalMessages &&
+                chat.generalMessages[0] &&
+                chat.generalMessages[0].text,
+              55
+            )}
           </p>
         </div>
       )}
@@ -160,7 +172,7 @@ const DashboardHomeComp = () => {
           <h2 className="userName">
             <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
           </h2>
-          <p>{chat.text}</p>
+          <p>{truncateText(chat.text, 55)}</p>
           <MdOutlineEdit />
         </div>
       ) : (
@@ -170,9 +182,12 @@ const DashboardHomeComp = () => {
             AI
           </h3>
           <p className="chatContent">
-            {chat.generalMessages &&
-              chat.generalMessages[1] &&
-              chat.generalMessages[1].text}
+            {truncateText(
+              chat.generalMessages &&
+                chat.generalMessages[1] &&
+                chat.generalMessages[1].text,
+              55
+            )}
           </p>
         </div>
       )}
@@ -186,12 +201,12 @@ const DashboardHomeComp = () => {
         </div>
         <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
       </div>
-      <div className="fileDetails">
+      {/* <div className="fileDetails">
         <div className="fileName">
           {chat.chatTitle}
           <IoPeople color="gray" style={{ marginLeft: '0.3rem' }} />
-        </div>
-        {/* <div>
+        </div> */}
+      {/* <div>
           <span>in</span>
           <span className="folderName">{data.folderName}</span>
           <span>
@@ -199,7 +214,7 @@ const DashboardHomeComp = () => {
             <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
           </span>
         </div> */}
-      </div>
+      {/* </div> */}
     </div>
   );
 
@@ -744,7 +759,7 @@ const DashboardHomeComp = () => {
         cursor: pointer;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: start;
         &:hover {
           background-color: #f9f9f9;
           transition: all 0.1s ease-in-out;
