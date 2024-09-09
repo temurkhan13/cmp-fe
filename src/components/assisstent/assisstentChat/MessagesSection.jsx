@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '@styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import {
@@ -85,6 +85,14 @@ const [addBookmark] = useAddBookmarkMutation();
    const [chat, setChat] = useState(
      currentChat ? currentChat.generalMessages : []
    );
+
+   const messagesEndRef = useRef(null);
+   const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
@@ -352,7 +360,9 @@ const applyFixedText = useCallback((newText) => {
   //     document.removeEventListener('mouseup', handleTextSelect);
   //   };
   // }, []);
-
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
   return (
     <div className="chat-message-wrapper">
       <div className="spinner" style={{ display: loading ? 'flex' : 'none' }}>
@@ -382,7 +392,9 @@ const applyFixedText = useCallback((newText) => {
             
 
 {chat.map((message, index) => (
-              <div key={index}>
+              <div key={index}
+              ref={index === chat.length - 1 ? messagesEndRef : null}
+              >
                 <div>
                   {message && message.sender ? (
                     <div className="card">

@@ -24,9 +24,14 @@ export const selectAllFolders = createSelector(
 );
 
 // Selector for the current folder
+// export const selectCurrentFolder = createSelector(
+//   selectAllFolders,
+//   (state) => state.workspaces.currentFolderId,
+//   (folders, currentFolderId) => folders.find((folder) => folder.id === currentFolderId) || folders[0]
+// );
+
 export const selectCurrentFolder = createSelector(
-  selectAllFolders,
-  (state) => state.workspace.currentFolderId,
+  [selectAllFolders, (state) => state.workspaces.currentFolderId],
   (folders, currentFolderId) => folders.find((folder) => folder.id === currentFolderId) || folders[0]
 );
 
@@ -35,13 +40,6 @@ export const selectAllChats = createSelector(
   selectCurrentFolder,
   (currentFolder) => currentFolder?.chats || []
 );
-
-// Selector for the current chat
-// export const selectCurrentChat = createSelector(
-//   selectAllChats,
-//   (state) => state.workspace.currentChatId,
-//   (chats, currentChatId) => chats.find((chat) => chat._id === currentChatId) || null
-// );
 
 
 export const selectCurrentChat = createSelector(
@@ -55,17 +53,37 @@ export const selectCurrentChat = createSelector(
   }
 );
 
+// Selector for all assessments in the current folder
+export const selectAllAssessments = createSelector(
+  selectCurrentFolder,
+  (currentFolder) => currentFolder?.assessments || []
+);
+
+export const selectCurrentAssessment = createSelector(
+  selectAllChats,
+  (state) => state.workspaces.currentAssessmentId,
+  (assessments, currentAssessmentId) => {
+    console.log("Chats:", assessments);
+    console.log("Current Chat ID:", currentAssessmentId);
+    
+    return assessments.find((chat) => chat._id === currentAssessmentId) || null;
+  }
+);
+
+
 // Selector for all comments in the current chat
 export const selectAllComments = createSelector(
   selectCurrentChat,
   (currentChat) => {
-    if (!currentChat || !currentChat.generalMessages) {
+    if (!currentChat || !currentChat.Comments) {
       return [];
     }
+    console.log("Total Comments:",currentChat.comments);
     // Flatten the comments from all generalMessages
-    return currentChat.generalMessages.reduce((allComments, message) => {
-      return allComments.concat(message.comments);
-    }, []);
+    // return currentChat.generalMessages.reduce((allComments, message) => {
+    //   return allComments.concat(message.comments);
+    // }, []);
+    return currentChat.comments;
   }
 );
 
