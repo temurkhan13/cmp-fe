@@ -21,6 +21,7 @@ const MainCard = (props) => {
   transition: all ease 0.2s;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   margin-bottom:3rem;
+  border:1px solid lightgray;
   }
   .paragraph{
     margin-top:0.5rem;
