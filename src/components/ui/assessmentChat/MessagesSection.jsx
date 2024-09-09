@@ -34,6 +34,10 @@ import usestartAssessment from '../../../hooks/usestartAssessment';
 // chat upload pdf & text
 import useChat from '../../../hooks/useChat';
 
+import { useAddAssessmentMutation, useUpdateAssessmentMutation, useAddBookmarkMutation } from '../../../redux/api/workspaceApi';
+import { selectCurrentAssessment } from '../../../redux/selectors/selectors';
+
+
 const TopBar = ({
   progress,
   solvedQuestions,
@@ -303,7 +307,7 @@ const MessagesSection = ({ selectedAssessment }) => {
       const initialMessage = await StartAssessment(
         '',
         assessmentName,
-        Questions
+       // Questions
       );
       setChat((prevChat) => [
         ...prevChat,
@@ -445,7 +449,7 @@ const MessagesSection = ({ selectedAssessment }) => {
               </p>
               <button
                 onClick={() =>
-                  handleStartAssessment('Change vision/case for change')
+                  handleStartAssessment('Change Vision/Case for Change')
                 }
                 style={{
                   backgroundColor: 'rgba(195, 225, 29, 1)',
