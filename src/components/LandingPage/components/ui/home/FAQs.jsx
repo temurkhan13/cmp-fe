@@ -115,6 +115,7 @@ const FAQs = () => {
       font-size: 20px;
       font-weight: 500;
       border:none;
+      margin:2rem 0rem;
       }
       `}
       </style>

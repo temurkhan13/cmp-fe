@@ -13,7 +13,7 @@ import { FaUserPlus } from 'react-icons/fa6';
 
 const searchUser = ['John', 'abigale', 'mosa'];
 
-const Header = () => {
+const Header = ({activeWorkspace, workspaces}) => {
   //const dispatch = useDispatch();
   const [activeIcon, setActiveIcon] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,7 +63,7 @@ const Header = () => {
       <div>
         <Components.Feature.HeaderDropDown />
         <Components.Feature.Button className="secondry">
-          Workspace 1
+        {activeWorkspace && activeWorkspace.workspaceName}
         </Components.Feature.Button>
       </div>
       <section>

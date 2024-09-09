@@ -1,9 +1,103 @@
+import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { MdOutlineError } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
+import { RxCross2 } from 'react-icons/rx';
+import ChoosePlan from '../../components/dashboard/PlanAndBillingmodal';
+
+const Modal = ({ component: Component, onClose }) => {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="close-btn" onClick={onClose}>
+          <RxCross2 size={22} />
+        </button>
+        <Component />
+      </div>
+
+      <style>{`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .modal-content {
+          background-color: white;
+          padding: 2rem;
+          border-radius: 1rem;
+          position: relative;
+          z-index:1001;
+        }
+        .close-btn {
+          position: absolute;
+          top: 2rem;
+          right: 2rem;
+          font-size: 2rem;
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+      `}</style>
+    </div>
+  );
+};
 
 const PlanAndBilling = () => {
-  const navigate = useNavigate();
+  const plans = [
+    {
+      name: 'Free',
+      description: 'Free Plan with purchase of.',
+      monthlyPrice: '£0',
+      yearlyPrice: '£0',
+      features: [
+        'Unlimited Queries: 1,000 AI words max per query.',
+        '2 Modules: 1,000 AI words each.',
+        '1 Project: 1,000 AI words max.',
+        'PDF Export: With ChangeAI branding.',
+        'AI Words: 2,000 monthly (up to 3,000).',
+      ],
+      highlighted: false,
+    },
+    {
+      name: 'Starter',
+      description: 'Starter Plan with purchase of.',
+      monthlyPrice: '£29',
+      yearlyPrice: '£348',
+      features: [
+        'Unlimited: 30,000 AI words.',
+        'Projects: 2 Assessments, 2 Playbooks.',
+        'Users: 3 users, 2 workspaces.',
+        'Export: PPT, Word, Excel, PDF (no watermark).',
+        'Design: Icons, images, shapes, tables.',
+        'Monthly Limit: 30,000 AI words, Email support.`',
+      ],
+      highlighted: true,
+    },
+    {
+      name: 'Pro',
+      description: 'Pro Plan with purchase of.',
+      monthlyPrice: '£49',
+      yearlyPrice: '£588',
+      features: [
+        'AI Usage: 60,000 words/month.',
+        'Projects: 5 assessments, 5 playbooks, export no watermark.',
+        'Data: Restore history/data up to 30 days.',
+        'Editing: Full access to layouts, icons, images, and tables.',
+        'Regenerate: Instant AI response refresh.',
+        'Support: Priority, 5 users, 3 workspaces.',
+      ],
+      highlighted: false,
+    },
+  ];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('monthly');
+
   const planInfo = {
     name: 'Starter',
     status: 'Active',
@@ -91,13 +185,27 @@ const PlanAndBilling = () => {
     },
   ];
 
+  const handleRenewClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const RenewComponent = () => (
+    <div>
+      <ChoosePlan
+        plans={plans}
+        selectedPlan={selectedPlan}
+        onSelectPlan={setSelectedPlan}
+      />
+    </div>
+  );
+
   return (
     <div className="billing-page">
       <h2>Plan & Billing</h2>
-      <div className="tabs">
-        <div className="tab active">General</div>
-      </div>
-
       <div className="plan-information">
         <div className="info">
           <h3>Information:</h3>
@@ -114,12 +222,7 @@ const PlanAndBilling = () => {
             <strong>Price:</strong>
             <span className="price">${planInfo.price}</span>
           </p>
-          <button
-            className="renew-btn"
-            onClick={() => {
-              navigate('/choose-plain');
-            }}
-          >
+          <button className="renew-btn" onClick={handleRenewClick}>
             Renew
           </button>
         </div>
@@ -171,35 +274,36 @@ const PlanAndBilling = () => {
         </table>
       </div>
 
+      {isModalOpen && (
+        <Modal component={RenewComponent} onClose={handleCloseModal} />
+      )}
+
       <style>{`
         .billing-page {
           padding: 1.25rem;
-          font-size:1.4rem;
+          font-size: 1.4rem;
           background-color: #f9f9f9;
         }
         h2 {
-          margin-bottom: 1.25rem;
+          // margin-bottom: 1.25rem;
         }
         .tabs {
           display: flex;
           margin-bottom: 1.25rem;
         }
         .tab {
-          padding: 0.625rem 1.25rem; 
+          // padding: 0.625rem 1.25rem;
           cursor: pointer;
-          border-bottom: 0.125rem solid transparent; 
+          border-bottom: 0.125rem solid transparent;
         }
         .tab.active {
           border-color: #3f51b5;
         }
-          .plan-name{
-          font-weight:bold;
-          }
         .plan-information {
           display: flex;
           background-color: #fff;
           padding: 1.5rem;
-          border-radius: 1rem; 
+          border-radius: 1rem;
           margin-bottom: 1.5rem;
           box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
         }
@@ -214,61 +318,59 @@ const PlanAndBilling = () => {
           flex: 1;
           list-style: none;
         }
-          tr td {
+        tr td {
           align-items: center;
-          }
-          .feature-list{
-          list-style:none;
-          font-size:1.4rem;
-          display:flex;
+        }
+        .feature-list {
+          list-style: none;
+          font-size: 1.4rem;
+          display: flex;
           align-items: center;
-          gap:1rem;
-          }
+          gap: 1rem;
+        }
         .status.active {
           background-color: rgba(4, 212, 0, 0.1);
-          color:rgba(4, 212, 0, 1);
-          border-radius:2rem;
-          font-size:1.4rem;
+          color: rgba(4, 212, 0, 1);
+          border-radius: 2rem;
+          font-size: 1.4rem;
           padding: 0.2rem 2rem;
-
         }
         .status.expired {
           background-color: rgba(203, 23, 12, 0.1);
-          color:rgba(203, 23, 12, 1);
-          border-radius:1.5rem;
-          display:flex;
+          color: rgba(203, 23, 12, 1);
+          border-radius: 1.5rem;
+          display: flex;
           align-items: center;
           justify-content: center;
-          padding:0.5rem 0rem;
-
-          gap:0.5rem;
+          padding: 0.5rem 0rem;
+          gap: 0.5rem;
         }
         .price {
           color: #3f51b5;
           font-weight: bold;
         }
         .renew-btn {
-          padding: 0.625rem 1.25rem; 
-          background-color:rgba(195, 225, 29, 1);
-          color:rgba(11, 20, 68, 1);
+          padding: 0.625rem 1.25rem;
+          background-color: rgba(195, 225, 29, 1);
+          color: rgba(11, 20, 68, 1);
           font-size: 1.5rem;
           font-weight: 500;
           border: none;
-          width:15rem;
-          border-radius: 1rem; 
+          width: 15rem;
+          border-radius: 1rem;
           cursor: pointer;
-          margin-top: 0.625rem; 
+          margin-top: 0.625rem;
         }
         .billing-history {
           background-color: #fff;
           padding: 1.25rem;
-          border-radius: 0.5rem; 
+          border-radius: 0.5rem;
           box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
         }
         table {
           width: 100%;
           border-collapse: collapse;
-          margin-top: 0.625rem; 
+          margin-top: 0.625rem;
         }
         th,
         td {
