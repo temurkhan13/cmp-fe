@@ -4,8 +4,8 @@ import Aos from "aos";
 import { useDispatch } from 'react-redux';
 import { rehydrateToken } from "./redux/slices/authSlice";
 
+import LoadingBar from 'react-redux-loading-bar';
 function App() {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,6 +26,8 @@ function App() {
 
   return (
     <>
+    <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
+   
       <Routess />
     </>
   );

@@ -26,7 +26,7 @@ const Comments = ({ comments }) => {
   const dispatch = useDispatch();
   //const chatId = useSelector((state) => state.workspace.selectedChatId);
 
-  const [addReply] = useSelector(useAddReplyMutation);
+  //const [addReply] = useSelector(useAddReplyMutation);
   
   const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
    const folderId = useSelector((state) => state.workspaces.currentFolderId);
@@ -205,7 +205,7 @@ const Comments = ({ comments }) => {
                 {showReplies[comment.commentId] && (
                   <div className="replies-container">
                     {comment.replies.map((reply) => (
-                      <div key={reply.replyId} className="reply">
+                      <div key={reply._Id} className="reply">
                         <span className="avatar">{reply.userName[0]}</span>
                         <div className="reply-content">
                           <div className="reply-header">

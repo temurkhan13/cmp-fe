@@ -21,14 +21,18 @@ import { RxDashboard } from 'react-icons/rx';
 //import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi'; // Adjust the import path as needed
 import {
   selectAllChats,
+  selectAllFolders,
   selectAllWorkspaces,
+  selectCurrentChat,
+  selectCurrentFolder,
   selectCurrentWorkspace,
 } from '../../../redux/selectors/selectors';
-import { setCurrentChatId } from '../../../redux/slices/workspacesSlice';
+import { setCurrentChatId, setSelectedFolder } from '../../../redux/slices/workspacesSlice';
 
-const projects = ['Project 1', 'Project 2', 'Project 3', 'Project 4'];
 
 const NewChat = () => {
+  const projects = useSelector(selectAllFolders);
+
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
   //const { historyChat, error } = useChatHistory();
@@ -86,9 +90,21 @@ const NewChat = () => {
   //     //dispatch(setSelectedChatId(updatedChat ? updatedChat.chatId : null));
   //   }
   // }, [chats, dispatch, selectedChatId]);
+const folderId = useSelector(selectCurrentFolder);
+
+
+const currentWorkspace = useSelector(selectCurrentWorkspace);
+const currentFolder = useSelector(selectCurrentFolder);
+const currentChat = useSelector(selectCurrentChat);
+
+useEffect(()=>{
+console.log(currentFolder,currentChat,currentWorkspace)
+},[currentFolder, currentChat, currentWorkspace]);
+
 
   //chat Select
   const handleChatSelect = (chatId) => {
+    console.log('FolderId', folderId);
     console.log('dispatch ChatId' + chatId);
     const currentUrl = window.location.pathname;
     const newUrl = currentUrl.replace(
@@ -139,6 +155,10 @@ const NewChat = () => {
   // };
 
   //const selectedChat = chats.find(chat => chat.chatId === selectedChatId);
+
+  const switchFolder =(folder) =>{
+    dispatch(setSelectedFolder(folder));
+  };
 
   const handleScroll = async () => {
     const chatContainer = chatContainerRef.current;
@@ -231,7 +251,7 @@ const NewChat = () => {
                   </div>
                   <ul className="projects-list">
                     {projects.map((project, index) => (
-                      <li key={index}>{project}</li>
+                      <li key={index} onClick={() => switchFolder(project)}>{project.folderName}</li>
                     ))}
                   </ul>
                 </div>
