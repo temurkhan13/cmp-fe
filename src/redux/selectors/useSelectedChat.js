@@ -4,14 +4,14 @@ import { useSelector } from 'react-redux';
 
 export const useSelectedChat = () => {
 
-  const selectedWorkspaceId = useSelector((state) => state.workspace.selectedWorkspaceId);
-  const selectedFolderId = useSelector((state) => state.workspace.selectedFolderId);
-  const chats = useSelector((state) => state.workspace.workspaces
-    .find(workspace => workspace.workspaceId === selectedWorkspaceId)
-    ?.folders.find(folder => folder.folderId === selectedFolderId)
+  const selectedWorkspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
+  const selectedFolderId = useSelector((state) => state.workspaces.currentFolderId);
+  const chats = useSelector((state) => state.workspaces.workspaces
+    .find(workspace => workspace._Id === selectedWorkspaceId)
+    ?.folders.find(folder => folder._Id === selectedFolderId)
     ?.chats || []);
-  const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
-  const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
+  const selectedChatId = useSelector((state) => state.workspaces.currentChatId);
+  const currentChat = chats.find((chat) => chat._Id === selectedChatId);
 
   //const selectedChatId = useSelector((state) => state.chat.selectedChatId);
   //const chats = useSelector((state) => state.chat.chats);

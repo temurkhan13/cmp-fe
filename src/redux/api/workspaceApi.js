@@ -148,7 +148,8 @@ export const workspaceApi = createApi({
         }
         const bodyData = {
         "assessmentName": assessmentName,//"Change Vision/Case for Change",
-        "message": {message}};
+        "message": {message}
+      };
 
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/assessment`,

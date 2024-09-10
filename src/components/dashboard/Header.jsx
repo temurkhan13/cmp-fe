@@ -3,6 +3,7 @@ import { CiBellOn } from 'react-icons/ci';
 import { FiLogOut } from 'react-icons/fi';
 import User from '../../assets/chat/user.png';
 import NotificationDropdown from './NotificationDropdown';
+import LoadingBar from 'react-redux-loading-bar';
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -30,7 +31,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div></div>
+      <div><LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} /></div>
       <div className="ProfileBar">
         <div className="bellWrapper" onClick={handleNotificationClick}>
           <CiBellOn className="BellIcon" />

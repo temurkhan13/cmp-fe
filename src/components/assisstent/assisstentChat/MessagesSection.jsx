@@ -43,7 +43,7 @@ import {
   useRemoveMessageMutation,
   useAddBookmarkMutation,
 } from '../../../redux/api/workspaceApi';
-import { selectCurrentChat } from '../../../redux/selectors/selectors';
+import { selectCurrentChat, selectCurrentFolder, selectCurrentWorkspace } from '../../../redux/selectors/selectors';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -84,7 +84,14 @@ const MessagesSection = () => {
   const chatId = useSelector((state) => state.workspaces.currentChatId);
   const [messageId, setMessageId] = useState();
 
+  const currentWorkspace = useSelector(selectCurrentWorkspace);
+  const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentChat);
+  
+  useEffect(()=>{
+
+  },[currentFolder, currentChat, currentWorkspace]);
+
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
@@ -219,35 +226,6 @@ const MessagesSection = () => {
     [chat, selectedText, dispatch, workspaceId, chatId]
   );
 
-  // const adjustSelectionToWordBoundaries = () => {
-  //   const selection = window.getSelection();
-  //   if (selection.rangeCount > 0) {
-  //     const range = selection.getRangeAt(0);
-
-  //     // Adjust start boundary
-  //     let startOffset = range.startOffset;
-  //     let endOffset = range.endOffset;
-  //     const startContainer = range.startContainer;
-
-  //     while (
-  //       startOffset > 0 &&
-  //       !/\s/.test(startContainer.textContent[startOffset - 1])
-  //     ) {
-  //       startOffset--;
-  //     }
-
-  //     // Adjust end boundary
-  //     while (
-  //       endOffset < startContainer.textContent.length &&
-  //       !/\s/.test(startContainer.textContent[endOffset])
-  //     ) {
-  //       endOffset++;
-  //     }
-
-  //     range.setStart(startContainer, startOffset);
-  //     range.setEnd(startContainer, endOffset);
-  //   }
-  // };
 
   useEffect(() => {
     const handleMouseUp = () => {

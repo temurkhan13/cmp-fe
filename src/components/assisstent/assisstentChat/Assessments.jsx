@@ -175,7 +175,7 @@ const Assessments = () => {
       {isCommentsModalOpen && (
         <AssessmentModal
           title="Comments"
-          bodyContent={<Comments comments={comments} />}
+          bodyContent={<Comments comments={currentChat.comments} />}
           onClose={closeModal}
         />
       )}
