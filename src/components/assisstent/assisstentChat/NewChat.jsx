@@ -26,6 +26,7 @@ import {
   selectCurrentChat,
   selectCurrentFolder,
   selectCurrentWorkspace,
+  selectFolderById,
 } from '../../../redux/selectors/selectors';
 import { setCurrentChatId, setSelectedFolder } from '../../../redux/slices/workspacesSlice';
 
@@ -46,7 +47,19 @@ const NewChat = () => {
 
   //new Apis Implementation
   //const [addMessage] = useAddMessageMutation();
+
+  const currentWorkspace = useSelector(selectCurrentWorkspace);
+  const currentFolder = useSelector(selectCurrentFolder);
+  const currentChat = useSelector(selectCurrentChat);
+
+  const selectedFolder = useSelector((state) => selectFolderById(state, currentFolder._id));
   const chats = useSelector(selectAllChats);
+
+
+
+useEffect(()=>{
+  console.log("",currentFolder,currentChat,currentWorkspace);
+  },[currentFolder, currentChat, currentWorkspace,chats, selectedFolder]);
 
   // const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
@@ -93,13 +106,6 @@ const NewChat = () => {
 const folderId = useSelector(selectCurrentFolder);
 
 
-const currentWorkspace = useSelector(selectCurrentWorkspace);
-const currentFolder = useSelector(selectCurrentFolder);
-const currentChat = useSelector(selectCurrentChat);
-
-useEffect(()=>{
-console.log(currentFolder,currentChat,currentWorkspace)
-},[currentFolder, currentChat, currentWorkspace]);
 
 
   //chat Select

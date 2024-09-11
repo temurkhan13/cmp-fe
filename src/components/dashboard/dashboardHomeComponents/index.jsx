@@ -42,6 +42,8 @@ const DashboardHomeComp = () => {
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
+
+  const activeFolder = useSelector((state) => state.workspaces.selectedFolder);
   const chats = useSelector(selectAllChats);
 
   const navigate = useNavigate(); // Hook to navigate programmatically
@@ -126,6 +128,28 @@ const DashboardHomeComp = () => {
     { name: 'AI in Healthcare Applications' },
   ];
 
+  const convertTimestampToRelativeTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+  
+    // Get the difference in milliseconds
+    const differenceInMillis = now - date;
+  
+    // Convert to days
+    const differenceInDays = Math.floor(differenceInMillis / (1000 * 60 * 60 * 24));
+  
+    if (differenceInDays === 0) {
+      return "Today";
+    } else if (differenceInDays === 1) {
+      return "1 day ago";
+    } else if (differenceInDays <= 2) {
+      return `${differenceInDays} days ago`;
+    } else if (differenceInDays <= 30) {
+      return `Previous ${differenceInDays} days`;
+    } else {
+      return "Older than 30 days";
+    }
+  };
   // Helper function to truncate text
   const truncateText = (text, maxLength) => {
     if (!text) return '';
@@ -271,7 +295,8 @@ const DashboardHomeComp = () => {
         style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
       >
         {chats &&
-          chats.map((chat, index) => (
+          chats
+          .map((chat, index) => (
             <div key={index}>
               <div
                 key={index}
@@ -289,9 +314,9 @@ const DashboardHomeComp = () => {
                 </div>
                 <div>
                   <span>in</span>
-                  <span className="folderName">folderName</span>
+                  <span className="folderName">{activeFolder && activeFolder.folderName}</span>
                   <span>
-                    • Modified 2 days ago
+                    • Created {convertTimestampToRelativeTime(chat.CreatedAt)}
                     <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
                   </span>
                 </div>

@@ -27,7 +27,7 @@ const useStartAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      const response = await axios.post(`http://139.59.4.99:3000/api/workspace/${currentWorkspaceId}/folder/${currentFolderId}/assessment/`, {
+      const response = await axios.post(`http://139.59.4.99:3000/api/workspace/66a500bef6d2341978d6d4b8/folder/66a500bef6d2341978d6d4b9/assessment/`, {
         // message: message || '',
         // history: [],
         // generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
@@ -38,7 +38,11 @@ const useStartAssessment = () => {
         headers: {
         Authorization : `Bearer ${token}`
       }, });
-      return response.data.message;
+      console.log("hook response: A:", response.data)
+      console.log("hook response: B", response.data.report[0]);
+      console.log("hook response: C", response.data.report[0].subReport[0].questionAnswer);
+      console.log("hook response:", response.data.report[0].subReport[0].questionAnswer[0].question)
+      return response.data.report[0].subReport[0].questionAnswer[0].question.content;
     } catch (error) {
       console.log('assessment error', error.message);
       setError(error.message);

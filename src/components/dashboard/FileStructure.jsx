@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'; // Import PropTypes for prop validation
 import { BiSolidFolderOpen } from 'react-icons/bi';
 import { FiPlus } from 'react-icons/fi';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
+import { setCurrentChatId, setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
 
 const FileStructure = ({ workspace }) => {
   const navigate = useNavigate();
@@ -53,8 +53,9 @@ const FileStructure = ({ workspace }) => {
             <div className="folder-modal-buttons">
               <button
                 className="folder-modal-button"
-                onClick={() => {
+                onClick={() => {                  
                   dispatch(setSelectedReduxFolder(selectedFolder));
+                  dispatch(setCurrentChatId(null));
                   navigate('/assisstant/chat');
                 }}
               >
