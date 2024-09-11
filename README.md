@@ -43,15 +43,13 @@ For now see [System Flow](#change-ai-system-flow)
 
 - System
  - workspaces 
-  - folders
+  - Projects
     - Assistant chats
     - Assessment Reports
 
 ### Single Workspace
  - Workspace
-  - Folders
-    - Folder
-      - Chats
+  - Project
         - Chat
           - Messages Exchange
           - Shared Users
@@ -80,8 +78,8 @@ For now see [System Flow](#change-ai-system-flow)
           - Images
           - Documents
           - Links
-          - Sitemap
-          - WireFrame
+       - Sitemap
+       - WireFrame
 
 ## Flow Diagram
 - [ ]
