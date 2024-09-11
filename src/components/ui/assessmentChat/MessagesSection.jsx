@@ -33,7 +33,6 @@ import useComprehensive from '../../../hooks/useComprehensive';
 import usestartAssessment from '../../../hooks/usestartAssessment';
 // chat upload pdf & text
 import useChat from '../../../hooks/useChat';
-import { useSelector } from 'react-redux';
 
 import { useAddAssessmentMutation, useUpdateAssessmentMutation, useAddBookmarkMutation } from '../../../redux/api/workspaceApi';
 import { selectCurrentAssessment } from '../../../redux/selectors/selectors';
@@ -83,7 +82,7 @@ const MessagesSection = ({ selectedAssessment }) => {
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
-  //const [chat, setChat] = useState([]);
+  const [chat, setChat] = useState([]);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
@@ -108,15 +107,9 @@ const MessagesSection = ({ selectedAssessment }) => {
 
   const messagesEndRef = useRef(null);
 
-  const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
-   const folderId = useSelector((state) => state.workspaces.currentFolderId);
-   const currentAssessmentId = useSelector((state) => state.workspaces.currentAssessmentId);
-
-   const currentChat = useSelector(currentAssessmentId);
-
-   const [chat, setChat] = useState(
-     currentChat ? currentChat.generalMessages : []
-   );
+  // const workspaceId = useSelector((state) => state.workspaces.currentWorkspaceId);
+  //  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  //  const chatId = useSelector((state) => state.workspaces.currentAssessmentId);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -167,7 +160,9 @@ const MessagesSection = ({ selectedAssessment }) => {
       const response = await StartAssessment(text);
       if (response) {
         // set AI chat
+        console.log("Assement response: ",response);
         setChat((prevChat) => [...prevChat, { role: 'ai', content: response }]);
+        console.log("chat: ",chat);
       }
 
       setFile(null);

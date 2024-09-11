@@ -9,6 +9,7 @@ export const selectCurrentWorkspace = createSelector(
   selectAllWorkspaces,
   (state) => state.workspaces.currentWorkspaceId,
   (workspaces, currentWorkspaceId) => {
+    console.log("selector workspace: ",currentWorkspaceId)
     if (!Array.isArray(workspaces)) {
       return null; // Handle the case where workspaces is not an array
     }
@@ -34,7 +35,16 @@ export const selectCurrentFolder = createSelector(
   [selectAllFolders, (state) => state.workspaces.currentFolderId],
   (folders, currentFolderId) => {
     console.log("FolderId Selector", currentFolderId)
-    return folders.find((folder) => folder._id === currentFolderId) || folders[0]}
+    return folders.find((folder) => folder._id === currentFolderId) || folders[0] || null}
+);
+
+//Selector by ID
+export const selectFolderById = createSelector(
+  [selectAllFolders, (state, folderId) => folderId],
+  (folders, folderId) => {
+    console.log("FolderId Selector", folderId);
+    return folders.find((folder) => folder._id === folderId) || folders[0] || null;
+  }
 );
 
 // Selector for all chats in the current folder

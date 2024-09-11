@@ -7,15 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import StartIcon from '../../assets/dashboard/StarICon.png';
 
 const AssistantBar = ({ setView }) => {
+  
   const navigate = useNavigate();
   return (
     <>
       <main className="main">
-        <input type="text" placeholder="Enter a prompt to generate new file" />
-        <button className="assbtn">
-          <img src={StartIcon} alt="StartIcon" />
-          Generate
-        </button>
+        <p>As a change management assistant, I offer expert guidance and support to streamline and optimize organizational transformations.</p>
       </main>
       <section className="generate">
         <div className="container">
@@ -28,7 +25,7 @@ const AssistantBar = ({ setView }) => {
             </button>
             <p className="assistantHeading">AI Assistant</p>
           </div>
-          <div className="controlContainer">
+          {/* <div className="controlContainer">
             <div className="menuContainer">
               <CgMenuGridR
                 className="menuIcon"
@@ -48,7 +45,7 @@ const AssistantBar = ({ setView }) => {
               <TiPlus />
               New Assistant
             </button>
-          </div>
+          </div> */}
         </div>
       </section>
       <style>{`

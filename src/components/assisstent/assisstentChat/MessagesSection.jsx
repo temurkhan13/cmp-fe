@@ -80,7 +80,7 @@ const MessagesSection = () => {
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
-  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const folderId = useSelector((state) => state.workspaces.selectedFolder);
   const chatId = useSelector((state) => state.workspaces.currentChatId);
   const [messageId, setMessageId] = useState();
 
@@ -163,13 +163,14 @@ const MessagesSection = () => {
       return;
     }
     try {
-      await addMessage({
+       await addMessage({
         workspaceId: workspaceId,
-        folderId: folderId,
+        folderId: folderId._id,
         chatId: chatId ? chatId : 'newChat',
         message: text,
         files: file,
-      }).unwrap();
+      }).unwrap().then(response => console.log("text: ", response));
+      
       // setChatContent('');
     } catch (error) {
       console.error('Failed to add chat:', error);
