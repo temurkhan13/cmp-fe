@@ -141,6 +141,7 @@ const Folder = ({ activeWorkspace }) => {
           font-weight: 600;
           line-height: 36px;
           letter-spacing: 0.12px;
+          font-size:2rem;
           text-align: left;
           color: black;
           display:flex;
