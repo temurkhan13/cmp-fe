@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import Routess from "./Routes";
-import Aos from "aos";
+import { useEffect } from 'react';
+import Routess from './Routes';
+import Aos from 'aos';
 import { useDispatch } from 'react-redux';
-import { rehydrateToken } from "./redux/slices/authSlice";
+import { rehydrateToken } from './redux/slices/authSlice';
 
 import LoadingBar from 'react-redux-loading-bar';
 function App() {
@@ -18,7 +18,7 @@ function App() {
       offset: 100,
       delay: 0,
       duration: 4000,
-      easing: "ease",
+      easing: 'ease',
       once: false,
       mirror: false,
     });
@@ -26,8 +26,7 @@ function App() {
 
   return (
     <>
-    <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
-   
+      <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
       <Routess />
     </>
   );

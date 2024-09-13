@@ -13,7 +13,7 @@ import { FaUserPlus } from 'react-icons/fa6';
 
 const searchUser = ['John', 'abigale', 'mosa'];
 
-const Header = ({activeWorkspace, workspaces}) => {
+const Header = ({ activeWorkspace, workspaces }) => {
   //const dispatch = useDispatch();
   const [activeIcon, setActiveIcon] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,6 +50,10 @@ const Header = ({activeWorkspace, workspaces}) => {
     setIsProfileDropdownOpen(false);
   };
 
+  const handleImproveResponse = () => {
+    console.log('improve response');
+  };
+
   // useEffect(() => {
   //   if (currentChatId) {
   //    // console.log("header dispatch: "+fetchSharedUsers(currentChatId));
@@ -63,11 +67,14 @@ const Header = ({activeWorkspace, workspaces}) => {
       <div>
         <Components.Feature.HeaderDropDown />
         <Components.Feature.Button className="secondry">
-        {activeWorkspace && activeWorkspace.workspaceName}
+          {activeWorkspace && activeWorkspace.workspaceName}
         </Components.Feature.Button>
       </div>
       <section>
         <div>
+          <span className="improve-response" onClick={handleImproveResponse}>
+            Improve Response
+          </span>
           <span
             className={activeIcon === 'search' ? 'active' : ''}
             onClick={() => handleIconClick('search')}

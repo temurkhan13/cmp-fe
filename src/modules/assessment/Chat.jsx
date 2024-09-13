@@ -13,12 +13,12 @@
 //     <div className="assessmentChat">
 //       <Components.Common.Header />
 //       <section>
-//         <Components.UI.NewChat data={data.chat.newChatDummyData} />
-//         <Components.UI.MessagesSection
+//         <NewChat data={data.chat.newChatDummyData} />
+//         <MessagesSection
 //           data={data.chat.dummyChatData}
 //           selectedAssessment={selectedAssessment}
 //         />
-//         <Components.UI.Assessments
+//         <Assessments
 //           onAssessmentSelect={handleAssessmentSelect}
 //         />
 //       </section>
@@ -28,9 +28,7 @@
 
 // export default Chat;
 
-
-import Components from '@components';
-
+import Components from '../../components';
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,12 +36,19 @@ import { useParams } from 'react-router-dom';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import data from '../../data';
 
-import { setSelectedWorkspace, selectWorkspace,setCurrentAssessmentId } from '../../redux/slices/workspacesSlice';
+import {
+  setSelectedWorkspace,
+  selectWorkspace,
+  setCurrentAssessmentId,
+} from '../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
+import {
+  Assessments,
+  MessagesSection,
+  NewChat,
+} from '../../components/assessment';
 
 const Chat = () => {
-
-
   const dispatch = useDispatch();
   const { chatId } = useParams(); // Extract chatId from the URL
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
@@ -52,11 +57,11 @@ const Chat = () => {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
 
   const handleAssessmentSelect = (assessment) => {
-        setSelectedAssessment(assessment);
-       };
+    setSelectedAssessment(assessment);
+  };
 
   useEffect(() => {
-    if(chatId){
+    if (chatId) {
       dispatch(setCurrentAssessmentId(chatId));
     }
     if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
@@ -67,13 +72,16 @@ const Chat = () => {
 
   return (
     <div className="assessmentChat">
-      <Components.Common.Header  activeWorkspace= {selectedWorkspace} workspaces={workspacess} />
+      <Components.Common.Header
+        activeWorkspace={selectedWorkspace}
+        workspaces={workspacess}
+      />
       <section>
-        <Components.UI.NewChat data={data.chat.newChatDummyData}/>
+        <NewChat data={data.chat.newChatDummyData} />
 
-        <Components.UI.MessagesSection />
+        <MessagesSection />
 
-        <Components.UI.Assessments onAssessmentSelect={handleAssessmentSelect}/>
+        <Assessments onAssessmentSelect={handleAssessmentSelect} />
       </section>
     </div>
   );

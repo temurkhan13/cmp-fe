@@ -15,7 +15,7 @@ const CustomModal = ({
   }
 
   return (
-    <div style={styles.overlay} onClick={onClose}>
+    <div style={styles.customOverlay} onClick={onClose}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div style={styles.header}>
           <p style={styles.heading}>{heading}</p>
@@ -45,13 +45,13 @@ const CustomModal = ({
 };
 
 const styles = {
-  overlay: {
+  customOverlay: {
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.002)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -59,9 +59,9 @@ const styles = {
   },
   modal: {
     backgroundColor: 'white',
-    borderRadius: '0.5rem',
+    borderRadius: '1rem',
     padding: '2rem 2rem 2rem 2rem',
-    boxShadow: '0 0.125rem 0.625rem rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 0.125rem 0.3rem rgba(0, 0, 0, 0.1)',
   },
   header: {
     fontSize: '1.125rem',

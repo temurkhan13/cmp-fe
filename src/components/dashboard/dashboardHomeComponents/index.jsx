@@ -1,19 +1,11 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import Workspaces from './Workspaces';
 import CountingCards from './CountingCards';
 import Folder from './Folder';
 import Account from './Account';
-import FileStructure from '../../dashboard/FileStructure';
-import { TiPlus } from 'react-icons/ti';
-import { BsFilterLeft } from 'react-icons/bs';
-import { MdOutlineEdit, MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { BsFilterCircle } from 'react-icons/bs';
-import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
-import { TfiMenuAlt, TfiReload } from 'react-icons/tfi';
-import { SlArrowRight } from 'react-icons/sl';
-import { SlArrowLeft } from 'react-icons/sl';
-import { CgMenuGridR } from 'react-icons/cg';
-import { PiFilesFill } from 'react-icons/pi';
+import { MdOutlineEdit } from 'react-icons/md';
+
+import { TfiReload } from 'react-icons/tfi';
 import { ImFilesEmpty } from 'react-icons/im';
 import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai';
 import { CiBookmark } from 'react-icons/ci';
@@ -23,22 +15,25 @@ import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { SlQuestion } from 'react-icons/sl';
 import { RxLaptop } from 'react-icons/rx';
-
-import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi';
-
+import CustomModal from '../../customModal/CustomModal';
 import {
   setSelectedWorkspace,
   selectWorkspace,
 } from '../../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../../redux/selectors/selectors';
-import { useNavigate } from 'react-router-dom';
 import { selectAllChats } from '../../../redux/selectors/selectors';
 
 const DashboardHomeComp = () => {
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
+  const menuRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
+  const [isMoveToTrashModalOpen, setIsMoveToTrashModalOpen] = useState(false);
+  const [selectedChat, setSelectedChat] = useState(null);
+
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
@@ -46,14 +41,57 @@ const DashboardHomeComp = () => {
   const activeFolder = useSelector((state) => state.workspaces.selectedFolder);
   const chats = useSelector(selectAllChats);
 
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const toggleDropdown = (chat) => {
+    setIsDropdownOpen(!isDropdownOpen);
+    setSelectedChat(chat);
+    if (selectedChat === chat) {
+      setIsDropdownOpen(!isDropdownOpen);
+    } else {
+      setIsDropdownOpen(true);
+      setSelectedChat(chat);
+    }
+  };
 
-  const handleChatClick = (chatId) => {
-    navigate(`/assisstant/chat/${chatId}`); // Redirect to the chat's specific route
+  const openRenameModal = () => {
+    setIsDropdownOpen(false);
+    setIsRenameModalOpen(true);
   };
-  const handleAssessmentClick = (chatId) => {
-    navigate(`/assisstant/chat/${chatId}`); // Redirect to the chat's specific route
+
+  const openMoveToTrashModal = () => {
+    setIsDropdownOpen(false);
+    setIsMoveToTrashModalOpen(true);
   };
+
+  const handleCloseRenameModal = () => {
+    setIsRenameModalOpen(false);
+  };
+
+  const handleCloseMoveToTrashModal = () => {
+    setIsMoveToTrashModalOpen(false);
+  };
+
+  useEffect(() => {
+    // Function to handle click outside
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !menuRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+        setSelectedChat(null);
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Remove event listener on cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   useEffect(() => {
     if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
       const firstWorkspace = workspaces[0];
@@ -61,93 +99,26 @@ const DashboardHomeComp = () => {
     }
   }, [workspaces, selectedWorkspace, dispatch]);
 
-  const cardData = [
-    {
-      userName: 'You',
-      avatar: <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />,
-      userComment:
-        'Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum molestiae! Nemo, repellat?',
-      aiHeading: 'ChangeAI',
-      chatContent: 'Lorem ipsum, dolor sit amet consectetur adipisi',
-      fileName: 'File Name',
-      folderName: 'folderName',
-      modifiedDate: 'Modified 2 days ago',
-    },
-    {
-      userName: 'You',
-      avatar: <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />,
-      userComment:
-        'Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum molestiae! Nemo, repellat?',
-      aiHeading: 'ChangeAI',
-      chatContent: 'Lorem ipsum, dolor sit amet consectetur adipisi',
-      fileName: 'File Name',
-      folderName: 'folderName',
-      modifiedDate: 'Modified 2 days ago',
-    },
-    {
-      userName: 'You',
-      avatar: <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />,
-      userComment:
-        'Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum molestiae! Nemo, repellat?',
-      aiHeading: 'ChangeAI',
-      chatContent: 'Lorem ipsum, dolor sit amet consectetur adipisi',
-      fileName: 'File Name',
-      folderName: 'folderName',
-      modifiedDate: 'Modified 2 days ago',
-    },
-  ];
-
-  const mockFiles = [
-    { name: 'AI Overview' },
-    { name: 'Machine Learning Basics' },
-    { name: 'Advanced Neural Networks' },
-    { name: 'Introduction to NLP' },
-    { name: 'AI in Robotics' },
-    { name: 'Reinforcement Learning Concepts' },
-    { name: 'AI and Ethics' },
-    { name: 'AI in Healthcare Applications' },
-    { name: 'AI in Financial Services' },
-    { name: 'Data Science Techniques' },
-    { name: 'Predictive Modeling' },
-    { name: 'AI and Privacy' },
-    { name: 'Computer Vision Applications' },
-    { name: 'Deep Learning Explained' },
-    { name: 'AI for Beginners' },
-    { name: 'AI Research Papers' },
-    { name: 'Natural Language Processing Guide' },
-    { name: 'Understanding AI Algorithms' },
-    { name: 'AI in Marketing' },
-    { name: 'AI in Education' },
-    { name: 'AI Overview' },
-    { name: 'Machine Learning Basics' },
-    { name: 'Advanced Neural Networks' },
-    { name: 'Introduction to NLP' },
-    { name: 'AI in Robotics' },
-    { name: 'Reinforcement Learning Concepts' },
-    { name: 'AI and Ethics' },
-    { name: 'AI in Healthcare Applications' },
-  ];
-
   const convertTimestampToRelativeTime = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
-  
     // Get the difference in milliseconds
     const differenceInMillis = now - date;
-  
     // Convert to days
-    const differenceInDays = Math.floor(differenceInMillis / (1000 * 60 * 60 * 24));
-  
+    const differenceInDays = Math.floor(
+      differenceInMillis / (1000 * 60 * 60 * 24)
+    );
+
     if (differenceInDays === 0) {
-      return "Today";
+      return 'Today';
     } else if (differenceInDays === 1) {
-      return "1 day ago";
+      return '1 day ago';
     } else if (differenceInDays <= 2) {
       return `${differenceInDays} days ago`;
     } else if (differenceInDays <= 30) {
       return `Previous ${differenceInDays} days`;
     } else {
-      return "Older than 30 days";
+      return 'Older than 30 days';
     }
   };
   // Helper function to truncate text
@@ -160,86 +131,122 @@ const DashboardHomeComp = () => {
 
   // Modified renderCard function
   const renderCard = (chat) => (
-    <div className="card">
-      {chat &&
-      chat.generalMessages &&
-      chat.generalMessages[0] &&
-      chat.generalMessages[0].sender ? (
-        <div className="card-header">
-          <h2 className="userName">
-            <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-          </h2>
-          <p>{truncateText(chat.text, 55)}</p>
-          <MdOutlineEdit />
+    <>
+      {' '}
+      <div className="card">
+        <div
+          className="menu"
+          ref={menuRef}
+          onClick={() => toggleDropdown(chat)}
+        >
+          <HiDotsHorizontal style={{ fontSize: '1.5rem', color: 'black' }} />
+          {isDropdownOpen && selectedChat === chat && (
+            <div className="card-dropdown-menu" ref={dropdownRef}>
+              <button onClick={openRenameModal}>Rename</button>
+              <button onClick={openMoveToTrashModal}>Move to Trash</button>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="content">
-          <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-            <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
-            AI
-          </h3>
-          <p className="chatContent">
-            {truncateText(
-              chat.generalMessages &&
-                chat.generalMessages[0] &&
-                chat.generalMessages[0].text,
-              55
-            )}
-          </p>
+        {chat &&
+        chat.generalMessages &&
+        chat.generalMessages[0] &&
+        chat.generalMessages[0].sender ? (
+          <div className="card-header">
+            <h2 className="userName">
+              <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+            </h2>
+            <p>{truncateText(chat.text, 55)}</p>
+            <MdOutlineEdit />
+          </div>
+        ) : (
+          <div className="content">
+            <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+              <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
+              AI
+            </h3>
+            <p className="chatContent">
+              {truncateText(
+                chat.generalMessages &&
+                  chat.generalMessages[0] &&
+                  chat.generalMessages[0].text,
+                55
+              )}
+            </p>
+          </div>
+        )}
+        {chat &&
+        chat.generalMessages &&
+        chat.generalMessages[1] &&
+        chat.generalMessages[1].sender ? (
+          <div className="card-header">
+            <h2 className="userName">
+              <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
+            </h2>
+            <p>{truncateText(chat.text, 55)}</p>
+            <MdOutlineEdit />
+          </div>
+        ) : (
+          <div className="content">
+            <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
+              <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
+              AI
+            </h3>
+            <p className="chatContent">
+              {truncateText(
+                chat.generalMessages &&
+                  chat.generalMessages[1] &&
+                  chat.generalMessages[1].text,
+                55
+              )}
+            </p>
+          </div>
+        )}
+        <div className="footer">
+          <div className="iconsContainer">
+            <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
+            <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
+            <AiOutlineDislike style={{ fontSize: '1.3rem', color: 'black' }} />
+            <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
+            <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
+          </div>
+          <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
         </div>
-      )}
-      {chat &&
-      chat.generalMessages &&
-      chat.generalMessages[1] &&
-      chat.generalMessages[1].sender ? (
-        <div className="card-header">
-          <h2 className="userName">
-            <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-          </h2>
-          <p>{truncateText(chat.text, 55)}</p>
-          <MdOutlineEdit />
-        </div>
-      ) : (
-        <div className="content">
-          <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-            <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
-            AI
-          </h3>
-          <p className="chatContent">
-            {truncateText(
-              chat.generalMessages &&
-                chat.generalMessages[1] &&
-                chat.generalMessages[1].text,
-              55
-            )}
-          </p>
-        </div>
-      )}
-      <div className="footer">
-        <div className="iconsContainer">
-          <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-          <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-          <AiOutlineDislike style={{ fontSize: '1.3rem', color: 'black' }} />
-          <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-          <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-        </div>
-        <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
       </div>
-      {/* <div className="fileDetails">
-        <div className="fileName">
-          {chat.chatTitle}
-          <IoPeople color="gray" style={{ marginLeft: '0.3rem' }} />
-        </div> */}
-      {/* <div>
-          <span>in</span>
-          <span className="folderName">{data.folderName}</span>
-          <span>
-            • {data.modifiedDate}
-            <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-          </span>
-        </div> */}
-      {/* </div> */}
-    </div>
+      <CustomModal
+        isOpen={isRenameModalOpen}
+        onClose={handleCloseRenameModal}
+        onProceed={() => {
+          /* handle rename logic */
+        }}
+        heading="Rename Card"
+        bodyContent={
+          <input
+            type="text"
+            placeholder="Enter new name"
+            className="rename-input"
+          />
+        }
+        cancelText="Cancel"
+        proceedText="Save"
+      />
+      <CustomModal
+        isOpen={isMoveToTrashModalOpen}
+        onClose={handleCloseMoveToTrashModal}
+        onProceed={() => {
+          /* handle move to trash logic */
+        }}
+        heading="Move to Trash"
+        bodyContent={
+          <div>
+            Are you sure you want to move this file to the trash?
+            <br /> It will remain there for 30 days before being permanently
+            deleted.
+          </div>
+        }
+        cancelText="Cancel"
+        proceedText="Proceed"
+      />
+    </>
   );
 
   return (
@@ -259,35 +266,6 @@ const DashboardHomeComp = () => {
             </button>
             <p className="assistant-heading">Change AI Assistance</p>
           </div>
-          {/* <div className="center-buttons">
-            <div className="left-buttons">
-              <CgMenuGridR className="icon" />
-              <TfiMenuAlt className="icon-small" />
-            </div>
-            {/* <div className="right-buttons">
-              <BsFilterLeft className="filter-icon" />
-              <MdOutlineKeyboardArrowDown className="icon-small" />
-            </div>
-            <div className="right-buttons">
-              <BsFilterCircle className="icon-small" />
-              <MdOutlineKeyboardArrowDown className="icon-small" />
-            </div>
-            <div className="right-buttons">
-              <HiAdjustmentsHorizontal className="adjustments-icon" />
-            </div> 
-            <div>
-              <Link
-                to="/assisstant/chat"
-                target="_blank"
-                style={{ textDecoration: 'none' }}
-              >
-                <button className="assiss-btn">
-                  <TiPlus />
-                  New Assistant
-                </button>
-              </Link>
-            </div>
-          </div> */}
         </div>
       </section>
       <div
@@ -295,8 +273,7 @@ const DashboardHomeComp = () => {
         style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
       >
         {chats &&
-          chats
-          .map((chat, index) => (
+          chats.map((chat, index) => (
             <div key={index}>
               <div
                 key={index}
@@ -314,7 +291,9 @@ const DashboardHomeComp = () => {
                 </div>
                 <div>
                   <span>in</span>
-                  <span className="folderName">{activeFolder && activeFolder.folderName}</span>
+                  <span className="folderName">
+                    {activeFolder && activeFolder.folderName}
+                  </span>
                   <span>
                     • Created {convertTimestampToRelativeTime(chat.CreatedAt)}
                     <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
@@ -324,340 +303,12 @@ const DashboardHomeComp = () => {
             </div>
           ))}
       </div>
-      {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="card">
-            <div className="card-header">
-              <h2 className="userName">
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-              </h2>
-              <p>
-                Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                molestiae! Nemo, repellat?
-              </p>
-              <MdOutlineEdit />
-            </div>
-            <div className="content">
-              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                ChangeAI
-              </h3>
-              <p className="chatContent">
-                <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-              </p>
-            </div>
-            <div className="footer">
-              <div className="iconsContainer">
-                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineDislike
-                  style={{ fontSize: '1.3rem', color: 'black' }}
-                />
-                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-              </div>
-              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-            </div>
-          </div>
-          <div className="fileDetails">
-            <div className="fileName">
-              File Name
-              <IoPeople
-                color="gray"
-                style={{ marginLeft: '0.3rem', fontSize: '' }}
-              />
-            </div>
-            <div>
-              <span>in</span>
-              <span className="folderName">folderName</span>
-              <span>
-                • Modified 2 days ago
-                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-              </span>
-            </div>
-          </div>
-        </div>{' '}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="card">
-            <div className="card-header">
-              <h2 className="userName">
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-              </h2>
-              <p>
-                Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                molestiae! Nemo, repellat?
-              </p>
-              <MdOutlineEdit />
-            </div>
-            <div className="content">
-              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                ChangeAI
-              </h3>
-              <p className="chatContent">
-                <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-              </p>
-            </div>
-            <div className="footer">
-              <div className="iconsContainer">
-                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineDislike
-                  style={{ fontSize: '1.3rem', color: 'black' }}
-                />
-                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-              </div>
-              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-            </div>
-          </div>
-          <div className="fileDetails">
-            <div className="fileName">
-              File Name
-              <IoPeople
-                color="gray"
-                style={{ marginLeft: '0.3rem', fontSize: '' }}
-              />
-            </div>
-            <div>
-              <span>in</span>
-              <span className="folderName">folderName</span>
-              <span>
-                • Modified 2 days ago
-                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-              </span>
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="card">
-            <div className="card-header">
-              <h2 className="userName">
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-              </h2>
-              <p>
-                Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                molestiae! Nemo, repellat?
-              </p>
-              <MdOutlineEdit />
-            </div>
-            <div className="content">
-              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                ChangeAI
-              </h3>
-              <p className="chatContent">
-                <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-              </p>
-            </div>
-            <div className="footer">
-              <div className="iconsContainer">
-                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineDislike
-                  style={{ fontSize: '1.3rem', color: 'black' }}
-                />
-                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-              </div>
-              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-            </div>
-          </div>
-          <div className="fileDetails">
-            <div className="fileName">
-              File Name
-              <IoPeople
-                color="gray"
-                style={{ marginLeft: '0.3rem', fontSize: '' }}
-              />
-            </div>
-            <div>
-              <span>in</span>
-              <span className="folderName">folderName</span>
-              <span>
-                • Modified 2 days ago
-                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-              </span>
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="card">
-            <div className="card-header">
-              <h2 className="userName">
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-              </h2>
-              <p>
-                Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                molestiae! Nemo, repellat?
-              </p>
-              <MdOutlineEdit />
-            </div>
-            <div className="content">
-              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                ChangeAI
-              </h3>
-              <p className="chatContent">
-                <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-              </p>
-            </div>
-            <div className="footer">
-              <div className="iconsContainer">
-                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineDislike
-                  style={{ fontSize: '1.3rem', color: 'black' }}
-                />
-                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-              </div>
-              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-            </div>
-          </div>
-          <div className="fileDetails">
-            <div className="fileName">
-              File Name
-              <IoPeople
-                color="gray"
-                style={{ marginLeft: '0.3rem', fontSize: '' }}
-              />
-            </div>
-            <div>
-              <span>in</span>
-              <span className="folderName">folderName</span>
-              <span>
-                • Modified 2 days ago
-                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-              </span>
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="card">
-            <div className="card-header">
-              <h2 className="userName">
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-              </h2>
-              <p>
-                Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                molestiae! Nemo, repellat?
-              </p>
-              <MdOutlineEdit />
-            </div>
-            <div className="content">
-              <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                ChangeAI
-              </h3>
-              <p className="chatContent">
-                <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-              </p>
-            </div>
-            <div className="footer">
-              <div className="iconsContainer">
-                <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-                <AiOutlineDislike
-                  style={{ fontSize: '1.3rem', color: 'black' }}
-                />
-                <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-              </div>
-              <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-            </div>
-          </div>
-          <div className="fileDetails">
-            <div className="fileName">
-              File Name
-              <IoPeople
-                color="gray"
-                style={{ marginLeft: '0.3rem', fontSize: '' }}
-              />
-            </div>
-            <div>
-              <span>in</span>
-              <span className="folderName">folderName</span>
-              <span>
-                • Modified 2 days ago
-                <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-              </span>
-            </div>
-          </div>
-        </div> */}
 
       <div className="files">
         <p className="files-heading">AI Assessments</p>
         <div className="heading">
           <p>Recent</p>
           <p className="see-less">See less</p>
-        </div>
-        <div
-          className="card-wrapper"
-          style={{ display: 'flex', flexWrap: 'wrap' }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '1rem',
-            }}
-          >
-            <div className="card">
-              <div className="card-header">
-                <h2 className="userName">
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />{' '}
-                  You
-                </h2>
-                <p>
-                  Lorem ipsum, dolor sit sapiente quae nobis porro, sed cum
-                  molestiae! Nemo, repellat?
-                </p>
-                <MdOutlineEdit />
-              </div>
-              <div className="content">
-                <h3 className="ai-heading" style={{ marginTop: '1rem' }}>
-                  <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} />
-                  ChangeAI
-                </h3>
-                <p className="chatContent">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisi</p>
-                </p>
-              </div>
-              <div className="footer">
-                <div className="iconsContainer">
-                  <ImFilesEmpty
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineLike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <AiOutlineDislike
-                    style={{ fontSize: '1.3rem', color: 'black' }}
-                  />
-                  <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-                  <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-                </div>
-                <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-              </div>
-            </div>{' '}
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople
-                  color="gray"
-                  style={{ marginLeft: '0.3rem', fontSize: '' }}
-                />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <style>{`
@@ -679,7 +330,7 @@ const DashboardHomeComp = () => {
         }
         .generate .arrow-btn {
           height: 40px;
-          width: 40px;
+          // width: 40px;
           border: none;
           outline: none;
           border-radius: 50%;
@@ -695,15 +346,16 @@ const DashboardHomeComp = () => {
           color: black;
         }
         .generate .assiss-btn {
-          background-color: rgba(10, 10, 10, 1);
+          background-color: #C3E11D;
+          color: #0B1444;
+          border:none;
           display: flex;
           text-align: center;
           align-items: center;
           justify-content: space-between;
-          color: white;
-          border-radius: 8px;
-          margin-left: 10px;
-          padding: 10px 20px;
+          border-radius: 0.8rem;
+          font-weight: 600;
+          padding: 0.9rem 2rem;
         }
         .generate .left-buttons,
         .generate .center-buttons,
@@ -711,6 +363,8 @@ const DashboardHomeComp = () => {
           display: flex;
           align-items: center;
           justify-content: center;
+          gap:0.8rem;
+          margin-left: 2rem;
         }
         .generate .center-buttons {
           justify-content: space-between;
@@ -838,6 +492,44 @@ const DashboardHomeComp = () => {
         font-size: 1.1rem;
         margin-left: 0.5rem;
       }
+.menu {
+  // position: absolute;
+  position:relative;
+  // top:1rem;
+  left:22rem;;
+
+}
+
+.card-dropdown-menu{
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: white;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index:10000;
+  width:15rem;
+}
+
+.card-dropdown-menu button {
+  padding: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.card-dropdown-menu button:hover {
+  background: #f0f0f0;
+}
+  .rename-input{
+  border: 1px solid lightgray;
+  outline:none;
+  }
+
       `}</style>
     </div>
   );

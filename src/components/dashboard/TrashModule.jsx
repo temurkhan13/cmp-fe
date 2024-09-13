@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import FolderTab from './TrashFolderTab';
 import TrashFileTab from './TrashFileTab';
-import PropTypes from 'prop-types';
+import TrashWorkspaceTab from './TrashWorkspaceTab';
 
 const TrashModule = () => {
   const sampleCardData = [
@@ -29,6 +30,7 @@ const TrashModule = () => {
       aiContent: 'More AI-generated content to show the variety of data.',
     },
   ];
+
   const [activeTab, setActiveTab] = useState('Folder');
 
   return (
@@ -36,24 +38,28 @@ const TrashModule = () => {
       <h1 className="heading">Trash</h1>
       <div className="tabs">
         <button
+          className={`tab ${activeTab === 'Workspace' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Workspace')}
+        >
+          Workspaces
+        </button>
+        <button
           className={`tab ${activeTab === 'Folder' ? 'active' : ''}`}
           onClick={() => setActiveTab('Folder')}
         >
-          Folder
+          Projects
         </button>
         <button
           className={`tab ${activeTab === 'File' ? 'active' : ''}`}
           onClick={() => setActiveTab('File')}
         >
-          File
+          Files
         </button>
       </div>
       <div className="content">
-        {activeTab === 'Folder' ? (
-          <FolderTab />
-        ) : (
-          <TrashFileTab cardData={sampleCardData} />
-        )}
+        {activeTab === 'Workspace' && <TrashWorkspaceTab />}
+        {activeTab === 'Folder' && <FolderTab />}
+        {activeTab === 'File' && <TrashFileTab cardData={sampleCardData} />}
       </div>
       <style>{`
         .trash-container {
@@ -65,15 +71,15 @@ const TrashModule = () => {
         }
         .heading {
           position: absolute;
-          top: 2rem; 
-          left: 1.25rem; 
-          font-size: 1.5rem; 
+          top: 2rem;
+          left: 1.25rem;
+          font-size: 1.5rem;
         }
         .tabs {
           display: flex;
           position: absolute;
-          top: 5rem; 
-          left: 3rem; 
+          top: 5rem;
+          left: 3rem;
         }
         .tab {
           margin-right: 0.625rem;
@@ -81,8 +87,9 @@ const TrashModule = () => {
           cursor: pointer;
           background: none;
           border: none;
-          outline"none;
-          font-size: 1.125rem; 
+          outline: none;
+          font-size: 1.4rem;
+          font-weight:600;
         }
         .tab.active {
           border-bottom: 0.1rem solid black;

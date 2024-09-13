@@ -8,7 +8,7 @@ import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import data from '../../data';
 import { Link, useNavigate } from 'react-router-dom';
-import useInspire from '../../hooks/useInspire';
+import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 // import ReactMarkdown from 'react-markdown';
 

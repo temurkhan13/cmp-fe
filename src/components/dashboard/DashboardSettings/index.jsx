@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import PersonalInfo from './PersonalInfo';
-import PaymentMethod from './PaymentMethod';
-import ChangePassword from './ChangePassword';
+// import PaymentMethod from './PaymentMethod';
 import Notifications from './Notifications';
 
 const SettingsTabs = () => {
@@ -11,10 +10,10 @@ const SettingsTabs = () => {
     switch (activeTab) {
       case 'personal-info':
         return <PersonalInfo />;
-      case 'payment-method':
-        return <PaymentMethod />;
-      case 'change-password':
-        return <ChangePassword />;
+      // case 'payment-method':
+      //   return <PaymentMethod />;
+      // case 'change-password':
+      //   return <ChangePassword />;
       case 'notifications':
         return <Notifications />;
       default:
@@ -32,18 +31,18 @@ const SettingsTabs = () => {
         >
           Personal Information
         </button>
-        <button
+        {/* <button
           className={activeTab === 'payment-method' ? 'active' : ''}
           onClick={() => setActiveTab('payment-method')}
         >
           Payment Method
-        </button>
-        <button
+        </button> */}
+        {/* <button
           className={activeTab === 'change-password' ? 'active' : ''}
           onClick={() => setActiveTab('change-password')}
         >
           Change Password
-        </button>
+        </button> */}
         <button
           className={activeTab === 'notifications' ? 'active' : ''}
           onClick={() => setActiveTab('notifications')}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SitemapImg } from '../../assets/dashboard';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus, BiPlusCircle } from 'react-icons/bi';

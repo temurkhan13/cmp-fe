@@ -9,7 +9,7 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
 
   return (
     <>
-      <div className="overlay" onClick={closeModal}></div>
+      <div className="newchat-overlay" onClick={closeModal}></div>
       <div
         className="dropdown-menu"
         style={{
@@ -25,7 +25,7 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
             closeModal();
           }}
         >
-          <FaFolder style={{ marginRight: '10px' }} /> Move to Folder
+          <FaFolder className="newchat-icon" /> Move to Folder
         </div>
         <div
           className="dropdown-item"
@@ -35,17 +35,17 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
             closeModal();
           }}
         >
-          <FaTrash style={{ marginRight: '10px' }} /> Move to Trash
+          <FaTrash className="newchat-icon" /> Move to Trash
         </div>
         <style>{`
-          .overlay {
+          .newchat-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 999;
-            background: rgba(0, 0, 0, 0.5);
+            // background: rgba(0, 0, 0, 0.5);
           }
           .dropdown-menu {
             z-index: 1000;
@@ -53,7 +53,7 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
             width: 18rem;
             border-radius: 0.6rem;
             background-color: white;
-            box-shadow: 0rem 0.4rem 2.4rem 0rem hsla(0, 0%, 0%, 0.122);
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
             padding: 1rem;
           }
           .dropdown-item {
@@ -65,8 +65,13 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
             border-bottom: none;
           }
           .dropdown-item:hover {
-            background-color: #f0f0f0;
+            background-color: lightgray;
+            border-radius:0.8rem;
           }
+            .newchat-icon{
+            margin-right:0.8rem;
+            color:gray;
+            }
         `}</style>
       </div>
     </>
