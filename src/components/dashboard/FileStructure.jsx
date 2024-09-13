@@ -100,7 +100,9 @@ const FileStructure = ({ workspace }) => {
           workspace.folders.map((folder, index) => (
             <div key={index} className="file" onClick={() => openModal(folder)}>
               <span className="icon">
-                <BiSolidFolderOpen style={{ fontSize: '5rem' }} />
+                <BiSolidFolderOpen
+                  style={{ fontSize: '5rem', color: 'gray' }}
+                />
               </span>
               <p>{folder.folderName}</p>
               <p className="file-count">

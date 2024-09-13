@@ -338,7 +338,7 @@ const DashboardHomeComp = () => {
         }
         .generate .assistant-heading {
           font-family: 'Poppins';
-          font-size: 20px;
+          font-size: 2rem;
           font-weight: 600;
           line-height: 36px;
           letter-spacing: 0.12px;

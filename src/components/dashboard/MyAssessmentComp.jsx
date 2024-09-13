@@ -11,13 +11,16 @@ import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineEdit } from 'react-icons/md';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import LoadingSpinner from '../../components/common/LoadingSpinner ';
-
-// import Component from '@components';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import { useSelector } from 'react-redux';
 import useManagerChat from '@hooks/useManagerChat';
+import Folder from './dashboardHomeComponents/Folder';
+// import Component from '@components';
 
 const MyAssessmentComp = () => {
   const { managerData, error, toggleMockData } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
+  const selectedWorkspace = useSelector(selectWorkspace);
 
   useEffect(() => {
     if (managerData) {
@@ -88,22 +91,23 @@ const MyAssessmentComp = () => {
     <div className="container">
       <div className="section">
         <p className="sectionTitle">AI Assessment</p>
-        <div className="buttonGroup">
+        <Folder activeWorkspace={selectedWorkspace} />
+        {/* <div className="buttonGroup">
           <Link to="/questionnaire">
             <button className="customizeButton">Customize</button>
           </Link>
           <Link to="/assessment/chat">
             <button className="addButton">Add New</button>
           </Link>
-        </div>
-        <div className="fileList">
+        </div> */}
+        {/* <div className="fileList">
           {mockFiles.map((file, index) => (
             <div key={index} className="fileItem">
               <PiFilesFill className="fileIcon" />
               <span>{truncateString(file.name, 6)}</span>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       <div className="cardWrapper">
