@@ -87,7 +87,7 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
 
   return (
     <>
-      {isOpen && <div className="overlay" onClick={onClose}></div>}
+      {isOpen && <div className="notificationOverlay" onClick={onClose}></div>}
       <div className={`dropdown ${isOpen ? 'open' : ''}`}>
         <div className="header">
           <span className="title">Notifications</span>
@@ -127,14 +127,13 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
         <div className="notification-content">{renderContent()}</div>
       </div>
       <style>{`
-        .overlay {
+        .notificationOverlay {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
           background-color: rgba(0, 0, 0, 0.5);
-          z-index: 1000; /* Place it behind the dropdown */
         }
         .dropdown {
           position: absolute;

@@ -1,23 +1,21 @@
 # ChangeManagementPlateform.AIAssistantApi
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to _http://localhost:3000_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**chatAutoPost**](AIAssistantApi.md#chatAutoPost) | **POST** /chat/auto | Auto Text
-[**chatChangeTonePost**](AIAssistantApi.md#chatChangeTonePost) | **POST** /chat/change-tone | Change Tone
-[**chatComprehensivePost**](AIAssistantApi.md#chatComprehensivePost) | **POST** /chat/comprehensive | Comprehensive Text
-[**chatExplainPost**](AIAssistantApi.md#chatExplainPost) | **POST** /chat/explain | Explain
-[**chatGrammarFixPost**](AIAssistantApi.md#chatGrammarFixPost) | **POST** /chat/grammar-fix | Fix Grammar
-[**chatImporveWritingPost**](AIAssistantApi.md#chatImporveWritingPost) | **POST** /chat/imporve-writing | Improve Writing
-[**chatLanguageSimplifyPost**](AIAssistantApi.md#chatLanguageSimplifyPost) | **POST** /chat/language-simplify | Language Simplify
-[**chatLongTextPost**](AIAssistantApi.md#chatLongTextPost) | **POST** /chat/long-text | Text Longer
-[**chatPost**](AIAssistantApi.md#chatPost) | **POST** /chat/ | Chat
-[**chatShortTextPost**](AIAssistantApi.md#chatShortTextPost) | **POST** /chat/short-text | Text Shorter
-[**chatSummarizePost**](AIAssistantApi.md#chatSummarizePost) | **POST** /chat/summarize | Summarize
-[**chatTranslatePost**](AIAssistantApi.md#chatTranslatePost) | **POST** /chat/translate | Translate
-
-
+| Method                                                                     | HTTP request                     | Description        |
+| -------------------------------------------------------------------------- | -------------------------------- | ------------------ |
+| [**chatAutoPost**](AIAssistantApi.md#chatAutoPost)                         | **POST** /chat/auto              | Auto Text          |
+| [**chatChangeTonePost**](AIAssistantApi.md#chatChangeTonePost)             | **POST** /chat/change-tone       | Change Tone        |
+| [**chatComprehensivePost**](AIAssistantApi.md#chatComprehensivePost)       | **POST** /chat/comprehensive     | Comprehensive Text |
+| [**chatExplainPost**](AIAssistantApi.md#chatExplainPost)                   | **POST** /chat/explain           | Explain            |
+| [**chatGrammarFixPost**](AIAssistantApi.md#chatGrammarFixPost)             | **POST** /chat/grammar-fix       | Fix Grammar        |
+| [**chatImporveWritingPost**](AIAssistantApi.md#chatImporveWritingPost)     | **POST** /chat/imporve-writing   | Improve Writing    |
+| [**chatLanguageSimplifyPost**](AIAssistantApi.md#chatLanguageSimplifyPost) | **POST** /chat/language-simplify | Language Simplify  |
+| [**chatLongTextPost**](AIAssistantApi.md#chatLongTextPost)                 | **POST** /chat/long-text         | Text Longer        |
+| [**chatPost**](AIAssistantApi.md#chatPost)                                 | **POST** /chat/                  | Chat               |
+| [**chatShortTextPost**](AIAssistantApi.md#chatShortTextPost)               | **POST** /chat/short-text        | Text Shorter       |
+| [**chatSummarizePost**](AIAssistantApi.md#chatSummarizePost)               | **POST** /chat/summarize         | Summarize          |
+| [**chatTranslatePost**](AIAssistantApi.md#chatTranslatePost)               | **POST** /chat/translate         | Translate          |
 
 ## chatAutoPost
 
@@ -32,7 +30,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatAutoPost(opts, (error, data, response) => {
   if (error) {
@@ -45,10 +43,9 @@ apiInstance.chatAutoPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -62,7 +59,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatChangeTonePost
 
@@ -77,7 +73,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatChangeTonePost(opts, (error, data, response) => {
   if (error) {
@@ -90,10 +86,9 @@ apiInstance.chatChangeTonePost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -107,7 +102,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatComprehensivePost
 
@@ -122,7 +116,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatComprehensivePost(opts, (error, data, response) => {
   if (error) {
@@ -135,10 +129,9 @@ apiInstance.chatComprehensivePost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -152,7 +145,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatExplainPost
 
@@ -167,7 +159,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatExplainPost(opts, (error, data, response) => {
   if (error) {
@@ -180,10 +172,9 @@ apiInstance.chatExplainPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -197,7 +188,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatGrammarFixPost
 
@@ -212,7 +202,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatGrammarFixPost(opts, (error, data, response) => {
   if (error) {
@@ -225,10 +215,9 @@ apiInstance.chatGrammarFixPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -242,7 +231,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatImporveWritingPost
 
@@ -257,7 +245,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatImporveWritingPost(opts, (error, data, response) => {
   if (error) {
@@ -270,10 +258,9 @@ apiInstance.chatImporveWritingPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -287,7 +274,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatLanguageSimplifyPost
 
@@ -302,7 +288,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatLanguageSimplifyPost(opts, (error, data, response) => {
   if (error) {
@@ -315,10 +301,9 @@ apiInstance.chatLanguageSimplifyPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -332,7 +317,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatLongTextPost
 
@@ -347,7 +331,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatLongTextPost(opts, (error, data, response) => {
   if (error) {
@@ -360,10 +344,9 @@ apiInstance.chatLongTextPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -377,7 +360,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatPost
 
@@ -392,7 +374,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatPost(opts, (error, data, response) => {
   if (error) {
@@ -405,10 +387,9 @@ apiInstance.chatPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -423,7 +404,6 @@ No authorization required
 - **Content-Type**: application/json, multipart/form-data
 - **Accept**: application/json
 
-
 ## chatShortTextPost
 
 > chatShortTextPost(opts)
@@ -437,7 +417,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatShortTextPost(opts, (error, data, response) => {
   if (error) {
@@ -450,10 +430,9 @@ apiInstance.chatShortTextPost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -467,7 +446,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatSummarizePost
 
@@ -482,7 +460,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatSummarizePost(opts, (error, data, response) => {
   if (error) {
@@ -495,10 +473,9 @@ apiInstance.chatSummarizePost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -512,7 +489,6 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-
 
 ## chatTranslatePost
 
@@ -527,7 +503,7 @@ import ChangeManagementPlateform from 'change_management_plateform';
 
 let apiInstance = new ChangeManagementPlateform.AIAssistantApi();
 let opts = {
-  'body': {key: null} // Object | 
+  body: { key: null }, // Object |
 };
 apiInstance.chatTranslatePost(opts, (error, data, response) => {
   if (error) {
@@ -540,10 +516,9 @@ apiInstance.chatTranslatePost(opts, (error, data, response) => {
 
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+| Name     | Type       | Description | Notes      |
+| -------- | ---------- | ----------- | ---------- |
+| **body** | **Object** |             | [optional] |
 
 ### Return type
 
@@ -557,4 +532,3 @@ No authorization required
 
 - **Content-Type**: application/json
 - **Accept**: application/json
-

@@ -1,37 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { GoPlus } from 'react-icons/go';
-import { RxCross2 } from 'react-icons/rx';
-import { FaFolderOpen } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsWindowStack } from 'react-icons/bs';
+import { RxCross2 } from 'react-icons/rx';
 import { IoFolderOpen } from 'react-icons/io5';
 
-import { useSelector, useDispatch } from 'react-redux';
-//import { setSelectedWorkspaceId } from '../../../redux/slices/workspaceSlice';
-//import { setSelectedFolderId } from '../../../redux/slices/folderSlice';
-
+import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
-import {
-  useAddWorkspaceMutation,
-  useGetWorkspacesQuery,
-} from '../../../redux/api/workspaceApi'; // Adjust the import path as needed
+import { useAddWorkspaceMutation } from '../../../redux/api/workspaceApi';
 
 const Workspaces = ({ activeWorkspace, workspaces }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFolder, setSelectedFolder] = useState(null);
-  const [newWorkspaceName, setNewWorkspaceName] = useState('');
-
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
+  const [newWorkspaceName, setNewWorkspaceName] = useState('');
+  const modalRef = useRef(null);
 
   const dispatch = useDispatch();
-
   const [addWorkspace] = useAddWorkspaceMutation();
 
-  const truncateString = (str, num) =>
-    str.length > num ? str.slice(0, num) + '...' : str;
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+        setIsNewWorkspaceModalOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleNewWorkspaceSubmit = async (e) => {
     e.preventDefault();
@@ -45,15 +44,11 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
   };
 
   const handleWorkspaceSwitch = (workspace) => {
-    console.log('Switching to workspace:', workspace);
     dispatch(setReduxSelectedWorkspace(workspace));
-    // Your logic to switch the workspace
   };
 
-  const toggleModal = (workspace) => {
-    setSelectedWorkspace(workspace);
-    setIsModalOpen(!isModalOpen);
-  };
+  const truncateString = (str, num) =>
+    str.length > num ? str.slice(0, num) + '...' : str;
 
   return (
     <div className="collection">
@@ -71,7 +66,10 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
         {workspaces.map((workspace, index) => (
           <div key={index} className="icon-container">
             <BsWindowStack
-              onClick={() => toggleModal(workspace)}
+              onClick={() => {
+                setSelectedWorkspace(workspace);
+                setIsModalOpen(true);
+              }}
               className="collection-icon"
             />
             <span className="icon-label" title={workspace.workspaceName}>
@@ -82,7 +80,7 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
       </div>
 
       {isModalOpen && selectedWorkspace && (
-        <div className="modal">
+        <div className="modal" ref={modalRef}>
           <div className="modal-wrapper">
             <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
             <button
@@ -102,7 +100,7 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
       )}
 
       {isNewWorkspaceModalOpen && (
-        <div className="modal">
+        <div className="modal" ref={modalRef}>
           <div className="modal-wrapper">
             <h3 className="modal-heading">Create New Workspace</h3>
             <button
@@ -157,6 +155,7 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
         }
         .icon {
           font-size: 2rem;
+          color:black;
         }
         .icons {
           padding: 0 3rem;
@@ -240,6 +239,7 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
            gap:0.3rem;
            border:none;
            font-size:1.4rem;
+           font-weight:600;
            color:#0B1444;
            border-radius:1rem;
            padding:1rem 1rem;
@@ -329,39 +329,30 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
         Switch Workspace <AiOutlinePlus className="icon" />
       </button>
       <div className="folder-wrapper">
-        {selectedWorkspace &&
-          selectedWorkspace.folders.map((folder, index) => (
-            <li key={index} className="section-list-item">
-              <IoFolderOpen
-                className="file-icon"
-                style={{ color: 'gray', fontSize: '2rem' }}
-              />
-              <p>{folder.folderName}</p>
-            </li>
-          ))}
+        {selectedWorkspace?.folders.map((folder, index) => (
+          <li key={index} className="section-list-item">
+            <IoFolderOpen
+              className="file-icon"
+              style={{ color: 'gray', fontSize: '2rem' }}
+            />
+            <p>{truncateString(folder.folderName, 9)}</p>
+          </li>
+        ))}
       </div>
     </ul>
   );
 };
+
 ModalSections.propTypes = {
-  selectedFolder: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    details: PropTypes.objectOf(
+  selectedWorkspace: PropTypes.shape({
+    workspaceName: PropTypes.string.isRequired,
+    folders: PropTypes.arrayOf(
       PropTypes.shape({
-        heading: PropTypes.string.isRequired,
-        recentFiles: PropTypes.arrayOf(
-          PropTypes.shape({
-            name: PropTypes.string.isRequired,
-          })
-        ).isRequired,
-        folders: PropTypes.arrayOf(
-          PropTypes.shape({
-            name: PropTypes.string.isRequired,
-          })
-        ).isRequired,
+        folderName: PropTypes.string.isRequired,
       })
     ).isRequired,
   }).isRequired,
+  handleWorkspaceSwitch: PropTypes.func.isRequired,
 };
 
 export default Workspaces;

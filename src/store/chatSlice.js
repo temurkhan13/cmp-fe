@@ -3,7 +3,7 @@
 // import { fetchUserShareData } from '../hooks/useManagerUser';
 // //import useManagerUser from '@hooks/useManagerUser';
 
- // Async thunk for fetching shared users
+// Async thunk for fetching shared users
 // export const fetchSharedUsers = createAsyncThunk(
 //   'chat/fetchSharedUsers',
 //   async (chatId) => {
@@ -28,7 +28,6 @@
 //       }
 //     }
 //   );
-
 
 //Chat Slice working
 // const chatSlice = createSlice({
@@ -68,8 +67,6 @@
 // export const { setCurrentChat, addSharedUser, removeSharedUser } = chatSlice.actions;
 // export default chatSlice.reducer;
 
-
-
 //chatSlice with additional features
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
@@ -77,17 +74,15 @@ import apiClient from '@api/axios';
 import { fetchUserShareData } from '../hooks/useManagerUser';
 //import { } from '';
 
-
-
 // Async thunk for fetching shared users
 export const fetchSharedUsers = createAsyncThunk(
-    'chat/fetchSharedUsers',
-    async (chatId) => {
-      const response = await fetchUserShareData(chatId);
-      console.log('Thunk response data:', response);
-      return response.data;
-    }
-  );
+  'chat/fetchSharedUsers',
+  async (chatId) => {
+    const response = await fetchUserShareData(chatId);
+    console.log('Thunk response data:', response);
+    return response.data;
+  }
+);
 // Async thunks for fetching and updating chat data
 export const fetchChat = createAsyncThunk('chat/fetchChat', async (chatId) => {
   const response = await apiClient.get(`/chat/${chatId}`);
@@ -95,20 +90,23 @@ export const fetchChat = createAsyncThunk('chat/fetchChat', async (chatId) => {
   return response.data;
 });
 
-
-
-export const updateChatVersion = createAsyncThunk('chat/updateVersion', async ({ chatId, newVersion }) => {
-  const response = await apiClient.put(`/chat/${chatId}/version`, { version: newVersion });
-  console.log('Thunk response data:', response);
-  return response.data;
-});
+export const updateChatVersion = createAsyncThunk(
+  'chat/updateVersion',
+  async ({ chatId, newVersion }) => {
+    const response = await apiClient.put(`/chat/${chatId}/version`, {
+      version: newVersion,
+    });
+    console.log('Thunk response data:', response);
+    return response.data;
+  }
+);
 
 // Define the initial state
 const initialState = {
-     sharedUsers: [],
+  sharedUsers: [],
   currentChat: null,
   loading: false,
-  error: null
+  error: null,
 };
 
 // Create the chat slice
@@ -120,13 +118,13 @@ const chatSlice = createSlice({
       state.currentChat = action.payload;
     },
     addSharedUser(state, action) {
-                console.log(action.payload);
-              state.sharedUsers.push(action.payload);
+      console.log(action.payload);
+      state.sharedUsers.push(action.payload);
     },
     removeSharedUser(state, action) {
-              state.sharedUsers = state.sharedUsers.filter(
-                (user) => user.name !== action.payload
-              );
+      state.sharedUsers = state.sharedUsers.filter(
+        (user) => user.name !== action.payload
+      );
     },
     addComment(state, action) {
       state.currentChat.comments.push(action.payload);
@@ -139,11 +137,13 @@ const chatSlice = createSlice({
     },
     addReplyToComment(state, action) {
       const { commentId, reply } = action.payload;
-      const comment = state.currentChat.comments.find(comment => comment.commentId === commentId);
+      const comment = state.currentChat.comments.find(
+        (comment) => comment.commentId === commentId
+      );
       if (comment) {
         comment.replies.push(reply);
       }
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -163,15 +163,23 @@ const chatSlice = createSlice({
         state.currentChat.version = action.payload.version;
       })
       .addCase(fetchSharedUsers.fulfilled, (state, action) => {
-                console.log('Action payload in fulfilled case:', action.payload);
-                state.sharedUsers = action.payload;
-              })
-        .addCase(fetchSharedUsers.rejected, (state, action) => {
-                console.log('Action payload in rejected case:', action.payload);
-                state.error = action.payload;
-              });
-  }
+        console.log('Action payload in fulfilled case:', action.payload);
+        state.sharedUsers = action.payload;
+      })
+      .addCase(fetchSharedUsers.rejected, (state, action) => {
+        console.log('Action payload in rejected case:', action.payload);
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { setCurrentChat, addSharedUser, removeSharedUser, addComment, addBookmark, addMedia, addReplyToComment } = chatSlice.actions;
+export const {
+  setCurrentChat,
+  addSharedUser,
+  removeSharedUser,
+  addComment,
+  addBookmark,
+  addMedia,
+  addReplyToComment,
+} = chatSlice.actions;
 export default chatSlice.reducer;

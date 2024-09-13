@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import { CiBellOn } from 'react-icons/ci';
 import { FiLogOut } from 'react-icons/fi';
+import { RiLockPasswordLine } from 'react-icons/ri';
+import { CgProfile } from 'react-icons/cg';
+import { useNavigate } from 'react-router-dom';
 import User from '../../assets/chat/user.png';
 import NotificationDropdown from './NotificationDropdown';
 import LoadingBar from 'react-redux-loading-bar';
+import Modal from '../../components/common/Modal';
+import ChangePassword from '../../components/dashboard/ChangePassword';
 
 const Header = () => {
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [hasNotification] = useState(true);
+  const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
+    useState(false);
 
   const handleProfileClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -27,11 +35,23 @@ const Header = () => {
 
   const handleLogout = () => {
     console.log('Logout clicked');
+    closeDropdowns();
+  };
+
+  const handleOpenChangePasswordModal = () => {
+    setChangePasswordModalOpen(true);
+    closeDropdowns();
+  };
+
+  const handleCloseChangePasswordModal = () => {
+    setChangePasswordModalOpen(false);
   };
 
   return (
     <header className="header">
-      <div><LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} /></div>
+      <div>
+        <LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} />
+      </div>
       <div className="ProfileBar">
         <div className="bellWrapper" onClick={handleNotificationClick}>
           <CiBellOn className="BellIcon" />
@@ -54,6 +74,23 @@ const Header = () => {
 
         {dropdownOpen && (
           <div className="dropdownMenu">
+            <div
+              className="dropdownItem"
+              onClick={() => {
+                navigate('/dashboard/settings');
+                closeDropdowns(); // Close dropdown after navigating
+              }}
+            >
+              <CgProfile className="dropdownIcon" />
+              Profile
+            </div>
+            <div
+              className="dropdownItem"
+              onClick={handleOpenChangePasswordModal}
+            >
+              <RiLockPasswordLine className="dropdownIcon" />
+              Change Password
+            </div>
             <div className="dropdownItem" onClick={handleLogout}>
               <FiLogOut className="dropdownIcon" />
               Logout
@@ -62,9 +99,18 @@ const Header = () => {
         )}
 
         {(dropdownOpen || notificationOpen) && (
-          <div className="overlay" onClick={closeDropdowns}></div>
+          <div className="header-overlay" onClick={closeDropdowns}></div>
         )}
       </div>
+      {isChangePasswordModalOpen && (
+        <Modal
+          title="Change Password"
+          isOpen={isChangePasswordModalOpen}
+          onClose={handleCloseChangePasswordModal}
+        >
+          <ChangePassword />
+        </Modal>
+      )}
 
       <style>{`
         .header {
@@ -116,21 +162,22 @@ const Header = () => {
 
         .dropdownMenu {
           position: absolute;
-          top: 4rem;
+          top: 4.5rem;
           right: 0rem;
           background-color: white;
-          box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.2);
-          border-radius: 0.5rem;
+          box-shadow: 0 1rem 5rem rgba(0, 0, 0, 0.2);
+          border-radius: 1rem;
           overflow: hidden;
           z-index: 1001;
+          width: 22rem;
         }
 
         .dropdownItem {
           display: flex;
           align-items: center;
-          padding: 0.5rem 1rem;
+          padding: 0.5rem 1.5rem;
           cursor: pointer;
-          font-size: 1.7rem;
+          font-size: 1.6rem;
           transition: background-color 0.3s ease;
         }
 
@@ -139,17 +186,18 @@ const Header = () => {
         }
 
         .dropdownIcon {
-          margin-right: 0.625rem;
+          margin-right: 0.8rem;
+          font-size: 1.8rem;
         }
 
-        .overlay {
+        .header-overlay {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
           background-color: rgba(0, 0, 0, 0);
-          z-index: 1000;
+          z-index: 0;
         }
       `}</style>
     </header>

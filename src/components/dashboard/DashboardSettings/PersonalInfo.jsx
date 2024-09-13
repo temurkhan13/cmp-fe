@@ -1,16 +1,17 @@
 import { useState } from 'react';
+// import ChangePassword from '../ChangePassword';
 
 const PersonalInfo = () => {
   const [avatar, setAvatar] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [companySize, setCompanySize] = useState('');
+  // const [role, setRole] = useState('');
+  // const [industry, setIndustry] = useState('');
+  // const [companySize, setCompanySize] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [websiteURL, setWebsiteURL] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
+  // const [websiteURL, setWebsiteURL] = useState('');
+  // const [jobTitle, setJobTitle] = useState('');
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -33,14 +34,6 @@ const PersonalInfo = () => {
 
   const validateForm = () => {
     const errors = {};
-
-    //     if (firstName && !/^[A-Za-z]{3,32}$/.test(firstName)) {
-    //       errors.firstName = 'First name must be between 3 and 32 letters.';
-    //     }
-    //
-    //     if (lastName && !/^[A-Za-z]{3,32}$/.test(lastName)) {
-    //       errors.lastName = 'Last name must be between 3 and 32 letters.';
-    //     }
 
     if (email && !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       errors.email = 'Invalid email address.';
@@ -94,7 +87,6 @@ const PersonalInfo = () => {
           </button>
         )}
       </div>
-
       <form className="info-form" onSubmit={handleSubmit}>
         <div className="form-row">
           <div className="input-wrapper">
@@ -141,16 +133,15 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        <div className="form-row">
+        {/* <div className="form-row">
           <div className="input-wrapper">
-            <label>What is your role?</label>
+            <label>your Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className={errors.role ? 'input-error' : ''}
             >
               <option value="">What is your role?</option>
-              {/* Add more options here */}
             </select>
             {errors.role && <small className="error">{errors.role}</small>}
           </div>
@@ -165,14 +156,13 @@ const PersonalInfo = () => {
               className={errors.industry ? 'input-error' : ''}
             >
               <option value="">What industry are you in?</option>
-              {/* Add more options here */}
             </select>
             {errors.industry && (
               <small className="error">{errors.industry}</small>
             )}
           </div>
-        </div>
-
+        </div> */}
+        {/* 
         <div className="form-row">
           <div className="input-wrapper">
             <label>What size is your company?</label>
@@ -182,13 +172,12 @@ const PersonalInfo = () => {
               className={errors.companySize ? 'input-error' : ''}
             >
               <option value="">What size is your company?</option>
-              {/* Add more options here */}
             </select>
             {errors.companySize && (
               <small className="error">{errors.companySize}</small>
             )}
           </div>
-        </div>
+        </div> */}
 
         <div className="form-row">
           <div className="input-wrapper">
@@ -206,7 +195,7 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        <div className="form-row">
+        {/* <div className="form-row">
           <div className="input-wrapper">
             <label>What is your website URL?</label>
             <input
@@ -220,8 +209,8 @@ const PersonalInfo = () => {
               <small className="error">{errors.websiteURL}</small>
             )}
           </div>
-        </div>
-
+        </div> */}
+        {/* 
         <div className="form-row">
           <div className="input-wrapper">
             <label>What is your job title?</label>
@@ -236,7 +225,7 @@ const PersonalInfo = () => {
               <small className="error">{errors.jobTitle}</small>
             )}
           </div>
-        </div>
+        </div> */}
 
         <button type="submit" className="save-button">
           Save Changes
@@ -244,7 +233,7 @@ const PersonalInfo = () => {
 
         {successMessage && <p className="success-message">{successMessage}</p>}
       </form>
-
+      {/* <ChangePassword /> */}
       <style>{`
         .personal-info {
           margin: 0 auto;

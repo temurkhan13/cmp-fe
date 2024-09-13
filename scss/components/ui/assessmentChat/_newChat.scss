@@ -101,11 +101,75 @@
 .header-collapsed-title {
   display: none;
 }
-section.chat-item-section {
+.chat-item-section {
   color: black !important;
 }
 .chat-item-section:hover {
   background-color: #f0f0f0;
   border-radius: 0.8rem;
   cursor: pointer;
+}
+
+.explore-projects p {
+  font-size: 1.4rem !important;
+  font-weight: 500 !important;
+  background-color: #f0f0f0 !important;
+  width: 22rem;
+  padding: 0.5rem !important;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: gray !important;
+}
+
+.projects-dropdown {
+  position: absolute;
+  background: white;
+  display: flex;
+  width: 20rem;
+  flex-direction: column;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 24px 0px #0000003f;
+  padding: 1rem;
+  z-index: 10;
+  font-size: 1.4rem !important;
+  font-weight: 500;
+  color: black;
+}
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 18rem;
+}
+.close-icon {
+  cursor: pointer;
+  font-size: 1.2rem;
+  background-color: #f0f0f0;
+  display: flex;
+  padding: 0.2rem;
+  border-radius: 50%;
+  align-items: right;
+}
+.projects-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.projects-list li {
+  padding: 0.5rem 0;
+  display: flex;
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  padding-left: 1rem;
+}
+.projects-list li:hover {
+  background-color: #f0f0f0;
+  border-radius: 0.8rem;
 }

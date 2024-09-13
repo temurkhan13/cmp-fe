@@ -1,114 +1,30 @@
-import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { MdOutlineError } from 'react-icons/md';
-import { RxCross2 } from 'react-icons/rx';
-import ChoosePlan from '../../components/dashboard/PlanAndBillingmodal';
-
-const Modal = ({ component: Component, onClose }) => {
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={onClose}>
-          <RxCross2 size={22} />
-        </button>
-        <Component />
-      </div>
-
-      <style>{`
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .modal-content {
-          background-color: white;
-          padding: 2rem;
-          border-radius: 1rem;
-          position: relative;
-          z-index:1001;
-        }
-        .close-btn {
-          position: absolute;
-          top: 2rem;
-          right: 2rem;
-          font-size: 2rem;
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-      `}</style>
-    </div>
-  );
-};
+import PlanAndBillingmodal from '../../components/dashboard/PlanAndBillingmodal';
+import { useState } from 'react';
 
 const PlanAndBilling = () => {
-  const plans = [
-    {
-      name: 'Free',
-      description: 'Free Plan with purchase of.',
-      monthlyPrice: '£0',
-      yearlyPrice: '£0',
-      features: [
-        'Unlimited Queries: 1,000 AI words max per query.',
-        '2 Modules: 1,000 AI words each.',
-        '1 Project: 1,000 AI words max.',
-        'PDF Export: With ChangeAI branding.',
-        'AI Words: 2,000 monthly (up to 3,000).',
-      ],
-      highlighted: false,
-    },
-    {
-      name: 'Starter',
-      description: 'Starter Plan with purchase of.',
-      monthlyPrice: '£29',
-      yearlyPrice: '£348',
-      features: [
-        'Unlimited: 30,000 AI words.',
-        'Projects: 2 Assessments, 2 Playbooks.',
-        'Users: 3 users, 2 workspaces.',
-        'Export: PPT, Word, Excel, PDF (no watermark).',
-        'Design: Icons, images, shapes, tables.',
-        'Monthly Limit: 30,000 AI words, Email support.`',
-      ],
-      highlighted: true,
-    },
-    {
-      name: 'Pro',
-      description: 'Pro Plan with purchase of.',
-      monthlyPrice: '£49',
-      yearlyPrice: '£588',
-      features: [
-        'AI Usage: 60,000 words/month.',
-        'Projects: 5 assessments, 5 playbooks, export no watermark.',
-        'Data: Restore history/data up to 30 days.',
-        'Editing: Full access to layouts, icons, images, and tables.',
-        'Regenerate: Instant AI response refresh.',
-        'Support: Priority, 5 users, 3 workspaces.',
-      ],
-      highlighted: false,
-    },
-  ];
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('monthly');
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const planInfo = {
     name: 'Starter',
     status: 'Active',
     price: '29.99',
     description: [
-      '3 users, 2 workspaces',
-      'View user history up to 7 days',
-      'Restore deleted data up to 7 days',
-      'Email support',
-      '3 brand styles per project',
-      '2 ChangeAI Playbook projects, max 30,000 AI words',
+      'Unlimited: 30,000 AI words.',
+      'Projects: 2 Assessments, 2 Playbooks.',
+      'Users: 3 users, 2 workspaces.',
+      'Export: PPT, Word, Excel, PDF (no watermark).',
+      'Design: Icons, images, shapes, tables.',
+      'Monthly Limit: 30,000 AI words, Email support.`',
     ],
   };
 
@@ -185,24 +101,6 @@ const PlanAndBilling = () => {
     },
   ];
 
-  const handleRenewClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const RenewComponent = () => (
-    <div>
-      <ChoosePlan
-        plans={plans}
-        selectedPlan={selectedPlan}
-        onSelectPlan={setSelectedPlan}
-      />
-    </div>
-  );
-
   return (
     <div className="billing-page">
       <h2>Plan & Billing</h2>
@@ -222,7 +120,7 @@ const PlanAndBilling = () => {
             <strong>Price:</strong>
             <span className="price">${planInfo.price}</span>
           </p>
-          <button className="renew-btn" onClick={handleRenewClick}>
+          <button className="renew-btn" onClick={openModal}>
             Renew
           </button>
         </div>
@@ -273,10 +171,7 @@ const PlanAndBilling = () => {
           </tbody>
         </table>
       </div>
-
-      {isModalOpen && (
-        <Modal component={RenewComponent} onClose={handleCloseModal} />
-      )}
+      <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`
         .billing-page {
@@ -384,6 +279,10 @@ const PlanAndBilling = () => {
         .price {
           color: #3f51b5;
         }
+          .info p{
+          display:flex;
+          gap: 1rem;
+          }
       `}</style>
     </div>
   );

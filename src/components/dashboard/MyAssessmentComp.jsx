@@ -10,8 +10,9 @@ import { ImFilesEmpty } from 'react-icons/im';
 import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineEdit } from 'react-icons/md';
 import { HiDotsHorizontal } from 'react-icons/hi';
+import LoadingSpinner from '../../components/common/LoadingSpinner ';
 
-import Component from '@components';
+// import Component from '@components';
 import useManagerChat from '@hooks/useManagerChat';
 
 const MyAssessmentComp = () => {
@@ -24,7 +25,7 @@ const MyAssessmentComp = () => {
     }
   }, [managerData]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error: {error}</div>;
 
   const truncateString = (str, num) => {
@@ -154,7 +155,7 @@ const MyAssessmentComp = () => {
         ))}
       </div>
 
-      <div className="section">
+      {/* <div className="section">
         <p className="sectionTitle">Folders</p>
         <div className="itemsContainer">
           {managerData &&
@@ -162,7 +163,7 @@ const MyAssessmentComp = () => {
               <Component.Dashboard.FolderCard key={folder.id} folder={folder} />
             ))}
         </div>
-      </div>
+      </div> */}
 
       <style>{`
         .container {

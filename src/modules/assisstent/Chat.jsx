@@ -1,17 +1,23 @@
-import Components from '@components';
-
+import Components from '../../components';
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 
-import { setSelectedWorkspace, selectWorkspace,setCurrentChatId } from '../../redux/slices/workspacesSlice';
+import {
+  setSelectedWorkspace,
+  selectWorkspace,
+  setCurrentChatId,
+} from '../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
+import {
+  AssistantSidebar,
+  MessagesSection,
+  NewChat,
+} from '../../components/assisstent';
 
 const AiAssistantChat = () => {
-
-
   const dispatch = useDispatch();
   const { chatId } = useParams(); // Extract chatId from the URL
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
@@ -19,7 +25,7 @@ const AiAssistantChat = () => {
   const selectedWorkspace = useSelector(selectWorkspace);
 
   useEffect(() => {
-    if(chatId){
+    if (chatId) {
       dispatch(setCurrentChatId(chatId));
     }
     if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
@@ -30,13 +36,16 @@ const AiAssistantChat = () => {
 
   return (
     <div className="assessmentChat">
-      <Components.Common.Header  activeWorkspace= {selectedWorkspace} workspaces={workspacess} />
+      <Components.Common.Header
+        activeWorkspace={selectedWorkspace}
+        workspaces={workspacess}
+      />
       <section>
-        <Components.Assistant.NewChat />
+        <NewChat />
 
-        <Components.Assistant.MessagesSection />
+        <MessagesSection />
 
-        <Components.Assistant.Assessments />
+        <AssistantSidebar />
       </section>
     </div>
   );
