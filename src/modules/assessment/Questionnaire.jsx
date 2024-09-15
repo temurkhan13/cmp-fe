@@ -78,12 +78,12 @@ const Questionnaire = () => {
 
   return (
     <div className={styles.MainContainer}>
-      <div className={styles.header}>
-        <p>User Questionnaire</p>
+      {/* <div className={styles.header}>
+        <p></p>
         <Link to="/dashboard">
-          <button>Exit</button>
+          <button className='exit-btn-questionnaire'>Exit</button>
         </Link>
-      </div>
+      </div> */}
 
       <div className={styles.Container}>
         <div className={styles.StepContainer} style={{ '--width': width }}>

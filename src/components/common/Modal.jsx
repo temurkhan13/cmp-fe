@@ -51,8 +51,10 @@ const Modal = ({ title, isOpen, onClose, children }) => {
           padding: 2rem;
           border-radius: 1rem;
           position: relative;
-          max-width: 90vw;
-          z-index: 10002; /* Ensure modal content stays on top of the overlay */
+          // max-width: 90vw;
+          max-height:95vh;
+          // z-index: 10002; 
+
         }
         .modal-header {
           display: flex;
