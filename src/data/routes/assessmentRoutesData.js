@@ -1,14 +1,15 @@
-import Module from '../../modules';
+import React from 'react';
+
 const assessmentRoutesData = [
   {
     title: '',
     path: '/assessment/chat',
-    element: Module.Assessment.Chat,
+    element: React.lazy(() => import('../../modules/assessment/Chat')),
   },
   {
     title: '',
     path: '/questionnaire',
-    element: Module.Assessment.Questionnaire,
+    element: React.lazy(() => import('../../modules/assessment/Questionnaire')),
   },
 ];
 

@@ -1,78 +1,58 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-//import { setCurrentChat, fetchSharedUsers } from '@store/chatSlice';
+import { useState } from 'react';
+import PropTypes from 'prop-types'; // Importing prop-types for validation
+import { BiSearch } from 'react-icons/bi';
+import { FaUserPlus } from 'react-icons/fa6';
 import Components from '@components';
 import assets from '../../assets';
 import UserDropdown from '../CustomDropdown/UserDropdown';
 import ShareModal from '../customModal/Sharemodal';
 import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import SearchDropdown from '../CustomDropdown/SearchDropdown';
+import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
-import { BiSearch } from 'react-icons/bi';
-import { FaUserPlus } from 'react-icons/fa6';
+import { Questionnaire } from '../../modules/assessment';
 
 const searchUser = ['John', 'abigale', 'mosa'];
 
 const Header = ({ activeWorkspace, workspaces }) => {
-  //const dispatch = useDispatch();
   const [activeIcon, setActiveIcon] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
+    useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-
-  // const selectedChatId = useSelector((state) => state.chat.selectedChatId);
-  // const chats = useSelector((state) => state.chat.chats);
-  // const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
-
-  // const currentChatId = useSelector((state) => state.chat.currentChatId);
-  // const sharedUsers = useSelector((state) => state.chat.sharedUsers);
 
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
 
-  const handleClose = () => {
-    setActiveIcon(null);
-  };
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeActiveIcon = () => setActiveIcon(null);
 
   const toggleProfileDropdown = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
-  const closeProfileDropdown = () => {
-    setIsProfileDropdownOpen(false);
-  };
+  const handleOpenShareModal = () => setIsShareModalOpen(true);
+  const handleCloseShareModal = () => setIsShareModalOpen(false);
 
-  const handleImproveResponse = () => {
-    console.log('improve response');
-  };
-
-  // useEffect(() => {
-  //   if (currentChatId) {
-  //    // console.log("header dispatch: "+fetchSharedUsers(currentChatId));
-  //    setCurrentChat(currentChatId);
-  //     dispatch(fetchSharedUsers(currentChatId));
-  //   }
-  // }, [currentChatId, dispatch]);
+  const handleOpenImproveResponseModal = () =>
+    setIsImproveResponseModalOpen(true);
+  const handleCloseImproveResponseModal = () =>
+    setIsImproveResponseModalOpen(false);
 
   return (
     <div className="topbar">
       <div>
         <Components.Feature.HeaderDropDown />
         <Components.Feature.Button className="secondry">
-          {activeWorkspace && activeWorkspace.workspaceName}
+          {activeWorkspace?.workspaceName}
         </Components.Feature.Button>
       </div>
       <section>
         <div>
-          <span className="improve-response" onClick={handleImproveResponse}>
+          <span
+            className="improve-response"
+            onClick={handleOpenImproveResponseModal}
+          >
             Improve Response
           </span>
           <span
@@ -86,7 +66,7 @@ const Header = ({ activeWorkspace, workspaces }) => {
               title="Search"
               items={searchUser}
               visible={activeIcon === 'search'}
-              onClose={handleClose}
+              onClose={closeActiveIcon}
             />
           )}
           <UserDropdown
@@ -97,11 +77,10 @@ const Header = ({ activeWorkspace, workspaces }) => {
             activeIcon={activeIcon}
             handleIconClick={handleIconClick}
           />
-          <div className="shareBtn" onClick={handleOpenModal}>
+          <div className="shareBtn" onClick={handleOpenShareModal}>
             <FaUserPlus />
             <span>Share</span>
           </div>
-          {isModalOpen && <ShareModal onClose={handleCloseModal} />}
         </div>
         <img
           src={assets.common.profile}
@@ -111,10 +90,32 @@ const Header = ({ activeWorkspace, workspaces }) => {
         />
       </section>
       {isProfileDropdownOpen && (
-        <ProfileDropdown onClose={closeProfileDropdown} />
+        <ProfileDropdown onClose={toggleProfileDropdown} />
+      )}
+      {isShareModalOpen && <ShareModal onClose={handleCloseShareModal} />}
+      {isImproveResponseModalOpen && (
+        <Modal
+          title="User Questionnaire"
+          isOpen={isImproveResponseModalOpen}
+          onClose={handleCloseImproveResponseModal}
+        >
+          <Questionnaire />
+        </Modal>
       )}
     </div>
   );
+};
+
+Header.propTypes = {
+  activeWorkspace: PropTypes.shape({
+    workspaceName: PropTypes.string,
+  }),
+  workspaces: PropTypes.arrayOf(
+    PropTypes.shape({
+      workspaceId: PropTypes.string,
+      workspaceName: PropTypes.string,
+    })
+  ),
 };
 
 export default Header;
