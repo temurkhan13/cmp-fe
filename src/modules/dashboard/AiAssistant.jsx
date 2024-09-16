@@ -148,6 +148,7 @@ const AiAssistant = () => {
           }
           .card {
             width: 30rem;
+            height: 25rem;
             margin: 0.5rem;
             border: 1px solid #ccc;
             border-radius: 1.3rem;
@@ -180,6 +181,19 @@ const AiAssistant = () => {
             justify-content: space-between;
             align-items: center;
           }
+            .fileDetails{
+            margin-bottom:3rem;
+            }
+              .fileName {
+        font-size: 1.125rem;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+         .folderName {
+        color: #0066ff;
+        font-size: 1.1rem;
+        margin-left: 0.5rem;
+      }
         `}</style>
       </div>
     </DashboardLayout>
