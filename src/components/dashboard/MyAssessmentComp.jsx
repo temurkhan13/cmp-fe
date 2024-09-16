@@ -243,10 +243,11 @@ const MyAssessmentComp = () => {
 
         .card {
           width: 30rem;
+          height:25rem;
           margin: 0.5rem;
           border: 1px solid #ccc;
           border-radius: 1.3rem;
-          background-color: white;
+          // background-color: white;
           padding: 2rem;
           cursor: pointer;
           display: flex;
@@ -256,7 +257,7 @@ const MyAssessmentComp = () => {
         }
 
         .card:hover {
-          background-color: #f9f9f9;
+          background-color: #f0f0f0;
         }
 
         .cardHeader {
@@ -321,12 +322,14 @@ const MyAssessmentComp = () => {
           width: 100%;
           margin: 0.2rem 1.5rem;
           font-size: 1rem;
+          margin-bottom:3rem;
         }
 
-        .folderName {
-          margin: 0 0.5rem;
-          font-weight: bold;
-        }
+         .folderName {
+        color: #0066ff;
+        font-size: 1.1rem;
+        margin-left: 0.5rem;
+      }
 
         .dotsIcon,
         .editIcon {

@@ -15,6 +15,9 @@ import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { SlQuestion } from 'react-icons/sl';
 import { RxLaptop } from 'react-icons/rx';
+
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi';
 import CustomModal from '../../customModal/CustomModal';
@@ -34,7 +37,6 @@ const DashboardHomeComp = () => {
   const [isMoveToTrashModalOpen, setIsMoveToTrashModalOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
   const userId = useSelector((state) => state.auth.user?.id);
-  
 
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
@@ -42,6 +44,13 @@ const DashboardHomeComp = () => {
 
   const activeFolder = useSelector((state) => state.workspaces.selectedFolder);
   const chats = useSelector(selectAllChats);
+
+  const renameSchema = Yup.object().shape({
+    newName: Yup.string()
+      .min(2, 'Name is too short') // Add minimum length validation if needed
+      .max(50, 'Name is too long') // Add maximum length validation if needed
+      .required('Name cannot be empty'),
+  });
 
   const toggleDropdown = (chat) => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -368,27 +377,7 @@ const DashboardHomeComp = () => {
           gap:0.8rem;
           margin-left: 2rem;
         }
-        .generate .center-buttons {
-          justify-content: space-between;
-        }
-        .generate .icon {
-          font-size: 26px;
-        }
-        .generate .icon-small {
-          margin-right: 30px;
-          margin-left: 5px;
-          font-size: 18px;
-        }
-        .generate .filter-icon {
-          font-size: 22px;
-        }
-        .generate .adjustments-icon {
-          margin-right: 30px;
-          font-size: 22px;
-        }
         .files {
-          // padding: 0 2rem;
-          // margin-top:1rem;
           border-right: 2px solid lightgray;
         }
         .files-heading {
@@ -397,26 +386,6 @@ const DashboardHomeComp = () => {
           font-weight: 600;
           margin-top: 2rem;
           padding: 0 3rem;
-        }
-        .file-list {
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: row;
-          gap: 1rem;
-        }
-        .file-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          color: gray;
-          cursor: pointer;
-          font-size: 1.25rem;
-          gap: 0.1rem;
-          padding: 0.5rem;
-          border-radius: 0.8rem;
-          &:hover {
-          background-color: #f0f0f0;
-        }
         }
       .card-wrapper{
         display: flex;
@@ -431,6 +400,7 @@ const DashboardHomeComp = () => {
       }
       .card {
         width: 30rem;
+        height:25rem;
         margin: 0.5rem;
         border: 1px solid #ccc;
         border-radius: 1.3rem;
@@ -483,6 +453,7 @@ const DashboardHomeComp = () => {
       .fileDetails {
         width: 100%;
         margin-top: 1rem;
+          margin-bottom:3rem;
       }
       .fileName {
         font-size: 1.125rem;

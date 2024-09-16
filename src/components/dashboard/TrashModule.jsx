@@ -31,7 +31,7 @@ const TrashModule = () => {
     },
   ];
 
-  const [activeTab, setActiveTab] = useState('Folder');
+  const [activeTab, setActiveTab] = useState('Workspace');
 
   return (
     <div className="trash-container">

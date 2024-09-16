@@ -40,12 +40,10 @@ const Questionnaire = () => {
       }\nAnswer: ${answer}\n`;
       setQuestions(questionnaireString);
     });
-    
   };
   const HandleStart = () => {
-
-    console.log("Survey: ",Questions);
-      dispatch(AddProjectSurvey(workspaceId,folderId, {survey : Questions}));
+    console.log('Survey: ', Questions);
+    dispatch(AddProjectSurvey(workspaceId, folderId, { survey: Questions }));
 
     // console.log("fghjk")
     //navigate('/assessment/chat', { state: { Questions } });
@@ -57,7 +55,7 @@ const Questionnaire = () => {
     ) {
       if (activeStep === totalSteps) {
         setIsSubmitted(true);
-        logAnswers();            
+        logAnswers();
       } else {
         setActiveStep(activeStep + 1);
       }

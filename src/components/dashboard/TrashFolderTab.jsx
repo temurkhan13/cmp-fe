@@ -84,6 +84,7 @@ const FolderCard = ({ folder }) => {
           margin: 1rem;
           width:35rem;
           position: relative;
+          box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
           transition: background 0.3s ease;
         }
 

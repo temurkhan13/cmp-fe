@@ -16,6 +16,14 @@ import { ImFilesEmpty } from 'react-icons/im';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
 
+// Truncate function
+const truncate = (text, charLimit) => {
+  if (text.length > charLimit) {
+    return text.substring(0, charLimit) + '...';
+  }
+  return text;
+};
+
 const DeletedItems = () => {
   return (
     <div className="file-content">
@@ -102,14 +110,18 @@ const TrashFileTab = ({ cardData }) => {
                   <h2 className="deletedUserName">
                     <RxAvatar className="deletedIcon" /> {card.userName}
                   </h2>
-                  <p className="deletedContent">{card.userContent}</p>
+                  <p className="deletedContent">
+                    {truncate(card.userContent, 55)}
+                  </p>
                   <MdOutlineEdit className="deletedEditIcon" />
                 </div>
                 <div className="deletedContentSection">
                   <h3 className="deletedAiHeading">
                     <RxAvatar className="deletedIcon" /> ChangeAI
                   </h3>
-                  <p className="deletedChatContent">{card.aiContent}</p>
+                  <p className="deletedChatContent">
+                    {truncate(card.aiContent, 55)}
+                  </p>
                 </div>
                 <div className="deletedFooter">
                   <div className="deletedIconsContainer">
@@ -275,9 +287,10 @@ const TrashFileTab = ({ cardData }) => {
           background: none;
           cursor: pointer;
           text-align: left;
+          width: 100%;
         }
         .dropdownMenu button:hover {
-          background-color: #f0f0f0;
+          background-color: #f9f9f9;
         }
       `}</style>
     </div>
