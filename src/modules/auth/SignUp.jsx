@@ -4,11 +4,21 @@ import Components from '../../components';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect } from 'react';
+
+
+import { useDispatch } from 'react-redux';
+import { register } from '../../redux/slices/authSlice';
+import { useSelector } from 'react-redux';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  //const [isLoading, setIsLoading] = useState(false);
+ // const { isLoading, error } = useSelector((state) => state.auth);
+  const { user, isLoading,error } = useSelector((state) => state.auth);
+
+//On error response should display on UI like User already Exist
 
   const initialValues = {
     email: '',
@@ -16,18 +26,36 @@ const SignUp = () => {
     lastName: '',
     password: '',
     confirmPassword: '',
+    companyName: '',
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    setIsLoading(true);
-    setSubmitting(false);
+   // setIsLoading(true);
+   try {
+    console.log(values);
+   await dispatch(register({ registrationData: values }));   
+    //navigate('/dashboard');
+   } catch (error) {
+    console.log(error);
+   }
 
+    setSubmitting(false);
     // Simulate an API call or a sign-up process
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate('/dashboard', { state: { email: values.email } });
-    }, 2000); // Simulate a 2 second delay
+   // 
+
+    // setTimeout(() => {
+
+    //  // setIsLoading(false);
+    // }, 2000); // Simulate a 2 second delay
   };
+
+
+   // Automatically navigate to dashboard after successful registration
+   useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   return (
     <Components.Feature.Container>
@@ -84,6 +112,8 @@ const SignUp = () => {
                 place="Enter Confirm Password"
                 type="password"
               />
+
+              {error && <p style={{ color: 'red' }}>{error}</p>}
               <Components.Feature.Button
                 className="primary"
                 type="submit"

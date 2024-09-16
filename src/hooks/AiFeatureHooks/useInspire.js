@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import apiClient from '@api/axios';
-
+//import apiClient from '@api/axios';
+import axios from 'axios';
 const useInspire = () => {
   const [loading, setLoading] = useState(false);
 
@@ -8,7 +8,7 @@ const useInspire = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await apiClient.post(
+      const response = await axios.post(
         'http://139.59.4.99:3000/api/assessment/inspire',
         {
           message:

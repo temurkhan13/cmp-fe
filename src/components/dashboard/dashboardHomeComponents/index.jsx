@@ -33,8 +33,10 @@ const DashboardHomeComp = () => {
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const [isMoveToTrashModalOpen, setIsMoveToTrashModalOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const userId = useSelector((state) => state.auth.user?.id);
+  
 
-  const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
+  const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
 

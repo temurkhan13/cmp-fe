@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import { loadingBarMiddleware, showLoading, hideLoading, loadingBarReducer } from 'react-redux-loading-bar';
 import storage from 'redux-persist/lib/storage'; // This defaults to localStorage for web
-import businessInfoReducer from '../../store/businessInfoSlice';
+import businessInfoReducer from '../slices/businessInfoSlice';
 import userReducer from '../slices/userSlice';
 import authReducer from '../slices/authSlice';
 import workspacesReducer from '../slices/workspacesSlice';

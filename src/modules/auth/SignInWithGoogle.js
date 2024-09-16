@@ -17,6 +17,7 @@ const firebaseConfig = {
 
 // Function to handle Google Sign-In
 export const signinWithGoogle = async () => {
+  window.location.href = 'http://139.59.4.99:3000/api/auth/google';
   // const provider = new GoogleAuthProvider();
 
   try {
