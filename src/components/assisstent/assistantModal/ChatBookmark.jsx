@@ -4,7 +4,7 @@ import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
 
 const ChatBookmark = ({ date, messages }) => {
-  const [bookmarks, setBookmarks] = useState(messages.map(() => false));
+  const [bookmarks, setBookmarks] = useState(messages && messages.map(() => false));
 
   const toggleBookmark = (index) => {
     setBookmarks((prevBookmarks) =>
@@ -18,10 +18,10 @@ const ChatBookmark = ({ date, messages }) => {
     <div>
       <div className="date">{date}</div>
       <div className="chat-bookmark">
-        {messages.length === 0 ? (
+        {!messages ? (
           <NoDataAvailable message="No messages available" />
         ) : (
-          messages.map((message, index) => (
+          messages && messages.map((message, index) => (
             <div className="message" key={index}>
               <div className="header-content">
                 <div className="avatar">

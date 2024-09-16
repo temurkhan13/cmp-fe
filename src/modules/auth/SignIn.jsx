@@ -6,12 +6,21 @@ import { Formik, Form } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/slices/authSlice';
+import { useEffect } from 'react';
 
 const SignIn = () => {
-  const { isLoading, error } = useSelector((state) => state.auth);
+  //const { isLoading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { user, isLoading ,error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+  
   const initialValues = {
     email: '',
     password: '',
@@ -21,11 +30,12 @@ const SignIn = () => {
     try {
       const response = await dispatch(login({ email, password }));
       console.log(response);
-      navigate('/dashboard');
+     // navigate('/dashboard');
     } catch (err) {
       console.error('Login failed:', err);
     }
   };
+
 
   return (
     <Components.Feature.Container className="auth signIn">

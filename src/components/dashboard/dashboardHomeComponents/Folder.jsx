@@ -24,6 +24,14 @@ const Folder = ({ activeWorkspace }) => {
         workspaceId: activeWorkspace.id,
         folderName: values.projectName,
       }).unwrap();
+      // await addBusinessInfo({
+      //   workspaceId: activeWorkspace.id,
+      //   folderName: values.projectName,
+      //   companySize: values.companySize,
+      //   webURL: values.websiteURL,
+      //   jobTitle: values.jobTitle,
+      //   industry: "IT",
+      // }).unwrap();
       setIsNewFolderModalOpen(false);
       resetForm();
     } catch (error) {

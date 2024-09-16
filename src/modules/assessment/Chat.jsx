@@ -51,7 +51,10 @@ import {
 const Chat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams(); // Extract chatId from the URL
-  const { data: workspaces, error, isLoading } = useGetWorkspacesQuery();
+  const userId = useSelector((state) => state.auth.user?.id) || localStorage.getItem('userId');
+  
+
+  const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
   const [selectedAssessment, setSelectedAssessment] = useState(null);

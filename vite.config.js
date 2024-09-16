@@ -71,6 +71,7 @@ export default defineConfig({
   },
   server: {
     server: {
+      hmr: false, // Disables HMR
       host: getLocalIPAddress() || '0.0.0.0',
       port: 5173, // You can change the port if needed
       strictPort: true, // Ensure the selected port is used, if not available, it will fail

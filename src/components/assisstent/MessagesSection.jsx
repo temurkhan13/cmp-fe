@@ -46,6 +46,7 @@ import {
   useUpdateMessageMutation,
   // useRemoveMessageMutation,
   useAddBookmarkMutation,
+  useGetChatQuery,
 } from '../../redux/api/workspaceApi';
 import {
   selectCurrentChat,
@@ -96,14 +97,20 @@ const MessagesSection = () => {
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentChat);
+  
 
   useEffect(() => {}, [currentFolder, currentChat, currentWorkspace]);
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
-  const [chat, setChat] = useState(
-    currentChat ? currentChat.generalMessages : []
-  );
+
+  const { data: chat } = useGetChatQuery({ workspaceId, folderId: folderId._id, chatId });
+  const [messages, setMessages] = useState(chat? chat.generalMessages : []);
+  
+
+  // const [chat, setChat] = useState(
+  //   currentChat ? currentChat.generalMessages : []
+  // );
 
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
@@ -130,6 +137,7 @@ const MessagesSection = () => {
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
 
+
   const renderIcon = (iconName, style = {}) => {
     const IconComponent = FaIcons[iconName];
     return IconComponent ? <IconComponent style={style} /> : null;
@@ -137,12 +145,12 @@ const MessagesSection = () => {
 
   useEffect(() => {
     if (chatId === null) {
-      setChat([]);
+    //  setChat([]);
       return;
     }
     if (currentChat) {
       console.log(currentChat);
-      setChat(currentChat.generalMessages || []);
+     // setChat(currentChat.generalMessages || []);
       console.log('chat Messages: ' + currentChat.generalMessages);
       console.log('chat: ' + chat);
     }
@@ -174,15 +182,15 @@ const MessagesSection = () => {
       return;
     }
     try {
-      await addMessage({
+     addMessage({
         workspaceId: workspaceId,
         folderId: folderId._id,
         chatId: chatId ? chatId : 'newChat',
         message: text,
         files: file,
       })
-        .unwrap()
-        .then((response) => console.log('text: ', response));
+        .unwrap();
+        //.then((response) => console.log('text: ', response));
 
       // setChatContent('');
     } catch (error) {
@@ -219,11 +227,31 @@ const MessagesSection = () => {
   );
 
   // Memoize applyFixedText function
+  // const applyFixedText = useCallback(
+  //   (newText) => {
+  //     const updatedChat = chat.map((message) => {
+  //       // console.log(message);
+  //       if (message.text) {
+  //         return {
+  //           ...message,
+  //           text: message.text.replace(selectedText, newText),
+  //         };
+  //       }
+  //       return message;
+  //     });
+  //     console.log('chatttt :' + chat);
+  //   //  setChat(updatedChat);
+  //     //dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
+
+  //     setPopupVisible(false);
+  //   },
+  //   [chat, selectedText, dispatch, workspaceId, chatId]
+  // );
+
   const applyFixedText = useCallback(
-    (newText) => {
-      const updatedChat = chat.map((message) => {
-        // console.log(message);
-        if (message.text) {
+    async (newText) => {
+      const updatedMessages = chat.generalMessages.map((message) => {
+        if (message.text && message.text.includes(selectedText)) {
           return {
             ...message,
             text: message.text.replace(selectedText, newText),
@@ -231,13 +259,36 @@ const MessagesSection = () => {
         }
         return message;
       });
-      console.log('chatttt :' + chat);
-      setChat(updatedChat);
-      //dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
+
+      // Optimistic update: Update UI immediately
+      // You might want to use a local state to manage this, as shown in the example
+
+      try {
+        // Optionally dispatch an action or make an API call to update the message
+        // await Promise.all(
+        //   updatedMessages
+        //     .filter((msg) => msg.text !== message.text)
+        //     .map((message) =>
+        //       updateMessage({
+        //         workspaceId,
+        //         folderId,
+        //         chatId,
+        //         messageId: message._id,
+        //         text: message.text,
+        //       })
+        //     )
+        // );
+
+        // Refetch the chat to get the latest data from the server
+      //  await refetch();
+      } catch (error) {
+        console.error('Failed to update message:', error);
+        // Handle error (e.g., show an error message to the user)
+      }
 
       setPopupVisible(false);
     },
-    [chat, selectedText, dispatch, workspaceId, chatId]
+    [chat, selectedText, updateMessage, workspaceId, folderId, chatId]
   );
 
   useEffect(() => {
@@ -344,7 +395,7 @@ const MessagesSection = () => {
     // };
     //dispatch(addBookmark(bookmark));
     console.log('bookmarked: ' + messageId);
-    await addBookmark({ workspaceId, folderId, chatId, messageId });
+    await addBookmark({ workspaceId, folderId : folderId._id, chatId, messageId });
     // console.log('bookmarked ' + bookmark.bookmarkId);
   };
   const handleInspireClick = async () => {
@@ -381,7 +432,7 @@ const MessagesSection = () => {
           multiple
         />
 
-        {chat.length > 0 ? (
+        {chat && chat.generalMessages.length > 0 ? (
           <div className="chat-scroll">
             {popupVisible && (
               <TonePopup
@@ -392,10 +443,10 @@ const MessagesSection = () => {
               />
             )}
 
-            {chat.map((message, index) => (
+            {chat && chat.generalMessages.map((message, index) => (
               <div
                 key={index}
-                ref={index === chat.length - 1 ? messagesEndRef : null}
+                ref={index === chat.generalMessages.length - 1 ? messagesEndRef : null}
               >
                 <div>
                   {message && message.sender ? (
@@ -582,7 +633,7 @@ const MessagesSection = () => {
         <CommentPopup
           onClose={() => setShowCommentPopup(false)}
           workspaceId={workspaceId}
-          folderId={folderId}
+          folderId={folderId._id}
           chatId={chatId}
           messageId={messageId}
         />

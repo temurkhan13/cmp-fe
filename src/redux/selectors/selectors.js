@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { workspaceApi } from '../api/workspaceApi';
 
 // Selector for all workspaces
 //export const selectAllWorkspaces = (state) => state.workspaceApi.queries['getWorkspaces(undefined)']?.data || [];
@@ -113,3 +114,21 @@ export const selectAllBookmarks = createSelector(
   }
 );
 
+// Selector to get chat data
+const selectChatData = (state) => state[workspaceApi.reducerPath]?.data;
+
+// Selector to get a message by ID
+export const selectMessageById = (messageId) =>
+  createSelector(
+    [selectChatData],
+    (chatData) => {
+      if (!chatData) return null;
+
+      // Iterate through each chat data to find the message
+      for (const chat of Object.values(chatData)) {
+        const message = chat.generalMessages.find((msg) => msg._id === messageId);
+        if (message) return message;
+      }
+      return null;
+    }
+  );

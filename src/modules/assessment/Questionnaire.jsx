@@ -10,9 +10,13 @@ import data from '../../data';
 import { Link, useNavigate } from 'react-router-dom';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
+import { useAddProjectSurveyMutation } from '../../redux/api/workspaceApi';
+import { useDispatch, useSelector } from 'react-redux';
+
 // import ReactMarkdown from 'react-markdown';
 
 const Questionnaire = () => {
+  const [AddProjectSurvey] = useAddProjectSurveyMutation();
   const [activeStep, setActiveStep] = useState(1);
   const [answers, setAnswers] = useState({});
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
@@ -20,6 +24,11 @@ const Questionnaire = () => {
   const [Questions, setQuestions] = useState('');
   const navigate = useNavigate();
   const { loading, handleInspire } = useInspire();
+  const dispatch = useDispatch();
+  const workspaceId = useSelector(
+    (state) => state.workspaces.currentWorkspaceId
+  );
+  const folderId = useSelector((state) => state.workspaces.currentFolderId);
 
   const logAnswers = () => {
     let questionnaireString = '';
@@ -31,10 +40,15 @@ const Questionnaire = () => {
       }\nAnswer: ${answer}\n`;
       setQuestions(questionnaireString);
     });
+    
   };
   const HandleStart = () => {
+
+    console.log("Survey: ",Questions);
+      dispatch(AddProjectSurvey(workspaceId,folderId, {survey : Questions}));
+
     // console.log("fghjk")
-    navigate('/assessment/chat', { state: { Questions } });
+    //navigate('/assessment/chat', { state: { Questions } });
   };
 
   const nextStep = () => {
@@ -43,7 +57,7 @@ const Questionnaire = () => {
     ) {
       if (activeStep === totalSteps) {
         setIsSubmitted(true);
-        logAnswers();
+        logAnswers();            
       } else {
         setActiveStep(activeStep + 1);
       }

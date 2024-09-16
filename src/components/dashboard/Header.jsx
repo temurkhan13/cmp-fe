@@ -9,7 +9,8 @@ import NotificationDropdown from './NotificationDropdown';
 import LoadingBar from 'react-redux-loading-bar';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
-
+import {logout} from '../../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -17,6 +18,8 @@ const Header = () => {
   const [hasNotification] = useState(true);
   const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
     useState(false);
+    const dispatch = useDispatch();
+    
 
   const handleProfileClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -33,7 +36,9 @@ const Header = () => {
     setNotificationOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    await dispatch (logout());
+    navigate('/log-in');
     console.log('Logout clicked');
     closeDropdowns();
   };
