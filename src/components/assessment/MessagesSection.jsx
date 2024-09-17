@@ -27,6 +27,7 @@ import useLonger from '../../hooks/AiFeatureHooks/useLonger';
 import useShorter from '../../hooks/AiFeatureHooks/useShorter';
 import useComprehensive from '../../hooks/AiFeatureHooks/useComprehensive';
 import usestartAssessment from '../../hooks/usestartAssessment';
+import useAssessment from '../../hooks/useAssessment';
 // chat upload pdf & text
 import useChat from '../../hooks/useChat';
 
@@ -76,6 +77,8 @@ const MessagesSection = ({ selectedAssessment }) => {
 
   // custom hooks
   const { StartAssessment } = usestartAssessment();
+  const { Assessment } = useAssessment();
+
   const { fixGrammar } = useGrammarFix();
   const { improveWriting } = useImproveWriting();
   const { summarize } = useSummarize();
@@ -135,7 +138,7 @@ const MessagesSection = ({ selectedAssessment }) => {
 
     setLoading(true);
     try {
-      const response = await StartAssessment(text);
+      const response = await Assessment(text);
       if (response) {
         // set AI chat
         setChat((prevChat) => [...prevChat, { role: 'ai', content: response }]);
@@ -441,7 +444,7 @@ const MessagesSection = ({ selectedAssessment }) => {
               </p>
               <button
                 onClick={() =>
-                  handleStartAssessment('Change vision/case for change')
+                  handleStartAssessment('Change Vision/Case for Change')
                 }
                 style={{
                   backgroundColor: 'rgba(195, 225, 29, 1)',
