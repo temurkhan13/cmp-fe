@@ -73,6 +73,7 @@ const MessagesSection = ({ selectedAssessment }) => {
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showTopBar, setShowTopBar] = useState(false);
+  const [showInputField, setShowInputField] = useState(false);
 
   // custom hooks
   const { StartAssessment } = usestartAssessment();
@@ -295,6 +296,9 @@ const MessagesSection = ({ selectedAssessment }) => {
         ...prevChat,
         { role: 'ai', content: initialMessage },
       ]);
+
+      // Show input field after generating a report
+      setShowInputField(true);
     } catch (error) {
       console.error('Start Assessment Error', error);
     } finally {
@@ -465,56 +469,62 @@ const MessagesSection = ({ selectedAssessment }) => {
           {error}
         </div>
       )}
-      <div className="Message_container">
-        <div>
-          <label htmlFor="file-input" className="file-upload-text">
-            {file ? file.name : ''}
-          </label>
-        </div>
-        <div className="input-container">
-          <div
-            style={{
-              position: 'left',
-              bottom: '10px',
-              right: '10px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <img
-              src={InpireMeIcon}
-              alt="Inspire Me"
-              onClick={handleInspireClick}
-            />
-            {loading && (
-              <div
-                style={{
-                  border: '2px solid rgba(0, 0, 0, 0.1)',
-                  borderTop: '2px solid #000',
-                  borderRadius: '50%',
-                  width: '16px',
-                  height: '16px',
-                  animation: 'spin 1s linear infinite',
-                  marginLeft: '8px',
-                }}
+      {showInputField ? (
+        <div className="Message_container">
+          <div className="input-container">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <img
+                src={InpireMeIcon}
+                alt="Inspire Me"
+                onClick={handleInspireClick}
               />
-            )}
-          </div>
-          <input
-            type="text"
-            placeholder="Enter text here.."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          <div className="icons">
-            <label htmlFor="file-input">
-              <IoAttach className="send-icon " />
-            </label>
-            <IoSend onClick={handleSendMessage} className="send-icon " />
+              {loading && (
+                <div
+                  style={{
+                    border: '2px solid rgba(0, 0, 0, 0.1)',
+                    borderTop: '2px solid #000',
+                    borderRadius: '50%',
+                    width: '16px',
+                    height: '16px',
+                    animation: 'spin 1s linear infinite',
+                    marginLeft: '8px',
+                  }}
+                />
+              )}
+            </div>
+            <input
+              type="text"
+              placeholder="Enter text here.."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <div className="icons">
+              <label htmlFor="file-input">
+                <IoAttach className="send-icon " />
+              </label>
+              <IoSend onClick={handleSendMessage} className="send-icon " />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        // Render the "Generate a single report" button here
+        <button
+          onClick={() => setShowInputField(true)}
+          style={{
+            backgroundColor: 'rgba(195, 225, 29, 1)',
+            padding: '1rem',
+            borderRadius: '10px',
+            border: 'none',
+            outline: 'none',
+            fontSize: '1.5rem',
+            fontWeight: '500',
+            display: 'flex',
+            marginBottom: '3rem',
+          }}
+        >
+          Generate a Single Report
+        </button>
+      )}
       <style>{`
         .assessment-topbar {
           display: flex;
