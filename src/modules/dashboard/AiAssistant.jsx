@@ -8,14 +8,8 @@ import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import { selectAllChats } from '../../redux/selectors/selectors';
 import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
-import { ImFilesEmpty } from 'react-icons/im';
-import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai';
-import { CiBookmark } from 'react-icons/ci';
-import { TfiReload } from 'react-icons/tfi';
-import { FaFileAlt } from 'react-icons/fa';
-import { MdOutlineEdit } from 'react-icons/md';
-import { RxAvatar, RxLaptop } from 'react-icons/rx';
 import LoadingSpinner from '../../components/common/LoadingSpinner ';
+import DashboardCard from '@components/common/DashboardCard';
 
 const AiAssistant = () => {
   const selectedWorkspace = useSelector(selectWorkspace);
@@ -39,11 +33,6 @@ const AiAssistant = () => {
     return <div>Error: {error}</div>;
   }
 
-  const truncateText = (text, maxLength) =>
-    text?.length > maxLength
-      ? `${text.substring(0, maxLength)}...`
-      : text || '';
-
   const convertTimestampToRelativeTime = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -55,61 +44,6 @@ const AiAssistant = () => {
     if (differenceInDays <= 30) return `Previous ${differenceInDays} days`;
     return 'Older than 30 days';
   };
-
-  const renderCard = (chat) => (
-    <div className="card">
-      {chat?.generalMessages?.[0]?.sender ? (
-        <div className="card-header">
-          <h2 className="userName">
-            <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-          </h2>
-          <p>{truncateText(chat.text, 55)}</p>
-          <MdOutlineEdit />
-        </div>
-      ) : (
-        <div className="content">
-          <h3 className="ai-heading">
-            <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
-            AI
-          </h3>
-          <p className="chatContent">
-            {truncateText(chat?.generalMessages?.[0]?.text, 55)}
-          </p>
-        </div>
-      )}
-
-      {chat?.generalMessages?.[1]?.sender ? (
-        <div className="card-header">
-          <h2 className="userName">
-            <RxAvatar style={{ fontSize: '1.5rem', color: 'black' }} /> You
-          </h2>
-          <p>{truncateText(chat.text, 55)}</p>
-          <MdOutlineEdit />
-        </div>
-      ) : (
-        <div className="content">
-          <h3 className="ai-heading">
-            <RxLaptop style={{ fontSize: '1.5rem', color: 'black' }} /> Change
-            AI
-          </h3>
-          <p className="chatContent">
-            {truncateText(chat?.generalMessages?.[1]?.text, 55)}
-          </p>
-        </div>
-      )}
-
-      <div className="footer">
-        <div className="iconsContainer">
-          <ImFilesEmpty style={{ fontSize: '1.3rem', color: 'black' }} />
-          <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black' }} />
-          <AiOutlineDislike style={{ fontSize: '1.3rem', color: 'black' }} />
-          <CiBookmark style={{ fontSize: '1.3rem', color: 'black' }} />
-          <TfiReload style={{ fontSize: '1.3rem', color: 'black' }} />
-        </div>
-        <FaFileAlt style={{ fontSize: '3.5rem', color: 'gray' }} />
-      </div>
-    </div>
-  );
 
   return (
     <DashboardLayout>
@@ -124,7 +58,7 @@ const AiAssistant = () => {
       >
         {selectAllChat?.map((chat, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-            {renderCard(chat)}
+            <DashboardCard chat={chat} />
             <div className="fileDetails">
               <div className="fileName">
                 {chat.chatTitle}

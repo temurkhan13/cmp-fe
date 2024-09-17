@@ -8,9 +8,7 @@ import { MdOutlineEdit } from 'react-icons/md';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
 import { RxAvatar } from 'react-icons/rx';
-
-const truncateText = (text, maxLength) =>
-  text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+import { truncateText } from '../../utils/helperFunction';
 
 const RecentCards = ({ chats, view }) => {
   const isListView = view === 'list';

@@ -1,4 +1,5 @@
 import LinksICon from '../../assets/chat/LinksICon.png';
+import { truncateText } from '../../utils/helperFunction';
 
 const documents = [
   {
@@ -38,11 +39,6 @@ const documents = [
     link: 'https://www.figma.com/design/NFE9opL7eqFH8JBzEdo5So/Change-AI---CMS?node-id=2-4&t=6cfaQPsjeKCtr3L7-11',
   },
 ];
-
-const truncateText = (text, maxLength) => {
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + '...';
-};
 
 const Links = () => {
   return (

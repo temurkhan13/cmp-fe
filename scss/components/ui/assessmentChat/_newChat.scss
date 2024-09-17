@@ -108,6 +108,7 @@
   background-color: #f0f0f0;
   border-radius: 0.8rem;
   cursor: pointer;
+  // color: black;
 }
 
 .explore-projects p {
@@ -172,4 +173,15 @@
 .projects-list li:hover {
   background-color: #f0f0f0;
   border-radius: 0.8rem;
+}
+.saperator {
+  border: none;
+  height: 2px;
+  margin-bottom: 5px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgb(195, 225, 29),
+    transparent
+  );
 }

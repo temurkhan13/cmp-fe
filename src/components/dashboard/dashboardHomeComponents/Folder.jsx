@@ -1,17 +1,20 @@
-import FileStructure from '../../dashboard/FileStructure';
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+
 import { TiPlus } from 'react-icons/ti';
 import { FaFolderTree } from 'react-icons/fa6';
 import { useState } from 'react';
+
+import Modal from '../../common/Modal';
+import FileStructure from '../../dashboard/FileStructure';
 import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
-import Modal from '../../common/Modal'; // Assuming the modal is imported from here
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup'; // Import Yup for validation
 
 const Folder = ({ activeWorkspace }) => {
   const [addFolder] = useAddFolderMutation();
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
 
-  // Define validation schema
+  // Validation schema
   const validationSchema = Yup.object({
     projectName: Yup.string()
       .required('Project Name is required')
@@ -252,6 +255,13 @@ const Folder = ({ activeWorkspace }) => {
       `}</style>
     </div>
   );
+};
+
+Folder.propTypes = {
+  activeWorkspace: PropTypes.shape({
+    id: PropTypes.string.isRequired, // Assuming workspace id is a string
+    name: PropTypes.string, // Add any other necessary fields
+  }).isRequired,
 };
 
 export default Folder;

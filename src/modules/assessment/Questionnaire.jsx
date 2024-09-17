@@ -1,19 +1,15 @@
 import { useState } from 'react';
 import styles from '../../../scss/modules/assessment/questionnaire.module.scss';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import { IoMdClose } from 'react-icons/io';
 import { TbExclamationCircle } from 'react-icons/tb';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
 import data from '../../data';
-import { Link, useNavigate } from 'react-router-dom';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import { useAddProjectSurveyMutation } from '../../redux/api/workspaceApi';
 import { useDispatch, useSelector } from 'react-redux';
-
-// import ReactMarkdown from 'react-markdown';
 
 const Questionnaire = () => {
   const [AddProjectSurvey] = useAddProjectSurveyMutation();
@@ -22,7 +18,6 @@ const Questionnaire = () => {
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [Questions, setQuestions] = useState('');
-  const navigate = useNavigate();
   const { loading, handleInspire } = useInspire();
   const dispatch = useDispatch();
   const workspaceId = useSelector(
@@ -41,24 +36,27 @@ const Questionnaire = () => {
       setQuestions(questionnaireString);
     });
   };
-  const HandleStart = () => {
+
+  const handleSubmit = () => {
     console.log('Survey: ', Questions);
     dispatch(AddProjectSurvey(workspaceId, folderId, { survey: Questions }));
-
-    // console.log("fghjk")
-    //navigate('/assessment/chat', { state: { Questions } });
   };
 
   const nextStep = () => {
-    if (
-      answers[`question-${data.questionnaire.Questions[activeStep - 1].id}`]
-    ) {
-      if (activeStep === totalSteps) {
-        setIsSubmitted(true);
-        logAnswers();
-      } else {
-        setActiveStep(activeStep + 1);
-      }
+    if (activeStep === totalSteps) {
+      setIsSubmitted(true);
+      logAnswers();
+    } else {
+      setActiveStep(activeStep + 1);
+    }
+  };
+
+  const skipStep = () => {
+    if (activeStep === totalSteps) {
+      setIsSubmitted(true);
+      logAnswers();
+    } else {
+      setActiveStep(activeStep + 1);
     }
   };
 
@@ -90,13 +88,6 @@ const Questionnaire = () => {
 
   return (
     <div className={styles.MainContainer}>
-      {/* <div className={styles.header}>
-        <p></p>
-        <Link to="/dashboard">
-          <button className='exit-btn-questionnaire'>Exit</button>
-        </Link>
-      </div> */}
-
       <div className={styles.Container}>
         <div className={styles.StepContainer} style={{ '--width': width }}>
           {data.questionnaire.Questions.map((_, index) => (
@@ -145,9 +136,9 @@ const Questionnaire = () => {
               <div className={styles.InitialBtn}>
                 <button
                   className={styles.ButtonStyleAss}
-                  onClick={() => HandleStart()}
+                  onClick={handleSubmit}
                 >
-                  Start Assessment
+                  Done
                 </button>
               </div>
             </div>
@@ -171,7 +162,7 @@ const Questionnaire = () => {
                   }
                   onChange={handleTextareaChange}
                   className={styles.InputStyle}
-                  style={{ height: '150px' }} // Adjust the height as needed
+                  style={{ height: '150px' }}
                 />
                 <div
                   style={{
@@ -216,7 +207,7 @@ const Questionnaire = () => {
                 className={styles.ButtonStyleNext}
                 onClick={nextStep}
                 disabled={
-                  !answers[
+                  !!answers[
                     `question-${
                       data.questionnaire.Questions[activeStep - 1].id
                     }`
@@ -224,6 +215,19 @@ const Questionnaire = () => {
                 }
               >
                 Next <MdKeyboardArrowRight />
+              </button>
+              <button
+                className={styles.ButtonStyleNext}
+                onClick={skipStep}
+                disabled={
+                  !!answers[
+                    `question-${
+                      data.questionnaire.Questions[activeStep - 1].id
+                    }`
+                  ]
+                }
+              >
+                Skip
               </button>
             </div>
           </>
@@ -239,7 +243,6 @@ const Questionnaire = () => {
                 assessment insights.
               </p>
               <div className={styles.InitialBtn}>
-                <button className={styles.ButtonStyleNext}>Skip</button>
                 <button
                   className={styles.ButtonStyleNext}
                   onClick={() => setShowQuestionnaire(true)}
