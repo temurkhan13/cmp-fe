@@ -3,7 +3,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { BiSearch } from 'react-icons/bi';
 import { FaUserPlus } from 'react-icons/fa6';
-import { useLocation } from 'react-router-dom';
 
 import Components from '@components';
 import assets from '../../assets';
@@ -23,8 +22,6 @@ const Header = ({ activeWorkspace, workspaces }) => {
   const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
     useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-
-  const location = useLocation();
 
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
@@ -54,15 +51,13 @@ const Header = ({ activeWorkspace, workspaces }) => {
       </div>
       <section>
         <div>
-          {/* Conditionally render Improve Response button based on route */}
-          {location.pathname === '/assessment/chat' && (
-            <span
-              className="improve-response"
-              onClick={handleOpenImproveResponseModal}
-            >
-              Improve Response
-            </span>
-          )}
+          <span
+            className="improve-response"
+            onClick={handleOpenImproveResponseModal}
+          >
+            Improve Response
+          </span>
+
           <span
             className={activeIcon === 'search' ? 'active' : ''}
             onClick={() => handleIconClick('search')}

@@ -35,6 +35,7 @@ import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { logo } from '../../assets/common/index';
+
 // import {
 //   addMessage,
 //   updateMessage,
@@ -97,16 +98,18 @@ const MessagesSection = () => {
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentChat);
-  
 
   useEffect(() => {}, [currentFolder, currentChat, currentWorkspace]);
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
 
-  const { data: chat } = useGetChatQuery({ workspaceId, folderId: folderId._id, chatId });
-  const [messages, setMessages] = useState(chat? chat.generalMessages : []);
-  
+  const { data: chat } = useGetChatQuery({
+    workspaceId,
+    folderId: folderId._id,
+    chatId,
+  });
+  const [messages, setMessages] = useState(chat ? chat.generalMessages : []);
 
   // const [chat, setChat] = useState(
   //   currentChat ? currentChat.generalMessages : []
@@ -137,7 +140,6 @@ const MessagesSection = () => {
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
 
-
   const renderIcon = (iconName, style = {}) => {
     const IconComponent = FaIcons[iconName];
     return IconComponent ? <IconComponent style={style} /> : null;
@@ -145,12 +147,12 @@ const MessagesSection = () => {
 
   useEffect(() => {
     if (chatId === null) {
-    //  setChat([]);
+      //  setChat([]);
       return;
     }
     if (currentChat) {
       console.log(currentChat);
-     // setChat(currentChat.generalMessages || []);
+      // setChat(currentChat.generalMessages || []);
       console.log('chat Messages: ' + currentChat.generalMessages);
       console.log('chat: ' + chat);
     }
@@ -175,28 +177,27 @@ const MessagesSection = () => {
     setAskAI(false);
     setPopupVisible(false);
   };
-  const handleSendMessage = async () => {
-    // e.preventDefault();
-    if (!workspaceId) {
-      alert('Please select a workspace');
-      return;
-    }
-    try {
-     addMessage({
-        workspaceId: workspaceId,
-        folderId: folderId._id,
-        chatId: chatId ? chatId : 'newChat',
-        message: text,
-        files: file,
-      })
-        .unwrap();
-        //.then((response) => console.log('text: ', response));
+  // const handleSendMessage = async () => {
+  // e.preventDefault();
+  // if (!workspaceId) {
+  //   alert('Please select a workspace');
+  //   return;
+  // }
+  // try {
+  //   addMessage({
+  //     workspaceId: workspaceId,
+  //     folderId: folderId._id,
+  //     chatId: chatId ? chatId : 'newChat',
+  //     message: text,
+  //     files: file,
+  //   }).unwrap();
+  //.then((response) => console.log('text: ', response));
 
-      // setChatContent('');
-    } catch (error) {
-      console.error('Failed to add chat:', error);
-    }
-  };
+  // setChatContent('');
+  //   } catch (error) {
+  //     console.error('Failed to add chat:', error);
+  //   }
+  // };
 
   // Memoize HandleAskAi function
   const HandleAskAi = useCallback(
@@ -278,9 +279,8 @@ const MessagesSection = () => {
         //       })
         //     )
         // );
-
         // Refetch the chat to get the latest data from the server
-      //  await refetch();
+        //  await refetch();
       } catch (error) {
         console.error('Failed to update message:', error);
         // Handle error (e.g., show an error message to the user)
@@ -395,8 +395,41 @@ const MessagesSection = () => {
     // };
     //dispatch(addBookmark(bookmark));
     console.log('bookmarked: ' + messageId);
-    await addBookmark({ workspaceId, folderId : folderId._id, chatId, messageId });
+    await addBookmark({
+      workspaceId,
+      folderId: folderId._id,
+      chatId,
+      messageId,
+    });
     // console.log('bookmarked ' + bookmark.bookmarkId);
+  };
+
+  const handleSendMessage = async () => {
+    if (!text.trim()) return; // Prevent empty messages
+
+    setLoading(true); // Show spinner
+    try {
+      // Simulate sending message
+      await addMessage({
+        workspaceId: workspaceId,
+        folderId: folderId._id,
+        chatId: chatId ? chatId : 'newChat',
+        message: text,
+        files: file,
+      }).unwrap();
+      setText(''); // Clear input field after message sent
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setLoading(false); // Hide spinner after response
+    }
+  };
+
+  const HandleEnterKey = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
   const handleInspireClick = async () => {
     //Todo: will implement Inspire
@@ -443,86 +476,93 @@ const MessagesSection = () => {
               />
             )}
 
-            {chat && chat.generalMessages.map((message, index) => (
-              <div
-                key={index}
-                ref={index === chat.generalMessages.length - 1 ? messagesEndRef : null}
-              >
-                <div>
-                  {message && message.sender ? (
-                    <div className="card">
-                      <div>
-                        <img src={UserPic} alt="avatar" />
-                      </div>
-                      <div>
-                        <p className="Heading">You</p>
-                        {/* <div className="msg">{item.content}</div> */}
-                        {message.text && (
-                          <div className="msg" data-message-id={message._id}>
-                            <ReactMarkdown>{message.text}</ReactMarkdown>
-                          </div>
-                        )}
-                        {message.file && (
-                          <div className="file-preview">
-                            <a
-                              href={message.file}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {message.fileName}
-                            </a>
-                          </div>
-                        )}
+            {chat &&
+              chat.generalMessages.map((message, index) => (
+                <div
+                  key={index}
+                  ref={
+                    index === chat.generalMessages.length - 1
+                      ? messagesEndRef
+                      : null
+                  }
+                >
+                  <div>
+                    {message && message.sender ? (
+                      <div className="card">
                         <div>
-                          <LuPencil />
+                          <img src={UserPic} alt="avatar" />
                         </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="card">
-                      <div className="header">
-                        <img src={AiPic} alt="avatar" className="avatar" />
-                        <p className="heading">ChangeAI</p>
-                        {message && (
-                          <div className="msg" data-message-id={message._id}>
-                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                        <div>
+                          <p className="Heading">You</p>
+                          {/* <div className="msg">{item.content}</div> */}
+                          {message.text && (
+                            <div className="msg" data-message-id={message._id}>
+                              <ReactMarkdown>{message.text}</ReactMarkdown>
+                            </div>
+                          )}
+                          {message.file && (
+                            <div className="file-preview">
+                              <a
+                                href={message.file}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {message.fileName}
+                              </a>
+                            </div>
+                          )}
+                          <div>
+                            <LuPencil />
                           </div>
-                        )}
-                      </div>
-                      <div className="message-action-icons">
-                        <div className="message-icon-wrapper">
-                          <FaCopy
-                            onClick={() => handleAddBookmark(message._id)}
-                            style={{ cursor: 'pointer' }}
-                          />
-                          <span className="tooltip-assessment">Copy</span>
-                        </div>
-                        <div className="message-icon-wrapper">
-                          <FaThumbsUp />
-                          <span className="tooltip-assessment">Like</span>
-                        </div>
-                        <div className="message-icon-wrapper">
-                          <FaThumbsDown />
-                          <span className="tooltip-assessment">Dislike</span>
-                        </div>
-                        <div className="message-icon-wrapper">
-                          <FaCommentAlt
-                            data-message-id={message._id}
-                            onClick={handleCommentClick}
-                            style={{ cursor: 'pointer' }}
-                          />
-                          <span className="tooltip-assessment">Comment</span>
-                        </div>
-                        <div className="message-icon-wrapper">
-                          <FaSync />
-                          <span className="tooltip-assessment">Regenerate</span>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="card">
+                        <div className="header">
+                          <img src={AiPic} alt="avatar" className="avatar" />
+                          <p className="heading">ChangeAI</p>
+                          {message && (
+                            <div className="msg" data-message-id={message._id}>
+                              <ReactMarkdown>{message.text}</ReactMarkdown>
+                            </div>
+                          )}
+                        </div>
+                        <div className="message-action-icons">
+                          <div className="message-icon-wrapper">
+                            <FaCopy
+                              onClick={() => handleAddBookmark(message._id)}
+                              style={{ cursor: 'pointer' }}
+                            />
+                            <span className="tooltip-assessment">Copy</span>
+                          </div>
+                          <div className="message-icon-wrapper">
+                            <FaThumbsUp />
+                            <span className="tooltip-assessment">Like</span>
+                          </div>
+                          <div className="message-icon-wrapper">
+                            <FaThumbsDown />
+                            <span className="tooltip-assessment">Dislike</span>
+                          </div>
+                          <div className="message-icon-wrapper">
+                            <FaCommentAlt
+                              data-message-id={message._id}
+                              onClick={handleCommentClick}
+                              style={{ cursor: 'pointer' }}
+                            />
+                            <span className="tooltip-assessment">Comment</span>
+                          </div>
+                          <div className="message-icon-wrapper">
+                            <FaSync />
+                            <span className="tooltip-assessment">
+                              Regenerate
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         ) : (
           <div className="defaultPage">
@@ -620,6 +660,7 @@ const MessagesSection = () => {
             placeholder="Enter text here.."
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyDown={HandleEnterKey}
           />
           <div className="icons">
             <label htmlFor="file-input">
