@@ -543,6 +543,7 @@ const MessagesSection = ({ selectedAssessment }) => {
           justify-content: space-between;
           font-weight: 500;
           padding-bottom:1rem;
+          gap:0.5rem;
           
         }
         .progress,

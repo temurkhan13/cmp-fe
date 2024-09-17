@@ -9,63 +9,54 @@ import {
   setSelectedFolder as setSelectedReduxFolder,
 } from '../../redux/slices/workspacesSlice';
 import CustomModal from '../customModal/CustomModal';
+import { truncateText } from '../../utils/helperFunction';
 
 const FileStructure = ({ workspace }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
-  const [isRenaming, setIsRenaming] = useState(false); // New state for rename mode
-  const [newFolderName, setNewFolderName] = useState(''); // New state for folder name
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+
   const modalRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        closeModal();
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isModalOpen]);
 
   const openModal = (folder) => {
     setSelectedFolder(folder);
     setIsModalOpen(true);
-    setNewFolderName(folder.folderName); // Set initial folder name for renaming
+    setNewFolderName(folder.folderName);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedFolder(null);
     setIsDropdownOpen(false);
-    setIsRenaming(false); // Reset rename state
-  };
-
-  const handleOutsideClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      closeModal();
-    }
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setIsDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.addEventListener('mousedown', handleOutsideClick);
-    } else {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [isModalOpen]);
-
-  const handleTrashAction = () => {
-    setIsTrashModalOpen(true);
-  };
-
-  const handleCloseTrashModal = () => {
-    setIsTrashModalOpen(false);
-  };
-
-  const handleProceedMoveToTrash = () => {
-    console.log('Moving folder to trash:', selectedFolder);
-    setIsTrashModalOpen(false);
+    setIsRenaming(false);
   };
 
   const handleRename = () => {
@@ -75,41 +66,57 @@ const FileStructure = ({ workspace }) => {
 
   const handleSaveRename = () => {
     if (newFolderName.trim()) {
-      // Update folder name logic here
-      selectedFolder.folderName = newFolderName; // Update the folder name in the selected folder
+      selectedFolder.folderName = newFolderName;
       setIsRenaming(false);
     }
   };
 
   const handleCancelRename = () => {
     setIsRenaming(false);
-    setNewFolderName(selectedFolder.folderName); // Reset to original name
+    setNewFolderName(selectedFolder.folderName);
+  };
+
+  const handleProceedMoveToTrash = () => {
+    console.log('Moving folder to trash:', selectedFolder);
+    setIsTrashModalOpen(false);
+  };
+
+  const handleOpenFolder = (folder) => {
+    dispatch(setSelectedReduxFolder(folder));
+    dispatch(setCurrentChatId(null));
+    navigate('/assisstant/chat');
+  };
+
+  const handleOpenAssessment = (folder) => {
+    dispatch(setSelectedReduxFolder(folder));
+    navigate('/assessment/chat');
+  };
+
+  const handleCreateSitemap = () => {
+    navigate('/sitemap/new');
   };
 
   return (
     <section className="folders-files" style={{ marginTop: '2rem' }}>
       <div className="heading">
         <p>
-          Your &ldquo;{workspace && workspace.workspaceName}&rdquo; contains the
-          following projects:
+          Your &ldquo;{workspace.workspaceName}&rdquo; contains the following
+          projects:
         </p>
       </div>
 
       <div className="files-container">
-        {workspace &&
-          workspace.folders.map((folder, index) => (
-            <div key={index} className="file" onClick={() => openModal(folder)}>
-              <span className="icon">
-                <BiSolidFolderOpen
-                  style={{ fontSize: '5rem', color: 'gray' }}
-                />
-              </span>
-              <p>{folder.folderName}</p>
-              <p className="file-count">
-                {folder.chats.length + folder.assessments.length} files
-              </p>
-            </div>
-          ))}
+        {workspace.folders.map((folder, index) => (
+          <div key={index} className="file" onClick={() => openModal(folder)}>
+            <span className="icon">
+              <BiSolidFolderOpen style={{ fontSize: '5rem', color: 'gray' }} />
+            </span>
+            <p>{truncateText(folder.folderName, 10)}</p>
+            <p className="file-count">
+              {folder.chats.length + folder.assessments.length} files
+            </p>
+          </div>
+        ))}
       </div>
 
       {isModalOpen && (
@@ -125,7 +132,10 @@ const FileStructure = ({ workspace }) => {
                   <button className="dropdown-item" onClick={handleRename}>
                     Rename
                   </button>
-                  <button className="dropdown-item" onClick={handleTrashAction}>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setIsTrashModalOpen(true)}
+                  >
                     Move to Trash
                   </button>
                 </div>
@@ -163,28 +173,19 @@ const FileStructure = ({ workspace }) => {
             <div className="folder-modal-buttons">
               <button
                 className="folder-modal-button"
-                onClick={() => {
-                  dispatch(setSelectedReduxFolder(selectedFolder));
-                  dispatch(setCurrentChatId(null));
-                  navigate('/assisstant/chat');
-                }}
+                onClick={() => handleOpenFolder(selectedFolder)}
               >
                 New Assistant <FiPlus />
               </button>
               <button
                 className="folder-modal-button"
-                onClick={() => {
-                  dispatch(setSelectedReduxFolder(selectedFolder));
-                  navigate('/assessment/chat');
-                }}
+                onClick={() => handleOpenAssessment(selectedFolder)}
               >
                 New Assessment <FiPlus />
               </button>
               <button
                 className="folder-modal-button"
-                onClick={() => {
-                  navigate('/sitemap/new');
-                }}
+                onClick={handleCreateSitemap}
               >
                 Create Sitemap <FiPlus />
               </button>
@@ -196,21 +197,21 @@ const FileStructure = ({ workspace }) => {
       {isTrashModalOpen && (
         <CustomModal
           isOpen={isTrashModalOpen}
-          onClose={handleCloseTrashModal}
+          onClose={() => setIsTrashModalOpen(false)}
           onProceed={handleProceedMoveToTrash}
           heading="Move to Trash"
           bodyContent={
             <div>
-              Are you sure you want to move this file to the
-              <br /> trash? It will remain there for 30 days before being
-              <br />
-              permanently deleted.
+              Are you sure you want to move this file to the trash?
+              <br /> It will remain there for 30 days before being permanently
+              deleted.
             </div>
           }
           cancelText="Cancel"
           proceedText="Proceed"
         />
       )}
+
       <style>{`
         .folders-files {
           padding: 0 2rem;
@@ -227,7 +228,6 @@ const FileStructure = ({ workspace }) => {
         .files-container {
           display: flex;
           flex-wrap: wrap;
-          cursor: pointer;
         }
         .file {
           cursor: pointer;

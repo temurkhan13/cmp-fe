@@ -15,14 +15,7 @@ import { TfiReload } from 'react-icons/tfi';
 import { ImFilesEmpty } from 'react-icons/im';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
-
-// Truncate function
-const truncate = (text, charLimit) => {
-  if (text.length > charLimit) {
-    return text.substring(0, charLimit) + '...';
-  }
-  return text;
-};
+import { truncateText } from '../../utils/helperFunction';
 
 const DeletedItems = () => {
   return (
@@ -111,7 +104,7 @@ const TrashFileTab = ({ cardData }) => {
                     <RxAvatar className="deletedIcon" /> {card.userName}
                   </h2>
                   <p className="deletedContent">
-                    {truncate(card.userContent, 55)}
+                    {truncateText(card.userContent, 55)}
                   </p>
                   <MdOutlineEdit className="deletedEditIcon" />
                 </div>
@@ -120,7 +113,7 @@ const TrashFileTab = ({ cardData }) => {
                     <RxAvatar className="deletedIcon" /> ChangeAI
                   </h3>
                   <p className="deletedChatContent">
-                    {truncate(card.aiContent, 55)}
+                    {truncateText(card.aiContent, 55)}
                   </p>
                 </div>
                 <div className="deletedFooter">

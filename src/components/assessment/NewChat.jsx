@@ -44,9 +44,9 @@ const NewChat = () => {
   );
   const chats = useSelector(selectAllChats);
 
-  useEffect(() => {
-    console.log('', currentFolder, currentChat, currentWorkspace);
-  }, [currentFolder, currentChat, currentWorkspace, chats, selectedFolder]);
+  const capitalizeFirstWord = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -107,6 +107,10 @@ const NewChat = () => {
   };
 
   useEffect(() => {
+    console.log('', currentFolder, currentChat, currentWorkspace);
+  }, [currentFolder, currentChat, currentWorkspace, chats, selectedFolder]);
+
+  useEffect(() => {
     const chatContainer = chatContainerRef.current;
     chatContainer.addEventListener('scroll', handleScroll);
     return () => {
@@ -156,41 +160,44 @@ const NewChat = () => {
         )}
       </div>
       {!sidebarCollapsed && (
-        <div
-          className="explore-projects"
-          onClick={toggleDropdown}
-          style={{ cursor: 'pointer' }}
-        >
-          <p>
-            <RxDashboard size={20} />
-            Explore Projects
-          </p>
-          {!sidebarCollapsed && (
-            <div
-              className="explore-projects"
-              onClick={toggleDropdown}
-              style={{ cursor: 'pointer' }}
-            >
-              {isDropdownOpen && (
-                <div className="projects-dropdown">
-                  <div className="dropdown-header">
-                    <span>Projects</span>
-                    <span className="close-icon" onClick={toggleDropdown}>
-                      <RxCross2 size={20} />
-                    </span>
+        <>
+          <div
+            className="explore-projects"
+            onClick={toggleDropdown}
+            style={{ cursor: 'pointer' }}
+          >
+            <p>
+              <RxDashboard size={20} />
+              Explore Projects
+            </p>
+            {!sidebarCollapsed && (
+              <div
+                className="explore-projects"
+                onClick={toggleDropdown}
+                style={{ cursor: 'pointer' }}
+              >
+                {isDropdownOpen && (
+                  <div className="projects-dropdown">
+                    <div className="dropdown-header">
+                      <span>Projects</span>
+                      <span className="close-icon" onClick={toggleDropdown}>
+                        <RxCross2 size={20} />
+                      </span>
+                    </div>
+                    <ul className="projects-list">
+                      {projects.map((project, index) => (
+                        <li key={index} onClick={() => switchFolder(project)}>
+                          {project.folderName}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="projects-list">
-                    {projects.map((project, index) => (
-                      <li key={index} onClick={() => switchFolder(project)}>
-                        {project.folderName}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+                )}
+              </div>
+            )}
+          </div>
+          <hr className="saperator" />
+        </>
       )}
       {!sidebarCollapsed && (
         <>
@@ -218,7 +225,7 @@ const NewChat = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  {chat.chatTitle}
+                  {capitalizeFirstWord(chat.chatTitle)}
                 </Components.Feature.Text>
                 {hoveredChatIndex === index && (
                   <BsThreeDots
