@@ -7,8 +7,12 @@ import { selectCurrentFolder, selectCurrentWorkspace } from '../redux/selectors/
 const useStartAssessment = () => {
   const [error, setError] = useState(null);
   const businessInfo = useSelector((state) => state.businessInfo);
-  const currentWorkspaceId = '66dc950e740af833ee34b3c5';// useSelector(selectCurrentWorkspace);
-  const currentFolderId = '66dc950e740af833ee34b3c6';// useSelector(selectCurrentFolder)
+  //const currentWorkspaceId = '66dc950e740af833ee34b3c5';// useSelector(selectCurrentWorkspace);
+ //const currentFolderId = '66dc950e740af833ee34b3c6';// useSelector(selectCurrentFolder)
+  const workspaceId = useSelector(
+    (state) => state.workspaces.currentWorkspaceId
+  );
+  const folderId = useSelector((state) => state.workspaces.currentFolderId);
 
   const StartAssessment = async (message, assessmentName, Questions) => {
     try {
@@ -27,7 +31,7 @@ const useStartAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      const response = await axios.post(`http://139.59.4.99:3000/api/workspace/66a500bef6d2341978d6d4b8/folder/66a500bef6d2341978d6d4b9/assessment/`, {
+      const response = await axios.post(`http://139.59.4.99:3000/api/workspace/${workspaceId}/folder/${folderId}/assessment/`, {
         // message: message || '',
         // history: [],
         // generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,

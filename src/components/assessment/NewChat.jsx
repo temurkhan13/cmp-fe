@@ -13,15 +13,15 @@ import {
 import LoadingSpinner from '../../components/common/LoadingSpinner ';
 
 import {
-  selectAllChats,
+  selectAllAssessments,
   selectAllFolders,
-  selectCurrentChat,
+  selectCurrentAssessment,
   selectCurrentFolder,
   selectCurrentWorkspace,
   selectFolderById,
 } from '../../redux/selectors/selectors';
 import {
-  setCurrentChatId,
+  setCurrentAssessmentId,
   setSelectedFolder,
 } from '../../redux/slices/workspacesSlice';
 
@@ -38,11 +38,11 @@ const NewChat = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
-  const currentChat = useSelector(selectCurrentChat);
+  const currentChat = useSelector(selectCurrentAssessment);
   const selectedFolder = useSelector((state) =>
     selectFolderById(state, currentFolder._id)
   );
-  const chats = useSelector(selectAllChats);
+  const chats = useSelector(selectAllAssessments);
 
   const capitalizeFirstWord = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -78,15 +78,15 @@ const NewChat = () => {
     console.log('dispatch ChatId' + chatId);
     const currentUrl = window.location.pathname;
     const newUrl = currentUrl.replace(
-      /\/assisstant\/chat\/[^/]+$/,
-      `/assisstant/chat/${chatId}`
+      /\/assessment\/chat\/[^/]+$/,
+      `/assessment/chat/${chatId}`
     );
     window.history.replaceState(null, '', newUrl);
-    dispatch(setCurrentChatId(chatId));
+    dispatch(setCurrentAssessmentId(chatId));
   };
 
   const handleAddChat = () => {
-    dispatch(setCurrentChatId(null));
+    dispatch(setCurrentAssessmentId(null));
     return;
   };
 
