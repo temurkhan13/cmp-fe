@@ -306,6 +306,10 @@ const MessagesSection = ({ selectedAssessment }) => {
     }
   };
 
+  const handleSingleReport = () => {
+    console.log('generate a single report ');
+  };
+
   useEffect(() => {
     document.addEventListener('mouseup', handleTextSelect);
     return () => {
@@ -469,61 +473,61 @@ const MessagesSection = ({ selectedAssessment }) => {
           {error}
         </div>
       )}
-      {showInputField ? (
-        <div className="Message_container">
-          <div className="input-container">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img
-                src={InpireMeIcon}
-                alt="Inspire Me"
-                onClick={handleInspireClick}
-              />
-              {loading && (
-                <div
-                  style={{
-                    border: '2px solid rgba(0, 0, 0, 0.1)',
-                    borderTop: '2px solid #000',
-                    borderRadius: '50%',
-                    width: '16px',
-                    height: '16px',
-                    animation: 'spin 1s linear infinite',
-                    marginLeft: '8px',
-                  }}
+      {showInputField && (
+        <>
+          <button
+            onClick={handleSingleReport}
+            style={{
+              backgroundColor: 'rgba(195, 225, 29, 1)',
+              padding: '1rem',
+              borderRadius: '10px',
+              border: 'none',
+              outline: 'none',
+              fontSize: '1.5rem',
+              fontWeight: '500',
+              display: 'flex',
+              marginBottom: '1rem',
+            }}
+          >
+            Generate a Single Report
+          </button>
+          <div className="Message_container">
+            <div className="input-container">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <img
+                  src={InpireMeIcon}
+                  alt="Inspire Me"
+                  onClick={handleInspireClick}
                 />
-              )}
-            </div>
-            <input
-              type="text"
-              placeholder="Enter text here.."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-            <div className="icons">
-              <label htmlFor="file-input">
-                <IoAttach className="send-icon " />
-              </label>
-              <IoSend onClick={handleSendMessage} className="send-icon " />
+                {loading && (
+                  <div
+                    style={{
+                      border: '2px solid rgba(0, 0, 0, 0.1)',
+                      borderTop: '2px solid #000',
+                      borderRadius: '50%',
+                      width: '16px',
+                      height: '16px',
+                      animation: 'spin 1s linear infinite',
+                      marginLeft: '8px',
+                    }}
+                  />
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder="Enter text here.."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+              <div className="icons">
+                <label htmlFor="file-input">
+                  <IoAttach className="send-icon " />
+                </label>
+                <IoSend onClick={handleSendMessage} className="send-icon " />
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        // Render the "Generate a single report" button here
-        <button
-          onClick={() => setShowInputField(true)}
-          style={{
-            backgroundColor: 'rgba(195, 225, 29, 1)',
-            padding: '1rem',
-            borderRadius: '10px',
-            border: 'none',
-            outline: 'none',
-            fontSize: '1.5rem',
-            fontWeight: '500',
-            display: 'flex',
-            marginBottom: '3rem',
-          }}
-        >
-          Generate a Single Report
-        </button>
+        </>
       )}
       <style>{`
         .assessment-topbar {
