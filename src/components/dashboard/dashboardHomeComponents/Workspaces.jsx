@@ -15,6 +15,8 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
+  const [newWorkspaceDescription, setNewWorkspaceDescription] = useState('');
+  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState('');
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const modalRef = useRef(null);
@@ -39,6 +41,12 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
     e.preventDefault();
     if (newWorkspaceName.trim().length < 3) {
       setErrorMessage('Workspace name must be at least 3 characters long.');
+      // Validate workspace description
+      if (newWorkspaceDescription.trim() === '') {
+        setDescriptionErrorMessage('Workspace description cannot be empty.');
+      } else {
+        setDescriptionErrorMessage(''); // Clear the error message if valid
+      }
       return;
     }
 
@@ -119,7 +127,9 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
               <RxCross2 />
             </button>
           </div>
+
           <div className="input-wrapper">
+            {/* Workspace Name Input */}
             <input
               type="text"
               className="workspace-input"
@@ -132,7 +142,21 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
               }}
               placeholder="Enter workspace name"
             />
+            {/* Error Message */}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+            {/* Workspace Description Input */}
+            <textarea
+              className="workspace-description"
+              value={newWorkspaceDescription}
+              onChange={(e) => setNewWorkspaceDescription(e.target.value)}
+              placeholder="Enter workspace description"
+            />
+            {descriptionErrorMessage && (
+              <p className="error-message">{descriptionErrorMessage}</p>
+            )}
+
+            {/* Create Button */}
             <button
               onClick={handleNewWorkspaceSubmit}
               className="create-workspace-btn"
@@ -311,6 +335,7 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
         .workspace-input {
           border: 1px solid #ccc;
           border-radius: 1rem;
+          outline:none;
           padding: 1rem;
         }
         .create-workspace-btn {
@@ -379,6 +404,16 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
           color: red;
           font-size:1.1rem;
           }
+          .workspace-description {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 14px;
+  outline:none;
+  border:1px solid lightgray;
+  border-radius: 1rem;
+}
       `}</style>
     </div>
   );
