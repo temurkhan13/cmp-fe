@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import SideBarModal from '../../components/common/SideBarModal';
 
@@ -17,6 +17,7 @@ import {
   FaImages,
   FaUserCircle,
 } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
 const tasks = [
   { name: 'Assessment Progress', progress: 3 },
@@ -277,10 +278,17 @@ const Comment = {
 
 const Assessments = () => {
   const [activeIcon, setActiveIcon] = useState(null);
+  const location = useLocation();
 
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
   };
+
+  useEffect(() => {
+    if (location.pathname === '/assessment/chat') {
+      setActiveIcon('question');
+    }
+  }, [location.pathname]);
 
   return (
     <>

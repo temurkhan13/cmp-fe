@@ -1,36 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import FolderTab from './TrashFolderTab';
-import TrashFileTab from './TrashFileTab';
 import TrashWorkspaceTab from './TrashWorkspaceTab';
+import TrashAssistant from './TrashAssistant';
+import TrashAssessment from './TrashAssessment';
+import TrashSitemap from './TrashSitemap';
 
 const TrashModule = () => {
-  const sampleCardData = [
-    {
-      id: 1,
-      userName: 'John Doe',
-      userContent:
-        'This is the content of the card. It can be any text related to the user’s activity.',
-      aiContent:
-        'AI generated content related to this card. Example text for illustration.',
-    },
-    {
-      id: 2,
-      userName: 'Jane Smith',
-      userContent:
-        'Another piece of content showing how the card data is displayed.',
-      aiContent:
-        'Additional AI content to demonstrate the component’s functionality.',
-    },
-    {
-      id: 3,
-      userName: 'Alice Johnson',
-      userContent:
-        'Sample content for a third card. Helps to visualize the data display.',
-      aiContent: 'More AI-generated content to show the variety of data.',
-    },
-  ];
-
   const [activeTab, setActiveTab] = useState('Workspace');
 
   return (
@@ -50,16 +26,30 @@ const TrashModule = () => {
           Projects
         </button>
         <button
-          className={`tab ${activeTab === 'File' ? 'active' : ''}`}
-          onClick={() => setActiveTab('File')}
+          className={`tab ${activeTab === 'Assistant' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Assistant')}
         >
-          Files
+          Assistant
+        </button>
+        <button
+          className={`tab ${activeTab === 'Assessment' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Assessment')}
+        >
+          Assessment
+        </button>{' '}
+        <button
+          className={`tab ${activeTab === 'Sitemap' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Sitemap')}
+        >
+          Sitemap
         </button>
       </div>
       <div className="content">
         {activeTab === 'Workspace' && <TrashWorkspaceTab />}
         {activeTab === 'Folder' && <FolderTab />}
-        {activeTab === 'File' && <TrashFileTab cardData={sampleCardData} />}
+        {activeTab === 'Assistant' && <TrashAssistant />}
+        {activeTab === 'Assessment' && <TrashAssessment />}
+        {activeTab === 'Sitemap' && <TrashSitemap />}
       </div>
       <style>{`
         .trash-container {
