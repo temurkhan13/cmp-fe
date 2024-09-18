@@ -26,38 +26,20 @@ const Questionnaire = () => {
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
 
   const logAnswers = () => {
-   // let questionnaireString = '';
+    let questionnaireString = '';
 
     const questionsArray = data.questionnaire.Questions.map((question, index) => {
       const answer = answers[`question-${question.id}`] || 'No answer provided';
-<<<<<<< Updated upstream
       questionnaireString += `${index + 1}. ${
         question.question
       }\nAnswer: ${answer}\n`;
       setQuestions(questionnaireString);
     });
-=======
-      return {
-        question: `${index + 1}. ${question.question}`,
-        answer: answer
-      };
-    })
-      setQuestions(questionsArray);
-    
->>>>>>> Stashed changes
   };
 
-<<<<<<< Updated upstream
   const handleSubmit = () => {
     console.log('Survey: ', Questions);
     dispatch(AddProjectSurvey(workspaceId, folderId, { survey: Questions }));
-=======
-    console.log("Survey: ",Questions);
-      dispatch(AddProjectSurvey({workspaceId,folderId, survey : Questions}));
-
-    // console.log("fghjk")
-    //navigate('/assessment/chat', { state: { Questions } });
->>>>>>> Stashed changes
   };
 
   const nextStep = () => {
