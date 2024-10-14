@@ -201,7 +201,7 @@ const NewChat = () => {
       )}
       {!sidebarCollapsed && (
         <>
-          {Array.isArray(chats) &&
+          {chats && Array.isArray(chats) &&
             chats.map((chat, index) => (
               <section
                 key={chat._id}
@@ -225,7 +225,9 @@ const NewChat = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  {capitalizeFirstWord(chat.chatTitle)}
+                  {//console.log("Assessments: ",chat.report)
+                  chat.report[0].ReportTitle
+                  }
                 </Components.Feature.Text>
                 {hoveredChatIndex === index && (
                   <BsThreeDots

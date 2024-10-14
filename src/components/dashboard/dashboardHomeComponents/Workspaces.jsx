@@ -8,7 +8,7 @@ import { IoFolderOpen } from 'react-icons/io5';
 
 import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
-import { useAddWorkspaceMutation } from '../../../redux/api/workspaceApi';
+import { useAddWorkspaceMutation,useMoveToTrashMutation, useRestoreFromTrashMutation } from '../../../redux/api/workspaceApi';
 import CustomModal from '../../customModal/CustomModal';
 
 const Workspaces = ({ activeWorkspace, workspaces }) => {
@@ -422,6 +422,8 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
 const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
   const [workspaceDropdownOpen, setWorkspaceDropdownOpen] = useState(false);
   const [isMoveToTrashModalOpen, setMoveToTrashModalOpen] = useState(false);
+
+  const [moveToTrash] = useMoveToTrashMutation();
   const [isRenaming, setIsRenaming] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -472,7 +474,17 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
     setMoveToTrashModalOpen(false);
   };
   const handleProceedMoveToTrash = () => {
+    handleMoveToTrash();
     setMoveToTrashModalOpen(false);
+  };
+
+  const handleMoveToTrash = async () => {
+    try {
+      await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id });
+      console.log('Moved to trash');
+    } catch (error) {
+      console.error('Error moving to trash:', error);
+    }
   };
 
   useEffect(() => {

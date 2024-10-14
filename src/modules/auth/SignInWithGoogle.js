@@ -2,14 +2,14 @@
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 // Firebase configuration (replace with your own config)
-const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_STORAGE_BUCKET',
-  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-  appId: 'YOUR_APP_ID',
-};
+// const firebaseConfig = {
+//   apiKey: 'YOUR_API_KEY',
+//   authDomain: 'YOUR_AUTH_DOMAIN',
+//   projectId: 'YOUR_PROJECT_ID',
+//   storageBucket: 'YOUR_STORAGE_BUCKET',
+//   messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+//   appId: 'YOUR_APP_ID',
+// };
 
 // Initialize Firebase app
 // const app = initializeApp(firebaseConfig);
@@ -17,7 +17,7 @@ const firebaseConfig = {
 
 // Function to handle Google Sign-In
 export const signinWithGoogle = async () => {
-  window.location.href = 'http://139.59.4.99:3000/api/auth/google';
+  window.location.href = 'https://be.changeai.ai/api/auth/google';
   // const provider = new GoogleAuthProvider();
 
   try {
