@@ -48,10 +48,11 @@ export const selectFolderById = createSelector(
   }
 );
 
-// Selector for all chats in the current folder
+// Selector for all chats in the current folder that are not soft deleted
 export const selectAllChats = createSelector(
   selectCurrentFolder,
-  (currentFolder) => currentFolder?.chats || []
+  (currentFolder) =>
+    currentFolder?.chats?.filter(chat => chat.isSoftDeleted === false) || []
 );
 
 

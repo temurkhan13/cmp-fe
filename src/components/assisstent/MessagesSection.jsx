@@ -145,16 +145,17 @@ const MessagesSection = () => {
     return IconComponent ? <IconComponent style={style} /> : null;
   };
 
+
   useEffect(() => {
     if (chatId === null) {
       //  setChat([]);
       return;
     }
     if (currentChat) {
-      console.log(currentChat);
+     // console.log(currentChat);
       // setChat(currentChat.generalMessages || []);
-      console.log('chat Messages: ' + currentChat.generalMessages);
-      console.log('chat: ' + chat);
+     // console.log('chat Messages: ' + currentChat.generalMessages);
+     // console.log('chat: ' + chat);
     }
     // if(chatId === null){
     //   setChat([]);
@@ -465,7 +466,7 @@ const MessagesSection = () => {
           multiple
         />
 
-        {chat && chat.generalMessages.length > 0 ? (
+        {chatId && chat && chat.generalMessages.length > 0 ? (
           <div className="chat-scroll">
             {popupVisible && (
               <TonePopup
