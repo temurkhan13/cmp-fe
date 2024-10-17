@@ -450,7 +450,7 @@ export const workspaceApi = createApi({
     }),
     moveToTrash: builder.mutation({
       query: ({ entityType, id }) => ({
-        url: `/${entityType}/${id}/moveToTrash`,
+        url: `workspace/${entityType}/${id}/moveToTrash`,
         method: 'PATCH',
       }),
     }),
