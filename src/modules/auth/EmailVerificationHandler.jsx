@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Modal from '../../components/common/Modal';
 import { useDispatch } from 'react-redux';
 import { verify } from '../../redux/slices/authSlice.js';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const EmailVerificationHandler = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verificationData, setVerificationData] = useState(false);
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -21,6 +22,7 @@ const EmailVerificationHandler = () => {
   const handleVerifyClick = async () => {
     setShowVerificationModal(true);
   };
+
 
   const handleCloseModal = async () => {
     const code = verificationCode.join('')
@@ -91,14 +93,21 @@ const EmailVerificationHandler = () => {
     inputRefs.current[index].select();
   };
 
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+      const parsedData = JSON.parse(userData);
+      setVerificationData(parsedData.verificationCode.verify);
+  }, [verificationData]);
   return (
     <>
-      <div className="email-verification-bar" style={{ display: 'flex' }}>
+    {verificationData === false && (
+      <div className="email-verification-bar">
         <p>Please verify your email to unlock all features.</p>
         <button onClick={handleVerifyClick} className="email-verify-btn">
           Verify
         </button>
       </div>
+    )}
 
       <Modal
         title="Email Verification"
@@ -138,27 +147,35 @@ const EmailVerificationHandler = () => {
           Submit
         </button>
 
+      </Modal>
         <style>{`
 
   .email-verification-bar {
-    // width: 100%;
-    // max-width: 37.5rem; 
-    // position: fixed;
-    // top: 0%;
-    // left: 50%;
-    // transform: translateX(-50%);
-    // background-color: #e74c3c;
-    // padding: 1rem;
-    // border-radius: 0.5rem; 
-    // color: white;
-    // text-align: center;
-    // box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); 
-    // z-index: 1000;
+    width: 100%;
+    max-width: 37.5rem; 
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #C3E11D;
+    padding: 1rem;
+    border-bottom-right-radius: 1rem; 
+    border-bottom-left-radius: 1rem; 
+    color: black;
+    text-align: center;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); 
+    z-index: 1000;
+    font-size: 11px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
   }
     .email-verify-btn{
-    // padding: 0.5rem 1rem;
-    // border: none;
-    // background-color:green;
+    padding: 0.5rem 1rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color:#C3E11D;
     }
   .verification-inputs {
     display: flex;
@@ -186,7 +203,6 @@ const EmailVerificationHandler = () => {
     color: #0b1444;
   }
 `}</style>
-      </Modal>
     </>
   );
 };

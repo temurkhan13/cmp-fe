@@ -477,11 +477,10 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
     handleMoveToTrash();
     setMoveToTrashModalOpen(false);
   };
-
+  
   const handleMoveToTrash = async () => {
     try {
       await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id });
-      console.log('Moved to trash');
     } catch (error) {
       console.error('Error moving to trash:', error);
     }

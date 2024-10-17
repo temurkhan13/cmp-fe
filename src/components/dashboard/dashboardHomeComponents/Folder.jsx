@@ -2,13 +2,13 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-import { TiPlus } from 'react-icons/ti';
 import { FaFolderTree } from 'react-icons/fa6';
 import { useState } from 'react';
 
 import Modal from '../../common/Modal';
 import FileStructure from '../../dashboard/FileStructure';
 import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 const Folder = ({ activeWorkspace }) => {
   const [addFolder] = useAddFolderMutation();
@@ -63,11 +63,12 @@ const Folder = ({ activeWorkspace }) => {
           <div className="center-buttons">
             <div>
               <button
+              style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
                 className="assiss-btn"
                 onClick={() => setIsNewFolderModalOpen(true)}
               >
-                <TiPlus />
                 New Project
+                <AiOutlinePlus className="icon" />
               </button>
             </div>
           </div>
@@ -178,7 +179,7 @@ const Folder = ({ activeWorkspace }) => {
           justify-content: space-between;
         }
         .generate {
-          background-color: rgba(249, 249, 249, 1);
+          background-color: white;
         }
         .generate .container {
           display: flex;
@@ -187,6 +188,11 @@ const Folder = ({ activeWorkspace }) => {
           justify-content: space-between;
           padding: 2%;
           height: 10vh;
+          border: 1px solid lightgray;
+          background-color: white;
+          width: 95%;
+          border-radius: 1.5rem;
+          margin: 0 3rem;
         }
         .generate .assistant-heading {
           font-family: 'Poppins';
