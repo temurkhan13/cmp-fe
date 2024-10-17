@@ -108,7 +108,7 @@ export const codeVerifyAsync = createAsyncThunk(
       };
 
       const response = await axios.post(`${baseURL}/verification`, {
-        verificationCode: value.newValue,
+        verificationCode: value.code,
       }, config);
 
       return response.data;
