@@ -4,12 +4,12 @@ import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
 import useRegister from '../../hooks/useRegister';
 
-
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/slices/authSlice';
 import { useSelector } from 'react-redux';
+import LoadingSpinner from '../../components/common/LoadingSpinner ';
 
 const SetPassword = () => {
   const dispatch = useDispatch();
@@ -17,13 +17,12 @@ const SetPassword = () => {
   const location = useLocation();
   const detailsBusinessInfo = location.state;
 
-
   const { isLoading, error } = useSelector((state) => state.auth);
   const initalValues = {
     password: '',
     confirmPassword: '',
   };
-  
+
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(false);
 
@@ -32,21 +31,18 @@ const SetPassword = () => {
     try {
       // Dispatch async action to register email and get verification code
       const password = values.password;
-      dispatch(register({registrationData, password}));       
+      dispatch(register({ registrationData, password }));
 
       navigate('/verify-email', { state: { email: registrationData.email } });
-          // Store the token in localStorage
-       //   localStorage.setItem('token', response.data.tokens.access.token);
-       //   navigate('/verify-email', { state: { email: registrationData.email } });
-        
-    
-  }
-    catch (error) {
+      // Store the token in localStorage
+      //   localStorage.setItem('token', response.data.tokens.access.token);
+      //   navigate('/verify-email', { state: { email: registrationData.email } });
+    } catch (error) {
       console.error('Registration failed:', error);
     }
 
-   // await register(allDetails, values.password);
-    setSubmitting(false)
+    // await register(allDetails, values.password);
+    setSubmitting(false);
   };
 
   return (
@@ -71,20 +67,24 @@ const SetPassword = () => {
           {(formik) => (
             <Form>
               <Components.Feature.FormInput
-              type = "password"
+                type="password"
                 name="password"
                 label="Password"
                 place="Enter password"
               />
               <Components.Feature.FormInput
-              type = "password"
+                type="password"
                 name="confirmPassword"
                 label="Confirm Password"
                 place="Confirm password"
               />
               {error && <p style={{ color: 'red' }}>{error}</p>}
-              <Components.Feature.Button className="primary" type="submit" disabled={isLoading}>
-              {isLoading ? 'Loading...' : 'Continue'}
+              <Components.Feature.Button
+                className="primary"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? <LoadingSpinner /> : 'Continue'}
               </Components.Feature.Button>
             </Form>
           )}

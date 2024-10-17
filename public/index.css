@@ -207,6 +207,6 @@ h1 {
 .signIn > center > p > a {
   text-decoration: none;
   font-size: 1.6rem;
-  font-weight: 500;
+  font-weight: bold;
   color: #0b1444;
 }

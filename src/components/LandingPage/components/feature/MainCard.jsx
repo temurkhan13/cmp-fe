@@ -13,15 +13,16 @@ const MainCard = (props) => {
         {`
 .change-ai-cards {
   background-color: #ffffff;
-  padding: 15px 20px;
+  // padding: 15px 20px;
   display: flex;
   border-radius: 20px;
   flex-direction: column;
   gap: 8px;
   transition: all ease 0.2s;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  margin-bottom:3rem;
-  border:1px solid lightgray;
+  margin-bottom:1.5rem;
+  // border:1px solid lightgray;
+  border:none;
   }
   .paragraph{
     margin-top:0.5rem;

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import 'boxicons/css/boxicons.min.css';
 import '../../scss/modules/dashboard/dashboardLayout.scss';
 import Sidebarlogo from '../assets/dashboard/sidebarLogo.png';
+import PlanAndBillingmodal from '../components/dashboard/PlanAndBillingmodal';
 
 import { RiFeedbackFill } from 'react-icons/ri';
 import { FaTrash } from 'react-icons/fa';
@@ -14,9 +14,12 @@ import { RiNewspaperLine } from 'react-icons/ri';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BiSolidSpreadsheet } from 'react-icons/bi';
 import { BsFilePlayFill } from 'react-icons/bs';
+import { IoSettingsSharp } from 'react-icons/io5';
+import { GiArtificialHive } from 'react-icons/gi';
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const Menu = [
     {
@@ -59,9 +62,23 @@ const DashboardLayout = ({ children }) => {
       name: 'Trash',
       Icon: <FaTrash />,
     },
+    {
+      path: '/dashboard/settings',
+      name: 'Settings',
+      Icon: <IoSettingsSharp />,
+    },
   ];
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -128,20 +145,39 @@ const DashboardLayout = ({ children }) => {
               </li>
             </Link>
           ))}
-          {/* <li className="profile">
-            <div className="profile_details">
-              <img src={ProfileUser} alt="profile image" />
-              <div className="profile_content">
-                <div className="name">Anna Jhon</div>
-                <div className="designation">Admin</div>
-              </div>
-            </div>
-            <i className="bx bx-log-out" id="log_out"></i>
-          </li> */}
         </ul>
+
+        <div className="upgrade-plan">
+          <button
+            className="upgrade-button"
+            onClick={openModal}
+            style={{
+              padding: isOpen ? '1.5rem 3rem' : '1rem',
+              marginRight: isOpen ? '2rem' : '3rem',
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center' }}>
+              <GiArtificialHive className="upgrade-icon" />
+              <span
+                style={{
+                  display: isOpen ? 'flex' : 'none',
+                  alignItems: 'center',
+                }}
+              >
+                Upgrade Plan
+              </span>
+            </span>
+            {isOpen && (
+              <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
+                Get Change AI Starter Plan
+              </p>
+            )}
+          </button>
+        </div>
       </div>
 
       <section className="home-section">{children}</section>
+      <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
 };

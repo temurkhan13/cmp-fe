@@ -8,6 +8,17 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [query, setQuery] = useState('');
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    if (e.target.value.trim()) {
+      window.find(e.target.value, false, false, true, false, true, false);
+    } else {
+      // If the query is empty, clear the search highlights
+      window.find('');
+    }
+  };
+
   // Filter and sort items based on the search term
   const filteredItems = items
     .filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -15,6 +26,7 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
+    handleSearch(e);
     setCurrentIndex(0);
   };
 

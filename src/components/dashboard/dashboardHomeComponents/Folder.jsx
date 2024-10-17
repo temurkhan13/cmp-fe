@@ -1,74 +1,49 @@
-import { Link } from 'react-router-dom';
-
-import Workspaces from './Workspaces';
-import CountingCards from './CountingCards';
-import FileStructure from '../../dashboard/FileStructure';
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 import { TiPlus } from 'react-icons/ti';
-import { BsFilterLeft } from 'react-icons/bs';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { BsFilterCircle } from 'react-icons/bs';
-import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
-import { TfiMenuAlt } from 'react-icons/tfi';
-import { SlFolder } from 'react-icons/sl';
-import { SlArrowLeft } from 'react-icons/sl';
-import { CgMenuGridR } from 'react-icons/cg';
-import { PiFilesFill } from 'react-icons/pi';
-import { FaFolderTree } from "react-icons/fa6";
+import { FaFolderTree } from 'react-icons/fa6';
+import { useState } from 'react';
 
-import { RxCross2 } from 'react-icons/rx';
-
-import React, { useEffect, useState } from 'react';
+import Modal from '../../common/Modal';
+import FileStructure from '../../dashboard/FileStructure';
 import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
 
-const Folder = ({activeWorkspace}) => {
-
-  const [addFolder ] = useAddFolderMutation();
-
-  const [newFolderName, setNewFolderName] = useState('');
+const Folder = ({ activeWorkspace }) => {
+  const [addFolder] = useAddFolderMutation();
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-  const truncateString = (str, num) =>
-    str.length > num ? str.slice(0, num) + '...' : str;
 
-  const mockFiles = [
-    { name: 'AI Overview' },
-    { name: 'Machine Learning Basics' },
-    { name: 'Advanced Neural Networks' },
-    { name: 'Introduction to NLP' },
-    { name: 'AI in Robotics' },
-    { name: 'Reinforcement Learning Concepts' },
-    { name: 'AI and Ethics' },
-    { name: 'AI in Healthcare Applications' },
-    { name: 'AI in Financial Services' },
-    { name: 'Data Science Techniques' },
-    { name: 'Predictive Modeling' },
-    { name: 'AI and Privacy' },
-    { name: 'Computer Vision Applications' },
-    { name: 'Deep Learning Explained' },
-    { name: 'AI for Beginners' },
-    { name: 'AI Research Papers' },
-    { name: 'Natural Language Processing Guide' },
-    { name: 'Understanding AI Algorithms' },
-    { name: 'AI in Marketing' },
-    { name: 'AI in Education' },
-    { name: 'AI Overview' },
-    { name: 'Machine Learning Basics' },
-    { name: 'Advanced Neural Networks' },
-    { name: 'Introduction to NLP' },
-    { name: 'AI in Robotics' },
-    { name: 'Reinforcement Learning Concepts' },
-    { name: 'AI and Ethics' },
-    { name: 'AI in Healthcare Applications' },
-  ];
+  // Validation schema
+  const validationSchema = Yup.object({
+    projectName: Yup.string()
+      .required('Project Name is required')
+      .min(3, 'Project Name must be at least 3 characters'),
+    companySize: Yup.string()
+      .required('Company Size is required')
+      .matches(/^[0-9]+$/, 'Company Size must be a number'),
+    websiteURL: Yup.string()
+      .url('Invalid URL format')
+      .required('Website URL is required'),
+    jobTitle: Yup.string().required('Job Title is required'),
+  });
 
-  const handleNewFolderSubmit = async (e) => {
-    e.preventDefault();
+  const initialValues = {
+    projectName: '',
+    companySize: '',
+    websiteURL: '',
+    jobTitle: '',
+  };
+
+  const handleNewFolderSubmit = async (values, { resetForm }) => {
     try {
-
-      console.log(newFolderName);
-      await addFolder({workspaceId : activeWorkspace.id, folderName: newFolderName }).unwrap();
-      setNewFolderName('');
+      console.log(values.projectName);
+      await addFolder({
+        workspaceId: activeWorkspace.id,
+        folderName: values.projectName,
+      }).unwrap();
       setIsNewFolderModalOpen(false);
+      resetForm();
     } catch (error) {
       console.error('Failed to add Project:', error);
     }
@@ -79,82 +54,130 @@ const Folder = ({activeWorkspace}) => {
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
           <div className="left-buttons">
-            {/* <button className="arrow-btn">
-              <SlArrowLeft />
-            </button>
-            <button className="arrow-btn">
-              <SlArrowRight />
-            </button> */}
-            <button className="arrow-btn">
-            <FaFolderTree /></button>
-            <p className="assistant-heading">Projects</p>
+            <p className="assistant-heading">
+              <FaFolderTree />
+              Projects
+            </p>
           </div>
 
           <div className="center-buttons">
-            <div className="left-buttons">
-              {/* <CgMenuGridR className="icon" />
-              <TfiMenuAlt className="icon-small" /> */}
-            </div>
-            {/* <div className="right-buttons">
-              <BsFilterLeft className="filter-icon" />
-              <MdOutlineKeyboardArrowDown className="icon-small" />
-            </div>
-            <div className="right-buttons">
-              <BsFilterCircle className="icon-small" />
-              <MdOutlineKeyboardArrowDown className="icon-small" />
-            </div>
-            <div className="right-buttons">
-              <HiAdjustmentsHorizontal className="adjustments-icon" />
-            </div> */}
-            
-            {isNewFolderModalOpen && (
-        <div className="modal">
-          <div className="modal-wrapper">
-            <h3 className="modal-heading">Create New Project</h3>
-            <button
-              className="modal-closebtn"
-              onClick={() => setIsNewFolderModalOpen(false)}
-            >
-              <RxCross2 />
-            </button>
-          </div>
-          <div className="input-wrapper">
-            <input
-              type="text"
-              className="workspace-input"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              placeholder="Enter project name"
-            />
-            <button
-              onClick={handleNewFolderSubmit}
-              className="create-workspace-btn"
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      )}
             <div>
-                <button className="assiss-btn"
+              <button
+                className="assiss-btn"
                 onClick={() => setIsNewFolderModalOpen(true)}
-                >
-                  <TiPlus />
-                  New Project
-                </button>
-              
+              >
+                <TiPlus />
+                New Project
+              </button>
             </div>
           </div>
         </div>
       </section>
-      <FileStructure workspace = {activeWorkspace}/>
+      {activeWorkspace ? <FileStructure workspace={activeWorkspace} />: <>No Active Workspace</>}
+      {isNewFolderModalOpen && (
+        <Modal
+          title="Create New Project"
+          isOpen={isNewFolderModalOpen}
+          onClose={() => setIsNewFolderModalOpen(false)}
+        >
+          <div className="modal-content">
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleNewFolderSubmit}
+            >
+              {({ errors, touched }) => (
+                <Form>
+                  <div className="modal-form-content">
+                    <label className="modal-label">Project Name</label>
+                    <Field
+                      type="text"
+                      name="projectName"
+                      placeholder="Enter project name"
+                      className={`workspace-input ${
+                        touched.projectName && errors.projectName
+                          ? 'error-border'
+                          : ''
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="projectName"
+                      component="div"
+                      className="error-message"
+                    />
+
+                    <p className="business-info-heading">Your Business Info</p>
+                    <hr />
+
+                    <label className="modal-label">Company Size</label>
+                    <Field
+                      type="text"
+                      name="companySize"
+                      placeholder="Enter company size"
+                      className={`workspace-input ${
+                        touched.companySize && errors.companySize
+                          ? 'error-border'
+                          : ''
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="companySize"
+                      component="div"
+                      className="error-message"
+                    />
+
+                    <label className="modal-label">Website URL</label>
+                    <Field
+                      type="text"
+                      name="websiteURL"
+                      placeholder="Enter website URL"
+                      className={`workspace-input ${
+                        touched.websiteURL && errors.websiteURL
+                          ? 'error-border'
+                          : ''
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="websiteURL"
+                      component="div"
+                      className="error-message"
+                    />
+
+                    <label className="modal-label">Job Title</label>
+                    <Field
+                      type="text"
+                      name="jobTitle"
+                      placeholder="Enter job title"
+                      className={`workspace-input ${
+                        touched.jobTitle && errors.jobTitle
+                          ? 'error-border'
+                          : ''
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="jobTitle"
+                      component="div"
+                      className="error-message"
+                    />
+
+                    <button type="submit" className="create-workspace-btn">
+                      Create
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </Modal>
+      )}
+
       <style>{`
         .dashboard {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
         }
-          .generate {
+        .generate {
           background-color: rgba(249, 249, 249, 1);
         }
         .generate .container {
@@ -162,97 +185,83 @@ const Folder = ({activeWorkspace}) => {
           text-align: center;
           align-items: center;
           justify-content: space-between;
-          padding: 1%;
+          padding: 2%;
           height: 10vh;
-        }
-        .generate .arrow-btn {
-          height: 40px;
-          width: 40px;
-          border: none;
-          outline: none;
-          border-radius: 50%;
-          background: transparent;
         }
         .generate .assistant-heading {
           font-family: 'Poppins';
-          font-size: 20px;
           font-weight: 600;
           line-height: 36px;
           letter-spacing: 0.12px;
+          font-size:2rem;
           text-align: left;
           color: black;
+          display:flex;
+          align-items: center;
+          gap:1rem;
         }
         .generate .assiss-btn {
-          background-color: rgba(10, 10, 10, 1);
+          background-color: #C3E11D;
+          color: #0B1444;
+          border:none;
           display: flex;
           text-align: center;
           align-items: center;
           justify-content: space-between;
-          color: white;
-          border-radius: 8px;
-          margin-left: 10px;
-          padding: 10px 20px;
-        }
-        .generate .left-buttons,
-        .generate .center-buttons,
-        .generate .right-buttons {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .generate .center-buttons {
-          justify-content: space-between;
-        }
-        .generate .icon {
-          font-size: 26px;
-        }
-        .generate .icon-small {
-          margin-right: 30px;
-          margin-left: 5px;
-          font-size: 18px;
-        }
-        .generate .filter-icon {
-          font-size: 22px;
-        }
-        .generate .adjustments-icon {
-          margin-right: 30px;
-          font-size: 22px;
-        }
-        .files {
-          padding: 0 2rem;
-          // margin-top:1rem;
-          border-right: 2px solid lightgray;
-        }
-        .files-heading {
-          font-size: 2.5rem;
-          display: flex;
+          border-radius: 0.8rem;
           font-weight: 600;
-          margin-top: 2rem;
-          padding: 0 3rem;
+          padding: 0.9rem 2rem;
         }
-        .file-list {
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: row;
-          gap: 1rem;
+        .modal-content {
+          background-color: white;
+          padding: 20px;
+          border-radius: 8px;
+          width: 40vw;
         }
-        .file-item {
+        .modal-form-content {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          color: gray;
-          cursor: pointer;
-          font-size: 1.25rem;
-          gap: 0.1rem;
-          padding: 0.5rem;
-          border-radius: 0.8rem;
-          &:hover {
-          background-color: #f0f0f0;
+          gap: 10px;
         }
+        .workspace-input {
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+        .create-workspace-btn {
+          background-color: #C3E11D;
+          color: #0B1444;
+          padding: 1rem 2rem;
+          font-size: 1.6rem;
+          border: none;
+          border-radius: 0.8rem;
+        }
+        .modal-label {
+          font-size: 1.4rem;
+          font-weight: 500;
+        }
+        .business-info-heading {
+          font-size: 1.6rem;
+          font-weight: 500;
+          text-align: center;
+        }
+        .error-message {
+          color: red;
+          font-size: 1.2rem;
+        }
+        .error-border {
+          border-color: red;
         }
       `}</style>
     </div>
   );
+};
+
+Folder.propTypes = {
+  activeWorkspace: PropTypes.shape({
+    id: PropTypes.string.isRequired, // Assuming workspace id is a string
+    name: PropTypes.string, // Add any other necessary fields
+  }).isRequired,
 };
 
 export default Folder;

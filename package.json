@@ -44,6 +44,7 @@
     "react-modal": "^3.16.1",
     "react-multilevel-dropdown": "^4.0.0",
     "react-redux": "^9.1.2",
+    "react-redux-loading-bar": "^5.0.8",
     "react-router-dom": "^6.23.0",
     "react-spinners": "^0.13.8",
     "react-switch": "^7.0.0",

@@ -1,75 +1,215 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes for prop validation
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { BiSolidFolderOpen } from 'react-icons/bi';
-import { FiPlus } from 'react-icons/fi';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { FiPlus, FiMoreVertical, FiX } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import {
+  setCurrentChatId,
+  setSelectedFolder as setSelectedReduxFolder,
+} from '../../redux/slices/workspacesSlice';
+import CustomModal from '../customModal/CustomModal';
+import { truncateText } from '../../utils/helperFunction';
 
 const FileStructure = ({ workspace }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+
+  const modalRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        closeModal();
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isModalOpen]);
 
   const openModal = (folder) => {
     setSelectedFolder(folder);
     setIsModalOpen(true);
+    setNewFolderName(folder.folderName);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedFolder(null);
+    setIsDropdownOpen(false);
+    setIsRenaming(false);
+  };
+
+  const handleRename = () => {
+    setIsRenaming(true);
+    setIsDropdownOpen(false);
+  };
+
+  const handleSaveRename = () => {
+    if (newFolderName.trim()) {
+      selectedFolder.folderName = newFolderName;
+      setIsRenaming(false);
+    }
+  };
+
+  const handleCancelRename = () => {
+    setIsRenaming(false);
+    setNewFolderName(selectedFolder.folderName);
+  };
+
+  const handleProceedMoveToTrash = () => {
+    console.log('Moving folder to trash:', selectedFolder);
+    setIsTrashModalOpen(false);
+  };
+
+  const handleOpenFolder = (folder) => {
+    dispatch(setSelectedReduxFolder(folder));
+    dispatch(setCurrentChatId(null));
+    navigate('/assisstant/chat');
+  };
+
+  const handleOpenAssessment = (folder) => {
+    dispatch(setSelectedReduxFolder(folder));
+    navigate('/assessment/chat');
+  };
+
+  const handleCreateSitemap = () => {
+    navigate('/sitemap/new');
   };
 
   return (
     <section className="folders-files" style={{ marginTop: '2rem' }}>
       <div className="heading">
         <p>
-          Your &ldquo;{workspace && workspace.workspaceName}&rdquo; contains the
-          following projects:
+          Your &ldquo;{workspace.workspaceName}&rdquo; contains the following
+          projects:
         </p>
       </div>
 
       <div className="files-container">
-        {workspace &&
-          workspace.folders.map((folder, index) => (
-            <div key={index} className="file" onClick={() => openModal(folder)}>
-              <span className="icon">
-                <BiSolidFolderOpen style={{ fontSize: '5rem' }} />
-              </span>
-              <p>{folder.folderName}</p>
-              <p className="file-count">
-                {folder.chats.length + folder.assessments.length} files
-              </p>
-            </div>
-          ))}
+        {workspace.folders.map((folder, index) => (
+          <div key={index} className="file" onClick={() => openModal(folder)}>
+            <span className="icon">
+              <BiSolidFolderOpen style={{ fontSize: '5rem', color: 'gray' }} />
+            </span>
+            <p>{truncateText(folder.folderName, 10)}</p>
+            <p className="file-count">
+              {folder.chats.length + folder.assessments.length} files
+            </p>
+          </div>
+        ))}
       </div>
 
       {isModalOpen && (
         <div className="folder-modal">
-          <div className="folder-modal-content">
-            <h3>{selectedFolder.folderName}</h3>
+          <div className="folder-modal-content" ref={modalRef}>
+            <FiX className="modal-close-icon" onClick={closeModal} />
+            <div className="modal-menu">
+              <FiMoreVertical
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              />
+              {isDropdownOpen && (
+                <div className="file-structure-dropdown" ref={dropdownRef}>
+                  <button className="dropdown-item" onClick={handleRename}>
+                    Rename
+                  </button>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setIsTrashModalOpen(true)}
+                  >
+                    Move to Trash
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {isRenaming ? (
+              <div className="rename-section">
+                <input
+                  type="text"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="Enter your new folder name"
+                  className="rename-input"
+                />
+                <div className="rename-buttons">
+                  <button
+                    className="folder-modal-button"
+                    onClick={handleCancelRename}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="folder-modal-button"
+                    onClick={handleSaveRename}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <h3>{selectedFolder.folderName}</h3>
+            )}
+
             <div className="folder-modal-buttons">
               <button
                 className="folder-modal-button"
-                onClick={() => {
-                  navigate('/assisstant/chat');
-                }}
+                onClick={() => handleOpenFolder(selectedFolder)}
               >
                 New Assistant <FiPlus />
               </button>
               <button
                 className="folder-modal-button"
-                onClick={() => {
-                  navigate('/assessment/chat');
-                }}
+                onClick={() => handleOpenAssessment(selectedFolder)}
               >
                 New Assessment <FiPlus />
               </button>
+              <button
+                className="folder-modal-button"
+                onClick={handleCreateSitemap}
+              >
+                Create Sitemap <FiPlus />
+              </button>
             </div>
-            <button onClick={closeModal} className="folder-modal-close-btn">
-              Close
-            </button>
           </div>
         </div>
+      )}
+
+      {isTrashModalOpen && (
+        <CustomModal
+          isOpen={isTrashModalOpen}
+          onClose={() => setIsTrashModalOpen(false)}
+          onProceed={handleProceedMoveToTrash}
+          heading="Move to Trash"
+          bodyContent={
+            <div>
+              Are you sure you want to move this file to the trash?
+              <br /> It will remain there for 30 days before being permanently
+              deleted.
+            </div>
+          }
+          cancelText="Cancel"
+          proceedText="Proceed"
+        />
       )}
 
       <style>{`
@@ -85,14 +225,9 @@ const FileStructure = ({ workspace }) => {
           margin-right: 4rem;
           margin-left: 2rem;
         }
-        .see-less {
-          font-weight: normal;
-          font-size: 1.5rem;
-        }
         .files-container {
           display: flex;
           flex-wrap: wrap;
-          cursor: pointer;
         }
         .file {
           cursor: pointer;
@@ -129,10 +264,48 @@ const FileStructure = ({ workspace }) => {
           background-color: white;
           padding: 2rem;
           border-radius: 1rem;
-          width: 90%;
-          max-width: 30rem;
+          width: 35rem;
           text-align: center;
           font-size: 1.4rem;
+          position: relative;
+        }
+        .modal-close-icon {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          font-size: 1.9rem;
+          cursor: pointer;
+        }
+        .modal-menu {
+          position: absolute;
+          top: 1rem;
+          left: 1rem;
+          cursor: pointer;
+          font-size:1.9rem;
+        }
+        .file-structure-dropdown {
+          position: absolute;
+          top: 2.5rem;
+          right: 0;
+          background-color: white;
+          border: 1px solid #ddd;
+          border-radius: 0.8rem;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
+          width: 15rem;
+        }
+        .dropdown-item {
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          font-size:1.5rem;
+          border: none;
+          background: none;
+          text-align: left;
+        }
+        .dropdown-item:hover {
+          background-color: #f0f0f0;
         }
         .folder-modal-buttons {
           display: flex;
@@ -143,35 +316,36 @@ const FileStructure = ({ workspace }) => {
         .folder-modal-button {
           padding: 0.5rem 1rem;
           background-color: #c3e11d;
-          color:#0b1444 ;
+          color: #0b1444;
           border: none;
           border-radius: 0.5rem;
           cursor: pointer;
           font-size: 1.5rem;
           font-weight: 500;
           transition: background-color 0.3s;
-          display:flex;
+          display: flex;
           align-items: center;
-          justify-content: center;
-          gap:0.5rem;
+          justify-content: space-between;
+          gap: 0.5rem;
         }
-        .folder-modal-close-btn {
-          padding: 0.5rem 1rem;
-          background-color: #c3e11d;
-          color: #0b1444;
-          border: none;
-          width: 15rem;
-          border-radius: 0.5rem;
-          cursor: pointer;
-          margin-top: 1rem;
-          font-size: 1.4rem;
-        }
+          .rename-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+    .rename-input{
+    outline: none;
+    border:1px solid lightgray;
+    width:25rem;
+    padding:0.8rem 1rem;
+    border-radius:0.8rem;
+    }
       `}</style>
     </section>
   );
 };
 
-// Define prop types for the component
 FileStructure.propTypes = {
   workspace: PropTypes.shape({
     workspaceName: PropTypes.string.isRequired,

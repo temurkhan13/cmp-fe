@@ -4,20 +4,29 @@ import { workspaceApi } from '../api/workspaceApi';
 
 const workspacesSlice = createSlice({
   name: 'workspaces',
-  initialState: { 
+  initialState: {
     workspaces: [],
     selectedWorkspace: null,
     currentWorkspaceId: null,
-    currentFolderId:"66a500bef6d2341978d6d4b9",
-    currentChatId:"66a500bef6d2341978d6d4ba",
-   },
+    selectedFolder: null,
+    currentFolderId: null,
+    currentChatId: null,
+    currentAssessmentId: null,
+  },
   reducers: {
     setSelectedWorkspace: (state, action) => {
       state.selectedWorkspace = action.payload;
       state.currentWorkspaceId = action.payload.id;
     },
-    setCurrentChatId: (state,action) => {
+    setSelectedFolder: (state, action) => {
+      state.selectedFolder = action.payload;
+      state.currentFolderId = action.payload._id;
+    },
+    setCurrentChatId: (state, action) => {
       state.currentChatId = action.payload;
+    },
+    setCurrentAssessmentId: (state, action) => {
+      state.currentAssessmentId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -43,6 +52,11 @@ const workspacesSlice = createSlice({
   },
 });
 
-export const { setSelectedWorkspace,setCurrentChatId } = workspacesSlice.actions;
+export const {
+  setSelectedWorkspace,
+  setCurrentChatId,
+  setCurrentAssessmentId,
+  setSelectedFolder,
+} = workspacesSlice.actions;
 export const selectWorkspace = (state) => state.workspaces.selectedWorkspace;
 export default workspacesSlice.reducer;

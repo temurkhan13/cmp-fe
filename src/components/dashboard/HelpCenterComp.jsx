@@ -36,7 +36,20 @@ const HelpCenterComp = () => {
       title: 'AI Introduction',
       content: (
         <div>
-          <p>Artificial Intelligence (AI) refers to the simulation...</p>
+          <p>
+            Artificial Intelligence (AI) refers to the simulation of human
+            intelligence in machines, enabling them to perform tasks that
+            typically require human cognition. These tasks include learning,
+            reasoning, problem-solving, and decision-making, allowing AI systems
+            to adapt and improve over time. AI has evolved rapidly, influencing
+            various industries by automating processes, analyzing vast amounts
+            of data, and improving operational efficiency. The integration of AI
+            into everyday life is transforming how we interact with technology,
+            from virtual assistants to advanced data analytics. AI-powered tools
+            enhance productivity, streamline workflows, and provide valuable
+            insights across sectors such as healthcare, finance, and education,
+            making AI an essential part of modern technological advancements.
+          </p>
           <img
             src="path/to/image1.jpg"
             alt="AI"
@@ -54,7 +67,20 @@ const HelpCenterComp = () => {
       title: 'Assistant Chat',
       content: (
         <div>
-          <p>Discover how AI can assist in real-time conversations...</p>
+          <p>
+            AI-powered chat systems offer real-time responses, enhancing the
+            flow of conversations by providing instant and accurate replies.
+            This enables seamless communication, especially in professional and
+            customer service settings where quick solutions are essential. AI
+            integration into chat platforms improves efficiency, reduces wait
+            times, and ensures users receive relevant information without delay.
+            With seamless integration, AI systems can be incorporated into
+            various applications, supporting a range of tasks beyond simple
+            conversation. From handling queries to assisting in workflows, AI
+            enhances user experience by automating processes and delivering
+            personalized interactions, ultimately making communication more
+            intuitive and efficient.
+          </p>
           <ul>
             <li>Real-time responses</li>
             <li>Seamless integration</li>
@@ -133,6 +159,8 @@ const HelpCenterComp = () => {
           display: flex;
           align-items: flex-start;
           position: relative;
+          font-size:1.5rem;
+          width: 100%;
         }
         .help-Heading {
           padding: 5rem;
