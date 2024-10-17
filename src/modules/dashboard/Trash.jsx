@@ -1,6 +1,13 @@
-import DashboardLayout from "../../layout/DashboardLayout";
+import TrashModule from '../../components/dashboard/TrashModule';
+import Header from '../../components/dashboard/Header';
+import DashboardLayout from '../../layout/DashboardLayout';
 const Trash = () => {
-  return <DashboardLayout>Trash</DashboardLayout>;
+  return (
+    <DashboardLayout>
+      <Header />
+      <TrashModule />
+    </DashboardLayout>
+  );
 };
 
 export default Trash;

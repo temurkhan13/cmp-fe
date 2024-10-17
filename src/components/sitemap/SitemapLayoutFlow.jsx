@@ -15,10 +15,10 @@ import { v4 as uuidv4 } from 'uuid';
 import assets from '../../assets';
 import { FaHistory } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
-import AssessmentModal from '../assisstent/assisstentChat/assessmentModal';
-import VersionHistory from '../assisstent/assisstentChat/assessmentModal/VersionHistory';
-import Media from '../assisstent/assisstentChat/assessmentModal/Media';
-import Comments from '../assisstent/assisstentChat/assessmentModal/Comments';
+import { SideBarModal } from '../../components/common';
+import VersionHistory from '../assisstent/assistantModal/VersionHistory';
+// import Media from '../assisstent/assisstentChat/SideBarModal/Media';
+import Comments from '../assisstent/assistantModal/Comments';
 import Loading from './Loading';
 import Edge from './Edge';
 const nodeTypes = {
@@ -634,14 +634,14 @@ const SitemapLayoutFlow = ({ id }) => {
           {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
 
           {isVersionHistoryModalOpen && (
-            <AssessmentModal
+            <SideBarModal
               title="Version History"
               bodyContent={<VersionHistory versions={[]} />}
               onClose={closeModal}
             />
           )}
           {isCommentsModalOpen && (
-            <AssessmentModal
+            <SideBarModal
               title="Comments"
               bodyContent={<Comments comments={[]} />}
               onClose={closeModal}

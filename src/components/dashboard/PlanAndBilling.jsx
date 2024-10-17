@@ -1,20 +1,30 @@
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { MdOutlineError } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
+import PlanAndBillingmodal from '../../components/dashboard/PlanAndBillingmodal';
+import { useState } from 'react';
 
 const PlanAndBilling = () => {
-  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const planInfo = {
     name: 'Starter',
     status: 'Active',
     price: '29.99',
     description: [
-      '3 users, 2 workspaces',
-      'View user history up to 7 days',
-      'Restore deleted data up to 7 days',
-      'Email support',
-      '3 brand styles per project',
-      '2 ChangeAI Playbook projects, max 30,000 AI words',
+      'Unlimited: 30,000 AI words.',
+      'Projects: 2 Assessments, 2 Playbooks.',
+      'Users: 3 users, 2 workspaces.',
+      'Export: PPT, Word, Excel, PDF (no watermark).',
+      'Design: Icons, images, shapes, tables.',
+      'Monthly Limit: 30,000 AI words, Email support.`',
     ],
   };
 
@@ -94,10 +104,6 @@ const PlanAndBilling = () => {
   return (
     <div className="billing-page">
       <h2>Plan & Billing</h2>
-      <div className="tabs">
-        <div className="tab active">General</div>
-      </div>
-
       <div className="plan-information">
         <div className="info">
           <h3>Information:</h3>
@@ -114,12 +120,7 @@ const PlanAndBilling = () => {
             <strong>Price:</strong>
             <span className="price">${planInfo.price}</span>
           </p>
-          <button
-            className="renew-btn"
-            onClick={() => {
-              navigate('/choose-plain');
-            }}
-          >
+          <button className="renew-btn" onClick={openModal}>
             Renew
           </button>
         </div>
@@ -170,36 +171,34 @@ const PlanAndBilling = () => {
           </tbody>
         </table>
       </div>
+      <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`
         .billing-page {
           padding: 1.25rem;
-          font-size:1.4rem;
+          font-size: 1.4rem;
           background-color: #f9f9f9;
         }
         h2 {
-          margin-bottom: 1.25rem;
+          // margin-bottom: 1.25rem;
         }
         .tabs {
           display: flex;
           margin-bottom: 1.25rem;
         }
         .tab {
-          padding: 0.625rem 1.25rem; 
+          // padding: 0.625rem 1.25rem;
           cursor: pointer;
-          border-bottom: 0.125rem solid transparent; 
+          border-bottom: 0.125rem solid transparent;
         }
         .tab.active {
           border-color: #3f51b5;
         }
-          .plan-name{
-          font-weight:bold;
-          }
         .plan-information {
           display: flex;
           background-color: #fff;
           padding: 1.5rem;
-          border-radius: 1rem; 
+          border-radius: 1rem;
           margin-bottom: 1.5rem;
           box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
         }
@@ -214,61 +213,59 @@ const PlanAndBilling = () => {
           flex: 1;
           list-style: none;
         }
-          tr td {
+        tr td {
           align-items: center;
-          }
-          .feature-list{
-          list-style:none;
-          font-size:1.4rem;
-          display:flex;
+        }
+        .feature-list {
+          list-style: none;
+          font-size: 1.4rem;
+          display: flex;
           align-items: center;
-          gap:1rem;
-          }
+          gap: 1rem;
+        }
         .status.active {
           background-color: rgba(4, 212, 0, 0.1);
-          color:rgba(4, 212, 0, 1);
-          border-radius:2rem;
-          font-size:1.4rem;
+          color: rgba(4, 212, 0, 1);
+          border-radius: 2rem;
+          font-size: 1.4rem;
           padding: 0.2rem 2rem;
-
         }
         .status.expired {
           background-color: rgba(203, 23, 12, 0.1);
-          color:rgba(203, 23, 12, 1);
-          border-radius:1.5rem;
-          display:flex;
+          color: rgba(203, 23, 12, 1);
+          border-radius: 1.5rem;
+          display: flex;
           align-items: center;
           justify-content: center;
-          padding:0.5rem 0rem;
-
-          gap:0.5rem;
+          padding: 0.5rem 0rem;
+          gap: 0.5rem;
         }
         .price {
           color: #3f51b5;
           font-weight: bold;
         }
         .renew-btn {
-          padding: 0.625rem 1.25rem; 
-          background-color:rgba(195, 225, 29, 1);
-          color:rgba(11, 20, 68, 1);
+          padding: 0.625rem 1.25rem;
+          background-color: rgba(195, 225, 29, 1);
+          color: rgba(11, 20, 68, 1);
           font-size: 1.5rem;
           font-weight: 500;
           border: none;
-          width:15rem;
-          border-radius: 1rem; 
+          width: 15rem;
+          border-radius: 1rem;
           cursor: pointer;
-          margin-top: 0.625rem; 
+          margin-top: 0.625rem;
         }
         .billing-history {
           background-color: #fff;
           padding: 1.25rem;
-          border-radius: 0.5rem; 
+          border-radius: 0.5rem;
           box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
         }
         table {
           width: 100%;
           border-collapse: collapse;
-          margin-top: 0.625rem; 
+          margin-top: 0.625rem;
         }
         th,
         td {
@@ -282,6 +279,10 @@ const PlanAndBilling = () => {
         .price {
           color: #3f51b5;
         }
+          .info p{
+          display:flex;
+          gap: 1rem;
+          }
       `}</style>
     </div>
   );

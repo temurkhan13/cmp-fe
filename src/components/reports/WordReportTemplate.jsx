@@ -58,8 +58,6 @@ const CoverPageContainer = styled(Page)`
   }
 `;
 
-
-
 const ContentPageContainer = styled(Page)`
   font-size: 16px;
   white-space: pre-wrap; /* Preserve white space formatting */
@@ -104,17 +102,17 @@ const WordReportTemplate = ({ content }) => {
   return (
     <div>
       <CoverPageContainer>
-      <div className="header">
-        <img src={Sidebarlogo} alt="Logo" className="logo" />
-      </div>
-      <h1>Change Vision/ Case For Change</h1>
-      <div className="footer">
-        <p>1234 Street Name</p>
-        <p>City, State, ZIP</p>
-        <p>(123) 456-7890</p>
-        <p>www.yourwebsite.com</p>
-      </div>
-    </CoverPageContainer>
+        <div className="header">
+          <img src={Sidebarlogo} alt="Logo" className="logo" />
+        </div>
+        <h1>Change Vision/ Case For Change</h1>
+        <div className="footer">
+          <p>1234 Street Name</p>
+          <p>City, State, ZIP</p>
+          <p>(123) 456-7890</p>
+          <p>www.yourwebsite.com</p>
+        </div>
+      </CoverPageContainer>
       {pages.map((pageContent, index) => (
         <ContentPageContainer
           key={index}

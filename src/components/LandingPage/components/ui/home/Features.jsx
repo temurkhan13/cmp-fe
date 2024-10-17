@@ -1,4 +1,3 @@
-import React from 'react';
 import FeaturesCard from '../../feature/FeaturesCard'; // Ensure the correct import path
 import {
   feature1,
@@ -70,34 +69,25 @@ const Features = () => {
 
         .features-grid {
           display: grid;
-          gap: 1.25rem;
-          grid-template-columns: repeat(
-            3,
-            minmax(0, 1fr)
-          ); 
+          gap: 2rem;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
+        /* Adjust grid layout for larger tablets and smaller desktops */
         @media screen and (max-width: 75rem) {
-        
           .features-grid {
-            grid-template-columns: repeat(
-              2,
-              minmax(0, 1fr)
-            ); 
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
+        /* Adjust grid layout and container padding for smaller screens (mobile) */
         @media screen and (max-width: 48rem) {
-        
           .features-container {
             padding: 1.875rem 1.25rem;
           }
 
           .features-grid {
-            grid-template-columns: repeat(
-              auto-fit,
-              minmax(18.75rem, 1fr)
-            ); 
+            grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column for mobile */
           }
         }
       `}</style>

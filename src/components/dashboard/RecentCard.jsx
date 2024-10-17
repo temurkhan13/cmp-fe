@@ -8,9 +8,7 @@ import { MdOutlineEdit } from 'react-icons/md';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
 import { RxAvatar } from 'react-icons/rx';
-
-const truncateText = (text, maxLength) =>
-  text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+import { truncateText } from '../../utils/helperFunction';
 
 const RecentCards = ({ chats, view }) => {
   const isListView = view === 'list';
@@ -83,7 +81,8 @@ const RecentCards = ({ chats, view }) => {
           justify-content: space-between;
         }
         .card {
-          width: 25rem;
+          width: 30rem;
+          height:25rem;
           border: 1px solid #ccc;
           border-radius: 1.3rem;
           background-color: #fff;
@@ -160,6 +159,8 @@ const RecentCards = ({ chats, view }) => {
         .fileDetails {
           width: 100%;
           margin-top: 1rem;
+          margin-bottom:3rem;
+
         }
         .folderName {
           color: #0066ff;

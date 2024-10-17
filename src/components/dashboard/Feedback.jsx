@@ -258,7 +258,7 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
           justify-content: flex-end;
         }
         button:hover {
-          background-color: #b5cd19;
+          // background-color: #b5cd19;
         }
         .radio-label {
           display: flex;

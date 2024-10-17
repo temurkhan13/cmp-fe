@@ -7,7 +7,8 @@ export const workspaceApi = createApi({
   endpoints: (builder) => ({
     // Workspaces
     getWorkspaces: builder.query({
-      query: () => 'workspace',
+      query: (userId) => `workspace?userId=${userId}`,
+      //query: () => 'workspace',
       providesTags: ['Workspace'],
     }),
     getWorkspace: builder.query({
@@ -65,6 +66,18 @@ export const workspaceApi = createApi({
         // body: chat,
       }),
     }),
+
+    // Query to fetch the full chat object
+    getChat: builder.query({
+      query: ({ workspaceId, folderId, chatId }) => 
+        `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/`,
+      providesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
+    }),
+    
+    
+    
     updateChat: builder.mutation({
       query: ({ workspaceId, folderId, chat }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chat.chatId}`,
@@ -74,31 +87,111 @@ export const workspaceApi = createApi({
     }),
     removeChat: builder.mutation({
       query: ({ workspaceId, folderId, chatId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}`,
+        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/`,
         method: 'DELETE',
       }),
     }),
 
-    // Messages
     addMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, message, files }) => {
         const formData = new FormData();
         formData.append('text', message);
-
-        // Append a single file or multiple files
+    
         if (files && files.length > 0) {
           files.forEach((file, index) => {
             formData.append(`file${index}`, file);
           });
         }
-
+    
+        // Use the actual chatId or handle for a new chat
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message`,
           method: 'PATCH',
           body: formData,
         };
       },
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId || 'newChat'}` },
+        { type: 'Workspace', id: workspaceId },
+        { type: 'Folder', id: `${workspaceId}-${folderId}` },
+      ],
+      async onQueryStarted({ workspaceId, folderId, chatId, message }, { dispatch, queryFulfilled }) {
+        const tempId = `temp-${Date.now()}`;
+        const timestamp = new Date().toISOString();
+        const newChat = chatId === 'newChat'; // Determine if it's a new chat
+    
+        // Optimistic UI update: Add the new message to the chat (or create a new chat if necessary)
+        const patchResult = dispatch(
+          workspaceApi.util.updateQueryData('getChat', { workspaceId, folderId, chatId: newChat ? tempId : chatId }, (draft) => {
+            // Create an empty message array if it's a new chat
+            console.log("is working1");
+            if (!draft.generalMessages) {
+              draft.generalMessages = [];
+            }
+            // Push the new message
+            draft.generalMessages.push({
+              _id: tempId,
+              text: message,
+              sender: 'user',
+              createdAt: timestamp,
+              status: 'sending',
+              files: [],
+            });
+          })
+        );
+    
+        try {
+          // Wait for the query to be fulfilled (i.e., server response)
+          const { data } = await queryFulfilled;
+    
+          // If it's a new chat, update the workspace with the new chatId
+          if (newChat) {
+            dispatch(
+              workspaceApi.util.updateQueryData('getWorkspace', { workspaceId }, (draftWorkspace) => {
+                const folder = draftWorkspace.folders.find((folder) => folder._id === folderId);
+                  console.log("is working");
+                if (folder) {
+                  folder.chats.push({
+                    _id: data.chatId, // Use the new chatId from the server
+                    generalMessages: [
+                      {
+                        _id: data._id, // Real message ID from the server
+                        text: data.text,
+                        sender: data.sender,
+                        createdAt: data.createdAt,
+                        status: 'sent',
+                        files: data.files || [],
+                      },
+                    ],
+                  });
+                }
+              })
+            );
+          } else {
+            // If the chat already exists, update the message with the real data from the server
+            dispatch(
+              workspaceApi.util.updateQueryData('getChat', { workspaceId, folderId, chatId }, (draft) => {
+                const index = draft.generalMessages.findIndex((msg) => msg._id === tempId);
+                if (index !== -1) {
+                  draft.generalMessages[index] = {
+                    ...draft.generalMessages[index],
+                    _id: data._id, // Replace tempId with real ID
+                    status: 'sent',
+                    files: data.files || [],
+                  };
+                }
+              })
+            );
+          }
+        } catch (error) {
+          // If the server request fails, undo the optimistic update
+          patchResult.undo();
+        }
+      },
     }),
+    
+  
+    
 
     updateMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, messageId, message }) => ({
@@ -134,6 +227,30 @@ export const workspaceApi = createApi({
         };
       },
     }),
+    // AddAssessment
+    addAssessmentSample: builder.mutation({
+      query: ({ workspaceId, folderId, chatId, message, files, assessmentName }) => {
+        const formData = new FormData();
+        formData.append('text', message);
+
+        // Append a single file or multiple files
+        if (files && files.length > 0) {
+          files.forEach((file, index) => {
+            formData.append(`file${index}`, file);
+          });
+        }
+        const bodyData = {
+        "assessmentName": assessmentName,//"Change Vision/Case for Change",
+        "message": {message}
+      };
+
+        return {
+          url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/assessment`,
+          method: 'PATCH',
+          body: bodyData,
+        };
+      },
+    }),
 
     updateAssessment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, message }) => ({
@@ -142,13 +259,35 @@ export const workspaceApi = createApi({
         body: message,
       }),
     }),
+
     removeAssessment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, messageId }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/messages/${messageId}`,
         method: 'DELETE',
       }),
     }),
+    generateReport: builder.mutation({
+      query: ({ workspaceId, folderId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/assessment/reports`,
+        method: 'POST',
+      }),
+    }),
+    generateAllReport: builder.mutation({
+      query: ({ workspaceId, folderId, chatId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/reports`,
+        method: 'POST',
+      }),
+    }),
+    
 
+    // Survey
+    addProjectSurvey: builder.mutation({
+      query: ({ workspaceId, folderId, survey }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/surveyInfo`,
+        method: 'POST',
+        body: survey,
+      }),
+    }),
     // Shared Users
     addSharedUser: builder.mutation({
       query: ({ workspaceId, folderId, chatId, user }) => ({
@@ -309,6 +448,19 @@ export const workspaceApi = createApi({
         method: 'DELETE',
       }),
     }),
+    moveToTrash: builder.mutation({
+      query: ({ entityType, id }) => ({
+        url: `/${entityType}/${id}/moveToTrash`,
+        method: 'PATCH',
+      }),
+    }),
+    restoreFromTrash: builder.mutation({
+      query: ({ entityType, id }) => ({
+        url: `/${entityType}/${id}/restoreFromTrash`,
+        method: 'PATCH',
+      }),
+    }),
+
   }),
 });
 
@@ -329,6 +481,8 @@ export const {
   useRemoveMessageMutation,
 
   useAddAssessmentMutation,
+  useGenerateAllReportMutation,
+  useGenerateReportMutation,
   useUpdateAssessmentMutation,
   useRemoveAssessmentMutation,
 
@@ -353,4 +507,8 @@ export const {
   useAddVersionMutation,
   useUpdateVersionMutation,
   useRemoveVersionMutation,
+  useAddProjectSurveyMutation,
+  useGetChatQuery,
+  useMoveToTrashMutation,
+  useRestoreFromTrashMutation
 } = workspaceApi;

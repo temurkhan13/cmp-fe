@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import Components from '../../components';
 import data from '../../data';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { setBusinessInfo } from '../../store/businessInfoSlice';
+import { setBusinessInfo } from '../../redux/slices/businessInfoSlice';
 
 const BusinessInfo = () => {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ const BusinessInfo = () => {
                     name="companySize"
                     label="What size is your company?"
                     place="Select size"
-                    type = "number"
+                    type="number"
                     data={dummyCompanySize}
                   />
                   <Components.Feature.FormInput

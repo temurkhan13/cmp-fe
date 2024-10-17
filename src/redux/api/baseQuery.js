@@ -8,7 +8,8 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     // Get the access token from the state
     const state = getState();
-    const token = state.auth.accessToken;
+    //const token = state.auth.accessToken;
+    const token = localStorage.getItem('token');
     
     // If we have a token, set it in the headers
     if (token) {

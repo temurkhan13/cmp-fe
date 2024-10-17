@@ -118,7 +118,7 @@ const ShareModal = ({ members, onClose }) => {
 
   return (
     <>
-      <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.ShareModalOverlay} onClick={onClose}>
         <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
           <div style={styles.header}>
             <h3 style={styles.shareHeading}>Share “AI Assistant Test File”</h3>
@@ -221,7 +221,7 @@ const ShareModal = ({ members, onClose }) => {
 };
 
 const styles = {
-  overlay: {
+  ShareModalOverlay: {
     position: 'fixed',
     top: 0,
     left: 0,
