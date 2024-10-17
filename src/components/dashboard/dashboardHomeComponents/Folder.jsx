@@ -73,7 +73,7 @@ const Folder = ({ activeWorkspace }) => {
           </div>
         </div>
       </section>
-      <FileStructure workspace={activeWorkspace} />
+      {activeWorkspace ? <FileStructure workspace={activeWorkspace} />: <>No Active Workspace</>}
       {isNewFolderModalOpen && (
         <Modal
           title="Create New Project"

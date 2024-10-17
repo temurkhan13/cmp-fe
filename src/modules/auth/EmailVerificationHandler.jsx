@@ -1,5 +1,8 @@
 import { useState, useRef } from 'react';
 import Modal from '../../components/common/Modal';
+import { useDispatch } from 'react-redux';
+import { verify } from '../../redux/slices/authSlice.js';
+import { useNavigate } from 'react-router-dom';
 
 const EmailVerificationHandler = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
@@ -12,13 +15,18 @@ const EmailVerificationHandler = () => {
     '',
   ]);
   const inputRefs = useRef([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleVerifyClick = () => {
+  const handleVerifyClick = async () => {
     setShowVerificationModal(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    const code = verificationCode.join('')
+    await dispatch(verify({code}))
     setShowVerificationModal(false);
+    navigate('/dashboard');
   };
 
   const handleCodeChange = (index, value) => {
