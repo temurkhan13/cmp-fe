@@ -37,7 +37,7 @@ const CommentPopup = ({
       const text = comment;
       await addComment({ workspaceId, folderId, chatId, messageId, text });
       setComment('');
-      onClose(); // Close the comment popup
+      onClose();
     }
   };
 

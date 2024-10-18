@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
-import LoadingSpinner from '../../components/common/LoadingSpinner ';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import { useSelector } from 'react-redux';
 import useManagerChat from '@hooks/useManagerChat';
