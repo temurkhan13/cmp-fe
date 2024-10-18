@@ -14,8 +14,8 @@ const CountingCards = ({ activeWorkspace }) => {
 
   const cardData = [
     { title: 'Active Workspace', count: activeWorkspaceName },
-    { title: 'Projects', count: totalProjects },
     { title: 'Total Workspaces', count: totalWorkspaces },
+    { title: 'Projects', count: totalProjects },
   ];
 
   return (
