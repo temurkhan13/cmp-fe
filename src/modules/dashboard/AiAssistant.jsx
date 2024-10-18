@@ -8,7 +8,7 @@ import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import { selectAllChats } from '../../redux/selectors/selectors';
 import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
-import LoadingSpinner from '../../components/common/LoadingSpinner ';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 import DashboardCard from '@components/common/DashboardCard';
 
 const AiAssistant = () => {

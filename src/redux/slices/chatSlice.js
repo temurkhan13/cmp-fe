@@ -47,9 +47,14 @@ const chatSlice = createSlice({
       if (workspace) {
         const folder = workspace.folders.find((f) => f.folderId === folderId);
         if (folder) {
-          const chatIndex = folder.chats.findIndex((chat) => chat.chatId === chatId);
+          const chatIndex = folder.chats.findIndex(
+            (chat) => chat.chatId === chatId
+          );
           if (chatIndex !== -1) {
-            folder.chats[chatIndex] = { ...folder.chats[chatIndex], ...updatedChat };
+            folder.chats[chatIndex] = {
+              ...folder.chats[chatIndex],
+              ...updatedChat,
+            };
           }
         }
       }
@@ -98,14 +103,17 @@ const chatSlice = createSlice({
       }
     },
     updateComment: (state, action) => {
-      const { workspaceId, folderId, chatId, commentId, updatedComment } = action.payload;
+      const { workspaceId, folderId, chatId, commentId, updatedComment } =
+        action.payload;
       const workspace = state.chats.find((w) => w.workspaceId === workspaceId);
       if (workspace) {
         const folder = workspace.folders.find((f) => f.folderId === folderId);
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            const commentIndex = chat.comments.findIndex((c) => c.commentId === commentId);
+            const commentIndex = chat.comments.findIndex(
+              (c) => c.commentId === commentId
+            );
             if (commentIndex !== -1) {
               chat.comments[commentIndex].text = updatedComment;
             }
@@ -121,20 +129,25 @@ const chatSlice = createSlice({
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            chat.comments = chat.comments.filter((c) => c.commentId !== commentId);
+            chat.comments = chat.comments.filter(
+              (c) => c.commentId !== commentId
+            );
           }
         }
       }
     },
     addReply: (state, action) => {
-      const { workspaceId, folderId, chatId, commentId, reply } = action.payload;
+      const { workspaceId, folderId, chatId, commentId, reply } =
+        action.payload;
       const workspace = state.chats.find((w) => w.workspaceId === workspaceId);
       if (workspace) {
         const folder = workspace.folders.find((f) => f.folderId === folderId);
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            const comment = chat.comments.find((c) => c.commentId === commentId);
+            const comment = chat.comments.find(
+              (c) => c.commentId === commentId
+            );
             if (comment) {
               const newReply = {
                 text: reply,
@@ -149,16 +162,27 @@ const chatSlice = createSlice({
       }
     },
     updateReply: (state, action) => {
-      const { workspaceId, folderId, chatId, commentId, replyId, updatedReply } = action.payload;
+      const {
+        workspaceId,
+        folderId,
+        chatId,
+        commentId,
+        replyId,
+        updatedReply,
+      } = action.payload;
       const workspace = state.chats.find((w) => w.workspaceId === workspaceId);
       if (workspace) {
         const folder = workspace.folders.find((f) => f.folderId === folderId);
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            const comment = chat.comments.find((c) => c.commentId === commentId);
+            const comment = chat.comments.find(
+              (c) => c.commentId === commentId
+            );
             if (comment) {
-              const replyIndex = comment.replies.findIndex((r) => r.replyId === replyId);
+              const replyIndex = comment.replies.findIndex(
+                (r) => r.replyId === replyId
+              );
               if (replyIndex !== -1) {
                 comment.replies[replyIndex].text = updatedReply;
               }
@@ -168,16 +192,21 @@ const chatSlice = createSlice({
       }
     },
     deleteReply: (state, action) => {
-      const { workspaceId, folderId, chatId, commentId, replyId } = action.payload;
+      const { workspaceId, folderId, chatId, commentId, replyId } =
+        action.payload;
       const workspace = state.chats.find((w) => w.workspaceId === workspaceId);
       if (workspace) {
         const folder = workspace.folders.find((f) => f.folderId === folderId);
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            const comment = chat.comments.find((c) => c.commentId === commentId);
+            const comment = chat.comments.find(
+              (c) => c.commentId === commentId
+            );
             if (comment) {
-              comment.replies = comment.replies.filter((r) => r.replyId !== replyId);
+              comment.replies = comment.replies.filter(
+                (r) => r.replyId !== replyId
+              );
             }
           }
         }
@@ -204,7 +233,9 @@ const chatSlice = createSlice({
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            chat.bookmarks = chat.bookmarks.filter((b) => b.bookmarkId !== bookmarkId);
+            chat.bookmarks = chat.bookmarks.filter(
+              (b) => b.bookmarkId !== bookmarkId
+            );
           }
         }
       }
@@ -249,16 +280,22 @@ const chatSlice = createSlice({
       }
     },
     updateTask: (state, action) => {
-      const { workspaceId, folderId, chatId, taskId, updatedTask } = action.payload;
+      const { workspaceId, folderId, chatId, taskId, updatedTask } =
+        action.payload;
       const workspace = state.chats.find((w) => w.workspaceId === workspaceId);
       if (workspace) {
         const folder = workspace.folders.find((f) => f.folderId === folderId);
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            const taskIndex = chat.tasks.findIndex((task) => task.taskId === taskId);
+            const taskIndex = chat.tasks.findIndex(
+              (task) => task.taskId === taskId
+            );
             if (taskIndex !== -1) {
-              chat.tasks[taskIndex] = { ...chat.tasks[taskIndex], ...updatedTask };
+              chat.tasks[taskIndex] = {
+                ...chat.tasks[taskIndex],
+                ...updatedTask,
+              };
             }
           }
         }
@@ -298,7 +335,9 @@ const chatSlice = createSlice({
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            chat.versions = chat.versions.filter((v) => v.versionId !== versionId);
+            chat.versions = chat.versions.filter(
+              (v) => v.versionId !== versionId
+            );
           }
         }
       }
@@ -350,7 +389,9 @@ const chatSlice = createSlice({
         if (folder) {
           const chat = folder.chats.find((chat) => chat.chatId === chatId);
           if (chat) {
-            chat.documents = chat.documents.filter((doc) => doc.documentId !== documentId);
+            chat.documents = chat.documents.filter(
+              (doc) => doc.documentId !== documentId
+            );
           }
         }
       }
@@ -358,7 +399,7 @@ const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Handle async thunks if any
-  }
+  },
 });
 
 export const {

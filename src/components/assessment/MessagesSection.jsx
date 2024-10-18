@@ -537,16 +537,16 @@ const MessagesSection = ({ selectedAssessment }) => {
           display: flex;
           align-items: center;
           // flex-direction: column;
-          justify-content: space-around;
+          justify-content: space-between;
           background-color: white;
           gap: 1rem;
           border-radius: 1rem;
           padding: 1rem;
           box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 15px;
           position: absolute;
-          width:80%;
+          width:70%;
           top:8.5rem;
-          left:35 %;
+          // left:35%;
           transition: all 0.3s ease-in-out;
         }
         .topbar-heading{
@@ -620,7 +620,6 @@ const MessagesSection = ({ selectedAssessment }) => {
    position: absolute;
       top: -2.5rem;
       left: 50%;
-      transform: translateX(-50%);
       background-color: black;
       color: #fff;
       padding: 0.5rem 0.6rem;

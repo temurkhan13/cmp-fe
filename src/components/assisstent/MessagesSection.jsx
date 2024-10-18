@@ -13,7 +13,7 @@ import {
   FaUsers,
 } from 'react-icons/fa';
 import { IoAttach, IoSend } from 'react-icons/io5';
-import { FaFile } from 'react-icons/fa6';
+import { FaBookmark, FaFile, FaRegBookmark } from 'react-icons/fa6';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import UserPic from '@assets/chat/user.png';
 import AiPic from '@assets/dashboard/sidebarLogo.png';
@@ -54,6 +54,7 @@ import {
   selectCurrentFolder,
   selectCurrentWorkspace,
 } from '../../redux/selectors/selectors';
+// import { addBookmark } from '../../../redux/slices/workspaceSlice';
 
 import * as FaIcons from 'react-icons/fa';
 // import { v4 as uuidv4 } from 'uuid';
@@ -145,17 +146,16 @@ const MessagesSection = () => {
     return IconComponent ? <IconComponent style={style} /> : null;
   };
 
-
   useEffect(() => {
     if (chatId === null) {
       //  setChat([]);
       return;
     }
     if (currentChat) {
-     // console.log(currentChat);
+      // console.log(currentChat);
       // setChat(currentChat.generalMessages || []);
-     // console.log('chat Messages: ' + currentChat.generalMessages);
-     // console.log('chat: ' + chat);
+      // console.log('chat Messages: ' + currentChat.generalMessages);
+      // console.log('chat: ' + chat);
     }
     // if(chatId === null){
     //   setChat([]);
@@ -328,7 +328,7 @@ const MessagesSection = () => {
       setSelectedText(selectedText);
       setPopupVisible(!!selectedText); // Show popup if there's a valid selection
       if (selectedMessageId) {
-        console.log(`Selected Message ID: ${selectedMessageId}`);
+        // console.log(`Selected Message ID: ${selectedMessageId}`);
         setMessageId(selectedMessageId);
         // You can now use `selectedMessageId` as needed
       }
@@ -396,13 +396,14 @@ const MessagesSection = () => {
     // };
     //dispatch(addBookmark(bookmark));
     console.log('bookmarked: ' + messageId);
+
+    // Dispatch action to add bookmark
     await addBookmark({
       workspaceId,
       folderId: folderId._id,
       chatId,
-      messageId,
+      messageId, // Send the whole bookmark data
     });
-    // console.log('bookmarked ' + bookmark.bookmarkId);
   };
 
   const handleSendMessage = async () => {
@@ -530,10 +531,7 @@ const MessagesSection = () => {
                         </div>
                         <div className="message-action-icons">
                           <div className="message-icon-wrapper">
-                            <FaCopy
-                              onClick={() => handleAddBookmark(message._id)}
-                              style={{ cursor: 'pointer' }}
-                            />
+                            <FaCopy style={{ cursor: 'pointer' }} />
                             <span className="tooltip-assessment">Copy</span>
                           </div>
                           <div className="message-icon-wrapper">
@@ -557,6 +555,12 @@ const MessagesSection = () => {
                             <span className="tooltip-assessment">
                               Regenerate
                             </span>
+                          </div>
+                          <div className="message-icon-wrapper">
+                            <FaBookmark
+                              onClick={() => handleAddBookmark(message._id)}
+                            />
+                            <span className="tooltip-assessment">Bookmark</span>
                           </div>
                         </div>
                       </div>
@@ -702,7 +706,6 @@ const MessagesSection = () => {
    position: absolute;
       top: -2.5rem;
       left: 50%;
-      transform: translateX(-50%);
       background-color: black;
       color: #fff;
       padding: 0.5rem 0.6rem;

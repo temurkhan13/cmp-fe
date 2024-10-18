@@ -3,7 +3,7 @@ import Dropdown from 'react-multilevel-dropdown';
 import { useState } from 'react';
 import { FaEllipsisV, FaCheck } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
-import { IoFilter } from 'react-icons/io5';
+import { IoFilter, IoSend } from 'react-icons/io5';
 import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineAttachFile, MdAlternateEmail } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
@@ -26,10 +26,6 @@ import NoDataAvailable from '../../common/NoDataAvailable';
 
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();
-  //const chatId = useSelector((state) => state.workspace.selectedChatId);
-
-  //const [addReply] = useSelector(useAddReplyMutation);
-
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
@@ -38,63 +34,53 @@ const Comments = ({ comments }) => {
 
   const [selectedComment, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
-  const [editingComment, setEditingComment] = useState(null);
-  const [editedText, setEditedText] = useState('');
+  const [editingCommentId, setEditingCommentId] = useState(null); // Separate state for comment editing
+  const [editingReplyId, setEditingReplyId] = useState(null); // Separate state for reply editing
+  const [editedCommentText, setEditedCommentText] = useState(''); // Separate state for comment text
+  const [editedReplyText, setEditedReplyText] = useState(''); // Separate state for reply text
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleEditComment = (commentId) => {
-    setEditingComment(commentId);
+    setEditingCommentId(commentId);
     const comment = comments.find((c) => c.commentId === commentId);
-    setEditedText(comment.text);
+    setEditedCommentText(comment.text); // Set the text for the specific comment
   };
 
   const handleSaveEdit = (commentId) => {
-    const updatedComment = editedText;
+    const updatedComment = editedCommentText;
     dispatch(updateComment({ commentId, updatedComment }));
-    setEditingComment(null);
-    setEditedText('');
+    setEditingCommentId(null); // Stop editing
+    setEditedCommentText('');
   };
 
   const handleEditReply = (commentId, replyId) => {
-    setEditingComment(replyId);
+    setEditingReplyId(replyId);
     const comment = comments.find((c) => c.commentId === commentId);
     const reply = comment.replies.find((r) => r.replyId === replyId);
-    setEditedText(reply.text);
+    setEditedReplyText(reply.text); // Set the text for the specific reply
   };
 
   const handleSaveReply = (commentId, replyId) => {
-    const updatedReply = editedText;
+    const updatedReply = editedReplyText;
     dispatch(updateReply({ commentId, replyId, updatedReply }));
-    setEditingComment(null);
-    setEditedText('');
+    setEditingReplyId(null); // Stop editing
+    setEditedReplyText('');
   };
 
-  const handleAddReply = async (messageId, commentId) => {
-    const reply = editedText;
-    await addReply(workspaceId, folderId, chatId, messageId, commentId, reply);
-    //dispatch(addReply({ commentId, reply }));
-    setEditingComment(null);
-    setEditedText('');
+  const handleAddReply = async (commentId) => {
+    const reply = editedReplyText;
+    await addReply(workspaceId, folderId, chatId, commentId, reply);
+    setEditedReplyText('');
   };
 
   const handleDeleteComment = (commentId, isReply, parentCommentId) => {
     if (isReply) {
-      const commentId = parentCommentId;
-      //  dispatch(removeReply({ commentId, replyId }));
-      const parentComment = comments.find(
-        (c) => c.commentId === parentCommentId
-      );
-      parentComment.replies = parentComment.replies.filter(
-        (reply) => reply.replyId !== commentId
-      );
-      //dispatch(deleteComment(chatId,commentId));
+      dispatch(removeReply({ commentId: parentCommentId, replyId: commentId }));
     } else {
       dispatch(removeComment({ commentId }));
-      //const commentIndex = comments.findIndex(c => c.commentId === commentId);
-      //comments.splice(commentIndex, 1);
-      //dispatch(deleteComment(chatId,commentId));
     }
+    setShowDropdown(false); // Close dropdown after deletion
     setSelectedComment(null);
   };
 
@@ -174,11 +160,11 @@ const Comments = ({ comments }) => {
                       </Dropdown>
                     </div>
                     <div className="comment-body">
-                      {editingComment === comment.commentId ? (
+                      {editingCommentId === comment.commentId ? (
                         <input
                           type="text"
-                          value={editedText}
-                          onChange={(e) => setEditedText(e.target.value)}
+                          value={editedCommentText}
+                          onChange={(e) => setEditedCommentText(e.target.value)}
                           onBlur={() => handleSaveEdit(comment.commentId)}
                           onKeyPress={(e) => {
                             if (e.key === 'Enter')
@@ -247,11 +233,13 @@ const Comments = ({ comments }) => {
                             </Dropdown>
                           </div>
                           <div className="reply-body">
-                            {editingComment === reply.replyId ? (
+                            {editingReplyId === reply.replyId ? (
                               <input
                                 type="text"
-                                value={editedText}
-                                onChange={(e) => setEditedText(e.target.value)}
+                                value={editedReplyText}
+                                onChange={(e) =>
+                                  setEditedReplyText(e.target.value)
+                                }
                                 onBlur={() =>
                                   handleSaveReply(
                                     comment.commentId,
@@ -286,9 +274,8 @@ const Comments = ({ comments }) => {
                     <input
                       type="text"
                       placeholder="Reply"
-                      value={editedText}
-                      onChange={(e) => setEditedText(e.target.value)}
-                      onBlur={() => handleAddReply(comment.commentId)}
+                      value={editedReplyText}
+                      onChange={(e) => setEditedReplyText(e.target.value)}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter')
                           handleAddReply(comment.commentId);
@@ -304,7 +291,7 @@ const Comments = ({ comments }) => {
                       className="send-icon"
                       onClick={() => handleAddReply(comment.commentId)}
                     >
-                      <RiSendPlane2Fill />
+                      <IoSend />
                     </div>
                   </div>
                 </div>
@@ -312,8 +299,9 @@ const Comments = ({ comments }) => {
             </div>
           ))
         )}
-        <hr />
-        <style>{`
+      </div>
+      <hr />
+      <style>{`
           .chat-container {
             padding-left: 1rem;
             padding-right: 1rem;
@@ -459,7 +447,7 @@ const Comments = ({ comments }) => {
           }
           .reply-wrapper {
             display: flex;
-            align-items: center;
+            // align-items: center;
             padding: 0.5rem 0;
             width: 100%;
           }
@@ -490,7 +478,6 @@ const Comments = ({ comments }) => {
             cursor: pointer;
           }
         `}</style>
-      </div>
     </>
   );
 };

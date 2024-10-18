@@ -10,7 +10,7 @@ import {
   TbLayoutSidebarLeftCollapseFilled,
   TbLayoutSidebarLeftExpandFilled,
 } from 'react-icons/tb';
-import LoadingSpinner from '../../components/common/LoadingSpinner ';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import {
   selectAllAssessments,
@@ -122,7 +122,7 @@ const NewChat = () => {
     <div
       className={`newChat ${sidebarCollapsed ? 'collapsed' : ''}`}
       ref={chatContainerRef}
-      style={{ overflowY: 'auto', height: '100vh' }}
+      style={{ overflowY: 'auto', height: '80vh' }}
     >
       <div
         className={`sidebar-header ${
@@ -201,7 +201,8 @@ const NewChat = () => {
       )}
       {!sidebarCollapsed && (
         <>
-          {chats && Array.isArray(chats) &&
+          {chats &&
+            Array.isArray(chats) &&
             chats.map((chat, index) => (
               <section
                 key={chat._id}
@@ -225,8 +226,9 @@ const NewChat = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  {//console.log("Assessments: ",chat.report)
-                  chat.report[0].ReportTitle
+                  {
+                    //console.log("Assessments: ",chat.report)
+                    chat.report[0].ReportTitle
                   }
                 </Components.Feature.Text>
                 {hoveredChatIndex === index && (
