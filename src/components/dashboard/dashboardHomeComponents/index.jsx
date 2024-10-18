@@ -56,9 +56,9 @@ const DashboardHomeComp = () => {
       <Folder activeWorkspace={selectedWorkspace} />
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
-          <div className="left-buttons">
+          <div className="left-buttons" style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
             <button className="arrow-btn">
-              <SlQuestion />
+              <SlQuestion size={25} />
             </button>
             <p className="assistant-heading">Change AI Assistance</p>
           </div>
@@ -93,12 +93,22 @@ const DashboardHomeComp = () => {
           ))}
       </div>
 
-      <div className="files">
-        <p className="files-heading">AI Assessments</p>
-        <div className="heading">
-          <p>Recent</p>
-          <p className="see-less">See less</p>
+      <section className="generate" style={{ marginTop: '2rem' }}>
+        <div className="container">
+          <div className="left-buttons">
+            <button className="arrow-btn">
+              {/* <SlQuestion /> */}
+            </button>
+            <p className="assistant-heading">AI Assessment</p>
+          </div>
         </div>
+      </section>
+      
+      <div
+        className="card-wrapper"
+        style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
+      >
+        
       </div>
 
       <style>{`
@@ -107,7 +117,7 @@ const DashboardHomeComp = () => {
           flex-direction: column;
         }
         .generate {
-          background-color: rgba(249, 249, 249, 1);
+          background-color: white;
         }
         .generate .container {
           display: flex;
