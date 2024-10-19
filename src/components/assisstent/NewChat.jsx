@@ -214,10 +214,10 @@ const NewChat = () => {
                   padding: '1rem',
                   justifyContent: 'space-between',
                   fontSize: '1.5rem !important',
-                  color: currentChat?._id === chat._id ? 'gray' : 'black',
+                  color: currentChat?._id === chat._id ? 'black' : 'black',
                   borderRadius: '1rem',
                   backgroundColor:
-                    currentChat?._id === chat._id ? 'lightgray' : 'transparent', // Set background color conditionally
+                    currentChat?._id === chat._id ? '#f0f0f0' : 'transparent', // Set background color conditionally
                 }}
                 className="chat-item-section"
               >

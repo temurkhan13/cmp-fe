@@ -137,17 +137,17 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
         }
         .dropdown {
           position: absolute;
-          top: 4rem;
-          right: 5rem;
+          top: 0rem;
+          right: 8rem;
           background-color: white;
           box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-          border-radius: 1rem;
+          border-radius: 0.5rem;
           overflow: hidden;
           transform: scaleY(0);
           transform-origin: top;
           transition: transform 0.1s ease;
           z-index: 1001;
-          width: 400px;
+          width: 45rem;
           height: 100vh;
           overflow-y: auto;
         }
