@@ -1,6 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import { loadingBarMiddleware, showLoading, hideLoading, loadingBarReducer } from 'react-redux-loading-bar';
+import {
+  loadingBarMiddleware,
+  showLoading,
+  hideLoading,
+  loadingBarReducer,
+} from 'react-redux-loading-bar';
 import storage from 'redux-persist/lib/storage'; // This defaults to localStorage for web
 import businessInfoReducer from '../slices/businessInfoSlice';
 import userReducer from '../slices/userSlice';
@@ -13,7 +18,10 @@ const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
   if (action.type.endsWith('/pending')) {
     console.log('Loading started'); // Add this line
     store.dispatch(showLoading());
-  } else if (action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected')) {
+  } else if (
+    action.type.endsWith('/fulfilled') ||
+    action.type.endsWith('/rejected')
+  ) {
     console.log('Loading finished'); // Add this line
     store.dispatch(hideLoading());
   }
@@ -42,8 +50,14 @@ const authPersistConfig = {
 };
 
 // Persisted reducers
-const persistedBusinessInfoReducer = persistReducer(businessInfoPersistConfig, businessInfoReducer);
-const persistedWorkspacesReducer = persistReducer(workspacesPersistConfig, workspacesReducer);
+const persistedBusinessInfoReducer = persistReducer(
+  businessInfoPersistConfig,
+  businessInfoReducer
+);
+const persistedWorkspacesReducer = persistReducer(
+  workspacesPersistConfig,
+  workspacesReducer
+);
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
@@ -60,9 +74,9 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false, // Disable serializable check for redux-persist
     })
-    .concat(rtkQueryLoadingMiddleware)
-    .concat(loadingBarMiddleware()) // Add loading bar middleware
-    .concat(workspaceApi.middleware), // Add middleware for RTK Query
+      .concat(rtkQueryLoadingMiddleware)
+      .concat(loadingBarMiddleware()) // Add loading bar middleware
+      .concat(workspaceApi.middleware), // Add middleware for RTK Query
 });
 
 const persistor = persistStore(store);

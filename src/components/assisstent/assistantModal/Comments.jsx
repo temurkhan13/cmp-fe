@@ -6,7 +6,6 @@ import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
 import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineAttachFile, MdAlternateEmail } from 'react-icons/md';
-import { RiSendPlane2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   // addComment,

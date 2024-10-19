@@ -212,10 +212,12 @@ const NewChat = () => {
                   display: 'flex',
                   alignItems: 'center',
                   padding: '1rem',
-                  // margin: '0.5rem 0',
                   justifyContent: 'space-between',
                   fontSize: '1.5rem !important',
-                  color: 'black',
+                  color: currentChat?._id === chat._id ? 'gray' : 'black',
+                  borderRadius: '1rem',
+                  backgroundColor:
+                    currentChat?._id === chat._id ? 'lightgray' : 'transparent', // Set background color conditionally
                 }}
                 className="chat-item-section"
               >
@@ -248,6 +250,7 @@ const NewChat = () => {
                   )}
               </section>
             ))}
+
           {/* {loading && <LoadingSpinner />} */}
         </>
       )}
