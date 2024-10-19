@@ -56,7 +56,10 @@ const DashboardHomeComp = () => {
       <Folder activeWorkspace={selectedWorkspace} />
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
-          <div className="left-buttons" style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+          <div
+            className="left-buttons"
+            style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
+          >
             <button className="arrow-btn">
               <SlQuestion size={25} />
             </button>
@@ -96,20 +99,16 @@ const DashboardHomeComp = () => {
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
           <div className="left-buttons">
-            <button className="arrow-btn">
-              {/* <SlQuestion /> */}
-            </button>
+            <button className="arrow-btn">{/* <SlQuestion /> */}</button>
             <p className="assistant-heading">AI Assessment</p>
           </div>
         </div>
       </section>
-      
+
       <div
         className="card-wrapper"
         style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
-      >
-        
-      </div>
+      ></div>
 
       <style>{`
         .dashboard {

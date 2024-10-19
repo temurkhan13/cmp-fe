@@ -69,15 +69,13 @@ export const workspaceApi = createApi({
 
     // Query to fetch the full chat object
     getChat: builder.query({
-      query: ({ workspaceId, folderId, chatId }) => 
+      query: ({ workspaceId, folderId, chatId }) =>
         `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/`,
       providesTags: (result, error, { workspaceId, folderId, chatId }) => [
         { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
       ],
     }),
-    
-    
-    
+
     updateChat: builder.mutation({
       query: ({ workspaceId, folderId, chat }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chat.chatId}`,
@@ -85,6 +83,7 @@ export const workspaceApi = createApi({
         body: chat,
       }),
     }),
+
     removeChat: builder.mutation({
       query: ({ workspaceId, folderId, chatId }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/`,
@@ -96,13 +95,13 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chatId, message, files }) => {
         const formData = new FormData();
         formData.append('text', message);
-    
+
         if (files && files.length > 0) {
           files.forEach((file, index) => {
             formData.append(`file${index}`, file);
           });
         }
-    
+
         // Use the actual chatId or handle for a new chat
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message`,
@@ -111,76 +110,98 @@ export const workspaceApi = createApi({
         };
       },
       invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
-        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId || 'newChat'}` },
+        {
+          type: 'Chat',
+          id: `${workspaceId}-${folderId}-${chatId || 'newChat'}`,
+        },
         { type: 'Workspace', id: workspaceId },
         { type: 'Folder', id: `${workspaceId}-${folderId}` },
       ],
-      async onQueryStarted({ workspaceId, folderId, chatId, message }, { dispatch, queryFulfilled }) {
+      async onQueryStarted(
+        { workspaceId, folderId, chatId, message },
+        { dispatch, queryFulfilled }
+      ) {
         const tempId = `temp-${Date.now()}`;
         const timestamp = new Date().toISOString();
         const newChat = chatId === 'newChat'; // Determine if it's a new chat
-    
+
         // Optimistic UI update: Add the new message to the chat (or create a new chat if necessary)
         const patchResult = dispatch(
-          workspaceApi.util.updateQueryData('getChat', { workspaceId, folderId, chatId: newChat ? tempId : chatId }, (draft) => {
-            // Create an empty message array if it's a new chat
-            console.log("is working1");
-            if (!draft.generalMessages) {
-              draft.generalMessages = [];
+          workspaceApi.util.updateQueryData(
+            'getChat',
+            { workspaceId, folderId, chatId: newChat ? tempId : chatId },
+            (draft) => {
+              // Create an empty message array if it's a new chat
+              console.log('is working1');
+              if (!draft.generalMessages) {
+                draft.generalMessages = [];
+              }
+              // Push the new message
+              draft.generalMessages.push({
+                _id: tempId,
+                text: message,
+                sender: 'user',
+                createdAt: timestamp,
+                status: 'sending',
+                files: [],
+              });
             }
-            // Push the new message
-            draft.generalMessages.push({
-              _id: tempId,
-              text: message,
-              sender: 'user',
-              createdAt: timestamp,
-              status: 'sending',
-              files: [],
-            });
-          })
+          )
         );
-    
+
         try {
           // Wait for the query to be fulfilled (i.e., server response)
           const { data } = await queryFulfilled;
-    
+
           // If it's a new chat, update the workspace with the new chatId
           if (newChat) {
             dispatch(
-              workspaceApi.util.updateQueryData('getWorkspace', { workspaceId }, (draftWorkspace) => {
-                const folder = draftWorkspace.folders.find((folder) => folder._id === folderId);
-                  console.log("is working");
-                if (folder) {
-                  folder.chats.push({
-                    _id: data.chatId, // Use the new chatId from the server
-                    generalMessages: [
-                      {
-                        _id: data._id, // Real message ID from the server
-                        text: data.text,
-                        sender: data.sender,
-                        createdAt: data.createdAt,
-                        status: 'sent',
-                        files: data.files || [],
-                      },
-                    ],
-                  });
+              workspaceApi.util.updateQueryData(
+                'getWorkspace',
+                { workspaceId },
+                (draftWorkspace) => {
+                  const folder = draftWorkspace.folders.find(
+                    (folder) => folder._id === folderId
+                  );
+                  console.log('is working');
+                  if (folder) {
+                    folder.chats.push({
+                      _id: data.chatId, // Use the new chatId from the server
+                      generalMessages: [
+                        {
+                          _id: data._id, // Real message ID from the server
+                          text: data.text,
+                          sender: data.sender,
+                          createdAt: data.createdAt,
+                          status: 'sent',
+                          files: data.files || [],
+                        },
+                      ],
+                    });
+                  }
                 }
-              })
+              )
             );
           } else {
             // If the chat already exists, update the message with the real data from the server
             dispatch(
-              workspaceApi.util.updateQueryData('getChat', { workspaceId, folderId, chatId }, (draft) => {
-                const index = draft.generalMessages.findIndex((msg) => msg._id === tempId);
-                if (index !== -1) {
-                  draft.generalMessages[index] = {
-                    ...draft.generalMessages[index],
-                    _id: data._id, // Replace tempId with real ID
-                    status: 'sent',
-                    files: data.files || [],
-                  };
+              workspaceApi.util.updateQueryData(
+                'getChat',
+                { workspaceId, folderId, chatId },
+                (draft) => {
+                  const index = draft.generalMessages.findIndex(
+                    (msg) => msg._id === tempId
+                  );
+                  if (index !== -1) {
+                    draft.generalMessages[index] = {
+                      ...draft.generalMessages[index],
+                      _id: data._id, // Replace tempId with real ID
+                      status: 'sent',
+                      files: data.files || [],
+                    };
+                  }
                 }
-              })
+              )
             );
           }
         } catch (error) {
@@ -189,9 +210,6 @@ export const workspaceApi = createApi({
         }
       },
     }),
-    
-  
-    
 
     updateMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, messageId, message }) => ({
@@ -229,7 +247,14 @@ export const workspaceApi = createApi({
     }),
     // AddAssessment
     addAssessmentSample: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, message, files, assessmentName }) => {
+      query: ({
+        workspaceId,
+        folderId,
+        chatId,
+        message,
+        files,
+        assessmentName,
+      }) => {
         const formData = new FormData();
         formData.append('text', message);
 
@@ -240,9 +265,9 @@ export const workspaceApi = createApi({
           });
         }
         const bodyData = {
-        "assessmentName": assessmentName,//"Change Vision/Case for Change",
-        "message": {message}
-      };
+          assessmentName: assessmentName, //"Change Vision/Case for Change",
+          message: { message },
+        };
 
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/assessment/${chatId}/assessment`,
@@ -278,7 +303,6 @@ export const workspaceApi = createApi({
         method: 'POST',
       }),
     }),
-    
 
     // Survey
     addProjectSurvey: builder.mutation({
@@ -315,14 +339,14 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chatId, messageId, text }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment`,
         method: 'POST',
-        body: {text},
+        body: { text },
       }),
     }),
     updateComment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, comment }) => ({
         url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${comment.commentId}`,
         method: 'PUT',
-        body: "text:"+{comment},
+        body: 'text:' + { comment },
       }),
     }),
     removeComment: builder.mutation({
@@ -366,7 +390,7 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chatId, messageId }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark`,
         method: 'POST',
-       // body: bookmark,
+        // body: bookmark,
       }),
     }),
     updateBookmark: builder.mutation({
@@ -460,7 +484,6 @@ export const workspaceApi = createApi({
         method: 'PATCH',
       }),
     }),
-
   }),
 });
 
@@ -510,5 +533,5 @@ export const {
   useAddProjectSurveyMutation,
   useGetChatQuery,
   useMoveToTrashMutation,
-  useRestoreFromTrashMutation
+  useRestoreFromTrashMutation,
 } = workspaceApi;

@@ -110,6 +110,7 @@ const MessagesSection = () => {
     folderId: folderId._id,
     chatId,
   });
+  // console.log(chat);
   const [messages, setMessages] = useState(chat ? chat.generalMessages : []);
 
   // const [chat, setChat] = useState(
@@ -148,7 +149,7 @@ const MessagesSection = () => {
 
   useEffect(() => {
     if (chatId === null) {
-      //  setChat([]);
+      // setChat([]);
       return;
     }
     if (currentChat) {
@@ -172,6 +173,7 @@ const MessagesSection = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
   };
+
   const handleCommentClick = (e) => {
     e.stopPropagation();
     setShowCommentPopup((prev) => !prev);
@@ -419,6 +421,7 @@ const MessagesSection = () => {
         message: text,
         files: file,
       }).unwrap();
+      refetch();
       setText(''); // Clear input field after message sent
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -451,7 +454,10 @@ const MessagesSection = () => {
   // }, []);
   useEffect(() => {
     scrollToBottom();
+    console.log(chat);
   }, [chat]);
+  console.log('chat', chat);
+
   return (
     <div className="chat-message-wrapper">
       <div className="spinner" style={{ display: loading ? 'flex' : 'none' }}>
@@ -466,7 +472,6 @@ const MessagesSection = () => {
           style={{ display: 'none' }}
           multiple
         />
-
         {chatId && chat && chat.generalMessages.length > 0 ? (
           <div className="chat-scroll">
             {popupVisible && (
