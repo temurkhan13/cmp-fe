@@ -148,6 +148,12 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
       }
     },
+    resetError: (state) => {
+      state.error = null; // Reset error to null
+    },
+    resetLoading: (state) => {
+      state.isLoggedIn = false; // Reset error to null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -216,7 +222,7 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 // Export async actions
-export const { logout, rehydrateToken } = authSlice.actions;
+export const { logout, rehydrateToken, resetError, resetLoading } = authSlice.actions;
 export {
   loginAsync as login,
   registerAsync as register,
