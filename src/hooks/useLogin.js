@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../api/axios";
-import axios from "axios";
 import { setToken } from "../api/axios"; // Import setToken to save the token in localStorage
 
 
@@ -32,11 +31,6 @@ const useLogin = () => {
         setSuccess(true);
         navigate("/dashboard");
       }
-
-      // if (response.data) {
-      //   setSuccess(true);
-      //   navigate("/dashboard");
-      // }
     } catch (err) {
       console.log(err.message);
       if (err.response) {

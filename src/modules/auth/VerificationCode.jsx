@@ -1,13 +1,42 @@
 import Components from '../../components';
 import { Formik, Form } from 'formik';
-import useVerifyEmail from '../../hooks/useVerifyEmail';
 import { useLocation } from 'react-router-dom';
+import data from '../../data';
+import { useNavigate } from 'react-router-dom';
+import { ResetforgetPasswordWithCode } from '../../redux/slices/authSlice.js';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 const verification = () => {
   const location = useLocation();
-  // const { email } = location.state;
-  const initialValues = { number: '' };
-  const { verifyEmail, error } = useVerifyEmail();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const initialValues = { OTP: '', newPassword: '' };
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (values) => {
+    dispatch(
+      ResetforgetPasswordWithCode({
+        email: localStorage.getItem('forgetEmail'),
+        OTP: values.otp,
+        newPassword: values.password,
+      })
+    )
+      .then((response) => {
+        if (response.payload.code) {
+          setError('Something went wrong, please try again.');
+          return;
+        }
+
+        localStorage.removeItem('forgetEmail');
+        navigate('/log-in');
+      })
+      .catch((error) => {
+        console.error('Forget password failed:', error);
+        setError('Something went wrong, please try again.');
+      });
+  };
 
   return (
     <Components.Feature.Container className="auth signIn">
@@ -24,18 +53,21 @@ const verification = () => {
         <Formik
           initialValues={initialValues}
           validateOnMount
+          validationSchema={
+            data.validation.validationAuth.validationResetPassword
+          }
           onSubmit={(values, { resetForm }) => {
-            console.log(values);
+            handleSubmit(values);
             resetForm();
           }}
         >
           {(formik) => (
             <Form>
-              <Components.Feature.VerifyCode
-                name="number"
-                label="Verification Code"
-                place="Enter 6-digit code"
-                handleVerification={(value) => verifyEmail({ value })}
+              <Components.Feature.FormInput name="otp" label="" place="OTP" />
+              <Components.Feature.FormInput
+                name="password"
+                label=""
+                place="Reset Password"
               />
               {error && (
                 <div
@@ -54,7 +86,9 @@ const verification = () => {
                   lineHeight: '24px',
                   letterSpacing: '0.24px',
                   color: 'rgba(10, 10, 10, 0.68)',
+                  cursor: 'pointer',
                 }}
+                onClick={() => navigate(-1)}
               >
                 Didn&apos;t receive a code?
                 <span
@@ -70,6 +104,9 @@ const verification = () => {
                   Resend
                 </span>
               </p>
+              <Components.Feature.Button className="primary" type="submit">
+                Reset Password
+              </Components.Feature.Button>
             </Form>
           )}
         </Formik>

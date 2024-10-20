@@ -123,6 +123,74 @@ export const codeVerifyAsync = createAsyncThunk(
   }
 );
 
+// Async thunk action to resend email verification code
+export const resentVerificationCodeAsync = createAsyncThunk(
+  'auth/email/send-verification',
+  async (_, thunkAPI) => { // Destructure the first argument to ignore it
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseURL}/email/send-verification`, {}, config);
+      return response.data;
+    } catch (error) {
+      // Handle errors gracefully
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to resend verification code' // Provide a default error message
+      );
+    }
+  }
+);
+
+// Async thunk action to resend email verification code
+export const forgetPasswordGetCodeAsync = createAsyncThunk(
+  'auth/forgot/password',
+  async (email, thunkAPI) => { // Destructure the first argument to ignore it
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseURL}/forgot/password`, {email}, config);
+      return response.data;
+    } catch (error) {
+      // Handle errors gracefully
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to resend verification code' // Provide a default error message
+      );
+    }
+  }
+);
+
+export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
+  'auth/reset/password',
+  async ({email, OTP, newPassword}, thunkAPI) => { // Destructure the first argument to ignore it
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseURL}/reset/password`, {email, OTP, newPassword}, config);
+      return response.data;
+    } catch (error) {
+      // Handle errors gracefully
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to resend verification code' // Provide a default error message
+      );
+    }
+  }
+);
+
 // Create authSlice
 const authSlice = createSlice({
   name: 'auth',
@@ -227,5 +295,8 @@ export {
   loginAsync as login,
   registerAsync as register,
   codeVerifyAsync as verify,
+  resentVerificationCodeAsync as resendVerification,
+  forgetPasswordGetCodeAsync as forgetPasswordGetCode,
+  ResetforgetPasswordWithCodeAsync as ResetforgetPasswordWithCode,
   googleOAuthLoginAsync as googleLogin,
 };

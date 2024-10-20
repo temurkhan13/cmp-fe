@@ -1,19 +1,36 @@
 import Components from '../../components';
-import assets from '../../assets';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { forgetPasswordGetCode } from '../../redux/slices/authSlice.js';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 const verification = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [error, setError] = useState('');
+
   const initalValues = {
     email: '',
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    setSubmitting(false);
-    navigate('/forgot-password/Code');
+    dispatch(forgetPasswordGetCode(values.email))
+      .then((response) => {
+        if (response.payload.code) {
+          setError('Something went wrong, please try again.');
+          return;
+        }
+        localStorage.setItem('forgetEmail', values.email);
+        setSubmitting(false);
+        navigate('/forgot-password/Code');
+      })
+      .catch((error) => {
+        console.error('Forget password failed:', error);
+        setError('Something went wrong, please try again.');
+      });
   };
 
   return (
@@ -30,7 +47,9 @@ const verification = () => {
         <Formik
           initialValues={initalValues}
           validateOnMount
-          validationSchema={data.validation.validationAuth.validationSignUp}
+          validationSchema={
+            data.validation.validationAuth.validationForgetPassword
+          }
           onSubmit={handleSubmit}
         >
           {(formik) => (
@@ -40,6 +59,8 @@ const verification = () => {
                 label=""
                 place="Enter your email"
               />
+              {error && <div style={{ color: 'red' }}>{error}</div>}
+
               <Components.Feature.Button className="primary" type="submit">
                 Continue
               </Components.Feature.Button>
