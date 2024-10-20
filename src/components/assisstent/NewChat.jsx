@@ -24,6 +24,8 @@ import {
   setCurrentChatId,
   setSelectedFolder,
 } from '../../redux/slices/workspacesSlice';
+import { setChats } from '../../redux/slices/chatSlice';
+import { getChatsAsync } from '../../redux/slices/workspaceSlice';
 
 const NewChat = () => {
   const projects = useSelector(selectAllFolders);
@@ -42,8 +44,28 @@ const NewChat = () => {
   const selectedFolder = useSelector((state) =>
     selectFolderById(state, currentFolder._id)
   );
-  const chats = useSelector(selectAllChats);
 
+  const chats = useSelector(selectAllChats);
+  const [showableChats, setShowableChats] = useState(chats);
+  const myChats = useSelector((state) => state.chat.chats);
+
+  useEffect(() => {
+    if(selectedFolder._id && currentWorkspace.id){
+      dispatch(getChatsAsync({workspaceId: currentWorkspace.id , folderId: selectedFolder._id}))
+      .then((response) => {
+        dispatch(setChats(response.payload.data))
+      })
+      .catch(error => {
+        console.error(error, 'error')
+      })
+    }
+  },[currentWorkspace, currentFolder, dispatch, selectedFolder._id])
+
+  useEffect(() => {
+    if(myChats.length > 0){
+      setShowableChats(myChats)
+    }
+  },[myChats])
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -107,7 +129,6 @@ const NewChat = () => {
   };
 
   useEffect(() => {
-    console.log('', currentFolder, currentChat, currentWorkspace);
   }, [currentFolder, currentChat, currentWorkspace, chats, selectedFolder]);
 
   useEffect(() => {
@@ -201,8 +222,8 @@ const NewChat = () => {
       )}
       {!sidebarCollapsed && (
         <>
-          {Array.isArray(chats) &&
-            chats.map((chat, index) => (
+          {Array.isArray(showableChats) &&
+            showableChats.map((chat, index) => (
               <section
                 key={chat._id}
                 onClick={() => handleChatSelect(chat._id)}

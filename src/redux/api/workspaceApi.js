@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import baseQuery from './baseQuery'; // Adjust the import path as needed
 
 export const workspaceApi = createApi({
@@ -152,7 +152,6 @@ export const workspaceApi = createApi({
         try {
           // Wait for the query to be fulfilled (i.e., server response)
           const { data } = await queryFulfilled;
-
           // If it's a new chat, update the workspace with the new chatId
           if (newChat) {
             dispatch(

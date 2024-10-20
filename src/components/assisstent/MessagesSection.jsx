@@ -35,6 +35,8 @@ import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { logo } from '../../assets/common/index';
+import { workspaceApi } from '../../redux/api/workspaceApi';
+import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 
 // import {
 //   addMessage,
@@ -58,6 +60,9 @@ import {
 
 import * as FaIcons from 'react-icons/fa';
 // import { v4 as uuidv4 } from 'uuid';
+import { setChats } from '../../redux/slices/chatSlice';
+import { getChatsAsync } from '../../redux/slices/workspaceSlice';
+import { setCurrentChatId } from '../../redux/slices/workspacesSlice';
 
 const MessagesSection = () => {
   const dispatch = useDispatch();
@@ -89,6 +94,9 @@ const MessagesSection = () => {
   const [addMessage] = useAddMessageMutation();
   const [updateMessage] = useUpdateMessageMutation();
   const [addBookmark] = useAddBookmarkMutation();
+  const userId = useSelector((state) => state.auth.user?.id);
+  const { data: workspaces } = useGetWorkspacesQuery(userId);
+  console.log(workspaces);
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
@@ -110,6 +118,7 @@ const MessagesSection = () => {
     folderId: folderId._id,
     chatId,
   });
+
   // console.log(chat);
   const [messages, setMessages] = useState(chat ? chat.generalMessages : []);
 
@@ -414,14 +423,33 @@ const MessagesSection = () => {
     setLoading(true); // Show spinner
     try {
       // Simulate sending message
-      await addMessage({
+      const data = await addMessage({
         workspaceId: workspaceId,
         folderId: folderId._id,
         chatId: chatId ? chatId : 'newChat',
         message: text,
         files: file,
       }).unwrap();
-      refetch();
+      console.log(data.success, 'data');
+      if (!chatId && data.success) {
+        dispatch(
+          getChatsAsync({
+            workspaceId: currentWorkspace.id,
+            folderId: folderId._id,
+          })
+        )
+          .then((response) => {
+            console.log(response.payload.data, 'myChatmyChatresponse');
+            dispatch(setChats(response.payload.data));
+            if (response.payload.data.length > 0) {
+              dispatch(setCurrentChatId(response.payload.data[0]._id));
+            }
+          })
+          .catch((error) => {
+            console.error(error, 'error');
+          });
+      }
+      // refetch();
       setText(''); // Clear input field after message sent
     } catch (error) {
       console.error('Failed to send message:', error);
