@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import Modal from '../../components/common/Modal';
 import { useDispatch } from 'react-redux';
-import { verify } from '../../redux/slices/authSlice.js';
+import { verify, resendVerification } from '../../redux/slices/authSlice.js';
 import { useNavigate } from 'react-router-dom';
-
+import Spinner from '../../components/dashboard/Spinner/Spinner.jsx';
 const EmailVerificationHandler = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [resendCode, setResendCode] = useState(false);
+  const [error, setError] = useState('');
+
   const [verificationData, setVerificationData] = useState(false);
   const [verificationCode, setVerificationCode] = useState([
     '',
@@ -23,32 +26,65 @@ const EmailVerificationHandler = () => {
     setShowVerificationModal(true);
   };
 
+  const handleResendCode = async () => {
+    setResendCode(true);
+    dispatch(resendVerification())
+      .then((response) => {
+        console.log(response, 'responseresponse');
+        setResendCode(false);
+      })
+      .catch((error) => {
+        console.error('Resend Verification failed:', error);
+        setResendCode(false);
+      });
+  };
 
   const handleCloseModal = async () => {
-    const code = verificationCode.join('')
+    const code = verificationCode.join('');
     // await dispatch(verify({code}))
-    dispatch(verify({ code }))
-    .then((response) => {
-      console.log(response, 'responseresponse')
-      const userData = localStorage.getItem('user');
-      let parsedData = JSON.parse(userData);
+    // Clear previous error
+    setError('');
 
-      // Update the verificationCode.verify to true
-      parsedData = {
-        ...parsedData,
-        verificationCode: {
-          ...parsedData.verificationCode,
-          verify: true,
-        },
-      };
-      localStorage.setItem('user', JSON.stringify(parsedData));
-      setVerificationData(true); // It should now be true
-    })
-    .catch((error) => {
-      console.error('Verification failed:', error);
+    // Check for empty fields or fields with minlength 0
+    const hasError = inputRefs.current.some((input) => {
+      return !input.value || input.value.length < 1; // Change < 1 to < desiredMinLength if needed
     });
-    setShowVerificationModal(false);
-    navigate('/dashboard');
+
+    if (hasError) {
+      setError(
+        'All fields are required and must be at least 1 character long.'
+      );
+      return;
+
+    }
+    dispatch(verify({ code }))
+      .then((response) => {
+        if(response.error && response.error.message){
+          setError('Something is wrong, please try again.')
+          return;
+        }
+
+        const userData = localStorage.getItem('user');
+        let parsedData = JSON.parse(userData);
+
+        // Update the verificationCode.verify to true
+        parsedData = {
+          ...parsedData,
+          verificationCode: {
+            ...parsedData.verificationCode,
+            verify: true,
+          },
+        };
+        localStorage.setItem('user', JSON.stringify(parsedData));
+        setVerificationData(true); 
+        setShowVerificationModal(false);
+        window.location.reload();
+        navigate('/dashboard');
+      })
+      .catch((error) => {
+        console.error('Verification failed:', error);
+      });
+
   };
 
   const handleCodeChange = (index, value) => {
@@ -111,33 +147,27 @@ const EmailVerificationHandler = () => {
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
-      const parsedData = JSON.parse(userData);
-      setVerificationData(parsedData.verificationCode.verify);
+    const parsedData = JSON.parse(userData);
+    setVerificationData(parsedData.verificationCode.verify);
   }, [verificationData]);
   return (
     <>
-    {verificationData === false && (
-      <div className="email-verification-bar">
-        <p>Please verify your email to unlock all features.</p>
-        <button onClick={handleVerifyClick} className="email-verify-btn">
-          Verify
-        </button>
-      </div>
-    )}
+      {verificationData === false && (
+        <div className="email-verification-bar">
+          <p>Please verify your email to unlock all features.</p>
+          <button onClick={handleVerifyClick} className="email-verify-btn">
+            Verify
+          </button>
+        </div>
+      )}
 
       <Modal
         title="Email Verification"
         isOpen={showVerificationModal}
         onClose={() => {
-          setVerificationCode([
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-          ]);
-          setShowVerificationModal(!showVerificationModal)
+          setVerificationCode(['', '', '', '', '', '']);
+          setError('')
+          setShowVerificationModal(!showVerificationModal);
         }}
       >
         <h1>Please check your email.</h1>
@@ -150,6 +180,7 @@ const EmailVerificationHandler = () => {
               key={index}
               type="text"
               value={code}
+              minLength={'1'}
               maxLength="1"
               ref={(el) => (inputRefs.current[index] = el)}
               onChange={(e) => handleCodeChange(index, e.target.value)}
@@ -159,22 +190,25 @@ const EmailVerificationHandler = () => {
             />
           ))}
         </div>
-        <p style={{ fontSize: '1.3rem', display: 'none' }}>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+
+        <p style={{ fontSize: '1.3rem' }}>
           <span> </span>
           Didn&apos;t get a code?
           <span
             style={{ textDecoration: 'underline', cursor: 'pointer' }}
-            onClick={() => {}}
+            onClick={handleResendCode}
           >
             Click to resend.
+            {resendCode && <Spinner />}
           </span>
         </p>
+
         <button className="code-submit-btn" onClick={handleCloseModal}>
           Submit
         </button>
-
       </Modal>
-        <style>{`
+      <style>{`
 
   .email-verification-bar {
     width: 100%;

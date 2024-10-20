@@ -14,13 +14,11 @@ const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [photoPath, setPhotoPath] = useState('false');
-
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [user, setUser] = useState(null);
-  useEffect(() => {
-    // Retrieve user data from localStorage
-    const storedUser = JSON.parse(localStorage.getItem('user'));
 
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
       setPhotoPath(storedUser.photoPath);
       setUser(storedUser);
@@ -28,10 +26,12 @@ const Header = () => {
   }, []);
 
   const getInitials = () => {
-    if(!user){
-      return 'N/A'
+    if (!user) {
+      return 'N/A';
     }
-    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
+    return `${user.firstName?.[0] || ''}${
+      user.lastName?.[0] || ''
+    }`.toUpperCase();
   };
 
   const [hasNotification] = useState(true);
@@ -88,7 +88,7 @@ const Header = () => {
           />
         )}
 
-        {!photoPath ? (
+        {photoPath ? (
           <img
             src={photoPath}
             alt="User"
@@ -96,7 +96,7 @@ const Header = () => {
             onClick={handleProfileClick}
           />
         ) : (
-          <div className="initials-placeholder">
+          <div onClick={handleProfileClick} className="initials-placeholder">
             {getInitials()}
           </div>
         )}
@@ -214,7 +214,7 @@ const Header = () => {
           font-weight: bold;
           text-align: center;
           margin-right: 8px;
-          cusor: pointer;
+          cursor: pointer;
         }
         .dropdownItem {
           display: flex;
