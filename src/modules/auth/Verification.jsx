@@ -37,7 +37,7 @@ const verification = () => {
             <Form>
               <Components.Feature.FormInput
                 name="email"
-                label="Email"
+                label=""
                 place="Enter your email"
               />
               <Components.Feature.Button className="primary" type="submit">

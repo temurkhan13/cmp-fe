@@ -26,7 +26,27 @@ const EmailVerificationHandler = () => {
 
   const handleCloseModal = async () => {
     const code = verificationCode.join('')
-    await dispatch(verify({code}))
+    // await dispatch(verify({code}))
+    dispatch(verify({ code }))
+    .then((response) => {
+      console.log(response, 'responseresponse')
+      const userData = localStorage.getItem('user');
+      let parsedData = JSON.parse(userData);
+
+      // Update the verificationCode.verify to true
+      parsedData = {
+        ...parsedData,
+        verificationCode: {
+          ...parsedData.verificationCode,
+          verify: true,
+        },
+      };
+      localStorage.setItem('user', JSON.stringify(parsedData));
+      setVerificationData(true); // It should now be true
+    })
+    .catch((error) => {
+      console.error('Verification failed:', error);
+    });
     setShowVerificationModal(false);
     navigate('/dashboard');
   };
@@ -40,10 +60,6 @@ const EmailVerificationHandler = () => {
     }
 
     setVerificationCode(newCode);
-  };
-
-  const codeResend = () => {
-    console.log('CodeResend');
   };
 
   const handlePaste = (index, e) => {
@@ -112,7 +128,17 @@ const EmailVerificationHandler = () => {
       <Modal
         title="Email Verification"
         isOpen={showVerificationModal}
-        onClose={handleCloseModal}
+        onClose={() => {
+          setVerificationCode([
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+          ]);
+          setShowVerificationModal(!showVerificationModal)
+        }}
       >
         <h1>Please check your email.</h1>
         <p style={{ fontSize: '1.2rem' }}>
@@ -133,7 +159,7 @@ const EmailVerificationHandler = () => {
             />
           ))}
         </div>
-        <p style={{ fontSize: '1.3rem' }}>
+        <p style={{ fontSize: '1.3rem', display: 'none' }}>
           <span> </span>
           Didn&apos;t get a code?
           <span
