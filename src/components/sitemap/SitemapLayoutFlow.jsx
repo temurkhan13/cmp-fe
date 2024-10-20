@@ -21,6 +21,7 @@ import VersionHistory from '../assisstent/assistantModal/VersionHistory';
 import Comments from '../assisstent/assistantModal/Comments';
 import Loading from './Loading';
 import Edge from './Edge';
+import config from '../../config/config';
 const nodeTypes = {
   custom: Node,
 };
@@ -211,7 +212,7 @@ const SitemapLayoutFlow = ({ id }) => {
 
   const getSitemap = async () => {
     if (!id) return;
-    const res = await getData(`http://139.59.4.99:3000/api/dpb/sitemap/${id}`);
+    const res = await getData(`${config.apiURL}/dpb/sitemap/${id}`);
 
     if (res) {
       let siteMapId = res.id;
@@ -320,11 +321,8 @@ const SitemapLayoutFlow = ({ id }) => {
 
     let res =
       stage === 'Playbook Introduction'
-        ? await postData('http://139.59.4.99:3000/api/dpb/sitemap', payload)
-        : await patchData(
-            `http://139.59.4.99:3000/api/dpb/sitemap/${sitemapId}`,
-            payload
-          );
+        ? await postData(`${config.apiURL}/dpb/sitemap`, payload)
+        : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
 
     setIsLoading(false);
     setPromptVisible(false);
@@ -384,11 +382,8 @@ const SitemapLayoutFlow = ({ id }) => {
 
     let res =
       stageLabel === 'Playbook Introduction'
-        ? await postData('http://139.59.4.99:3000/api/dpb/sitemap', payload)
-        : await patchData(
-            `http://139.59.4.99:3000/api/dpb/sitemap/${sitemapId}`,
-            payload
-          );
+        ? await postData(`${config.apiURL}/dpb/sitemap`, payload)
+        : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
 
     setIsLoading(false);
     setPromptVisible(false);

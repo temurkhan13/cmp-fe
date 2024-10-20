@@ -2,6 +2,7 @@ import { useState } from 'react';
 import apiClient from '../api/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import config from '../config/config';
 
 const useUpdateAssessment = () => {
   const [error, setError] = useState(null);
@@ -24,16 +25,21 @@ const useUpdateAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://139.59.4.99:3000/api/assessment/', {
-        message: message || '',
-        history: [],
-        generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
-        businessInfo: businessInfoData,
-        assessmentName: assessmentName,
-      },{
-        headers: {
-        Authorization : `Bearer ${token}`
-      }, });
+      const response = await axios.post(
+        `${config.apiURL}/assessment/`,
+        {
+          message: message || '',
+          history: [],
+          generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
+          businessInfo: businessInfoData,
+          assessmentName: assessmentName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data.message;
     } catch (error) {
       console.log('assessment error', error.message);

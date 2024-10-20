@@ -9,8 +9,6 @@
 //   const location = useLocation();
 //   const [loading, setLoading] = useState(false);
 
-  
-
 //   const chatWithdoc = async (inputText, file = null) => {
 //     try {
 
@@ -56,10 +54,10 @@
 
 // export default useChat;
 
-
 import { useState } from 'react';
 import apiClient from '@api/axios';
 import axios from 'axios';
+import config from '../config/config';
 
 const useChat = () => {
   const [error, setError] = useState(null);
@@ -79,11 +77,12 @@ const useChat = () => {
       }
 
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://139.59.4.99:3000/api/chat/', formData, {
+      const response = await axios.post(`${config.apiURL}/chat/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-        Authorization : `Bearer ${token}`
-      }, });
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log('chatWithApi response', response.data.message);
       setLoading(false);
       setError(null);

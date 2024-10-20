@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import config from '../../config/config';
 
 // Define initial state
 const initialState = {
@@ -11,7 +12,7 @@ const initialState = {
   error: null,
 };
 
-const baseURL = 'http://139.59.4.99:3000/api/auth'; // Change this as per your API
+const baseURL = `${config.apiURL}/auth`; // Change this as per your API
 
 // Async thunk action to handle Google OAuth login
 export const googleOAuthLoginAsync = createAsyncThunk(
@@ -24,7 +25,7 @@ export const googleOAuthLoginAsync = createAsyncThunk(
 
       // Hit the API with the access token
       const response = await axios.post(
-        'https://be.changeai.ai/api/auth/get-user-from-token',
+        `${config.apiURL}/auth/get-user-from-token`,
         {},
         {
           headers: {
@@ -107,9 +108,13 @@ export const codeVerifyAsync = createAsyncThunk(
         },
       };
 
-      const response = await axios.post(`${baseURL}/verification`, {
-        verificationCode: value.code,
-      }, config);
+      const response = await axios.post(
+        `${baseURL}/verification`,
+        {
+          verificationCode: value.code,
+        },
+        config
+      );
 
       return response.data;
     } catch (error) {
@@ -212,4 +217,9 @@ export default authSlice.reducer;
 
 // Export async actions
 export const { logout, rehydrateToken } = authSlice.actions;
-export { loginAsync as login, registerAsync as register, codeVerifyAsync as verify, googleOAuthLoginAsync as googleLogin };
+export {
+  loginAsync as login,
+  registerAsync as register,
+  codeVerifyAsync as verify,
+  googleOAuthLoginAsync as googleLogin,
+};

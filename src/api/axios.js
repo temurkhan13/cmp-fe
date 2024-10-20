@@ -1,7 +1,5 @@
 // import axios from 'axios';
 
-// const baseURL = 'http://139.59.4.99:3000/api';
-
 // const apiClient = axios.create({
 //   baseURL: baseURL,
 //   headers: {
@@ -33,11 +31,12 @@
 // export default apiClient;
 
 import axios from 'axios';
+import config from '../config/config';
 //baseURL: 'http://localhost:5173/api',
 const apiClient = axios.create({
-  baseURL: 'http://139.59.4.99:3000/api',
+  baseURL: config.apiURL,
   headers: {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Content-Type': 'application/json',
   },
 });
