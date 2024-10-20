@@ -28,8 +28,30 @@ const validationSignIn = Yup.object({
   password,
 });
 // Sign Up
-const validationSignUp = Yup.object({
-  email,
+const signupValidationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
+  firstName: Yup.string()
+    .min(2, 'First name must be at least 2 characters')
+    .required('First name is required'),
+  lastName: Yup.string()
+    .min(2, 'Last name must be at least 2 characters')
+    .required('Last name is required'),
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
+  companyName: Yup.string()
+    .min(2, 'Company name must be at least 2 characters')
+    .required('Company name is required'),
+});
+const validationSignUp = signupValidationSchema;
+// Sign IN
+const validationForgetPassword = Yup.object({
+  email
 });
 // Set Password
 const validationSetPassword = Yup.object({
@@ -44,7 +66,13 @@ const validationVerificationCode = Yup.object({
     .required("Verification code is required")
     .matches(/^\d{6}$/, "Verification code must be exactly 6 digits"),
 });
-
+// Reset Password 
+const validationResetPassword = Yup.object({
+  otp: Yup.string()
+    .required("Verification code is required")
+    .matches(/^\d{6}$/, "Verification code must be exactly 6 digits"),
+    password
+});
 // Pay with Card
 
 const validationPayWithCard = Yup.object().shape({
@@ -130,6 +158,8 @@ const validationAuth = {
   validationSetPassword,
   validationPayWithCard,
   validationBusinessInfo,
+  validationForgetPassword,
+  validationResetPassword
 };
 
 export default validationAuth;

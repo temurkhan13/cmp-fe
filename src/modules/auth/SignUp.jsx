@@ -8,18 +8,13 @@ import { useEffect } from 'react';
 
 
 import { useDispatch } from 'react-redux';
-import { register } from '../../redux/slices/authSlice';
+import { register, resetError, resetLoading } from '../../redux/slices/authSlice';
 import { useSelector } from 'react-redux';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //const [isLoading, setIsLoading] = useState(false);
- // const { isLoading, error } = useSelector((state) => state.auth);
-  const { user, isLoading,error } = useSelector((state) => state.auth);
-
-//On error response should display on UI like User already Exist
-
+  const { user, isLoading, error } = useSelector((state) => state.auth);
   const initialValues = {
     email: '',
     firstName: '',
@@ -40,22 +35,24 @@ const SignUp = () => {
    }
 
     setSubmitting(false);
-    // Simulate an API call or a sign-up process
-   // 
-
-    // setTimeout(() => {
-
-    //  // setIsLoading(false);
-    // }, 2000); // Simulate a 2 second delay
   };
 
 
    // Automatically navigate to dashboard after successful registration
    useEffect(() => {
     if (user) {
+      dispatch(resetLoading());
       navigate('/dashboard');
     }
-  }, [user, navigate]);
+  }, [user, navigate, dispatch]);
+
+  useEffect(() => {
+    if(error){
+      setTimeout(() => {
+        dispatch(resetError());
+      }, 2000);
+    }
+  }, [dispatch, error]);
 
   return (
     <Components.Feature.Container>
@@ -117,8 +114,8 @@ const SignUp = () => {
               <Components.Feature.Button
                 className="primary"
                 type="submit"
-                disabled={isLoading}
-              >
+                disabled={ isLoading || error} // Disable based on form validity, loading state, or error
+                >
                 {isLoading ? 'Signing up...' : 'Submit'}
               </Components.Feature.Button>
             </Form>
