@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BiPlus, BiPlusCircle } from 'react-icons/bi';
 import Loading from './Loading';
 import NoData from './NoData';
+import config from '../../config/config.js';
 
 function List() {
   let navigate = useNavigate();
@@ -11,7 +12,7 @@ function List() {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
 
-  async function getData(url = 'http://139.59.4.99:3000/api/dpb/sitemap') {
+  async function getData(url = `${config.apiURL}/dpb/sitemap`) {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
