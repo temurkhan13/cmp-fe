@@ -11,6 +11,7 @@ import businessInfoReducer from '../slices/businessInfoSlice';
 import userReducer from '../slices/userSlice';
 import authReducer from '../slices/authSlice';
 import workspacesReducer from '../slices/workspacesSlice';
+import chatReducer from '../slices/chatSlice';
 import { workspaceApi } from '../api/workspaceApi';
 
 // Custom middleware to trigger loading bar actions for RTK Query requests
@@ -49,6 +50,11 @@ const authPersistConfig = {
   storage,
 };
 
+const chatPersistConfig = {
+  key: 'chat',
+  storage,
+};
+
 // Persisted reducers
 const persistedBusinessInfoReducer = persistReducer(
   businessInfoPersistConfig,
@@ -60,6 +66,7 @@ const persistedWorkspacesReducer = persistReducer(
 );
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
 
 const store = configureStore({
   reducer: {
@@ -68,6 +75,7 @@ const store = configureStore({
     user: persistedUserReducer,
     auth: persistedAuthReducer,
     loadingBar: loadingBarReducer,
+    chat: persistedChatReducer,
     [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
   },
   middleware: (getDefaultMiddleware) =>
