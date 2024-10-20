@@ -1,6 +1,8 @@
 // import { initializeApp } from 'firebase/app';
 // import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
+import config from '../../config/config';
+
 // Firebase configuration (replace with your own config)
 // const firebaseConfig = {
 //   apiKey: 'YOUR_API_KEY',
@@ -17,7 +19,7 @@
 
 // Function to handle Google Sign-In
 export const signinWithGoogle = async () => {
-  window.location.href = 'https://be.changeai.ai/api/auth/google';
+  window.location.href = `${config.apiURL}/auth/google`;
   // const provider = new GoogleAuthProvider();
 
   try {

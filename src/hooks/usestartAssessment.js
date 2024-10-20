@@ -6,6 +6,7 @@ import {
   selectCurrentFolder,
   selectCurrentWorkspace,
 } from '../redux/selectors/selectors';
+import config from '../config/config';
 
 const useStartAssessment = () => {
   const [error, setError] = useState(null);
@@ -35,7 +36,7 @@ const useStartAssessment = () => {
       };
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://139.59.4.99:3000/api/workspace/${workspaceId}/folder/${folderId}/assessment/`,
+        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment/`,
         {
           // message: message || '',
           // history: [],
