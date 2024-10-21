@@ -31,7 +31,8 @@ const SignIn = () => {
     try {
       const response = await dispatch(login({ email, password }));
       console.log(response);
-     navigate('/dashboard');
+      if (!response.error.message == 'Rejected')
+      {navigate('/dashboard');}
     } catch (err) {
       console.error('Login failed:', err);
     }
