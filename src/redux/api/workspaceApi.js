@@ -13,6 +13,7 @@ export const workspaceApi = createApi({
     }),
     getWorkspace: builder.query({
       query: (workspaceId) => `workspace/${workspaceId}`,
+      providesTags: ['Workspace'],
     }),
     addWorkspace: builder.mutation({
       query: (newWorkspace) => ({
