@@ -444,7 +444,8 @@ const MessagesSection = ({ selectedAssessment }) => {
           <div className="defaultPage">
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
-                {selectedAssessment} Champions Survey
+                {selectedAssessment} 
+                {/* Champions Survey */}
               </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,

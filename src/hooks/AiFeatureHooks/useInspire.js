@@ -10,10 +10,9 @@ const useInspire = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${config.apiURL}/assessment/inspire`,
+        `${config.apiURL}/chat/inspire-me`,
         {
-          message:
-            'What is the current situation prompting the need for change?', //text,
+          message: text,
         },
         {
           headers: {

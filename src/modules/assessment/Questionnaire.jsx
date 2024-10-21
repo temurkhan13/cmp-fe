@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import styles from '../../../scss/modules/assessment/questionnaire.module.scss';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import { IoMdClose } from 'react-icons/io';
@@ -9,9 +10,9 @@ import data from '../../data';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import { useAddProjectSurveyMutation } from '../../redux/api/workspaceApi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-const Questionnaire = () => {
+const Questionnaire = ({handleCloseImproveResponseModal}) => {
   const [AddProjectSurvey] = useAddProjectSurveyMutation();
   const [activeStep, setActiveStep] = useState(1);
   const [answers, setAnswers] = useState({});
@@ -19,27 +20,29 @@ const Questionnaire = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [Questions, setQuestions] = useState('');
   const { loading, handleInspire } = useInspire();
-  const dispatch = useDispatch();
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
-  const folderId = useSelector((state) => state.workspaces.currentFolderId);
-
+  const folderId = useSelector((state) => state.workspaces.currentFolderId); 
   const logAnswers = () => {
-    let questionnaireString = '';
 
-    const questionsArray = data.questionnaire.Questions.map((question, index) => {
+    const questionsArray = data.questionnaire.Questions.map((question) => {
       const answer = answers[`question-${question.id}`] || 'No answer provided';
-      questionnaireString += `${index + 1}. ${
-        question.question
-      }\nAnswer: ${answer}\n`;
-      setQuestions(questionnaireString);
+      return {
+        question: question.question,
+        answer: answer
+      };
     });
+    // Now questionsArray will be an array of objects
+    setQuestions(questionsArray);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log('Survey: ', Questions);
-    dispatch(AddProjectSurvey(workspaceId, folderId, { survey: Questions }));
+    console.log(workspaceId, folderId, 'workspaceId, folderId')
+    await AddProjectSurvey( { workspaceId, folderId,survey: Questions })
+    handleCloseImproveResponseModal(false)
+
   };
 
   const nextStep = () => {
@@ -76,7 +79,8 @@ const Questionnaire = () => {
     const currentQuestionKey = `question-${
       data.questionnaire.Questions[activeStep - 1].id
     }`;
-    const inspiredText = await handleInspire(answers[currentQuestionKey]);
+    console.log(Questions, 'currentQuestionKey')
+    const inspiredText = await handleInspire(data.questionnaire.Questions[activeStep - 1].question);
     setAnswers({
       ...answers,
       [currentQuestionKey]: inspiredText,
@@ -206,13 +210,6 @@ const Questionnaire = () => {
               <button
                 className={styles.ButtonStyleNext}
                 onClick={nextStep}
-                disabled={
-                  !!answers[
-                    `question-${
-                      data.questionnaire.Questions[activeStep - 1].id
-                    }`
-                  ]
-                }
               >
                 Next <MdKeyboardArrowRight />
               </button>
@@ -257,5 +254,7 @@ const Questionnaire = () => {
     </div>
   );
 };
-
+Questionnaire.propTypes = {
+  handleCloseImproveResponseModal: PropTypes.func.isRequired,
+}
 export default Questionnaire;
