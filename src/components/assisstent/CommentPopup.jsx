@@ -40,7 +40,7 @@ const CommentPopup = ({
 
   const handleSend = async () => {
     if (comment.trim()) {
-      console.log('Comment sent:', comment, messageId);
+      console.log('Comment sent:', chatId, comment, messageId);
       const text = comment;
       await addComment({ workspaceId, folderId, chatId, messageId, text });
       setComment('');

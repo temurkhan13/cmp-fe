@@ -1,6 +1,6 @@
 import Components from '../../components';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
@@ -27,7 +27,8 @@ const AiAssistantChat = () => {
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
-
+  const [currentChat, setCurrentChat] = useState(null);
+  console.log(currentChat, 'currentChatcurrentChat')
   useEffect(() => {
     if (chatId) {
       dispatch(setCurrentChatId(chatId));
@@ -47,9 +48,9 @@ const AiAssistantChat = () => {
       <section>
         <NewChat />
 
-        <MessagesSection />
+        <MessagesSection setCurrentChat={setCurrentChat} />
 
-        <AssistantSidebar />
+        <AssistantSidebar currentChat={currentChat} />
       </section>
     </div>
   );

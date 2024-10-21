@@ -1,4 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import config from '../../config/config';
+import { setChats } from '../slices/chatSlice';
 
 import mockWorkspace from '../../utils/mockWorkspace';
 
@@ -8,8 +11,32 @@ const initialState = {
   workspaces: initialChatState,
   selectedWorkspaceId: 'workspaceId1',
   selectedFolderId: 'folderId1',
+  chats: [],
   selectedChatId: null,
 };
+
+export const getChatsAsync = createAsyncThunk(
+  `/workspace/user/chatsAll?workspaceId`,
+  async ({workspaceId, folderId}, thunkAPI) => {
+    try {
+      // Save tokens in localStorage
+      const token = localStorage.getItem('token');
+
+      // Hit the API with the access token
+      const response = await axios.get(
+        `${config.apiURL}/workspace/user/chats?workspaceId=${workspaceId}&folderId=${folderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 // Helper functions
 const findWorkspaceById = (state, workspaceId) =>

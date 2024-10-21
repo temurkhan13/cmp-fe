@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import '@styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import {
@@ -7,13 +8,9 @@ import {
   FaThumbsDown,
   FaSync,
   FaCommentAlt,
-  FaQuestion,
-  FaLightbulb,
-  FaBullhorn,
-  FaUsers,
 } from 'react-icons/fa';
 import { IoAttach, IoSend } from 'react-icons/io5';
-import { FaBookmark, FaFile, FaRegBookmark } from 'react-icons/fa6';
+import { FaBookmark } from 'react-icons/fa6';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import UserPic from '@assets/chat/user.png';
 import AiPic from '@assets/dashboard/sidebarLogo.png';
@@ -35,6 +32,7 @@ import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { logo } from '../../assets/common/index';
+import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 
 // import {
 //   addMessage,
@@ -58,8 +56,11 @@ import {
 
 import * as FaIcons from 'react-icons/fa';
 // import { v4 as uuidv4 } from 'uuid';
+import { setChats } from '../../redux/slices/chatSlice';
+import { getChatsAsync } from '../../redux/slices/workspaceSlice';
+import { setCurrentChatId } from '../../redux/slices/workspacesSlice';
 
-const MessagesSection = () => {
+const MessagesSection = ({ setCurrentChat }) => {
   const dispatch = useDispatch();
   // const state = useSelector((state) => state.workspace);
   // const selectedWorkspaceId = useSelector(
@@ -89,13 +90,15 @@ const MessagesSection = () => {
   const [addMessage] = useAddMessageMutation();
   const [updateMessage] = useUpdateMessageMutation();
   const [addBookmark] = useAddBookmarkMutation();
+  const userId = useSelector((state) => state.auth.user?.id);
+  const { data: workspaces } = useGetWorkspacesQuery(userId);
+  console.log(workspaces);
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
   const folderId = useSelector((state) => state.workspaces.selectedFolder);
   const chatId = useSelector((state) => state.workspaces.currentChatId);
   const [messageId, setMessageId] = useState();
-
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentChat);
@@ -105,13 +108,18 @@ const MessagesSection = () => {
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
 
-  const { data: chat } = useGetChatQuery({
+  const { data: chat, refetch } = useGetChatQuery({
     workspaceId,
     folderId: folderId._id,
     chatId,
   });
+
+  useEffect(() => {
+    if (chat && chat?._id) {
+      setCurrentChat(chat);
+    }
+  }, [chat]);
   // console.log(chat);
-  const [messages, setMessages] = useState(chat ? chat.generalMessages : []);
 
   // const [chat, setChat] = useState(
   //   currentChat ? currentChat.generalMessages : []
@@ -141,6 +149,7 @@ const MessagesSection = () => {
   const { shortText } = useShorter();
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
+  console.debug(selectedTone, responseLength, askAi, chatWithdoc);
 
   const renderIcon = (iconName, style = {}) => {
     const IconComponent = FaIcons[iconName];
@@ -174,8 +183,10 @@ const MessagesSection = () => {
     e.preventDefault();
   };
 
-  const handleCommentClick = (e) => {
-    e.stopPropagation();
+  const handleCommentClick = (event) => {
+    event.stopPropagation();
+    const messageId = event.currentTarget.getAttribute('data-message-id');
+    setMessageId(messageId)
     setShowCommentPopup((prev) => !prev);
     setAskAI(false);
     setPopupVisible(false);
@@ -405,7 +416,8 @@ const MessagesSection = () => {
       folderId: folderId._id,
       chatId,
       messageId, // Send the whole bookmark data
-    });
+    }).unwrap();
+    refetch(); // Trigger the chat query to refetch
   };
 
   const handleSendMessage = async () => {
@@ -414,14 +426,33 @@ const MessagesSection = () => {
     setLoading(true); // Show spinner
     try {
       // Simulate sending message
-      await addMessage({
+      const data = await addMessage({
         workspaceId: workspaceId,
         folderId: folderId._id,
         chatId: chatId ? chatId : 'newChat',
         message: text,
         files: file,
       }).unwrap();
-      refetch();
+
+      if (!chatId && data.success) {
+        dispatch(
+          getChatsAsync({
+            workspaceId: currentWorkspace.id,
+            folderId: folderId._id,
+          })
+        )
+          .then((response) => {
+            console.log(response.payload.data, 'myChatmyChatresponse');
+            dispatch(setChats(response.payload.data));
+            if (response.payload.data.length > 0) {
+              dispatch(setCurrentChatId(response.payload.data[0]._id));
+            }
+          })
+          .catch((error) => {
+            console.error(error, 'error');
+          });
+      }
+      // refetch();
       setText(''); // Clear input field after message sent
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -682,7 +713,10 @@ const MessagesSection = () => {
       </div>
       {showCommentPopup && (
         <CommentPopup
-          onClose={() => setShowCommentPopup(false)}
+          onClose={() => {
+            setShowCommentPopup(false)
+            refetch();
+          }}
           workspaceId={workspaceId}
           folderId={folderId._id}
           chatId={chatId}
@@ -723,6 +757,16 @@ const MessagesSection = () => {
     }`}</style>
     </div>
   );
+};
+
+// Define prop types for validation
+MessagesSection.propTypes = {
+  setCurrentChat: PropTypes.func.isRequired, // Validate that it's a required function
+};
+
+// Optionally, define defaultProps if needed
+MessagesSection.defaultProps = {
+  setCurrentChat: () => {}, // Default no-op function if none is passed
 };
 
 export default MessagesSection;

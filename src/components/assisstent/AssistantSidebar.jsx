@@ -1,6 +1,6 @@
-import { useState } from 'react';
-// import icon from '../../../assets/common/index';
+import { useState, useEffect } from 'react';
 import { SideBarModal } from '../common';
+import PropTypes from 'prop-types';
 
 import Media from './assistantModal/Media';
 import Comments from './assistantModal/Comments';
@@ -8,17 +8,10 @@ import ChatBookmark from './assistantModal/ChatBookmark';
 import VersionHistory from './assistantModal/VersionHistory';
 import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
 
-import {
-  selectCurrentChat,
-  // selectAllComments,
-} from '../../redux/selectors/selectors';
-
-const AssistantSidebar = () => {
-  // const { users, currentChat } = useSelectedChat();
-  const currentChat = useSelector(selectCurrentChat);
-  // const comments = useSelector(selectAllComments);
+const AssistantSidebar = (props) => {
+  const currentChat =  props?.currentChat;
+  const [bookmarksShow, setBookmarksShow] = useState([]);
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
@@ -32,6 +25,26 @@ const AssistantSidebar = () => {
     setIsCommentsModalOpen(false);
     setIsBookmarkModalOpen(false);
   };
+
+  useEffect(() => {
+    const findingAllbookmarks = currentChat ? currentChat.bookmarks.map((item) => {
+      const foundMessage = currentChat.generalMessages.find(
+        (message) => message._id === item.messageId
+      )
+
+      if (foundMessage) {
+        const date = new Date(foundMessage.createdAt);
+        const localDate = date.toLocaleString(); 
+        return {
+          ...foundMessage,
+          localDate,
+        };
+      }
+    }) : []
+    if (findingAllbookmarks.length > 0) {
+      setBookmarksShow(findingAllbookmarks);
+    }
+  }, [currentChat]);
 
   return (
     <>
@@ -102,13 +115,7 @@ const AssistantSidebar = () => {
           title="Bookmark"
           bodyContent={
             <div>
-              {currentChat.bookmarks.map((item, index) => (
-                <ChatBookmark
-                  key={index}
-                  date={item.date}
-                  messages={item.messages}
-                />
-              ))}
+              <ChatBookmark date={Date.now()} messages={bookmarksShow} />
             </div>
           }
           onClose={closeModal}
@@ -189,6 +196,32 @@ const AssistantSidebar = () => {
       `}</style>
     </>
   );
+};
+
+AssistantSidebar.propTypes = {
+  currentChat: PropTypes.shape({
+    bookmarks: PropTypes.arrayOf(
+      PropTypes.shape({
+        messageId: PropTypes.string.isRequired,
+        createdAt: PropTypes.string.isRequired,
+      })
+    ),
+    generalMessages: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        text: PropTypes.string,
+        from: PropTypes.string,
+        createdAt: PropTypes.string,
+      })
+    ),
+  }),
+};
+
+AssistantSidebar.defaultProps = {
+  currentChat: {
+    bookmarks: [],
+    generalMessages: [],
+  },
 };
 
 export default AssistantSidebar;

@@ -7,12 +7,21 @@ import { useState } from 'react';
 
 import Modal from '../../common/Modal';
 import FileStructure from '../../dashboard/FileStructure';
-import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
+import {
+  useAddFolderMutation,
+  useGetWorkspacesQuery,
+} from '../../../redux/api/workspaceApi';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { selectCurrentWorkspace } from '../../../redux/selectors/selectors';
+import { useSelector } from 'react-redux';
 
 const Folder = ({ activeWorkspace }) => {
   const [addFolder] = useAddFolderMutation();
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+  const userId = useSelector((state) => state.auth.user?.id);
+
+  const currentWorkspace = useSelector(selectCurrentWorkspace);
+  const {  refetch } = useGetWorkspacesQuery(userId);
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -42,6 +51,7 @@ const Folder = ({ activeWorkspace }) => {
         workspaceId: activeWorkspace.id,
         folderName: values.projectName,
       }).unwrap();
+      refetch();
       setIsNewFolderModalOpen(false);
       resetForm();
     } catch (error) {
@@ -63,7 +73,7 @@ const Folder = ({ activeWorkspace }) => {
           <div className="center-buttons">
             <div>
               <button
-              style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 className="assiss-btn"
                 onClick={() => setIsNewFolderModalOpen(true)}
               >
@@ -74,7 +84,11 @@ const Folder = ({ activeWorkspace }) => {
           </div>
         </div>
       </section>
-      {activeWorkspace ? <FileStructure workspace={activeWorkspace} />: <>No Active Workspace</>}
+      {activeWorkspace ? (
+        <FileStructure workspace={currentWorkspace} />
+      ) : (
+        <>No Active Workspace</>
+      )}
       {isNewFolderModalOpen && (
         <Modal
           title="Create New Project"
