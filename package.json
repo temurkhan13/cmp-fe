@@ -2,7 +2,6 @@
   "name": "change-ai",
   "private": true,
   "version": "0.0.0",
-  "proxy": "http://139.59.4.99:3000",
   "type": "module",
   "scripts": {
     "prepare": "husky install",

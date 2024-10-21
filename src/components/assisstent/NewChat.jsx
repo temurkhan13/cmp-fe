@@ -10,7 +10,7 @@ import {
 import { BsThreeDots } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { RxDashboard } from 'react-icons/rx';
-import LoadingSpinner from '../../components/common/LoadingSpinner ';
+// import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 import {
   selectAllChats,
@@ -122,7 +122,7 @@ const NewChat = () => {
     <div
       className={`newChat ${sidebarCollapsed ? 'collapsed' : ''}`}
       ref={chatContainerRef}
-      style={{ overflowY: 'auto', height: '100vh' }}
+      style={{ overflowY: 'auto', height: '80vh' }}
     >
       <div
         className={`sidebar-header ${
@@ -212,10 +212,12 @@ const NewChat = () => {
                   display: 'flex',
                   alignItems: 'center',
                   padding: '1rem',
-                  // margin: '0.5rem 0',
                   justifyContent: 'space-between',
                   fontSize: '1.5rem !important',
-                  color: 'black',
+                  color: currentChat?._id === chat._id ? 'black' : 'black',
+                  borderRadius: '1rem',
+                  backgroundColor:
+                    currentChat?._id === chat._id ? '#f0f0f0' : 'transparent', // Set background color conditionally
                 }}
                 className="chat-item-section"
               >
@@ -248,7 +250,8 @@ const NewChat = () => {
                   )}
               </section>
             ))}
-          {loading && <LoadingSpinner />}
+
+          {/* {loading && <LoadingSpinner />} */}
         </>
       )}
     </div>

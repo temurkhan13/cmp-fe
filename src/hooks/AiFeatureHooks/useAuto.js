@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
+import config from '../../config/config';
 
 const useAuto = () => {
   const [error, setError] = useState(null);
@@ -8,7 +9,7 @@ const useAuto = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await apiClient.post(
-        'http://139.59.4.99:3000/api//chat/auto',
+        `${config.apiURL}/chat/auto`,
         {
           message: inputText,
         },

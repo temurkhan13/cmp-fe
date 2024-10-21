@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/slices/authSlice';
 import { useSelector } from 'react-redux';
-import LoadingSpinner from '../../components/common/LoadingSpinner ';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const SetPassword = () => {
   const dispatch = useDispatch();
