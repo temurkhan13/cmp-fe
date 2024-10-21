@@ -136,18 +136,47 @@ function List() {
                   })}
                 </div>
               )}
+              <div style={{
+                margin: '16px 0',
+                display: 'flex',
+                justifyContent: 'end'
+              }}>
+                <div style={{}}>
+                  <a
+                    style={{
+                      width: '100%',
+                      background: '#C3E11B',
+                      border: 'none',
+                      padding: '5px',
+                      borderRadius: '6px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      marginTop: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'black',
+                      textDecoration: 'none'
+                    }}
+                    href='http://139.59.4.99:3500/'
+                  >
+                    <BiPlus></BiPlus>
+                    Create Wireframe
+                  </a>
+                </div>
+
+              </div>
               <div
                 style={{
                   margin: '16px 0',
                   display: 'flex',
-                  justifyContent: 'space-between',
+                  justifyContent: 'space-between'
                 }}
               >
                 <span
                   style={{
                     fontSize: '28px',
                     fontWeight: '600',
-                    color: 'rgba(10, 10, 10, 1)',
+                    color: 'rgba(10, 10, 10, 1)'
                   }}
                 >
                   Digital Playbook
