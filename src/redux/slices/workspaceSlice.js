@@ -2,10 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import mockWorkspace from '../../utils/mockWorkspace';
 
-
 const initialChatState = mockWorkspace;
-
-
 
 const initialState = {
   workspaces: initialChatState,
@@ -16,17 +13,16 @@ const initialState = {
 
 // Helper functions
 const findWorkspaceById = (state, workspaceId) =>
-  state.workspaces.find(ws => ws.workspaceId === workspaceId);
+  state.workspaces.find((ws) => ws.workspaceId === workspaceId);
 
 const findFolderById = (workspace, folderId) =>
-  workspace?.folders.find(f => f.folderId === folderId);
+  workspace?.folders.find((f) => f.folderId === folderId);
 
 const findChatById = (folder, chatId) =>
-  folder?.chats.find(c => c.chatId === chatId);
-
+  folder?.chats.find((c) => c.chatId === chatId);
 
 const findCommentById = (chat, commentId) =>
-  chat?.comments.find(c => c.commentId === commentId);
+  chat?.comments.find((c) => c.commentId === commentId);
 
 const workspaceSlice = createSlice({
   name: 'workspace',
@@ -37,13 +33,20 @@ const workspaceSlice = createSlice({
       state.workspaces.push(action.payload);
     },
     updateWorkspace: (state, action) => {
-      const index = state.workspaces.findIndex(ws => ws.workspaceId === action.payload.workspaceId);
+      const index = state.workspaces.findIndex(
+        (ws) => ws.workspaceId === action.payload.workspaceId
+      );
       if (index !== -1) {
-        state.workspaces[index] = { ...state.workspaces[index], ...action.payload };
+        state.workspaces[index] = {
+          ...state.workspaces[index],
+          ...action.payload,
+        };
       }
     },
     removeWorkspace: (state, action) => {
-      state.workspaces = state.workspaces.filter(ws => ws.workspaceId !== action.payload);
+      state.workspaces = state.workspaces.filter(
+        (ws) => ws.workspaceId !== action.payload
+      );
     },
     setSelectedWorkspaceId: (state, action) => {
       state.selectedWorkspaceId = action.payload;
@@ -65,7 +68,9 @@ const workspaceSlice = createSlice({
     removeFolder: (state, action) => {
       const workspace = findWorkspaceById(state, action.payload.workspaceId);
       if (workspace) {
-        workspace.folders = workspace.folders.filter(f => f.folderId !== action.payload.folderId);
+        workspace.folders = workspace.folders.filter(
+          (f) => f.folderId !== action.payload.folderId
+        );
       }
     },
     setSelectedFolderId: (state, action) => {
@@ -91,7 +96,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       if (folder) {
-        folder.chats = folder.chats.filter(c => c.chatId !== action.payload.chatId);
+        folder.chats = folder.chats.filter(
+          (c) => c.chatId !== action.payload.chatId
+        );
       }
     },
     setSelectedChatId: (state, action) => {
@@ -103,7 +110,7 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        console.log("slice message: ", action.payload);
+        console.log('slice message: ', action.payload);
         chat.generalMessages.push(action.payload);
       }
     },
@@ -111,7 +118,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const message = chat.generalMessages.find(msg => msg.messageId === action.payload.message.messageId);
+      const message = chat.generalMessages.find(
+        (msg) => msg.messageId === action.payload.message.messageId
+      );
       if (message) {
         Object.assign(message, action.payload);
       }
@@ -121,7 +130,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.generalMessages = chat.generalMessages.filter(msg => msg.messageId !== action.payload.messageId);
+        chat.generalMessages = chat.generalMessages.filter(
+          (msg) => msg.messageId !== action.payload.messageId
+        );
       }
     },
     // Shared Users CRUD
@@ -137,7 +148,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const user = chat.sharedUsers.find(u => u.userId === action.payload.user.userId);
+      const user = chat.sharedUsers.find(
+        (u) => u.userId === action.payload.user.userId
+      );
       if (user) {
         Object.assign(user, action.payload.user);
       }
@@ -147,7 +160,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.sharedUsers = chat.sharedUsers.filter(u => u.userId !== action.payload.userId);
+        chat.sharedUsers = chat.sharedUsers.filter(
+          (u) => u.userId !== action.payload.userId
+        );
       }
     },
     // Comments CRUD
@@ -163,7 +178,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const comment = chat.comments.find(c => c.commentId === action.payload.comment.commentId);
+      const comment = chat.comments.find(
+        (c) => c.commentId === action.payload.comment.commentId
+      );
       if (comment) {
         Object.assign(comment, action.payload.comment);
       }
@@ -173,7 +190,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.comments = chat.comments.filter(c => c.commentId !== action.payload.commentId);
+        chat.comments = chat.comments.filter(
+          (c) => c.commentId !== action.payload.commentId
+        );
       }
     },
 
@@ -199,7 +218,6 @@ const workspaceSlice = createSlice({
       if (replyIndex !== -1) {
         comment.replies[replyIndex].text = action.payload.updatedReply;
       }
-      
     },
     removeReply: (state, action) => {
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
@@ -211,7 +229,6 @@ const workspaceSlice = createSlice({
           (r) => r.replyId !== action.payload.replyId
         );
       }
-      
     },
 
     // Bookmarks CRUD
@@ -227,7 +244,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const bookmark = chat.bookmarks.find(b => b.bookmarkId === action.payload.bookmark.bookmarkId);
+      const bookmark = chat.bookmarks.find(
+        (b) => b.bookmarkId === action.payload.bookmark.bookmarkId
+      );
       if (bookmark) {
         Object.assign(bookmark, action.payload.bookmark);
       }
@@ -237,7 +256,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.bookmarks = chat.bookmarks.filter(b => b.bookmarkId !== action.payload.bookmarkId);
+        chat.bookmarks = chat.bookmarks.filter(
+          (b) => b.bookmarkId !== action.payload.bookmarkId
+        );
       }
     },
     // Media CRUD
@@ -253,7 +274,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const media = chat.media.find(m => m.mediaId === action.payload.media.mediaId);
+      const media = chat.media.find(
+        (m) => m.mediaId === action.payload.media.mediaId
+      );
       if (media) {
         Object.assign(media, action.payload.media);
       }
@@ -263,7 +286,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.media = chat.media.filter(m => m.mediaId !== action.payload.mediaId);
+        chat.media = chat.media.filter(
+          (m) => m.mediaId !== action.payload.mediaId
+        );
       }
     },
     // Tasks CRUD
@@ -279,7 +304,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const task = chat.tasks.find(t => t.taskId === action.payload.task.taskId);
+      const task = chat.tasks.find(
+        (t) => t.taskId === action.payload.task.taskId
+      );
       if (task) {
         Object.assign(task, action.payload.task);
       }
@@ -289,7 +316,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.tasks = chat.tasks.filter(t => t.taskId !== action.payload.taskId);
+        chat.tasks = chat.tasks.filter(
+          (t) => t.taskId !== action.payload.taskId
+        );
       }
     },
     // Versions CRUD
@@ -305,7 +334,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const version = chat.versions.find(v => v.versionId === action.payload.version.versionId);
+      const version = chat.versions.find(
+        (v) => v.versionId === action.payload.version.versionId
+      );
       if (version) {
         Object.assign(version, action.payload.version);
       }
@@ -315,7 +346,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.versions = chat.versions.filter(v => v.versionId !== action.payload.versionId);
+        chat.versions = chat.versions.filter(
+          (v) => v.versionId !== action.payload.versionId
+        );
       }
     },
     // Images CRUD
@@ -331,7 +364,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const image = chat.images.find(i => i.imageId === action.payload.image.imageId);
+      const image = chat.images.find(
+        (i) => i.imageId === action.payload.image.imageId
+      );
       if (image) {
         Object.assign(image, action.payload.image);
       }
@@ -341,7 +376,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.images = chat.images.filter(i => i.imageId !== action.payload.imageId);
+        chat.images = chat.images.filter(
+          (i) => i.imageId !== action.payload.imageId
+        );
       }
     },
     // Documents CRUD
@@ -357,7 +394,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const document = chat.documents.find(d => d.documentId === action.payload.document.documentId);
+      const document = chat.documents.find(
+        (d) => d.documentId === action.payload.document.documentId
+      );
       if (document) {
         Object.assign(document, action.payload.document);
       }
@@ -367,7 +406,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.documents = chat.documents.filter(d => d.documentId !== action.payload.documentId);
+        chat.documents = chat.documents.filter(
+          (d) => d.documentId !== action.payload.documentId
+        );
       }
     },
     // Links CRUD
@@ -383,7 +424,9 @@ const workspaceSlice = createSlice({
       const workspace = findWorkspaceById(state, state.selectedWorkspaceId);
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
-      const link = chat.links.find(l => l.linkId === action.payload.link.linkId);
+      const link = chat.links.find(
+        (l) => l.linkId === action.payload.link.linkId
+      );
       if (link) {
         Object.assign(link, action.payload.link);
       }
@@ -393,7 +436,9 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        chat.links = chat.links.filter(l => l.linkId !== action.payload.linkId);
+        chat.links = chat.links.filter(
+          (l) => l.linkId !== action.payload.linkId
+        );
       }
     },
   },

@@ -1,25 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CiBellOn } from 'react-icons/ci';
 import { FiLogOut } from 'react-icons/fi';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { CgProfile } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
-import User from '../../assets/chat/user.png';
 import NotificationDropdown from './NotificationDropdown';
 import LoadingBar from 'react-redux-loading-bar';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
-import {logout} from '../../redux/slices/authSlice';
+import { logout } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [photoPath, setPhotoPath] = useState('false');
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setPhotoPath(storedUser.photoPath);
+      setUser(storedUser);
+    }
+  }, []);
+
+  const getInitials = () => {
+    if (!user) {
+      return 'N/A';
+    }
+    return `${user.firstName?.[0] || ''}${
+      user.lastName?.[0] || ''
+    }`.toUpperCase();
+  };
+
   const [hasNotification] = useState(true);
   const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
     useState(false);
-    const dispatch = useDispatch();
-    
+  const dispatch = useDispatch();
 
   const handleProfileClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -36,8 +54,8 @@ const Header = () => {
     setNotificationOpen(false);
   };
 
-  const handleLogout = async() => {
-    await dispatch (logout());
+  const handleLogout = async () => {
+    await dispatch(logout());
     navigate('/log-in');
     console.log('Logout clicked');
     closeDropdowns();
@@ -70,12 +88,18 @@ const Header = () => {
           />
         )}
 
-        <img
-          src={User}
-          alt="User"
-          className="ProfileImage"
-          onClick={handleProfileClick}
-        />
+        {photoPath ? (
+          <img
+            src={photoPath}
+            alt="User"
+            className="ProfileImage"
+            onClick={handleProfileClick}
+          />
+        ) : (
+          <div onClick={handleProfileClick} className="initials-placeholder">
+            {getInitials()}
+          </div>
+        )}
 
         {dropdownOpen && (
           <div className="dropdownMenu">
@@ -177,6 +201,21 @@ const Header = () => {
           width: 22rem;
         }
 
+        .initials-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: #007bff;
+          color: #ffffff;
+          font-size: 18px;
+          font-weight: bold;
+          text-align: center;
+          margin-right: 8px;
+          cursor: pointer;
+        }
         .dropdownItem {
           display: flex;
           align-items: center;

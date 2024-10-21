@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import config from '../../config/config';
 
 // Define initial state
 const initialState = {
@@ -11,7 +12,7 @@ const initialState = {
   error: null,
 };
 
-const baseURL = 'http://139.59.4.99:3000/api/auth'; // Change this as per your API
+const baseURL = `${config.apiURL}/auth`; // Change this as per your API
 
 // Async thunk action to handle Google OAuth login
 export const googleOAuthLoginAsync = createAsyncThunk(
@@ -24,7 +25,7 @@ export const googleOAuthLoginAsync = createAsyncThunk(
 
       // Hit the API with the access token
       const response = await axios.post(
-        'https://be.changeai.ai/api/auth/get-user-from-token',
+        `${config.apiURL}/auth/get-user-from-token`,
         {},
         {
           headers: {
@@ -107,13 +108,85 @@ export const codeVerifyAsync = createAsyncThunk(
         },
       };
 
-      const response = await axios.post(`${baseURL}/verification`, {
-        verificationCode: value.code,
-      }, config);
+      const response = await axios.post(
+        `${baseURL}/verification`,
+        {
+          verificationCode: value.code,
+        },
+        config
+      );
 
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Async thunk action to resend email verification code
+export const resentVerificationCodeAsync = createAsyncThunk(
+  'auth/email/send-verification',
+  async (_, thunkAPI) => { // Destructure the first argument to ignore it
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseURL}/email/send-verification`, {}, config);
+      return response.data;
+    } catch (error) {
+      // Handle errors gracefully
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to resend verification code' // Provide a default error message
+      );
+    }
+  }
+);
+
+// Async thunk action to resend email verification code
+export const forgetPasswordGetCodeAsync = createAsyncThunk(
+  'auth/forgot/password',
+  async (email, thunkAPI) => { // Destructure the first argument to ignore it
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseURL}/forgot/password`, {email}, config);
+      return response.data;
+    } catch (error) {
+      // Handle errors gracefully
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to resend verification code' // Provide a default error message
+      );
+    }
+  }
+);
+
+export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
+  'auth/reset/password',
+  async ({email, OTP, newPassword}, thunkAPI) => { // Destructure the first argument to ignore it
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await axios.post(`${baseURL}/reset/password`, {email, OTP, newPassword}, config);
+      return response.data;
+    } catch (error) {
+      // Handle errors gracefully
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to resend verification code' // Provide a default error message
+      );
     }
   }
 );
@@ -142,6 +215,12 @@ const authSlice = createSlice({
         state.user = user;
         state.isLoggedIn = true;
       }
+    },
+    resetError: (state) => {
+      state.error = null; // Reset error to null
+    },
+    resetLoading: (state) => {
+      state.isLoggedIn = false; // Reset error to null
     },
   },
   extraReducers: (builder) => {
@@ -211,5 +290,13 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 // Export async actions
-export const { logout, rehydrateToken } = authSlice.actions;
-export { loginAsync as login, registerAsync as register, codeVerifyAsync as verify, googleOAuthLoginAsync as googleLogin };
+export const { logout, rehydrateToken, resetError, resetLoading } = authSlice.actions;
+export {
+  loginAsync as login,
+  registerAsync as register,
+  codeVerifyAsync as verify,
+  resentVerificationCodeAsync as resendVerification,
+  forgetPasswordGetCodeAsync as forgetPasswordGetCode,
+  ResetforgetPasswordWithCodeAsync as ResetforgetPasswordWithCode,
+  googleOAuthLoginAsync as googleLogin,
+};

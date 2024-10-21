@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import config from '../config/config';
 
 const useForgotVerfication = () => {
   const navigate = useNavigate();
@@ -11,10 +12,9 @@ const useForgotVerfication = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post(
-        'http://139.59.4.99:3000/api/auth/verification',
-        { code }
-      );
+      const response = await axios.post(`${config.apiURL}/auth/verification`, {
+        code,
+      });
       setLoading(false);
       if (response.data) {
         navigate('forgot-password/set-new-password');

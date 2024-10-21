@@ -1,6 +1,7 @@
 import { useState } from 'react';
 //import apiClient from '@api/axios';
 import axios from 'axios';
+import config from '../../config/config';
 const useInspire = () => {
   const [loading, setLoading] = useState(false);
 
@@ -9,7 +10,7 @@ const useInspire = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://139.59.4.99:3000/api/assessment/inspire',
+        `${config.apiURL}/assessment/inspire`,
         {
           message:
             'What is the current situation prompting the need for change?', //text,

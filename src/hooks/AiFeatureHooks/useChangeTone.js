@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
 import axios from 'axios';
+import config from '../../config/config';
 
 const useChangeTone = () => {
   const [error, setError] = useState(null);
@@ -11,7 +12,7 @@ const useChangeTone = () => {
 
       console.log('Change Tone text: ' + selectedText);
       const response = await axios.post(
-        'http://139.59.4.99:3000/api/chat/change-tone',
+        `${config.apiURL}/chat/change-tone`,
         {
           message: { selectedText },
           tone: tone,

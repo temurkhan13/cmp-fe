@@ -31,13 +31,20 @@ const CommentPopup = ({
     };
   }, [onClose]);
 
+  const HandleEnterKey = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
   const handleSend = async () => {
     if (comment.trim()) {
       console.log('Comment sent:', comment, messageId);
       const text = comment;
       await addComment({ workspaceId, folderId, chatId, messageId, text });
       setComment('');
-      onClose(); // Close the comment popup
+      onClose();
     }
   };
 
@@ -59,6 +66,7 @@ const CommentPopup = ({
               onChange={(e) => setComment(e.target.value)}
               placeholder="Reply"
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={HandleEnterKey}
             />
             <div className="user-icon">
               <MdOutlineAttachFile />

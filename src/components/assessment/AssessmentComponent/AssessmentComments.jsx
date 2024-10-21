@@ -434,7 +434,7 @@ const AssessmentComments = ({ comments }) => {
           }
           .reply-wrapper {
             display: flex;
-            align-items: center;
+            // align-items: center;
             padding: 0.5rem 0;
             width: 100%;
           }
