@@ -38,25 +38,25 @@ const requestsNotifications = [
 const RequestsNotifications = () => {
   return (
     <div className="notification-list">
-      {requestsNotifications.map((notification) => (
-        <div className="notification-item" key={notification.id}>
-          <div className="notification-avatar">
-            {notification.avatar ? (
-              <img src={notification.avatar} alt="avatar" className="avatar" />
-            ) : (
-              <FaUserCircle className="default-avatar" />
-            )}
-          </div>
-          <div className="notification-details">
-            <div className="notification-name">{notification.name}</div>
-            <div className="notification-message">
-              {notification.message} -{' '}
-              <span className="notification-team">{notification.team}</span>
-            </div>
-          </div>
-          <div className="notification-date">{notification.date}</div>
-        </div>
-      ))}
+      {/*{requestsNotifications.map((notification) => (*/}
+      {/*  <div className="notification-item" key={notification.id}>*/}
+      {/*    <div className="notification-avatar">*/}
+      {/*      {notification.avatar ? (*/}
+      {/*        <img src={notification.avatar} alt="avatar" className="avatar" />*/}
+      {/*      ) : (*/}
+      {/*        <FaUserCircle className="default-avatar" />*/}
+      {/*      )}*/}
+      {/*    </div>*/}
+      {/*    <div className="notification-details">*/}
+      {/*      <div className="notification-name">{notification.name}</div>*/}
+      {/*      <div className="notification-message">*/}
+      {/*        {notification.message} -{' '}*/}
+      {/*        <span className="notification-team">{notification.team}</span>*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*    <div className="notification-date">{notification.date}</div>*/}
+      {/*  </div>*/}
+      {/*))}*/}
       <style>{`
         .notification-list {
           background-color: #fff;

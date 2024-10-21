@@ -34,31 +34,31 @@ const unreadNotifications = [
 const UnreadNotifications = () => {
   return (
     <div className="notification-list">
-      {unreadNotifications.map((notification) => (
-        <div className="notification-item" key={notification.id}>
-          <div className="notification-avatar">
-            {notification.avatar ? (
-              <img src={notification.avatar} alt="avatar" className="avatar" />
-            ) : (
-              <FaUserCircle className="default-avatar" />
-            )}
-          </div>
-          <div className="notification-details">
-            <div className="notification-name">{notification.name}</div>
-            <div className="notification-message">
-              {notification.message} -{' '}
-              <span className="notification-team">{notification.team}</span>
-            </div>
-            <div className="notification-submessage">
-              {notification.subMessage}
-            </div>
-          </div>
-          <div className="notification-meta">
-            <div className="notification-date">{notification.date}</div>
-            <MdCircle className="unread-icon" />
-          </div>
-        </div>
-      ))}
+      {/*{unreadNotifications.map((notification) => (*/}
+      {/*  <div className="notification-item" key={notification.id}>*/}
+      {/*    <div className="notification-avatar">*/}
+      {/*      {notification.avatar ? (*/}
+      {/*        <img src={notification.avatar} alt="avatar" className="avatar" />*/}
+      {/*      ) : (*/}
+      {/*        <FaUserCircle className="default-avatar" />*/}
+      {/*      )}*/}
+      {/*    </div>*/}
+      {/*    <div className="notification-details">*/}
+      {/*      <div className="notification-name">{notification.name}</div>*/}
+      {/*      <div className="notification-message">*/}
+      {/*        {notification.message} -{' '}*/}
+      {/*        <span className="notification-team">{notification.team}</span>*/}
+      {/*      </div>*/}
+      {/*      <div className="notification-submessage">*/}
+      {/*        {notification.subMessage}*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*    <div className="notification-meta">*/}
+      {/*      <div className="notification-date">{notification.date}</div>*/}
+      {/*      <MdCircle className="unread-icon" />*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*))}*/}
       <style>{`
         .notification-list {
         }
