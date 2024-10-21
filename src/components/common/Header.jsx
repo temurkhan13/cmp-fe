@@ -102,7 +102,7 @@ const Header = ({ activeWorkspace, workspaces }) => {
           isOpen={isImproveResponseModalOpen}
           onClose={handleCloseImproveResponseModal}
         >
-          <Questionnaire />
+          <Questionnaire handleCloseImproveResponseModal={handleCloseImproveResponseModal} />
         </Modal>
       )}
     </div>
