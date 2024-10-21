@@ -54,7 +54,7 @@ const MyAssessmentComp = () => {
         <Folder activeWorkspace={selectedWorkspace} />
       </div>
 
-      <div className="cardWrapper">
+      <div className="cardWrapper" style={{display: 'none'}}>
         {cardData.map((card, index) => (
           <div key={index}>
             <DashboardCard chat={''} />

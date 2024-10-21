@@ -18,7 +18,6 @@ const ChatBookmark = ({ date, messages }) => {
 
   return (
     <div>
-      <div className="date">{date}</div>
       <div className="chat-bookmark">
         {!messages ? (
           <NoDataAvailable message="No bookmark available" />
@@ -26,6 +25,8 @@ const ChatBookmark = ({ date, messages }) => {
           messages &&
           messages.map((message, index) => (
             <div className="message" key={index}>
+              <div className="date">{message.localDate}</div>
+
               <div className="header-content">
                 <div className="avatar">
                   {/* <img src={message.avatar} alt={`${message.sender} avatar`} /> */}
@@ -33,7 +34,7 @@ const ChatBookmark = ({ date, messages }) => {
                 </div>
                 <div className="content">
                   <div className="header">
-                    <div className="sender">{message.sender}</div>
+                    <div className="sender">{message.from}</div>
                     {bookmarks[index] ? (
                       <FaBookmark
                         className="bookmark-icon"
@@ -51,7 +52,8 @@ const ChatBookmark = ({ date, messages }) => {
               <div className="bookmark-text">{message.text}</div>
               <div className="saved-by">
                 <span> Saved by </span>
-                {message.savedBy}
+                You
+                {/* {message.savedBy} */}
               </div>
             </div>
           ))

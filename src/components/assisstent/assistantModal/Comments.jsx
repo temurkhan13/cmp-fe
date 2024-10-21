@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaEllipsisV, FaCheck } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
@@ -17,11 +17,12 @@ import {
 } from '../../../redux/slices/workspaceSlice';
 import NoDataAvailable from '../../common/NoDataAvailable';
 
-// import {
-//   useAddReplyMutation,
-//   useUpdateReplyMutation,
-//   useRemoveReplyMutation,
-// } from '../../../redux/api/workspaceApi';
+import {
+  useRemoveCommentMutation
+  // useAddReplyMutation,
+  // useUpdateReplyMutation,
+  // useRemoveReplyMutation,
+} from '../../../redux/api/workspaceApi';
 
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Comments = ({ comments }) => {
   );
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
   const chatId = useSelector((state) => state.workspaces.currentChatId);
+  const [removeComment] = useRemoveCommentMutation();
 
   const [selectedComment, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
@@ -39,6 +41,25 @@ const Comments = ({ comments }) => {
   const [editedReplyText, setEditedReplyText] = useState(''); // Separate state for reply text
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [photoPath, setPhotoPath] = useState('false');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setPhotoPath(storedUser.photoPath);
+      setUser(storedUser);
+    }
+  }, []);
+
+  const getInitials = () => {
+    if (!user) {
+      return 'N/A';
+    }
+    return `${user.firstName?.[0] || ''}${
+      user.lastName?.[0] || ''
+    }`.toUpperCase();
+  };
 
   const handleEditComment = (commentId) => {
     setEditingCommentId(commentId);
@@ -73,11 +94,11 @@ const Comments = ({ comments }) => {
     setEditedReplyText('');
   };
 
-  const handleDeleteComment = (commentId, isReply, parentCommentId) => {
+  const handleDeleteComment = async (commentId, isReply, parentCommentId) => {
     if (isReply) {
       dispatch(removeReply({ commentId: parentCommentId, replyId: commentId }));
     } else {
-      dispatch(removeComment({ commentId }));
+      await removeComment( {workspaceId, folderId, chatId, commentId})
     }
     setShowDropdown(false); // Close dropdown after deletion
     setSelectedComment(null);
@@ -130,7 +151,18 @@ const Comments = ({ comments }) => {
                 <span className="comment-time">{comment.timestamp}</span>
                 <div className="comment">
                   <div className="avatar">
-                    <RxAvatar />
+                    {/* <RxAvatar /> */}
+                    {photoPath ? (
+                      <img
+                        src={photoPath}
+                        alt="User"
+                        className="ProfileImage"
+                      />
+                    ) : (
+                      <div className="initials-placeholder">
+                        {getInitials()}
+                      </div>
+                    )}
                   </div>
                   <div className="comment-content">
                     <div className="comment-header">
@@ -150,9 +182,10 @@ const Comments = ({ comments }) => {
                           Edit Comment
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onClick={() =>
-                            handleDeleteComment(comment.commentId, false)
-                          }
+                          onClick={() => {
+                            console.log(comment, 'commentcomment')
+                            handleDeleteComment(comment._id, false);
+                          }}
                         >
                           Delete Comment
                         </Dropdown.Item>
@@ -301,6 +334,27 @@ const Comments = ({ comments }) => {
       </div>
       <hr />
       <style>{`
+        .ProfileImage {
+        s  height: 4rem;
+          width: 4rem;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+        .initials-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: #007bff;
+          color: #ffffff;
+          font-size: 18px;
+          font-weight: bold;
+          text-align: center;
+          margin-right: 8px;
+          cursor: pointer;
+        }
           .chat-container {
             padding-left: 1rem;
             padding-right: 1rem;
