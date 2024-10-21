@@ -1,13 +1,15 @@
 import { useState } from "react";
 import apiClient from "../api/axios";
 import axios from "axios";
+import config from '../config/config';
+
 
 const useAssessment = () => {
   const [error, setError] = useState(null);
 
   const Assessment = async (message) => {
     try {
-      const response = await axios.post("/assessment/", {
+      const response = await axios.post(`${config.apiURL}`, {
         content: message,
        // history:[],
         //generalInfo:"",
