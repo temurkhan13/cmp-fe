@@ -124,7 +124,7 @@ const NewChat = () => {
     }
   };
 
-  const capitalizeFirstWord = (str) => {
+  const capitalizeFirstWord = (str='') => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
