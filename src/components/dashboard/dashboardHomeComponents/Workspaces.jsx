@@ -8,7 +8,7 @@ import { IoFolderOpen } from 'react-icons/io5';
 
 import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
-import { useAddWorkspaceMutation,useMoveToTrashMutation, useRestoreFromTrashMutation } from '../../../redux/api/workspaceApi';
+import { useAddWorkspaceMutation,useGetWorkspacesQuery,useMoveToTrashMutation, useRestoreFromTrashMutation, useUpdateWorkspaceMutation } from '../../../redux/api/workspaceApi';
 import CustomModal from '../../customModal/CustomModal';
 
 const Workspaces = ({ activeWorkspace, workspaces }) => {
@@ -80,21 +80,28 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
       </div>
 
       <div className="icons">
-        {workspaces.map((workspace, index) => (
-          <div key={index} className="icon-container">
-            <BsWindowStack
-              onClick={() => {
-                setSelectedWorkspace(workspace);
-                setIsModalOpen(true);
-              }}
-              className="collection-icon"
-            />
-            <span className="icon-label" title={workspace.workspaceName}>
-              {truncateString(workspace.workspaceName, 8)}
-            </span>
-          </div>
-        ))}
-      </div>
+  {workspaces.map((workspace, index) => (
+    <div key={index} className="icon-container">
+      <BsWindowStack
+        onClick={() => {
+          setSelectedWorkspace(workspace);
+          setIsModalOpen(true);
+          console.log('selectedWork:', workspace);
+          console.log('selectedWorkSpace:', selectedWorkspace);
+        }}
+        // Compare unique property like id to check if the workspace is selected
+        style={ selectedWorkspace?.id === workspace.id 
+          ? { color: 'black', transform: 'scale(1.1)' } 
+          : { color: 'grey' }}
+        className="collection-icon"
+      />
+      <span className="icon-label" title={workspace.workspaceName}>
+        {truncateString(workspace.workspaceName, 8)}
+      </span>
+    </div>
+  ))}
+</div>
+
 
       {isModalOpen && selectedWorkspace && (
         <div className="modal" ref={modalRef}>
@@ -334,9 +341,15 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
         }
         .workspace-input {
           border: 1px solid #ccc;
+          width: 100%;
           border-radius: 1rem;
           outline:none;
           padding: 1rem;
+          text-align: left;
+          font-size: 1.5rem;
+        }
+        .workspace-input::placeholder {
+        font-size: 1.5rem;
         }
         .create-workspace-btn {
           border: none;
@@ -403,6 +416,7 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
           .error-message{
           color: red;
           font-size:1.1rem;
+          margin: 0;
           }
           .workspace-description {
   width: 100%;
@@ -424,6 +438,8 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
   const [isMoveToTrashModalOpen, setMoveToTrashModalOpen] = useState(false);
 
   const [moveToTrash] = useMoveToTrashMutation();
+  const [updateWorkspace, { isSuccess }] = useUpdateWorkspaceMutation();
+  const { refetch } = useGetWorkspacesQuery(selectedWorkspace.userId);
   const [isRenaming, setIsRenaming] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -451,14 +467,33 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
     setInputValue(selectedWorkspace.workspaceName); // Reset to the current workspace name
   };
 
-  const handleSaveRename = () => {
+  const handleSaveRename = async () => {
     if (inputValue.trim().length < 3) {
       setErrorMessage('Please enter at least 3 characters.');
     } else {
-      // Save the new workspace name logic here
-      setIsRenaming(false); // Close rename mode
-      setErrorMessage('');
-      // Update workspace name here in the main component if necessary
+      try {
+        // Log the data before making the request to ensure it's correct
+        console.log('Sending to API:', {
+          workspaceId: selectedWorkspace.id,  // Ensure workspaceId is correct
+          workspaceName: inputValue.trim(),   // The new workspace name
+        });
+  
+        // Trigger the mutation to save the updated workspace name
+        const updatedWorkspace = await updateWorkspace({
+          workspaceId: selectedWorkspace.id,   // Ensure workspaceId is correct
+          workspaceName: inputValue.trim(),    // The new workspace name
+        }).unwrap();
+  
+        console.log('API response (updated workspace):', updatedWorkspace); // Log the API response
+  
+        // Refetch workspace data to update the UI after a successful mutation
+        refetch();  // Assuming you have a refetch function from your query
+        setIsRenaming(false); // Exit renaming mode
+        setErrorMessage('');  // Clear error message
+      } catch (error) {
+        setErrorMessage('Failed to update the workspace name.');
+        console.error('Error updating workspace:', error);
+      }
     }
   };
 
@@ -480,7 +515,11 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
   
   const handleMoveToTrash = async () => {
     try {
-      await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id });
+      console.log(selectedWorkspace)
+      const saveUserId = selectedWorkspace.userId;
+      console.log("User ID:", saveUserId);
+      await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id }).unwrap();  
+      refetch(); 
     } catch (error) {
       console.error('Error moving to trash:', error);
     }

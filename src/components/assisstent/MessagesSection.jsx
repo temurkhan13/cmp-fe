@@ -109,6 +109,9 @@ const MessagesSection = () => {
     folderId: folderId._id,
     chatId,
   });
+
+  console.log('chatData:', chat)
+
   const [messages, setMessages] = useState(chat ? chat.generalMessages : []);
 
   // const [chat, setChat] = useState(

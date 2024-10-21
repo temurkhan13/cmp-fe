@@ -10,6 +10,7 @@ import {
 } from '../../redux/slices/workspacesSlice';
 import CustomModal from '../customModal/CustomModal';
 import { truncateText } from '../../utils/helperFunction';
+import { useGetWorkspacesQuery, useMoveToTrashMutation, useUpdateWorkspaceMutation } from '../../redux/api/workspaceApi';
 
 const FileStructure = ({ workspace }) => {
   const navigate = useNavigate();
@@ -21,6 +22,9 @@ const FileStructure = ({ workspace }) => {
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
+  const [moveToTrash] = useMoveToTrashMutation();
+  const { refetch } = useGetWorkspacesQuery(workspace.id);
+  console.log('folderr:', workspace)
 
   const modalRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -76,7 +80,16 @@ const FileStructure = ({ workspace }) => {
     setNewFolderName(selectedFolder.folderName);
   };
 
-  const handleProceedMoveToTrash = () => {
+  const handleProceedMoveToTrash = async() => {
+    try {
+      console.log(workspace.folder)
+      const saveUserId = selectedFolder.userId;
+      console.log("User ID:", saveUserId);
+      await moveToTrash({ entityType: 'folder', id: selectedFolder.id }).unwrap();  
+      refetch(); 
+    } catch (error) {
+      console.error('Error moving to trash:', error);
+    }
     console.log('Moving folder to trash:', selectedFolder);
     setIsTrashModalOpen(false);
   };

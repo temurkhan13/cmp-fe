@@ -229,11 +229,6 @@ const Folder = ({ activeWorkspace }) => {
           flex-direction: column;
           gap: 10px;
         }
-        .workspace-input {
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-        }
         .create-workspace-btn {
           background-color: #C3E11D;
           color: #0B1444;
