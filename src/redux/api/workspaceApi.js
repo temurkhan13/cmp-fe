@@ -11,6 +11,7 @@ export const workspaceApi = createApi({
       //query: () => 'workspace',
       providesTags: ['Workspace'],
     }),
+      // `workspace/id`
     getWorkspace: builder.query({
       query: (workspaceId) => `workspace/${workspaceId}`,
     }),
@@ -24,14 +25,14 @@ export const workspaceApi = createApi({
     }),
     updateWorkspace: builder.mutation({
       query: (workspace) => ({
-        url: `workspaces/${workspace.workspaceId}`,
-        method: 'PUT',
+        url: `workspace/${workspace.workspaceId}`,
+        method: 'PATCH',
         body: workspace,
       }),
     }),
     removeWorkspace: builder.mutation({
       query: (workspaceId) => ({
-        url: `workspaces/${workspaceId}`,
+        url: `workspace/${workspaceId}`,
         method: 'DELETE',
       }),
     }),
@@ -46,14 +47,14 @@ export const workspaceApi = createApi({
     }),
     updateFolder: builder.mutation({
       query: ({ workspaceId, folder }) => ({
-        url: `workspaces/${workspaceId}/folders/${folder.folderId}`,
+        url: `workspace/${workspaceId}/folders/${folder.folderId}`,
         method: 'PUT',
         body: folder,
       }),
     }),
     removeFolder: builder.mutation({
       query: ({ workspaceId, folderId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}`,
         method: 'DELETE',
       }),
     }),
@@ -69,7 +70,7 @@ export const workspaceApi = createApi({
 
     // Query to fetch the full chat object
     getChat: builder.query({
-      query: ({ workspaceId, folderId, chatId }) => 
+      query: ( workspaceId, folderId, chatId ) => 
         `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/`,
       providesTags: (result, error, { workspaceId, folderId, chatId }) => [
         { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
@@ -80,14 +81,14 @@ export const workspaceApi = createApi({
     
     updateChat: builder.mutation({
       query: ({ workspaceId, folderId, chat }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chat.chatId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chat.chatId}`,
         method: 'PUT',
         body: chat,
       }),
     }),
     removeChat: builder.mutation({
       query: ({ workspaceId, folderId, chatId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/`,
         method: 'DELETE',
       }),
     }),
@@ -195,14 +196,14 @@ export const workspaceApi = createApi({
 
     updateMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, messageId, message }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${messageId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${messageId}`,
         method: 'PUT',
         body: message,
       }),
     }),
     removeMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, messageId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${messageId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/messages/${messageId}`,
         method: 'DELETE',
       }),
     }),
@@ -291,21 +292,21 @@ export const workspaceApi = createApi({
     // Shared Users
     addSharedUser: builder.mutation({
       query: ({ workspaceId, folderId, chatId, user }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/sharedUsers`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/sharedUsers`,
         method: 'POST',
         body: user,
       }),
     }),
     updateSharedUser: builder.mutation({
       query: ({ workspaceId, folderId, chatId, user }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/sharedUsers/${user.userId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/sharedUsers/${user.userId}`,
         method: 'PUT',
         body: user,
       }),
     }),
     removeSharedUser: builder.mutation({
       query: ({ workspaceId, folderId, chatId, userId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/sharedUsers/${userId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/sharedUsers/${userId}`,
         method: 'DELETE',
       }),
     }),
@@ -320,14 +321,14 @@ export const workspaceApi = createApi({
     }),
     updateComment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, comment }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${comment.commentId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${comment.commentId}`,
         method: 'PUT',
         body: "text:"+{comment},
       }),
     }),
     removeComment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, commentId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}`,
         method: 'DELETE',
       }),
     }),
@@ -349,14 +350,14 @@ export const workspaceApi = createApi({
         replyId,
         updatedReply,
       }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
         method: 'PUT',
         body: { text: updatedReply },
       }),
     }),
     removeReply: builder.mutation({
       query: ({ workspaceId, folderId, chatId, commentId, replyId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
         method: 'DELETE',
       }),
     }),
@@ -371,14 +372,14 @@ export const workspaceApi = createApi({
     }),
     updateBookmark: builder.mutation({
       query: ({ workspaceId, folderId, chatId, bookmark }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/bookmarks/${bookmark.bookmarkId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/bookmarks/${bookmark.bookmarkId}`,
         method: 'PUT',
         body: bookmark,
       }),
     }),
     removeBookmark: builder.mutation({
       query: ({ workspaceId, folderId, chatId, bookmarkId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/bookmarks/${bookmarkId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/bookmarks/${bookmarkId}`,
         method: 'DELETE',
       }),
     }),
@@ -386,21 +387,21 @@ export const workspaceApi = createApi({
     // Media
     addMedia: builder.mutation({
       query: ({ workspaceId, folderId, chatId, media }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/media`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/media`,
         method: 'POST',
         body: media,
       }),
     }),
     updateMedia: builder.mutation({
       query: ({ workspaceId, folderId, chatId, media }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/media/${media.mediaId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/media/${media.mediaId}`,
         method: 'PUT',
         body: media,
       }),
     }),
     removeMedia: builder.mutation({
       query: ({ workspaceId, folderId, chatId, mediaId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/media/${mediaId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/media/${mediaId}`,
         method: 'DELETE',
       }),
     }),
@@ -408,21 +409,21 @@ export const workspaceApi = createApi({
     // Tasks
     addTask: builder.mutation({
       query: ({ workspaceId, folderId, chatId, task }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/tasks`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/tasks`,
         method: 'POST',
         body: task,
       }),
     }),
     updateTask: builder.mutation({
       query: ({ workspaceId, folderId, chatId, task }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/tasks/${task.taskId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/tasks/${task.taskId}`,
         method: 'PUT',
         body: task,
       }),
     }),
     removeTask: builder.mutation({
       query: ({ workspaceId, folderId, chatId, taskId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/tasks/${taskId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/tasks/${taskId}`,
         method: 'DELETE',
       }),
     }),
@@ -430,21 +431,21 @@ export const workspaceApi = createApi({
     // Versions
     addVersion: builder.mutation({
       query: ({ workspaceId, folderId, chatId, version }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/versions`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/versions`,
         method: 'POST',
         body: version,
       }),
     }),
     updateVersion: builder.mutation({
       query: ({ workspaceId, folderId, chatId, version }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/versions/${version.versionId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/versions/${version.versionId}`,
         method: 'PUT',
         body: version,
       }),
     }),
     removeVersion: builder.mutation({
       query: ({ workspaceId, folderId, chatId, versionId }) => ({
-        url: `workspaces/${workspaceId}/folders/${folderId}/chats/${chatId}/versions/${versionId}`,
+        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/versions/${versionId}`,
         method: 'DELETE',
       }),
     }),
