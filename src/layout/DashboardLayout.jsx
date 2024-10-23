@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import 'boxicons/css/boxicons.min.css';
@@ -16,10 +16,31 @@ import { BiSolidSpreadsheet } from 'react-icons/bi';
 import { BsFilePlayFill } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GiArtificialHive } from 'react-icons/gi';
+import { useDispatch } from 'react-redux';
+import { getUser } from '../redux/slices/authSlice.js';
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user')); // Parse the user from localStorage
+        const userId = user ? user.id : null; // Extract user ID
+
+        if (userId) {
+          await dispatch(getUser(userId)); // Dispatch action to get user data
+        }
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    };
+    fetchUserData(); // Call the async function inside useEffect
+  }, []); // Empty dependency array to run only once
+
 
   const Menu = [
     {
