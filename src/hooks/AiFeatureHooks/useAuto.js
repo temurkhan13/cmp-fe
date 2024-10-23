@@ -22,7 +22,7 @@ const useAuto = () => {
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log('error', error.message);
+      console.error('error', error.message);
       setError(error.message);
     }
   };

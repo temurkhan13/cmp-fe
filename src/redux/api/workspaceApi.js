@@ -40,10 +40,10 @@ export const workspaceApi = createApi({
 
     // Folders
     addFolder: builder.mutation({
-      query: ({ workspaceId, folderName }) => ({
+      query: ({ workspaceId, folderName,businessInfo }) => ({
         url: `workspace/${workspaceId}/folder`,
         method: 'POST',
-        body: { folderName },
+        body: { folderName ,businessInfo},
       }),
     }),
     updateFolder: builder.mutation({
