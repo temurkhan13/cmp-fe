@@ -95,7 +95,7 @@ const splitContentIntoPages = (htmlContent) => {
   return pages;
 };
 
-const WordReportTemplate = ({ content }) => {
+const WordReportTemplate = ({ content, title }) => {
   const htmlContent = marked(content);
   const pages = splitContentIntoPages(htmlContent);
 
@@ -105,7 +105,7 @@ const WordReportTemplate = ({ content }) => {
         <div className="header">
           <img src={Sidebarlogo} alt="Logo" className="logo" />
         </div>
-        <h1>Change Vision/ Case For Change</h1>
+        <h1>{title}</h1>
         <div className="footer">
           <p>1234 Street Name</p>
           <p>City, State, ZIP</p>
