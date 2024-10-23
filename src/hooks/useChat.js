@@ -83,7 +83,6 @@ const useChat = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('chatWithApi response', response.data.message);
       setLoading(false);
       setError(null);
       return response.data.message;

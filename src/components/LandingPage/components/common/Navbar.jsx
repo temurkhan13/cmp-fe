@@ -47,59 +47,59 @@ const Navbar = () => {
           {isOpen ? <FaTimes /> : <FaBars />}
         </div>
         <ul className={isOpen ? 'nav-menu active' : 'nav-menu'}>
-          <li className="nav-item dropdown">
-            <button className="nav-links" onClick={toggleDropdownHome}>
-              User Cases &nbsp;
-              <img
-                className={dropdownHomeOpen ? 'dropdownrotate' : ''}
-                src={dropdown}
-                alt="dropdown"
-              />
-            </button>
-            {dropdownHomeOpen && (
-              <ul className="dropdown-menu">
-                <li>
-                  <a href="#home-sub1" className="dropdown-link">
-                    Sub Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="#home-sub2" className="dropdown-link">
-                    Sub Link 2
-                  </a>
-                </li>
-              </ul>
-            )}
-          </li>
-          <li className="nav-item dropdown">
-            <button className="nav-links" onClick={toggleDropdownAbout}>
-              Resources &nbsp;
-              <img
-                className={dropdownAboutOpen ? 'dropdownrotate' : ''}
-                src={dropdown}
-                alt="dropdown"
-              />
-            </button>
-            {dropdownAboutOpen && (
-              <ul className="dropdown-menu">
-                <li>
-                  <a href="#about-sub1" className="dropdown-link">
-                    Sub Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href="#about-sub2" className="dropdown-link">
-                    Sub Link 2
-                  </a>
-                </li>
-              </ul>
-            )}
-          </li>
-          <li className="nav-item">
-            <a href="#services" className="nav-links">
-              Pricing Plan
-            </a>
-          </li>
+          {/*<li className="nav-item dropdown">*/}
+          {/*  <button className="nav-links" onClick={toggleDropdownHome}>*/}
+          {/*    User Cases &nbsp;*/}
+          {/*    <img*/}
+          {/*      className={dropdownHomeOpen ? 'dropdownrotate' : ''}*/}
+          {/*      src={dropdown}*/}
+          {/*      alt="dropdown"*/}
+          {/*    />*/}
+          {/*  </button>*/}
+          {/*  {dropdownHomeOpen && (*/}
+          {/*    <ul className="dropdown-menu">*/}
+          {/*      <li>*/}
+          {/*        <a href="#home-sub1" className="dropdown-link">*/}
+          {/*          Sub Link 1*/}
+          {/*        </a>*/}
+          {/*      </li>*/}
+          {/*      <li>*/}
+          {/*        <a href="#home-sub2" className="dropdown-link">*/}
+          {/*          Sub Link 2*/}
+          {/*        </a>*/}
+          {/*      </li>*/}
+          {/*    </ul>*/}
+          {/*  )}*/}
+          {/*</li>*/}
+          {/*<li className="nav-item dropdown">*/}
+          {/*  <button className="nav-links" onClick={toggleDropdownAbout}>*/}
+          {/*    Resources &nbsp;*/}
+          {/*    <img*/}
+          {/*      className={dropdownAboutOpen ? 'dropdownrotate' : ''}*/}
+          {/*      src={dropdown}*/}
+          {/*      alt="dropdown"*/}
+          {/*    />*/}
+          {/*  </button>*/}
+          {/*  {dropdownAboutOpen && (*/}
+          {/*    <ul className="dropdown-menu">*/}
+          {/*      <li>*/}
+          {/*        <a href="#about-sub1" className="dropdown-link">*/}
+          {/*          Sub Link 1*/}
+          {/*        </a>*/}
+          {/*      </li>*/}
+          {/*      <li>*/}
+          {/*        <a href="#about-sub2" className="dropdown-link">*/}
+          {/*          Sub Link 2*/}
+          {/*        </a>*/}
+          {/*      </li>*/}
+          {/*    </ul>*/}
+          {/*  )}*/}
+          {/*</li>*/}
+          {/*<li className="nav-item">*/}
+          {/*  <a href="#services" className="nav-links">*/}
+          {/*    Pricing Plan*/}
+          {/*  </a>*/}
+          {/*</li>*/}
         </ul>
         <div className="navbar-buttons">
           <button

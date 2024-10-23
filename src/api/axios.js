@@ -47,9 +47,6 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    console.log('Request URL:', config.baseURL + config.url); // Log the full URL
-    console.log('Request Headers:', config.headers); // Log headers
-    console.log('Request Data:', config.data); // Log request data
     return config;
   },
   (error) => {

@@ -69,6 +69,29 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
+// Async thunk action to handle login
+export const getUserAsync = createAsyncThunk(
+  'auth/getUser',
+  async ( userId , thunkAPI) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${baseURL}/users/${userId}`,config);
+      const user = response.data;
+      // Store token and user in localStorage
+      localStorage.setItem('user', JSON.stringify(user));
+
+      return { user };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Async thunk action to handle full registration
 export const registerAsync = createAsyncThunk(
   'auth/register',
@@ -293,6 +316,7 @@ export default authSlice.reducer;
 export const { logout, rehydrateToken, resetError, resetLoading } = authSlice.actions;
 export {
   loginAsync as login,
+  getUserAsync as getUser,
   registerAsync as register,
   codeVerifyAsync as verify,
   resentVerificationCodeAsync as resendVerification,

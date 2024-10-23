@@ -1,7 +1,10 @@
 import { DottedBg, heroBg, heroBg2, MainBg } from '../../../assets';
 import { FaArrowRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <div class="container">
       <img class="main-bg" src={MainBg} alt="" />
@@ -10,7 +13,9 @@ const HeroSection = () => {
         <h1 class="hero-text">
           Transforming the <br /> future of <br /> Documentation
         </h1>
-        <button class="demo-button">
+        <button class="demo-button" onClick={() => {
+          navigate('/sign-up');
+        }}>
           Get Free Demo <FaArrowRight className="rotate-icon" />
         </button>
       </div>
