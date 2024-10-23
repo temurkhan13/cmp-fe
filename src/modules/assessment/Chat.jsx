@@ -82,7 +82,7 @@ const Chat = () => {
       <section>
         <NewChat data={data.chat.newChatDummyData} />
 
-        <MessagesSection />
+        <MessagesSection handleAssessmentSelect={handleAssessmentSelect} selectedAssessment={selectedAssessment} />
 
         <Assessments onAssessmentSelect={handleAssessmentSelect} />
       </section>
