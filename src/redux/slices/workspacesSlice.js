@@ -12,6 +12,7 @@ const workspacesSlice = createSlice({
     currentFolderId: null,
     currentChatId: null,
     currentAssessmentId: null,
+    currentSelectedTitle: ''
   },
   reducers: {
     setSelectedWorkspace: (state, action) => {
@@ -27,6 +28,9 @@ const workspacesSlice = createSlice({
     },
     setCurrentAssessmentId: (state, action) => {
       state.currentAssessmentId = action.payload;
+    },
+    setCurrentSelectedTitle: (state, action) => {
+      state.currentSelectedTitle = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -57,6 +61,7 @@ export const {
   setCurrentChatId,
   setCurrentAssessmentId,
   setSelectedFolder,
+  setCurrentSelectedTitle
 } = workspacesSlice.actions;
 export const selectWorkspace = (state) => state.workspaces.selectedWorkspace;
 export default workspacesSlice.reducer;
