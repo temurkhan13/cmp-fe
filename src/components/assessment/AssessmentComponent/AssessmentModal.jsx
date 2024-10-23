@@ -28,9 +28,9 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
         <div className="header">
           <h2 className="title">{title}</h2>
           <div className="headerButtons">
-            <button className="generate-button" onClick={handleRegenerate}>
+            {/* <button className="generate-button" onClick={handleRegenerate}>
               <IoSync style={{ marginRight: '0.5rem' }} /> Regenerate
-            </button>
+            </button> */}
             <button className="edit-button" onClick={openModal}>
               <MdModeEdit
                 style={{ marginRight: '0.3rem', fontSize: '1.5rem' }}

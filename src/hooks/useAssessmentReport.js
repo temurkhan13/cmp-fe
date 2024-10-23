@@ -2,16 +2,16 @@ import { useState } from "react";
 import axios from "axios";
 import config from '../config/config';
 
-const useAssessment = ({ workspaceId, folderId }) => {
+const useAssessmentReport = ({ workspaceId, folderId, assessmentId }) => {
   const [error, setError] = useState(null);
 
-  const Assessment = async (assessmentName) => {
+  const AssessmentReport = async (assessmentName, subReportId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment`,
+      const response = await axios.patch(
+        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment/${assessmentId}/subReport/${subReportId}`,
         {
-          assessmentName,
+          content: assessmentName,
         },
         {
           headers: {
@@ -21,7 +21,7 @@ const useAssessment = ({ workspaceId, folderId }) => {
       );
 
       console.log("Assessment hook response:", response.data);
-      const question = response.data.report[0]?.subReport[0]?.questionAnswer[0]?.question;
+      const question = response.data.question;
       console.log("Extracted question:", question);
 
       setError(null);
@@ -34,8 +34,8 @@ const useAssessment = ({ workspaceId, folderId }) => {
 
 
 
-  return { error, Assessment };
+  return { error, AssessmentReport };
 };
 
-export default useAssessment;
+export default useAssessmentReport;
 

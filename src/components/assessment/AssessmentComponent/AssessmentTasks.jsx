@@ -1,12 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Editor from './Editor';
 import AssessmentModal from './AssessmentModal';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import { useSelector } from 'react-redux';
+import { selectWorkspace } from '../../../redux/slices/workspacesSlice';
 
 const AssessmentTasks = ({ tasks }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const workspaceId = useSelector(
+    (state) => state.workspaces.currentWorkspaceId
+  );
+  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const selectedWorkspace = useSelector(selectWorkspace);
+  const [assessmentId, setAssessmentId] = useState('');
+  const [selectedFolder, setSelectedFolder] = useState({});
+  const [selectedReport, setSelectedReport] = useState();
+
+  const viewReport = (report) => {
+    setSelectedReport(report);
+    setIsModalOpen(true);
+  };
+  useEffect(() => {
+    if (workspaceId && folderId) {
+      const filteredFolders = selectedWorkspace.folders.filter(
+        (item) => item._id === folderId
+      );
+      if (
+        filteredFolders.length > 0 &&
+        filteredFolders[0].assessments.length > 0 &&
+        filteredFolders[0].assessments[0].report.length > 0
+      ) {
+        console.log(filteredFolders[0].assessments);
+        setAssessmentId(filteredFolders[0].assessments[0]._id);
+        setSelectedFolder(filteredFolders[0]);
+      }
+    }
+  }, [workspaceId, folderId]);
   const handleDownload = (format) => {
     console.log(`Download ${format} clicked`);
   };
@@ -16,9 +47,7 @@ const AssessmentTasks = ({ tasks }) => {
   };
 
   const getColor = (progress) => {
-    if (progress === 100) return { text: 'blue', background: '#ccffcc' };
-    if (progress >= 70) return { text: 'purple', background: '#e6ccff' };
-    if (progress >= 50) return { text: 'orange', background: '#ffe6cc' };
+    if (progress) return { text: 'blue', background: '#ccffcc' };
     return { text: 'red', background: '#ffcccc' };
   };
 
@@ -46,62 +75,61 @@ const AssessmentTasks = ({ tasks }) => {
           <span style={{ fontSize: '1.4rem', fontWeight: '500' }}>
             Generate All Reports
           </span>
-          {/* <span
-            style={{
-              color: collectiveColors.text,
-              backgroundColor: collectiveColors.background,
-              borderRadius: '1rem',
-              fontSize: '1.3rem',
-              padding: '0.1rem 0.5rem',
-            }}
-          >
-            {collectiveProgress}%
-          </span> */}
         </div>
-        {tasks.length === 0 ? (
-          <NoDataAvailable message="No tasks available" />
+        {selectedFolder &&
+        selectedFolder.assessments &&
+        selectedFolder.assessments.length === 0 ? (
+          <NoDataAvailable message="No reports available" />
         ) : (
           <div className="task-list">
-            {tasks.map((task, index) => {
-              const taskColors = getColor(task.progress);
-              return (
-                <div className="task-item" key={index}>
-                  <div className="task-info">
-                    <span className="task-name">{task.name}</span>
-                    {task.progress !== undefined && (
-                      <span
-                        className={`task-progress ${
-                          task.progress < 100 ? 'hover-show' : ''
-                        }`}
-                        style={{
-                          color: taskColors.text,
-                          backgroundColor: taskColors.background,
-                          borderRadius: '1rem',
-                          paddingLeft: '0.8rem',
-                          paddingRight: '0.8rem',
-                          fontSize: '1.2rem',
-                          fontWeight: '500',
-                        }}
-                      >
-                        {task.progress === 100
-                          ? 'Completed'
-                          : `${task.progress}%`}
+            {selectedFolder &&
+              selectedFolder.assessments &&
+              selectedFolder.assessments.map((assessment, index) => {
+                if (assessment.report.length === 0) return null;
+
+                const currentReport = assessment.report[0];
+
+                const taskColors = getColor(currentReport.finalReportURL);
+                return (
+                  <div className="task-item" key={index}>
+                    <div className="task-info">
+                      <span className="task-name">
+                        {currentReport.ReportTitle}
                       </span>
+                      {!currentReport.finalReportURL && (
+                        <span
+                          className={`task-progress ${
+                            !currentReport.finalReportURL ? 'hover-show' : ''
+                          }`}
+                          style={{
+                            color: taskColors.text,
+                            backgroundColor: taskColors.background,
+                            borderRadius: '1rem',
+                            paddingLeft: '0.8rem',
+                            paddingRight: '0.8rem',
+                            fontSize: '1.2rem',
+                            fontWeight: '500',
+                          }}
+                        >
+                          {currentReport.finalReportURL
+                            ? 'Completed'
+                            : `Not Completed yet`}
+                        </span>
+                      )}
+                    </div>
+                    {currentReport.finalReportURL && (
+                      <>
+                        <button
+                          className="complete-button"
+                          onClick={() => viewReport(currentReport)}
+                        >
+                          Link_Assessment
+                        </button>
+                      </>
                     )}
                   </div>
-                  {task.progress === 100 && (
-                    <>
-                      <button
-                        className="complete-button"
-                        onClick={() => setIsModalOpen(true)}
-                      >
-                        Link_Assessment
-                      </button>
-                    </>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         )}
         <style>{`
@@ -173,11 +201,21 @@ const AssessmentTasks = ({ tasks }) => {
       </div>
       {isModalOpen && (
         <AssessmentModal
-          title="Change Vision/Case for Change"
+          title={selectedReport.ReportTitle}
           content={
-            <Editor placeholder="Type your text here..." height="100vw" />
+            <Editor
+            title={selectedReport.ReportTitle}
+
+              data={selectedReport.finalReport}
+              placeholder="Type your text here..."
+              height="100vw"
+            />
           }
-          onDownload={handleDownload}
+          onDownload={() => {
+            const fullUrl = `${window.location.protocol}//${window.location.host}${selectedReport.finalReportURL}`;
+            window.open(fullUrl, '_blank');
+          }}
+          // onDownload={handleDownload}
           onClose={handleClose}
         />
       )}

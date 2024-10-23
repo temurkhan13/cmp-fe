@@ -3,7 +3,6 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import WordReportTemplate from '../../reports/WordReportTemplate';
 import ReactDOMServer from 'react-dom/server';
-import mockMarkdown from '../../reports/mockMarkdown';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -11,11 +10,11 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const Editor = ({ placeholder, height }) => {
+const Editor = ({ placeholder, height, data, title, }) => {
   const editor = useRef(null);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(data);
 
-  const markdownData = mockMarkdown[0];
+  const markdownData = data 
 
   const downloadPdf = () => {
     const editorContent = editor.current.value;
@@ -37,7 +36,7 @@ const Editor = ({ placeholder, height }) => {
 
   // Generate HTML for TrioPage
   const reportHtml = ReactDOMServer.renderToStaticMarkup(
-    <WordReportTemplate content={markdownData} />
+    <WordReportTemplate title={title} content={markdownData} />
   );
 
   const htmlToDocx = (html) => {};
@@ -141,7 +140,9 @@ const Editor = ({ placeholder, height }) => {
 
 Editor.propTypes = {
   placeholder: PropTypes.string,
+  title: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  data: PropTypes.any, 
 };
 
 Editor.defaultProps = {
