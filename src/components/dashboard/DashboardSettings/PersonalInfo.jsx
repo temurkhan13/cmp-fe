@@ -1,17 +1,17 @@
 import { useState } from 'react';
-// import ChangePassword from '../ChangePassword';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserAsync } from '../../../redux/slices/userSlice.js';
 
 const PersonalInfo = () => {
-  const [avatar, setAvatar] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  // const [role, setRole] = useState('');
-  // const [industry, setIndustry] = useState('');
-  // const [companySize, setCompanySize] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  // const [websiteURL, setWebsiteURL] = useState('');
-  // const [jobTitle, setJobTitle] = useState('');
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.auth.user); // Assuming current user is stored in auth state
+
+  const [avatar, setAvatar] = useState(currentUser?.photoPath || '');
+  const [firstName, setFirstName] = useState(currentUser?.firstName || '');
+  const [lastName, setLastName] = useState(currentUser?.lastName || '');
+  const [email, setEmail] = useState(currentUser?.email || '');
+  const [companyName, setCompanyName] = useState(currentUser?.companyName || '');
+  const [selectedFile, setSelectedFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -23,13 +23,41 @@ const PersonalInfo = () => {
         setAvatar(e.target.result);
       };
       reader.readAsDataURL(file);
+      setSelectedFile(file); // Save file for uploading
     } else {
       alert('File size should be less than 1 MB.');
     }
   };
 
+  // Function to generate initials image when avatar is deleted
+  const generateInitialsImage = () => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
+
+    canvas.width = 200;
+    canvas.height = 200;
+
+    // Set background color
+    context.fillStyle = '#C3E11D'; // Same color as avatar background
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Set text style
+    context.font = 'bold 80px Arial';
+    context.fillStyle = '#0B1444'; // Same color as text
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+
+    // Draw the initials in the center
+    context.fillText(initials, canvas.width / 2, canvas.height / 2);
+
+    return canvas.toDataURL('image/png');
+  };
+
   const handleImageDelete = () => {
-    setAvatar('');
+    const generatedImage = generateInitialsImage(); // Generate the initials image
+    setAvatar(generatedImage); // Set it as avatar
+    setSelectedFile(null); // Clear selected file
   };
 
   const validateForm = () => {
@@ -45,11 +73,47 @@ const PersonalInfo = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (validateForm()) {
-      // Submit form logic here
-      setSuccessMessage('Changes have been updated successfully!');
-      setTimeout(() => setSuccessMessage(''), 3000);
+      const updatedUserData = {
+        firstName,
+        lastName,
+        email,
+        companyName,
+      };
+
+      // If there's no selected file, use the generated initials image
+      const imageToSend = selectedFile ? selectedFile : dataURLToFile(avatar, 'initials.png');
+
+      const formData = {
+        userId: currentUser.id,
+        updatedUserData,
+        photoPath: imageToSend,
+      };
+
+      dispatch(updateUserAsync(formData)).then((result) => {
+        if (updateUserAsync.fulfilled.match(result)) {
+          setSuccessMessage('Changes have been updated successfully!');
+        } else {
+          setErrors({ form: 'Failed to update user information.' });
+        }
+
+        setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
+      });
     }
+  };
+
+  // Helper function to convert Base64 to File
+  const dataURLToFile = (dataUrl, filename) => {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   };
 
   return (
@@ -133,52 +197,6 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        {/* <div className="form-row">
-          <div className="input-wrapper">
-            <label>your Role</label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className={errors.role ? 'input-error' : ''}
-            >
-              <option value="">What is your role?</option>
-            </select>
-            {errors.role && <small className="error">{errors.role}</small>}
-          </div>
-        </div>
-
-        <div className="form-row">
-          <div className="input-wrapper">
-            <label>What industry are you in?</label>
-            <select
-              value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-              className={errors.industry ? 'input-error' : ''}
-            >
-              <option value="">What industry are you in?</option>
-            </select>
-            {errors.industry && (
-              <small className="error">{errors.industry}</small>
-            )}
-          </div>
-        </div> */}
-        {/* 
-        <div className="form-row">
-          <div className="input-wrapper">
-            <label>What size is your company?</label>
-            <select
-              value={companySize}
-              onChange={(e) => setCompanySize(e.target.value)}
-              className={errors.companySize ? 'input-error' : ''}
-            >
-              <option value="">What size is your company?</option>
-            </select>
-            {errors.companySize && (
-              <small className="error">{errors.companySize}</small>
-            )}
-          </div>
-        </div> */}
-
         <div className="form-row">
           <div className="input-wrapper">
             <label>What is your company name?</label>
@@ -195,45 +213,14 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        {/* <div className="form-row">
-          <div className="input-wrapper">
-            <label>What is your website URL?</label>
-            <input
-              type="url"
-              placeholder="Website URL"
-              value={websiteURL}
-              onChange={(e) => setWebsiteURL(e.target.value)}
-              className={errors.websiteURL ? 'input-error' : ''}
-            />
-            {errors.websiteURL && (
-              <small className="error">{errors.websiteURL}</small>
-            )}
-          </div>
-        </div> */}
-        {/* 
-        <div className="form-row">
-          <div className="input-wrapper">
-            <label>What is your job title?</label>
-            <input
-              type="text"
-              placeholder="Job Title"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-              className={errors.jobTitle ? 'input-error' : ''}
-            />
-            {errors.jobTitle && (
-              <small className="error">{errors.jobTitle}</small>
-            )}
-          </div>
-        </div> */}
-
         <button type="submit" className="save-button">
           Save Changes
         </button>
 
         {successMessage && <p className="success-message">{successMessage}</p>}
+        {errors.form && <p className="error-message">{errors.form}</p>}
       </form>
-      {/* <ChangePassword /> */}
+
       <style>{`
         .personal-info {
           margin: 0 auto;
@@ -250,15 +237,14 @@ const PersonalInfo = () => {
         }
 
         p {
-          // margin-bottom: 1rem;
           color: #777;
-          font-size:1.3rem;
+          font-size: 1.3rem;
         }
 
         .upload-section {
           display: flex;
           align-items: center;
-          margin: 2rem 0 ;
+          margin: 2rem 0;
         }
 
         .avatar {
@@ -285,8 +271,7 @@ const PersonalInfo = () => {
           font-size: 1.5rem;
           cursor: pointer;
           border-radius: 1rem;
-          top:0;
-          padding: 1rem
+          padding: 1rem;
         }
 
         .upload-input {
@@ -301,7 +286,7 @@ const PersonalInfo = () => {
           font-size: 1.4rem;
           border-radius: 1rem;
           color: #0B1444;
-          width:15rem;
+          width: 15rem;
         }
 
         small {
@@ -338,8 +323,7 @@ const PersonalInfo = () => {
           color: #000;
         }
 
-        .input-wrapper input,
-        .input-wrapper select {
+        .input-wrapper input {
           width: 100%;
           padding: 1rem;
           font-size: 1.4rem;

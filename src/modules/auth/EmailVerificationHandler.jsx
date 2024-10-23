@@ -148,8 +148,9 @@ const EmailVerificationHandler = () => {
   useEffect(() => {
     const userData = localStorage.getItem('user');
     const parsedData = JSON.parse(userData);
-    setVerificationData(parsedData.verificationCode.verify);
+    setVerificationData(parsedData.googleId || parsedData.verificationCode.verify);
   }, [verificationData]);
+
   return (
     <>
       {verificationData === false && (
