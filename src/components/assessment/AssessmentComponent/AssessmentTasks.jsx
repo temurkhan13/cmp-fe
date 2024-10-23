@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import Editor from './Editor';
 import AssessmentModal from './AssessmentModal';
 import NoDataAvailable from '../../common/NoDataAvailable';
-import { useSelector } from 'react-redux';
-import { selectWorkspace } from '../../../redux/slices/workspacesSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectWorkspace,
+  setCurrentSelectedTitle,
+} from '../../../redux/slices/workspacesSlice';
+import assessmentQnaData from '../../../data/chat/assessmentQnaData';
 
 const AssessmentTasks = ({ tasks }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
@@ -17,7 +22,7 @@ const AssessmentTasks = ({ tasks }) => {
   const [assessmentId, setAssessmentId] = useState('');
   const [selectedFolder, setSelectedFolder] = useState({});
   const [selectedReport, setSelectedReport] = useState();
-
+  const [mergeReports, setMergeRepoorts] = useState([]);
   const viewReport = (report) => {
     setSelectedReport(report);
     setIsModalOpen(true);
@@ -27,6 +32,30 @@ const AssessmentTasks = ({ tasks }) => {
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
+
+      if (filteredFolders[0].assessments.length > 0) {
+        const mergedData = assessmentQnaData.map((title) => {
+          // Check if there is a matching report title in the selectedFolder.assessments array
+          const matchingAssessment = filteredFolders[0].assessments.find(
+            (assessment) =>
+              assessment.report[0].subReport.some((report) => {
+                if (report.ReportTitle === title) {
+                  return assessment.report[0];
+                }
+              })
+          );
+
+          // If found, return the matching assessment object; otherwise, return the title
+          if (matchingAssessment) {
+            return matchingAssessment;
+          } else {
+            return { ReportTitle: title };
+          }
+        });
+
+        setMergeRepoorts(mergedData);
+      }
+
       if (
         filteredFolders.length > 0 &&
         filteredFolders[0].assessments.length > 0 &&
@@ -76,10 +105,103 @@ const AssessmentTasks = ({ tasks }) => {
             Generate All Reports
           </span>
         </div>
+
         {selectedFolder &&
         selectedFolder.assessments &&
         selectedFolder.assessments.length === 0 ? (
           <NoDataAvailable message="No reports available" />
+        ) : mergeReports.length > 0 ? (
+          <div className="task-list">
+            {mergeReports.map((assessment, index) => {
+              const currentReport = assessment.report
+                ? assessment.report[0]
+                : {};
+
+              const taskColors = getColor(
+                currentReport.finalReportURL || false
+              );
+              return (
+                <div className="task-item" key={index}>
+                  <div className="task-info">
+                    <span
+                      className="task-name"
+                      onClick={() =>
+                        dispatch(setCurrentSelectedTitle(assessment))
+                      }
+                    >
+                      {currentReport.ReportTitle
+                        ? currentReport.subReport[0].ReportTitle
+                        : assessment.ReportTitle}
+                    </span>
+                    {!currentReport.finalReportURL && (
+                      <span
+                        className={`task-progress ${
+                          !currentReport.finalReportURL ? 'hover-show' : ''
+                        }`}
+                        style={{
+                          color: taskColors.text,
+                          backgroundColor: taskColors.background,
+                          borderRadius: '1rem',
+                          paddingLeft: '0.8rem',
+                          paddingRight: '0.8rem',
+                          fontSize: '1.2rem',
+                          fontWeight: '500',
+                        }}
+                      >
+                        {currentReport.finalReportURL
+                          ? 'Completed'
+                          : `Not Completed yet`}
+                      </span>
+                    )}
+                  </div>
+                  {currentReport.finalReportURL && (
+                    <>
+                      <button
+                        className="complete-button"
+                        onClick={() => viewReport(currentReport)}
+                      >
+                        Link_Assessment
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : selectedFolder && Object.keys(selectedFolder).length === 0 ? (
+          <div className="task-list">
+            {assessmentQnaData.map((assessment, index) => {
+              const taskColors = getColor(false);
+              return (
+                <div className="task-item" key={index}>
+                  <div className="task-info">
+                    <span
+                      className="task-name"
+                      onClick={() =>
+                        dispatch(setCurrentSelectedTitle(assessment))
+                      }
+                    >
+                      {assessment}
+                    </span>
+                    <span
+                      className={`task-progress hover-show`}
+                      style={{
+                        color: taskColors.text,
+                        backgroundColor: taskColors.background,
+                        borderRadius: '1rem',
+                        paddingLeft: '0.8rem',
+                        paddingRight: '0.8rem',
+                        fontSize: '1.2rem',
+                        fontWeight: '500',
+                      }}
+                    >
+                      Not Started yet
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <div className="task-list">
             {selectedFolder &&
@@ -204,8 +326,7 @@ const AssessmentTasks = ({ tasks }) => {
           title={selectedReport.ReportTitle}
           content={
             <Editor
-            title={selectedReport.ReportTitle}
-
+              title={selectedReport.ReportTitle}
               data={selectedReport.finalReport}
               placeholder="Type your text here..."
               height="100vw"
