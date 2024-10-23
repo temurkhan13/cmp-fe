@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+
 import '../../styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
 import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
@@ -27,9 +29,17 @@ import useLonger from '../../hooks/AiFeatureHooks/useLonger';
 import useShorter from '../../hooks/AiFeatureHooks/useShorter';
 import useComprehensive from '../../hooks/AiFeatureHooks/useComprehensive';
 import usestartAssessment from '../../hooks/usestartAssessment';
-import useAssessment from '../../hooks/useAssessment';
+import useAssessmentReport from '../../hooks/useAssessmentReport';
 // chat upload pdf & text
 import useChat from '../../hooks/useChat';
+import { useSelector } from 'react-redux';
+import assessmentQnaData from '../../data/chat/assessmentQnaData';
+import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
+import { selectAllWorkspaces } from '../../redux/selectors/selectors';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
+import AssessmentModal from './AssessmentComponent/AssessmentModal';
+import Editor from './AssessmentComponent/Editor';
 
 const TopBar = ({
   progress,
@@ -59,13 +69,19 @@ const TopBar = ({
     </div>
   );
 };
-const MessagesSection = ({ selectedAssessment }) => {
+const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const location = useLocation();
   const { Questions } = location.state || {};
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
   const [chat, setChat] = useState([]);
+  const [generateSingleReport, setGenerateSingleReport] = useState(false);
+  const [finalReport, setFinalReport] = useState('');
+  const [reportTitle, setReportTitle] = useState('');
+  const [SubReportId, setSubReportId] = useState('');
+  const [fileUrl, setFileUrl] = useState('');
+  const [assessmentId, setAssessmentId] = useState('');
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
@@ -75,11 +91,22 @@ const MessagesSection = ({ selectedAssessment }) => {
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showTopBar, setShowTopBar] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
-
+  const workspaceId = useSelector(
+    (state) => state.workspaces.currentWorkspaceId
+  );
+  const folderId = useSelector((state) => state.workspaces.currentFolderId);
   // custom hooks
   const { StartAssessment } = usestartAssessment();
-  const { Assessment } = useAssessment();
-
+  const { AssessmentReport } = useAssessmentReport({
+    workspaceId,
+    folderId,
+    assessmentId,
+  });
+  const { GenerateSingleReport } = useGenerateSingleReport({
+    workspaceId,
+    folderId,
+    assessmentId,
+  });
   const { fixGrammar } = useGrammarFix();
   const { improveWriting } = useImproveWriting();
   const { summarize } = useSummarize();
@@ -88,6 +115,11 @@ const MessagesSection = ({ selectedAssessment }) => {
   const { autoWritingFnc } = useAuto();
   const { shortText } = useShorter();
   const { LongText } = useLonger();
+  const userId = useSelector((state) => state.auth.user?.id);
+  const workspacess = useSelector(selectAllWorkspaces);
+  const selectedWorkspace = useSelector(selectWorkspace);
+  const { refetch } = useGetWorkspacesQuery(userId);
+  const [firstPrompt, setFirstPrompt] = useState('');
 
   const { error, chatWithdoc } = useChat();
 
@@ -98,6 +130,14 @@ const MessagesSection = ({ selectedAssessment }) => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  useEffect(() => {
+    if (assessmentQnaData.length > 0) {
+      setText(assessmentQnaData[0]);
+    } else {
+      setText('');
+    }
+  }, []);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -116,14 +156,11 @@ const MessagesSection = ({ selectedAssessment }) => {
     console.log('Text:', text);
     console.log('Uploaded File:', file);
 
-    if (!text && !file) return;
-    if (text) {
+    // if (!text && !file) return;
+    if (firstPrompt) {
       setChat((prevChat) => [
         ...prevChat,
-        {
-          role: 'user',
-          content: text || null,
-        },
+        { role: 'user', content: firstPrompt || null },
       ]);
     } else {
       setChat((prevChat) => [
@@ -136,15 +173,18 @@ const MessagesSection = ({ selectedAssessment }) => {
       ]);
       scrollToBottom();
     }
-
     setLoading(true);
+
     try {
-      const response = await Assessment(text);
+      const response = await AssessmentReport(firstPrompt, SubReportId);
       if (response) {
         // set AI chat
-        setChat((prevChat) => [...prevChat, { role: 'ai', content: response }]);
+        setChat((prevChat) => [
+          ...prevChat,
+          { role: 'ai', content: response.content },
+        ]);
       }
-
+      setFirstPrompt('');
       setFile(null);
       document.getElementById('file-input').value = '';
       setText('');
@@ -283,6 +323,42 @@ const MessagesSection = ({ selectedAssessment }) => {
     // }
   };
 
+  useEffect(() => {
+    if (generateSingleReport && selectedWorkspace) {
+      const filteredFolders = selectedWorkspace.folders.filter(
+        (item) => item._id === folderId
+      );
+      if (
+        filteredFolders.length > 0 &&
+        filteredFolders[0].assessments.length > 0 &&
+        filteredFolders[0].assessments[0].report.length > 0
+      ) {
+        setFinalReport(filteredFolders[0].assessments[0].report[0].finalReport);
+        setReportTitle(filteredFolders[0].assessments[0].report[0].ReportTitle);
+        setFileUrl(filteredFolders[0].assessments[0].report[0].finalReportURL);
+        console.log(
+          filteredFolders[0].assessments[0].report[0],
+          'generateSingleReport'
+        );
+      }
+    }
+    if (selectedWorkspace) {
+      const filteredFolders = selectedWorkspace.folders.filter(
+        (item) => item._id === folderId
+      );
+      if (
+        filteredFolders.length > 0 &&
+        filteredFolders[0].assessments.length > 0 &&
+        filteredFolders[0].assessments[0].report.length > 0
+      ) {
+        setAssessmentId(filteredFolders[0].assessments[0]._id);
+        setSubReportId(
+          filteredFolders[0].assessments[0].report[0].subReport[0]._id
+        );
+      }
+    }
+  }, [selectedWorkspace]);
+
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
@@ -295,12 +371,24 @@ const MessagesSection = ({ selectedAssessment }) => {
         assessmentName,
         Questions
       );
+      refetch();
+
+
+      const filteredFolders = selectedWorkspace.folders.filter(
+        (item) => item._id === folderId
+      );
+
+      handleAssessmentSelect(filteredFolders[0].assessments[0]);
+      setAssessmentId(filteredFolders[0].assessments[0]._id);
+      setSubReportId(
+        filteredFolders[0].assessments[0].report[0].subReport[0]._id
+      );
+
       setChat((prevChat) => [
         ...prevChat,
         { role: 'ai', content: initialMessage },
       ]);
 
-      // Show input field after generating a report
       setShowInputField(true);
     } catch (error) {
       console.error('Start Assessment Error', error);
@@ -309,8 +397,11 @@ const MessagesSection = ({ selectedAssessment }) => {
     }
   };
 
-  const handleSingleReport = () => {
-    console.log('generate a single report ');
+  const handleSingleReport = async () => {
+    const data = await GenerateSingleReport();
+    console.log(data, 'data');
+    refetch();
+    setGenerateSingleReport(true);
   };
 
   useEffect(() => {
@@ -444,17 +535,15 @@ const MessagesSection = ({ selectedAssessment }) => {
           <div className="defaultPage">
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
-                {selectedAssessment} 
-                {/* Champions Survey */}
+                {selectedAssessment}
+                {assessmentQnaData.length > 0 ? assessmentQnaData[0] : ''}
               </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
                 benefits, risks, and success metrics.
               </p>
               <button
-                onClick={() =>
-                  handleStartAssessment('Change Vision/Case for Change')
-                }
+                onClick={() => handleStartAssessment(text)}
                 style={{
                   backgroundColor: 'rgba(195, 225, 29, 1)',
                   padding: '1rem',
@@ -520,8 +609,8 @@ const MessagesSection = ({ selectedAssessment }) => {
               <input
                 type="text"
                 placeholder="Enter text here.."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
+                value={firstPrompt}
+                onChange={(e) => setFirstPrompt(e.target.value)}
               />
               <div className="icons">
                 <label htmlFor="file-input">
@@ -530,6 +619,23 @@ const MessagesSection = ({ selectedAssessment }) => {
                 <IoSend onClick={handleSendMessage} className="send-icon " />
               </div>
             </div>
+            {generateSingleReport && (
+              <AssessmentModal
+                title={reportTitle}
+                content={
+                  <Editor
+                    placeholder="Type your text here..."
+                    height="100vw"
+                    data={finalReport}
+                  />
+                }
+                onDownload={() => {
+                  const fullUrl = `${window.location.protocol}//${window.location.host}${fileUrl}`;
+                  window.open(fullUrl, '_blank');
+                }}
+                onClose={() => setGenerateSingleReport(false)}
+              />
+            )}
           </div>
         </>
       )}
@@ -634,6 +740,11 @@ const MessagesSection = ({ selectedAssessment }) => {
       `}</style>
     </div>
   );
+};
+
+MessagesSection.propTypes = {
+  handleAssessmentSelect: PropTypes.func.isRequired,
+  selectedAssessment: PropTypes.object,
 };
 
 export default MessagesSection;

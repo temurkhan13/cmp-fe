@@ -52,6 +52,7 @@ const Folder = ({ activeWorkspace }) => {
         folderName: values.projectName,
       }).unwrap();
       refetch();
+      
       setIsNewFolderModalOpen(false);
       resetForm();
     } catch (error) {
