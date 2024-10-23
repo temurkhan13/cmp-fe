@@ -122,7 +122,7 @@ const NewChat = () => {
     <div
       className={`newChat ${sidebarCollapsed ? 'collapsed' : ''}`}
       ref={chatContainerRef}
-      style={{ overflowY: 'auto', height: '80vh' }}
+      style={{ overflowY: 'auto', height: '80vh', display: 'none' }}
     >
       <div
         className={`sidebar-header ${

@@ -38,8 +38,6 @@ import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
-import AssessmentModal from './AssessmentComponent/AssessmentModal';
-import Editor from './AssessmentComponent/Editor';
 
 const TopBar = ({
   progress,
@@ -94,6 +92,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
+  const selectedAssessmentTitle = useSelector(
+    (state) => state.workspaces.currentSelectedTitle
+  );
+
+  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle')
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
   // custom hooks
   const { StartAssessment } = usestartAssessment();
@@ -340,6 +343,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           filteredFolders[0].assessments[0].report[0],
           'generateSingleReport'
         );
+        setGenerateSingleReport(false);
       }
     }
     if (selectedWorkspace) {
@@ -357,8 +361,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         );
       }
     }
-  }, [selectedWorkspace]);
+  }, [generateSingleReport, selectedWorkspace]);
 
+  console.log(fileUrl, 'url')
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
@@ -398,10 +403,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSingleReport = async () => {
+    setLoading(true)
     const data = await GenerateSingleReport();
-    console.log(data, 'data');
-    refetch();
-    setGenerateSingleReport(true);
+    const fullUrl = `${data.data.report.finalReportURL}`;
+    window.open(fullUrl, '_blank');
+    setLoading(false)
+    setGenerateSingleReport(false);
+
   };
 
   useEffect(() => {
@@ -536,8 +544,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
                 {selectedAssessment}
-                {assessmentQnaData.length > 0 ? assessmentQnaData[0] : ''}
-              </p>
+                {selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle || (assessmentQnaData.length > 0 ? assessmentQnaData[0] : '')}
+                </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
                 benefits, risks, and success metrics.
@@ -619,23 +627,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 <IoSend onClick={handleSendMessage} className="send-icon " />
               </div>
             </div>
-            {generateSingleReport && (
-              <AssessmentModal
-                title={reportTitle}
-                content={
-                  <Editor
-                    placeholder="Type your text here..."
-                    height="100vw"
-                    data={finalReport}
-                  />
-                }
-                onDownload={() => {
-                  const fullUrl = `${window.location.protocol}//${window.location.host}${fileUrl}`;
-                  window.open(fullUrl, '_blank');
-                }}
-                onClose={() => setGenerateSingleReport(false)}
-              />
-            )}
           </div>
         </>
       )}
