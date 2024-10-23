@@ -31,7 +31,7 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
             {/* <button className="generate-button" onClick={handleRegenerate}>
               <IoSync style={{ marginRight: '0.5rem' }} /> Regenerate
             </button> */}
-            <button className="edit-button" onClick={openModal}>
+            <button className="edit-button" style={{display: 'none'}} onClick={openModal}>
               <MdModeEdit
                 style={{ marginRight: '0.3rem', fontSize: '1.5rem' }}
               />
@@ -41,13 +41,8 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
               <EditModal isOpen={isModalOpen} onClose={closeModal} />
             )}
             <div className="dropdown">
-              <Dropdown title="Download" buttonClassName="dropdown-btn">
-                <Dropdown.Item onClick={() => onDownload('pdf')}>
-                  Excel.csv
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => onDownload('docx')}>
-                  Word.docx
-                </Dropdown.Item>
+              <Dropdown  title="Download" buttonClassName="dropdown-btn">
+               
                 <Dropdown.Item onClick={() => onDownload('txt')}>
                   PDF.pdf
                 </Dropdown.Item>
