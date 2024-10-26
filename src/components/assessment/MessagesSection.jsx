@@ -125,6 +125,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [firstPrompt, setFirstPrompt] = useState('');
 
   const { error, chatWithdoc } = useChat();
+  const [photoPath, setPhotoPath] = useState('false');
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setPhotoPath(storedUser.photoPath);
+      setUser(storedUser);
+    }
+  }, []);
 
   const messagesEndRef = useRef(null);
 
@@ -274,7 +283,14 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       setPopupVisible(false);
     }
   };
-
+  const getInitials = () => {
+    if (!user) {
+      return 'N/A';
+    }
+    return `${user.firstName?.[0] || ''}${
+      user.lastName?.[0] || ''
+    }`.toUpperCase();
+  };
   // handle Tone change
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
@@ -483,7 +499,19 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                   {item.role === 'user' ? (
                     <div className="card">
                       <div>
-                        <img src={UserPic} alt="avatar" />
+                      {photoPath ? (
+          <img
+            src={photoPath}
+            alt="profile"
+            className="ProfileImage"            style={{ cursor: 'pointer' }}
+
+          />
+        ) : (
+          <div  className="initials-placeholder">
+            {getInitials()}
+          </div>
+        )}
+                        {/* <img src={UserPic} alt="avatar" /> */}
                       </div>
                       <div>
                         <p className="Heading">You</p>
@@ -713,6 +741,21 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       margin: 1rem 0;
       font-size: 1rem;
     }
+      .initials-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: #007bff;
+          color: #ffffff;
+          font-size: 18px;
+          font-weight: bold;
+          text-align: center;
+          margin-right: 8px;
+          cursor: pointer;
+        }
     .message-action-icons {
       display: flex;
       // gap: 0.5rem;
