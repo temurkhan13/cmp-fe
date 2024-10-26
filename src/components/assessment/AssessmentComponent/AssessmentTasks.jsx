@@ -117,6 +117,7 @@ const AssessmentTasks = ({ tasks }) => {
                 ? assessment.report[0]
                 : {};
 
+              console.log(assessment, 'assessment');
               const taskColors = getColor(
                 currentReport.finalReportURL || false
               );
@@ -126,7 +127,13 @@ const AssessmentTasks = ({ tasks }) => {
                     <span
                       className="task-name"
                       onClick={() =>
-                        dispatch(setCurrentSelectedTitle(assessment))
+                        dispatch(
+                          setCurrentSelectedTitle(
+                            assessment.ReportTitle ||
+                              assessment.report[0].subReport[0].ReportTitle ||
+                              assessment.report[0].ReportTitle
+                          )
+                        )
                       }
                     >
                       {currentReport.ReportTitle
@@ -177,9 +184,10 @@ const AssessmentTasks = ({ tasks }) => {
                   <div className="task-info">
                     <span
                       className="task-name"
-                      onClick={() =>
+                      onClick={() => {
+
                         dispatch(setCurrentSelectedTitle(assessment))
-                      }
+                      }}
                     >
                       {assessment}
                     </span>
