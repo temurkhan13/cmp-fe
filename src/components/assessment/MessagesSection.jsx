@@ -38,6 +38,7 @@ import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
+import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 
 const TopBar = ({
   progress,
@@ -123,6 +124,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const selectedWorkspace = useSelector(selectWorkspace);
   const { refetch } = useGetWorkspacesQuery(userId);
   const [firstPrompt, setFirstPrompt] = useState('');
+  const { handleInspire } = useInspire();
 
   const { error, chatWithdoc } = useChat();
   const [photoPath, setPhotoPath] = useState('false');
@@ -208,12 +210,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleInspireClick = async () => {
-    // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
-    // const inspiredText = await handleInspire(answers[currentQuestionKey]);
-    // setAnswers({
-    //   ...answers,
-    //   [currentQuestionKey]: inspiredText,
-    // });
+    setLoading(true);
+    const inspiredText = await handleInspire(chat[chat.length - 1].content);
+    setFirstPrompt(inspiredText);
+    setLoading(false);
   };
 
   // Ask-Ai
@@ -379,7 +379,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     }
   }, [generateSingleReport, selectedWorkspace]);
 
-  console.log(fileUrl, 'url');
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
@@ -395,14 +394,16 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       refetch();
 
       console.log(initialResponse, 'initialMessage');
-      const initialMessage = initialResponse.report[0].subReport[0].questionAnswer[0].question.content;
+      const initialMessage =
+        initialResponse.report[0].subReport[0].questionAnswer[0].question
+          .content;
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
 
       handleAssessmentSelect(filteredFolders[0].assessments[0]);
       // setAssessmentId(filteredFolders[0].assessments[0]._id);
-      setAssessmentId(initialResponse._id)
+      setAssessmentId(initialResponse._id);
       setSubReportId(initialResponse.report[0].subReport[0]._id);
       // setSubReportId(
       //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
@@ -427,6 +428,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     const fullUrl = `${data.data.report.finalReportURL}`;
     window.open(fullUrl, '_blank');
     setLoading(false);
+    refetch();
     setGenerateSingleReport(false);
   };
 
@@ -499,18 +501,18 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                   {item.role === 'user' ? (
                     <div className="card">
                       <div>
-                      {photoPath ? (
-          <img
-            src={photoPath}
-            alt="profile"
-            className="ProfileImage"            style={{ cursor: 'pointer' }}
-
-          />
-        ) : (
-          <div  className="initials-placeholder">
-            {getInitials()}
-          </div>
-        )}
+                        {photoPath ? (
+                          <img
+                            src={photoPath}
+                            alt="profile"
+                            className="ProfileImage"
+                            style={{ cursor: 'pointer' }}
+                          />
+                        ) : (
+                          <div className="initials-placeholder">
+                            {getInitials()}
+                          </div>
+                        )}
                         {/* <img src={UserPic} alt="avatar" /> */}
                       </div>
                       <div>

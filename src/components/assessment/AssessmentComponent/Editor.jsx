@@ -125,7 +125,6 @@ const Editor = ({ placeholder, height, data, title, }) => {
   return (
     <div>
       {' '}
-      <button onClick={downloadPdf}>Download as PDF</button>
       <JoditEditor
         ref={editor}
         value={content}
