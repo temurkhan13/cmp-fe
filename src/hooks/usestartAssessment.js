@@ -60,8 +60,7 @@ const useStartAssessment = () => {
         'hook response:',
         response.data.report[0].subReport[0].questionAnswer[0].question
       );
-      return response.data.report[0].subReport[0].questionAnswer[0].question
-        .content;
+      return response.data;
     } catch (error) {
       console.log('assessment error', error.message);
       setError(error.message);
