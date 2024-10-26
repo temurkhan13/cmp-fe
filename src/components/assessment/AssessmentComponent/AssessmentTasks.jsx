@@ -39,6 +39,7 @@ const AssessmentTasks = ({ tasks }) => {
           const matchingAssessment = filteredFolders[0].assessments.find(
             (assessment) =>
               assessment.report[0].subReport.some((report) => {
+                console.log(assessment.report)
                 if (report.ReportTitle === title) {
                   return assessment.report[0];
                 }
@@ -117,7 +118,6 @@ const AssessmentTasks = ({ tasks }) => {
                 ? assessment.report[0]
                 : {};
 
-              console.log(assessment, 'assessment');
               const taskColors = getColor(
                 currentReport.finalReportURL || false
               );
