@@ -153,6 +153,7 @@ const EmailVerificationHandler = () => {
     }
 
   }, [verificationData]);
+
   return (
     <>
       {verificationData === false && (

@@ -1,10 +1,8 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-
 import { FaFolderTree } from 'react-icons/fa6';
 import { useState } from 'react';
-
 import Modal from '../../common/Modal';
 import FileStructure from '../../dashboard/FileStructure';
 import {
@@ -21,7 +19,7 @@ const Folder = ({ activeWorkspace }) => {
   const userId = useSelector((state) => state.auth.user?.id);
 
   const currentWorkspace = useSelector(selectCurrentWorkspace);
-  const {  refetch } = useGetWorkspacesQuery(userId);
+  const { refetch } = useGetWorkspacesQuery(userId);
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -31,28 +29,32 @@ const Folder = ({ activeWorkspace }) => {
     companySize: Yup.string()
       .required('Company Size is required')
       .matches(/^[0-9]+$/, 'Company Size must be a number'),
-    websiteURL: Yup.string()
-      .url('Invalid URL format')
-      .required('Website URL is required'),
+    companyName: Yup.string().required('Company Name is required'),
     jobTitle: Yup.string().required('Job Title is required'),
+    industry: Yup.string().required('Industry is required'),
   });
 
   const initialValues = {
     projectName: '',
     companySize: '',
-    websiteURL: '',
+    companyName: '',
     jobTitle: '',
+    industry: '',
   };
 
   const handleNewFolderSubmit = async (values, { resetForm }) => {
     try {
-      console.log(values.projectName);
       await addFolder({
         workspaceId: activeWorkspace.id,
         folderName: values.projectName,
+        businessInfo: {
+          companySize: values.companySize,
+          companyName: values.companyName,
+          jobTitle: values.jobTitle,
+          industry: values.industry,
+        },
       }).unwrap();
       refetch();
-      
       setIsNewFolderModalOpen(false);
       resetForm();
     } catch (error) {
@@ -85,11 +87,14 @@ const Folder = ({ activeWorkspace }) => {
           </div>
         </div>
       </section>
+
       {activeWorkspace ? (
         <FileStructure workspace={currentWorkspace} />
       ) : (
-        <>No Active Workspace</>
+        <></>
       )}
+
+
       {isNewFolderModalOpen && (
         <Modal
           title="Create New Project"
@@ -125,6 +130,23 @@ const Folder = ({ activeWorkspace }) => {
                     <p className="business-info-heading">Your Business Info</p>
                     <hr />
 
+                    <label className="modal-label">Company Name</label>
+                    <Field
+                      type="text"
+                      name="companyName"
+                      placeholder="Enter Company Name"
+                      className={`workspace-input ${
+                        touched.companyName && errors.companyName
+                          ? 'error-border'
+                          : ''
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="companyName"
+                      component="div"
+                      className="error-message"
+                    />
+
                     <label className="modal-label">Company Size</label>
                     <Field
                       type="text"
@@ -142,23 +164,6 @@ const Folder = ({ activeWorkspace }) => {
                       className="error-message"
                     />
 
-                    <label className="modal-label">Website URL</label>
-                    <Field
-                      type="text"
-                      name="websiteURL"
-                      placeholder="Enter website URL"
-                      className={`workspace-input ${
-                        touched.websiteURL && errors.websiteURL
-                          ? 'error-border'
-                          : ''
-                      }`}
-                    />
-                    <ErrorMessage
-                      name="websiteURL"
-                      component="div"
-                      className="error-message"
-                    />
-
                     <label className="modal-label">Job Title</label>
                     <Field
                       type="text"
@@ -172,6 +177,23 @@ const Folder = ({ activeWorkspace }) => {
                     />
                     <ErrorMessage
                       name="jobTitle"
+                      component="div"
+                      className="error-message"
+                    />
+
+                    <label className="modal-label">Industry</label>
+                    <Field
+                      type="text"
+                      name="industry"
+                      placeholder="Enter Industry"
+                      className={`workspace-input ${
+                        touched.industry && errors.industry
+                          ? 'error-border'
+                          : ''
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="industry"
                       component="div"
                       className="error-message"
                     />
@@ -214,17 +236,17 @@ const Folder = ({ activeWorkspace }) => {
           font-weight: 600;
           line-height: 36px;
           letter-spacing: 0.12px;
-          font-size:2rem;
+          font-size: 2rem;
           text-align: left;
           color: black;
-          display:flex;
+          display: flex;
           align-items: center;
-          gap:1rem;
+          gap: 1rem;
         }
         .generate .assiss-btn {
-          background-color: #C3E11D;
-          color: #0B1444;
-          border:none;
+          background-color: #c3e11d;
+          color: #0b1444;
+          border: none;
           display: flex;
           text-align: center;
           align-items: center;
@@ -245,8 +267,8 @@ const Folder = ({ activeWorkspace }) => {
           gap: 10px;
         }
         .create-workspace-btn {
-          background-color: #C3E11D;
-          color: #0B1444;
+          background-color: #c3e11d;
+          color: #0b1444;
           padding: 1rem 2rem;
           font-size: 1.6rem;
           border: none;
