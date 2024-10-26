@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 import { BiSearch } from 'react-icons/bi';
@@ -40,6 +40,26 @@ const Header = ({ activeWorkspace, workspaces }) => {
     setIsImproveResponseModalOpen(true);
   const handleCloseImproveResponseModal = () =>
     setIsImproveResponseModalOpen(false);
+
+  const [photoPath, setPhotoPath] = useState('false');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setPhotoPath(storedUser.photoPath);
+      setUser(storedUser);
+    }
+  }, []);
+
+  const getInitials = () => {
+    if (!user) {
+      return 'N/A';
+    }
+    return `${user.firstName?.[0] || ''}${
+      user.lastName?.[0] || ''
+    }`.toUpperCase();
+  };
 
   return (
     <div className="topbar">
@@ -85,12 +105,20 @@ const Header = ({ activeWorkspace, workspaces }) => {
             <span>Share</span>
           </div>
         </div>
-        <img
-          src={assets.common.profile}
-          alt="profile"
-          onClick={toggleProfileDropdown}
-          style={{ cursor: 'pointer' }}
-        />
+        {photoPath ? (
+          <img
+            src={photoPath}
+            alt="profile"
+            className="ProfileImage"
+            onClick={toggleProfileDropdown}
+            style={{ cursor: 'pointer' }}
+
+          />
+        ) : (
+          <div onClick={toggleProfileDropdown} className="initials-placeholder">
+            {getInitials()}
+          </div>
+        )}
       </section>
       {isProfileDropdownOpen && (
         <ProfileDropdown onClose={toggleProfileDropdown} />

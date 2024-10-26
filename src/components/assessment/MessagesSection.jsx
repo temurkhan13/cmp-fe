@@ -96,7 +96,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     (state) => state.workspaces.currentSelectedTitle
   );
 
-  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle')
+  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle');
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
   // custom hooks
   const { StartAssessment } = usestartAssessment();
@@ -355,15 +355,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         filteredFolders[0].assessments.length > 0 &&
         filteredFolders[0].assessments[0].report.length > 0
       ) {
-        setAssessmentId(filteredFolders[0].assessments[0]._id);
-        setSubReportId(
-          filteredFolders[0].assessments[0].report[0].subReport[0]._id
-        );
+        // setAssessmentId(filteredFolders[0].assessments[0]._id);
+        // setSubReportId(
+        //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
+        // );
       }
     }
   }, [generateSingleReport, selectedWorkspace]);
 
-  console.log(fileUrl, 'url')
+  console.log(fileUrl, 'url');
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
@@ -371,23 +371,26 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const handleStartAssessment = async (assessmentName) => {
     try {
       setAssessmentLoading(true);
-      const initialMessage = await StartAssessment(
+      const initialResponse = await StartAssessment(
         '',
         assessmentName,
         Questions
       );
       refetch();
 
-
+      console.log(initialResponse, 'initialMessage');
+      const initialMessage = initialResponse.report[0].subReport[0].questionAnswer[0].question.content;
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
 
       handleAssessmentSelect(filteredFolders[0].assessments[0]);
-      setAssessmentId(filteredFolders[0].assessments[0]._id);
-      setSubReportId(
-        filteredFolders[0].assessments[0].report[0].subReport[0]._id
-      );
+      // setAssessmentId(filteredFolders[0].assessments[0]._id);
+      setAssessmentId(initialResponse._id)
+      setSubReportId(initialResponse.report[0].subReport[0]._id);
+      // setSubReportId(
+      //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
+      // );
 
       setChat((prevChat) => [
         ...prevChat,
@@ -403,13 +406,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSingleReport = async () => {
-    setLoading(true)
+    setLoading(true);
     const data = await GenerateSingleReport();
     const fullUrl = `${data.data.report.finalReportURL}`;
     window.open(fullUrl, '_blank');
-    setLoading(false)
+    setLoading(false);
     setGenerateSingleReport(false);
-
   };
 
   useEffect(() => {
@@ -544,14 +546,25 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
                 {selectedAssessment}
-                {selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle || (assessmentQnaData.length > 0 ? assessmentQnaData[0] : '')}
-                </p>
+                {selectedAssessmentTitle.report?.[0]?.subReport?.[0]
+                  ?.ReportTitle ||
+                  selectedAssessmentTitle.ReportTitle ||
+                  selectedAssessmentTitle ||
+                  (assessmentQnaData.length > 0
+                    ? assessmentQnaData[0]
+                    : '')}{' '}
+              </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
                 benefits, risks, and success metrics.
               </p>
               <button
-                onClick={() => handleStartAssessment(text)}
+                onClick={() =>
+                  handleStartAssessment(
+                    selectedAssessmentTitle?.ReportTitle ||
+                      selectedAssessmentTitle
+                  )
+                }
                 style={{
                   backgroundColor: 'rgba(195, 225, 29, 1)',
                   padding: '1rem',
