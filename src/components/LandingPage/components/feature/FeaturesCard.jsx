@@ -6,9 +6,9 @@ const FeaturesCard = (props) => {
       <div className="featurecontent">
         <h2 className="title">{props.title}</h2>
         <p className="description">{props.desc}</p>
-        <button className="learn-more">
-          Learn more <IoIosArrowRoundForward size={20} />
-        </button>
+        {/*<button className="learn-more">*/}
+        {/*  Learn more <IoIosArrowRoundForward size={20} />*/}
+        {/*</button>*/}
       </div>
       <style>
         {`

@@ -5,11 +5,11 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import { CgProfile } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import NotificationDropdown from './NotificationDropdown';
-import LoadingBar from 'react-redux-loading-bar';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
 import { logout } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { persistor } from '../../redux/store/store.js';
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -56,10 +56,15 @@ const Header = () => {
 
   const handleLogout = async () => {
     await dispatch(logout());
+    persistor.purge();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // OR if you want to clear everything
+    // localStorage.clear();
     navigate('/log-in');
-    console.log('Logout clicked');
     closeDropdowns();
   };
+
 
   const handleOpenChangePasswordModal = () => {
     setChangePasswordModalOpen(true);
@@ -72,9 +77,9 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div>
-        <LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} />
-      </div>
+      {/*<div>*/}
+      {/*  <LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} />*/}
+      {/*</div>*/}
       <div className="ProfileBar">
         <div className="bellWrapper" onClick={handleNotificationClick}>
           <CiBellOn className="BellIcon" />
@@ -144,7 +149,7 @@ const Header = () => {
       <style>{`
         .header {
           display: flex;
-          justify-content: space-between;
+          justify-content: end;
           padding: 1% 2%;
         }
 
@@ -191,14 +196,34 @@ const Header = () => {
 
         .dropdownMenu {
           position: absolute;
-          top: 4.5rem;
-          right: 0rem;
-          background-color: white;
-          box-shadow: 0 1rem 5rem rgba(0, 0, 0, 0.2);
-          border-radius: 1rem;
-          overflow: hidden;
+          top: 5rem;
+          right: 0;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          padding: 0.5rem;
           z-index: 1001;
-          width: 22rem;
+          width: 18rem;
+        }
+
+        .dropdownItem {
+          display: flex;
+          align-items: center;
+          padding: 1rem;
+          cursor: pointer;
+          font-size: 1.4rem;
+          border-radius: 5px;
+          transition: background-color 0.3s ease;
+        }
+
+        .dropdownItem:hover {
+          background-color: #f0f0f0;
+        }
+
+        .dropdownIcon {
+          margin-right: 1rem;
+          font-size: 1.8rem;
         }
 
         .initials-placeholder {
@@ -215,23 +240,6 @@ const Header = () => {
           text-align: center;
           margin-right: 8px;
           cursor: pointer;
-        }
-        .dropdownItem {
-          display: flex;
-          align-items: center;
-          padding: 0.5rem 1.5rem;
-          cursor: pointer;
-          font-size: 1.6rem;
-          transition: background-color 0.3s ease;
-        }
-
-        .dropdownItem:hover {
-          background-color: #f0f0f0;
-        }
-
-        .dropdownIcon {
-          margin-right: 0.8rem;
-          font-size: 1.8rem;
         }
 
         .header-overlay {

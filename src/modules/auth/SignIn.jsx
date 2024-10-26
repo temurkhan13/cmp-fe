@@ -1,21 +1,25 @@
-import Components from '../../components';
-import assets from '../../assets';
-import data from '../../data';
-import { signinWithGoogle } from './SignInWithGoogle';
+import { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, googleLogin } from '../../redux/slices/authSlice';
-import { useEffect } from 'react';
-import axios from 'axios';
+import Components from '../../components';
+import { signinWithGoogle } from './SignInWithGoogle';
+import assets from '../../assets/index.js';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const SignIn = () => {
-  //const { isLoading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, isLoading ,error } = useSelector((state) => state.auth);
+  // Destructure the relevant state from the auth slice
+  const { user, isLoading } = useSelector((state) => state.auth);
 
+  // Local state for handling error display and password visibility
+  const [apiError, setApiError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Redirect user to dashboard if authenticated
   useEffect(() => {
     if (user) {
       navigate('/dashboard');
@@ -27,60 +31,39 @@ const SignIn = () => {
     password: '',
   };
 
+  // Handle form submission
   const handleLoginSubmit = async (email, password) => {
     try {
       const response = await dispatch(login({ email, password }));
-      console.log(response);
-      if (!response.error.message == 'Rejected')
-      {navigate('/dashboard');}
+
+      if (response.error) {
+        setApiError(response.payload.message || 'Login failed');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error('Login failed:', err);
+      setApiError('Login failed due to an unexpected error.');
     }
   };
 
-   // Function to handle the response once redirected back
-   const handleAuthResponse = async () => {
+  // Handle authentication response from Google
+  const handleAuthResponse = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get('accessToken');
     const refreshToken = urlParams.get('refreshToken');
 
-    console.log("accessToken: ",accessToken);
-    console.log("accessToken: ",refreshToken);
-
-    if (accessToken ) {
+    if (accessToken) {
       // Save tokens to localStorage
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
 
-      // Hit the API with the access token to get the user data
       try {
-        await dispatch(googleLogin({ accessToken,navigate, refreshToken }));
-        // const response = await axios.post(
-        //   'https://be.changeai.ai/api/auth/get-user-from-token',
-        //   {}, // Empty body
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   }
-        // );
-
-        // const user = response.data;
-        // // Save user data in localStorage
-        // localStorage.setItem('user', JSON.stringify(user));
-
-        // // Redirect to dashboard after successful login
-        // navigate('/dashboard');
+        await dispatch(googleLogin({ accessToken, navigate, refreshToken }));
       } catch (error) {
         console.error('Error fetching user data:', error);
-        // Redirect to login if there's an error fetching the user
-       // navigate('/');
       }
     }
-    //  else {
-    //   // Redirect to login if no tokens are present
-    //   navigate('/');
-    // }
   };
 
   // Handle authentication response on component mount
@@ -88,6 +71,10 @@ const SignIn = () => {
     handleAuthResponse();
   }, []);
 
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <Components.Feature.Container className="auth signIn">
@@ -115,14 +102,13 @@ const SignIn = () => {
           <span></span>
         </div>
       </header>
+
       <section>
         <Formik
           initialValues={initialValues}
-          validateOnMount
-          validationSchema={data.validation.validationAuth.validationSignIn}
-          onSubmit={(values, { resetForm }) => {
+          onSubmit={(values) => {
             handleLoginSubmit(values.email, values.password);
-            resetForm();
+            // resetForm();
           }}
         >
           {() => (
@@ -133,13 +119,25 @@ const SignIn = () => {
                 place="Enter your email"
                 type="email"
               />
-              <Components.Feature.FormInput
-                name="password"
-                label="Password"
-                place="Enter your password"
-                type="password"
-              />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
+              <div className="password-input-wrapper">
+                <Components.Feature.FormInput
+                  name="password"
+                  label="Password"
+                  place="Enter your password"
+                  type={showPassword ? 'text' : 'password'}
+                />
+                <span
+                  className="password-toggle-icon"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <FaEyeSlash size={20}/> : <FaEye size={20}/>}
+                </span>
+              </div>
+              {apiError && (
+                <p className="error-message">
+                  {apiError}
+                </p>
+              )}
               <section className="signIn_remember mb_Tertiary">
                 <div>
                   <input type="checkbox" />
@@ -147,7 +145,9 @@ const SignIn = () => {
                     Remember Me
                   </Components.Feature.Text>
                 </div>
-                <Link to="/forgot-password/verification">Forgot Password?</Link>
+                <Link to="/forgot-password/verification" className="forgot-password-link">
+                  Forgot Password?
+                </Link>
               </section>
               <Components.Feature.Button
                 className="primary"
@@ -160,18 +160,58 @@ const SignIn = () => {
           )}
         </Formik>
       </section>
+
       <center>
         <Components.Feature.Text className="primary m_1">
-          Don&apos;t have an account? <Link to="/sign-up">Sign Up</Link>
+          Don&apos;t have an account?{' '}
+          <Link to="/sign-up" className="sign-up-link">
+            Sign Up
+          </Link>
         </Components.Feature.Text>
       </center>
+
+      {/* Custom styles */}
+      <style>
+        {`
+          .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .forgot-password-link {
+            color: #1e90ff;
+            text-decoration: none;
+          }
+          .forgot-password-link:hover {
+            text-decoration: underline;
+          }
+          .sign-up-link {
+            color: #1e90ff;
+            text-decoration: none;
+            font-weight: bold;
+          }
+          .sign-up-link:hover {
+            text-decoration: underline;
+          }
+          .password-input-wrapper {
+            position: relative;
+          }
+          .password-toggle-icon {
+            position: absolute;
+            top: 70%;
+            right: 10px;
+            cursor: pointer;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #555;
+          }
+          .password-toggle-icon:hover {
+            color: #1e90ff;
+          }
+        `}
+      </style>
     </Components.Feature.Container>
   );
 };
 
 export default SignIn;
-
-
-// google Test SignIn
-//http://localhost:5173/log-in?accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NmU3MDAyZTY3MDhhYmY5YzE3ZWY0YzMiLCJpYXQiOjE3MjcxMzQyNDgsImV4cCI6MjY3Mzg0MDY0OCwidHlwZSI6ImFjY2VzcyJ9.4BGy6eCMBtOP3TMBB-EIeIdk9cuJmshsHTB5BbXylkw
-//refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NmU3MDAyZTY3MDhhYmY5YzE3ZWY0YzMiLCJpYXQiOjE3MjcxMzQyNDgsImV4cCI6MTcyNzI0MjI0OCwidHlwZSI6InJlZnJlc2gifQ.AekFwuZU8AxtlZQPZgIGIVsL28MtXxMGxTvqxws4cBU

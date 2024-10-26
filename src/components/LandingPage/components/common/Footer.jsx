@@ -84,13 +84,19 @@ const Footer = () => {
 
         @media screen and (min-width: 786px) {
           .footer-sections {
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(2, 1fr);
           }
+        }
+        .footer-brand{
+        display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
         .footer-section {
           display: flex;
           flex-direction: column;
+          align-items: center;
           gap: 0.25rem;
         }
 
@@ -162,37 +168,37 @@ const SocialIcon = ({ href, icon }) => (
 );
 
 const footerLinks = [
-  {
-    title: 'Product',
-    links: [
-      { label: 'Login', href: '#' },
-      { label: 'Pricing', href: '#' },
-      { label: 'Copy AI Reviews', href: '#' },
-      { label: 'Free AI Tools', href: '#' },
-      { label: 'GPL licenses', href: '#' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'Blog', href: '#' },
-      { label: 'Careers', href: '#' },
-      { label: 'Community', href: '#' },
-      { label: 'Twitter', href: '#' },
-      { label: 'LinkedIn', href: '#' },
-      { label: 'Affiliate Program', href: '#' },
-    ],
-  },
-  {
-    title: 'Support',
-    links: [
-      { label: 'Weekly Demos', href: '#' },
-      { label: 'Report a Bug', href: '#' },
-      { label: 'Report an Outage', href: '#' },
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms & Conditions', href: '#' },
-    ],
-  },
+  // {
+  //   title: 'Product',
+  //   links: [
+  //     { label: 'Login', href: '#' },
+  //     { label: 'Pricing', href: '#' },
+  //     { label: 'Copy AI Reviews', href: '#' },
+  //     { label: 'Free AI Tools', href: '#' },
+  //     { label: 'GPL licenses', href: '#' },
+  //   ],
+  // },
+  // {
+  //   title: 'Company',
+  //   links: [
+  //     { label: 'Blog', href: '#' },
+  //     { label: 'Careers', href: '#' },
+  //     { label: 'Community', href: '#' },
+  //     { label: 'Twitter', href: '#' },
+  //     { label: 'LinkedIn', href: '#' },
+  //     { label: 'Affiliate Program', href: '#' },
+  //   ],
+  // },
+  // {
+  //   title: 'Support',
+  //   links: [
+  //     { label: 'Weekly Demos', href: '#' },
+  //     { label: 'Report a Bug', href: '#' },
+  //     { label: 'Report an Outage', href: '#' },
+  //     { label: 'Privacy Policy', href: '#' },
+  //     { label: 'Terms & Conditions', href: '#' },
+  //   ],
+  // },
   {
     title: 'Contact Us',
     links: [
