@@ -96,7 +96,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     (state) => state.workspaces.currentSelectedTitle
   );
 
-  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle')
+  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle');
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
   // custom hooks
   const { StartAssessment } = usestartAssessment();
@@ -125,6 +125,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [firstPrompt, setFirstPrompt] = useState('');
 
   const { error, chatWithdoc } = useChat();
+  const [photoPath, setPhotoPath] = useState('false');
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setPhotoPath(storedUser.photoPath);
+      setUser(storedUser);
+    }
+  }, []);
 
   const messagesEndRef = useRef(null);
 
@@ -274,7 +283,14 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       setPopupVisible(false);
     }
   };
-
+  const getInitials = () => {
+    if (!user) {
+      return 'N/A';
+    }
+    return `${user.firstName?.[0] || ''}${
+      user.lastName?.[0] || ''
+    }`.toUpperCase();
+  };
   // handle Tone change
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
@@ -355,15 +371,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         filteredFolders[0].assessments.length > 0 &&
         filteredFolders[0].assessments[0].report.length > 0
       ) {
-        setAssessmentId(filteredFolders[0].assessments[0]._id);
-        setSubReportId(
-          filteredFolders[0].assessments[0].report[0].subReport[0]._id
-        );
+        // setAssessmentId(filteredFolders[0].assessments[0]._id);
+        // setSubReportId(
+        //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
+        // );
       }
     }
   }, [generateSingleReport, selectedWorkspace]);
 
-  console.log(fileUrl, 'url')
+  console.log(fileUrl, 'url');
   const handleClosePopup = () => {
     setPopupVisible(false);
   };
@@ -371,23 +387,26 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const handleStartAssessment = async (assessmentName) => {
     try {
       setAssessmentLoading(true);
-      const initialMessage = await StartAssessment(
+      const initialResponse = await StartAssessment(
         '',
         assessmentName,
         Questions
       );
       refetch();
 
-
+      console.log(initialResponse, 'initialMessage');
+      const initialMessage = initialResponse.report[0].subReport[0].questionAnswer[0].question.content;
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
 
       handleAssessmentSelect(filteredFolders[0].assessments[0]);
-      setAssessmentId(filteredFolders[0].assessments[0]._id);
-      setSubReportId(
-        filteredFolders[0].assessments[0].report[0].subReport[0]._id
-      );
+      // setAssessmentId(filteredFolders[0].assessments[0]._id);
+      setAssessmentId(initialResponse._id)
+      setSubReportId(initialResponse.report[0].subReport[0]._id);
+      // setSubReportId(
+      //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
+      // );
 
       setChat((prevChat) => [
         ...prevChat,
@@ -403,13 +422,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSingleReport = async () => {
-    setLoading(true)
+    setLoading(true);
     const data = await GenerateSingleReport();
     const fullUrl = `${data.data.report.finalReportURL}`;
     window.open(fullUrl, '_blank');
-    setLoading(false)
+    setLoading(false);
     setGenerateSingleReport(false);
-
   };
 
   useEffect(() => {
@@ -481,7 +499,19 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                   {item.role === 'user' ? (
                     <div className="card">
                       <div>
-                        <img src={UserPic} alt="avatar" />
+                      {photoPath ? (
+          <img
+            src={photoPath}
+            alt="profile"
+            className="ProfileImage"            style={{ cursor: 'pointer' }}
+
+          />
+        ) : (
+          <div  className="initials-placeholder">
+            {getInitials()}
+          </div>
+        )}
+                        {/* <img src={UserPic} alt="avatar" /> */}
                       </div>
                       <div>
                         <p className="Heading">You</p>
@@ -544,14 +574,25 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
                 {selectedAssessment}
-                {selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle || (assessmentQnaData.length > 0 ? assessmentQnaData[0] : '')}
-                </p>
+                {selectedAssessmentTitle.report?.[0]?.subReport?.[0]
+                  ?.ReportTitle ||
+                  selectedAssessmentTitle.ReportTitle ||
+                  selectedAssessmentTitle ||
+                  (assessmentQnaData.length > 0
+                    ? assessmentQnaData[0]
+                    : '')}{' '}
+              </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
                 benefits, risks, and success metrics.
               </p>
               <button
-                onClick={() => handleStartAssessment(text)}
+                onClick={() =>
+                  handleStartAssessment(
+                    selectedAssessmentTitle?.ReportTitle ||
+                      selectedAssessmentTitle
+                  )
+                }
                 style={{
                   backgroundColor: 'rgba(195, 225, 29, 1)',
                   padding: '1rem',
@@ -700,6 +741,21 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       margin: 1rem 0;
       font-size: 1rem;
     }
+      .initials-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: #007bff;
+          color: #ffffff;
+          font-size: 18px;
+          font-weight: bold;
+          text-align: center;
+          margin-right: 8px;
+          cursor: pointer;
+        }
     .message-action-icons {
       display: flex;
       // gap: 0.5rem;
