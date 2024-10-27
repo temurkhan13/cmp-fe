@@ -1,17 +1,18 @@
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { FaRegFolderOpen } from 'react-icons/fa6';
 import { FaTrash } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
-import { MdPeopleAlt } from 'react-icons/md';
+import { MdDelete, MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import DeleteModal from './DeleteModal';
+import {  } from '../../redux/slices/trashSlice'; // Import actions
 
 const FolderCard = ({ folder }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const dispatch = useDispatch();
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => {
@@ -20,16 +21,25 @@ const FolderCard = ({ folder }) => {
   };
 
   const handleThreeDotsClick = () => setShowDropdown(!showDropdown);
+
+  // Dispatch the restoreFolder action
+  const handleRestoreClick = () => {
+    // dispatch(restoreFolder(folder._id));
+  };
+
+  // Show delete modal
   const handleDeleteClick = () => {
     setShowDropdown(false);
     setShowDeleteModal(true);
   };
-  const handleCancelDelete = () => setShowDeleteModal(false);
+
+  // Confirm delete action
   const handleConfirmDelete = () => {
     setShowDeleteModal(false);
-    // Add your delete logic here
-    console.log(`Deleted: ${folder.name}`);
+    // dispatch(deleteFolderPermanently(folder._id)); // Dispatch deleteFolderPermanently action
   };
+
+  const handleCancelDelete = () => setShowDeleteModal(false);
 
   return (
     <div
@@ -41,11 +51,7 @@ const FolderCard = ({ folder }) => {
         <FaRegFolderOpen className="folder-icon" />
         <div className="folder-details">
           <div className="folder-name">
-            {folder.name}
-            <MdPeopleAlt style={{ color: 'gray' }} />
-          </div>
-          <div className="folder-meta">
-            Deleted by {folder.deletedBy} {folder.timeAgo}
+            {folder.folderName}
           </div>
         </div>
       </div>
@@ -56,7 +62,7 @@ const FolderCard = ({ folder }) => {
       )}
       {showDropdown && (
         <div className="dropdown-menu">
-          <div className="dropdown-item">
+          <div className="dropdown-item" onClick={handleRestoreClick}>
             <MdOutlineSettingsBackupRestore size={18} />
             Restore
           </div>
@@ -68,7 +74,7 @@ const FolderCard = ({ folder }) => {
       )}
       {showDeleteModal && (
         <DeleteModal
-          folderName={folder.name}
+          folderName={folder.folderName}
           onCancel={handleCancelDelete}
           onDelete={handleConfirmDelete}
         />
@@ -104,10 +110,9 @@ const FolderCard = ({ folder }) => {
         }
 
         .folder-details {
-        //   flex: 1;
-        display:flex;
-        flex-direction:column;
-        align-items:flex-start;
+          display:flex;
+          flex-direction:column;
+          align-items:flex-start;
         }
 
         .folder-name {
@@ -117,13 +122,6 @@ const FolderCard = ({ folder }) => {
           display:flex;
           align-items:center;
           gap:0.5rem;
-          
-        }
-
-        .folder-meta {
-          color: #888;
-          font-size: 1.2rem;
-        //   width:28rem;
         }
 
         .three-dots {
@@ -154,8 +152,7 @@ const FolderCard = ({ folder }) => {
 
         .dropdown-item:hover {
           background: #f0f0f0;
-            border-radius: 1rem;
-            d
+          border-radius: 1rem;
         }
       `}</style>
     </div>
@@ -164,9 +161,8 @@ const FolderCard = ({ folder }) => {
 
 FolderCard.propTypes = {
   folder: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    deletedBy: PropTypes.string.isRequired,
-    timeAgo: PropTypes.string.isRequired,
+    folderName: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
   }).isRequired,
 };
 
@@ -174,7 +170,7 @@ const TrashFolderTab = () => {
   return (
     <div className="folder-content">
       <FaTrash size={50} />
-      <p className="trash-activity">No recent activity here</p>
+      <p className="trash-activity">No recent trash here</p>
       <p>
         Any file you trash will end up here. You&apos;ll have 30 days <br />
         to restore them before they are automatically deleted <br />
@@ -203,32 +199,13 @@ const TrashFolderTab = () => {
 };
 
 const FolderTab = () => {
-  const folders = [
-    { id: 1, name: 'Folder Name', deletedBy: 'Imran', timeAgo: 'moments ago' },
-    {
-      id: 2,
-      name: 'Folder Name',
-      deletedBy: 'Sherrimac Gyver',
-      timeAgo: 'moments ago',
-    },
-    {
-      id: 2,
-      name: 'Folder Name',
-      deletedBy: 'Sherrimac Gyver',
-      timeAgo: 'moments ago',
-    },
-    {
-      id: 2,
-      name: 'Folder Name',
-      deletedBy: 'Sherrimac Gyver',
-      timeAgo: '10 days ago',
-    },
-  ];
+  // Retrieve the folders from the Redux store
+  const folders = useSelector((state) => state.trash.trashItems.folders || []);
 
   return (
     <div className="folder-tab">
       {folders.length > 0 ? (
-        folders.map((folder) => <FolderCard key={folder.id} folder={folder} />)
+        folders.map((folder) => <FolderCard key={folder._id} folder={folder} />)
       ) : (
         <TrashFolderTab />
       )}
@@ -238,6 +215,8 @@ const FolderTab = () => {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
+          gap: 2rem;
+          padding: 2rem;
         }
       `}</style>
     </div>

@@ -1,13 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import FolderTab from './TrashFolderTab';
 import TrashWorkspaceTab from './TrashWorkspaceTab';
 import TrashAssistant from './TrashAssistant';
 import TrashAssessment from './TrashAssessment';
 import TrashSitemap from './TrashSitemap';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTrashItems } from '../../redux/slices/trashSlice.js';
 
 const TrashModule = () => {
+  const dispatch = useDispatch();
+
+  // Ensure the state is not undefined
+  const trashState = useSelector((state) => state.trash || {});
+  const { workspaces = [], folders = [], assessments = [], chats = [] } = trashState.trashItems || {};
+  const isLoading = trashState.isLoading || false;
+  const error = trashState.error || null;
+
   const [activeTab, setActiveTab] = useState('Workspace');
+
+  // Fetch trash items on component mount
+  useEffect(() => {
+    dispatch(fetchTrashItems());
+  }, [dispatch]);
+
+  // Log the state after it updates
+  useEffect(() => {
+    console.log('Updated trash state:', trashState);
+  }, [trashState]);
 
   return (
     <div className="trash-container">
@@ -36,7 +56,8 @@ const TrashModule = () => {
           onClick={() => setActiveTab('Assessment')}
         >
           Assessment
-        </button>{' '}
+        </button>
+        {' '}
         <button
           className={`tab ${activeTab === 'Sitemap' ? 'active' : ''}`}
           onClick={() => setActiveTab('Sitemap')}
@@ -45,11 +66,17 @@ const TrashModule = () => {
         </button>
       </div>
       <div className="content">
-        {activeTab === 'Workspace' && <TrashWorkspaceTab />}
-        {activeTab === 'Folder' && <FolderTab />}
-        {activeTab === 'Assistant' && <TrashAssistant />}
-        {activeTab === 'Assessment' && <TrashAssessment />}
-        {activeTab === 'Sitemap' && <TrashSitemap />}
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{error}</p>}
+        {!isLoading && !error && (
+          <>
+            {activeTab === 'Workspace' && <TrashWorkspaceTab workspaces={workspaces} />}
+            {activeTab === 'Folder' && <FolderTab folders={folders} />}
+            {activeTab === 'Assistant' && <TrashAssistant chats={chats} />}
+            {activeTab === 'Assessment' && <TrashAssessment assessments={assessments} />}
+            {activeTab === 'Sitemap' && <TrashSitemap />}
+          </>
+        )}
       </div>
       <style>{`
         .trash-container {
@@ -61,31 +88,39 @@ const TrashModule = () => {
         }
         .heading {
           position: absolute;
-          top: 2rem;
+          top: 4rem;
           left: 1.25rem;
-          font-size: 1.5rem;
+          font-size: 3rem;
+          font-weight: bold;
+          color: #333;
         }
         .tabs {
           display: flex;
           position: absolute;
-          top: 5rem;
+          top: 9rem;
           left: 3rem;
+          gap: 1.5rem;
         }
         .tab {
-          margin-right: 0.625rem;
-          padding: 0.625rem 1.25rem;
+          padding: 0.75rem 1.5rem;
           cursor: pointer;
           background: none;
           border: none;
           outline: none;
-          font-size: 1.4rem;
-          font-weight:600;
+          font-size: 1.6rem;
+          font-weight: 500;
+          color: #555;
+          transition: color 0.3s, border-bottom 0.3s;
+        }
+        .tab:hover {
+          color: #000;
         }
         .tab.active {
-          border-bottom: 0.1rem solid black;
+          color: black;
+          border-bottom: 3px solid black;
         }
         .content {
-          margin-top: 6.25rem;
+          margin-top: 7.5rem;
           display: flex;
           flex-direction: column;
           align-items: center;

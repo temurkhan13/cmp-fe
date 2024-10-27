@@ -1,27 +1,20 @@
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FaFolderTree } from 'react-icons/fa6';
 import { useState } from 'react';
 import Modal from '../../common/Modal';
 import FileStructure from '../../dashboard/FileStructure';
-import {
-  useAddFolderMutation,
-  useGetWorkspacesQuery,
-} from '../../../redux/api/workspaceApi';
+import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { selectCurrentWorkspace } from '../../../redux/selectors/selectors';
-import { useSelector } from 'react-redux';
+import NotificationBar from '../../common/NotificationBar';
 
-const Folder = ({ activeWorkspace }) => {
+const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
   const [addFolder] = useAddFolderMutation();
   const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-  const userId = useSelector((state) => state.auth.user?.id);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
 
-  const currentWorkspace = useSelector(selectCurrentWorkspace);
-  const { refetch } = useGetWorkspacesQuery(userId);
-
-  // Validation schema
+  // Validation schema for new folder creation
   const validationSchema = Yup.object({
     projectName: Yup.string()
       .required('Project Name is required')
@@ -54,12 +47,17 @@ const Folder = ({ activeWorkspace }) => {
           industry: values.industry,
         },
       }).unwrap();
-      refetch();
       setIsNewFolderModalOpen(false);
       resetForm();
+      onFolderUpdate(); // Notify the parent component to refresh folder data
     } catch (error) {
-      console.error('Failed to add Project:', error);
+      showError('Failed to add Project.');
     }
+  };
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setShowNotification(true);
   };
 
   return (
@@ -74,26 +72,30 @@ const Folder = ({ activeWorkspace }) => {
           </div>
 
           <div className="center-buttons">
-            <div>
-              <button
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                className="assiss-btn"
-                onClick={() => setIsNewFolderModalOpen(true)}
-              >
-                New Project
-                <AiOutlinePlus className="icon" />
-              </button>
-            </div>
+            <button
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              className="assiss-btn"
+              onClick={() => setIsNewFolderModalOpen(true)}
+            >
+              New Project
+              <AiOutlinePlus className="icon" />
+            </button>
           </div>
         </div>
       </section>
 
-      {activeWorkspace ? (
-        <FileStructure workspace={currentWorkspace} />
+      {/* Show the FileStructure based on the selected workspace */}
+      {activeWorkspace && activeWorkspace.folders?.length > 0 ? (
+        <FileStructure
+          workspace={activeWorkspace}
+          onFolderSelect={onFolderSelect}
+          onFolderUpdate={onFolderUpdate}
+        />
       ) : (
-        <></>
+        <div className="no-projects">
+          <p>No projects associated with this workspace.</p>
+        </div>
       )}
-
 
       {isNewFolderModalOpen && (
         <Modal
@@ -115,17 +117,9 @@ const Folder = ({ activeWorkspace }) => {
                       type="text"
                       name="projectName"
                       placeholder="Enter project name"
-                      className={`workspace-input ${
-                        touched.projectName && errors.projectName
-                          ? 'error-border'
-                          : ''
-                      }`}
+                      className={`workspace-input ${touched.projectName && errors.projectName ? 'error-border' : ''}`}
                     />
-                    <ErrorMessage
-                      name="projectName"
-                      component="div"
-                      className="error-message"
-                    />
+                    <ErrorMessage name="projectName" component="div" className="error-message" />
 
                     <p className="business-info-heading">Your Business Info</p>
                     <hr />
@@ -135,68 +129,36 @@ const Folder = ({ activeWorkspace }) => {
                       type="text"
                       name="companyName"
                       placeholder="Enter Company Name"
-                      className={`workspace-input ${
-                        touched.companyName && errors.companyName
-                          ? 'error-border'
-                          : ''
-                      }`}
+                      className={`workspace-input ${touched.companyName && errors.companyName ? 'error-border' : ''}`}
                     />
-                    <ErrorMessage
-                      name="companyName"
-                      component="div"
-                      className="error-message"
-                    />
+                    <ErrorMessage name="companyName" component="div" className="error-message" />
 
                     <label className="modal-label">Company Size</label>
                     <Field
                       type="text"
                       name="companySize"
                       placeholder="Enter company size"
-                      className={`workspace-input ${
-                        touched.companySize && errors.companySize
-                          ? 'error-border'
-                          : ''
-                      }`}
+                      className={`workspace-input ${touched.companySize && errors.companySize ? 'error-border' : ''}`}
                     />
-                    <ErrorMessage
-                      name="companySize"
-                      component="div"
-                      className="error-message"
-                    />
+                    <ErrorMessage name="companySize" component="div" className="error-message" />
 
                     <label className="modal-label">Job Title</label>
                     <Field
                       type="text"
                       name="jobTitle"
                       placeholder="Enter job title"
-                      className={`workspace-input ${
-                        touched.jobTitle && errors.jobTitle
-                          ? 'error-border'
-                          : ''
-                      }`}
+                      className={`workspace-input ${touched.jobTitle && errors.jobTitle ? 'error-border' : ''}`}
                     />
-                    <ErrorMessage
-                      name="jobTitle"
-                      component="div"
-                      className="error-message"
-                    />
+                    <ErrorMessage name="jobTitle" component="div" className="error-message" />
 
                     <label className="modal-label">Industry</label>
                     <Field
                       type="text"
                       name="industry"
                       placeholder="Enter Industry"
-                      className={`workspace-input ${
-                        touched.industry && errors.industry
-                          ? 'error-border'
-                          : ''
-                      }`}
+                      className={`workspace-input ${touched.industry && errors.industry ? 'error-border' : ''}`}
                     />
-                    <ErrorMessage
-                      name="industry"
-                      component="div"
-                      className="error-message"
-                    />
+                    <ErrorMessage name="industry" component="div" className="error-message" />
 
                     <button type="submit" className="create-workspace-btn">
                       Create
@@ -207,6 +169,15 @@ const Folder = ({ activeWorkspace }) => {
             </Formik>
           </div>
         </Modal>
+      )}
+
+      {showNotification && (
+        <NotificationBar
+          message={errorMessage}
+          type="error"
+          duration={5000}
+          onClose={() => setShowNotification(false)}
+        />
       )}
 
       <style>{`
@@ -259,7 +230,6 @@ const Folder = ({ activeWorkspace }) => {
           background-color: white;
           padding: 20px;
           border-radius: 8px;
-          width: 40vw;
         }
         .modal-form-content {
           display: flex;
@@ -290,16 +260,15 @@ const Folder = ({ activeWorkspace }) => {
         .error-border {
           border-color: red;
         }
+        .no-projects {
+          padding: 2rem;
+          text-align: center;
+          font-size: 1.6rem;
+          color: gray;
+        }
       `}</style>
     </div>
   );
-};
-
-Folder.propTypes = {
-  activeWorkspace: PropTypes.shape({
-    id: PropTypes.string.isRequired, // Assuming workspace id is a string
-    name: PropTypes.string, // Add any other necessary fields
-  }).isRequired,
 };
 
 export default Folder;

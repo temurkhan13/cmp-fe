@@ -21,11 +21,12 @@ import {
   selectFolderById,
 } from '../../redux/selectors/selectors';
 import {
+  selectWorkspace,
   setCurrentChatId,
-  setSelectedFolder,
 } from '../../redux/slices/workspacesSlice';
 import { setChats } from '../../redux/slices/chatSlice';
 import { getChatsAsync } from '../../redux/slices/workspaceSlice';
+import { selectFolderData, selectSelectedFolder, setSelectedFolder } from '../../redux/slices/folderSlice.js';
 
 const NewChat = () => {
   const projects = useSelector(selectAllFolders);
@@ -38,20 +39,19 @@ const NewChat = () => {
   const [hoveredChatIndex, setHoveredChatIndex] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const currentWorkspace = useSelector(selectCurrentWorkspace);
+  // const currentWorkspace = useSelector(selectCurrentWorkspace);
+  const currentWorkspace = useSelector(selectWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentChat);
-  const selectedFolder = useSelector((state) =>
-    selectFolderById(state, currentFolder._id)
-  );
+  const selectedFolder = useSelector(selectSelectedFolder);
 
   const chats = useSelector(selectAllChats);
   const [showableChats, setShowableChats] = useState(chats);
   const myChats = useSelector((state) => state.chat.chats);
 
   useEffect(() => {
-    if(selectedFolder._id && currentWorkspace.id){
-      dispatch(getChatsAsync({workspaceId: currentWorkspace.id , folderId: selectedFolder._id}))
+    if(selectedFolder?.id && currentWorkspace?.id){
+      dispatch(getChatsAsync({workspaceId: currentWorkspace.id , folderId: selectedFolder.id}))
       .then((response) => {
         dispatch(setChats(response.payload.data))
       })
@@ -59,12 +59,12 @@ const NewChat = () => {
         console.error(error, 'error')
       })
     }
-  },[currentWorkspace, currentFolder, dispatch, selectedFolder._id])
+  },[currentWorkspace, currentFolder, dispatch, selectedFolder])
 
   useEffect(() => {
-    if(myChats.length > 0){
+    // if(myChats?.length > 0){
       setShowableChats(myChats)
-    }
+    // }
   },[myChats])
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -92,8 +92,6 @@ const NewChat = () => {
   const folderId = useSelector(selectCurrentFolder);
 
   const handleChatSelect = (chatId) => {
-    console.log('FolderId', folderId);
-    console.log('dispatch ChatId' + chatId);
     const currentUrl = window.location.pathname;
     const newUrl = currentUrl.replace(
       /\/assisstant\/chat\/[^/]+$/,
@@ -110,6 +108,15 @@ const NewChat = () => {
 
   const switchFolder = (folder) => {
     dispatch(setSelectedFolder(folder));
+    if (folder.id && currentWorkspace?.id) {
+      dispatch(getChatsAsync({ workspaceId: currentWorkspace.id, folderId: folder.id }))
+        .then((response) => {
+          dispatch(setChats(response.payload.data));
+        })
+        .catch((error) => {
+          console.error('Error fetching chats for the selected folder:', error);
+        });
+    }
   };
 
   const handleScroll = async () => {
@@ -206,7 +213,7 @@ const NewChat = () => {
                       </span>
                     </div>
                     <ul className="projects-list">
-                      {projects.map((project, index) => (
+                      {currentWorkspace?.folders?.map((project, index) => (
                         <li key={index} onClick={() => switchFolder(project)}>
                           {project.folderName}
                         </li>
