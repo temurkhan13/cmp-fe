@@ -461,16 +461,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           totalQuestions={6}
         />
       )}
-      <div
-        className="spinner"
-        style={{ display: loading || assessmentLoading ? 'flex' : 'none' }}
-      >
+
         <ScaleLoader
           color={'#000000'}
           loading={loading || assessmentLoading}
           size={150}
         />
-      </div>
+
 
       <div className="chat-message">
         <input

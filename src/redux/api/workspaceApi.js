@@ -104,6 +104,8 @@ export const workspaceApi = createApi({
           });
         }
 
+        console.log(folderId,'..............')
+
         // Use the actual chatId or handle for a new chat
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message`,
