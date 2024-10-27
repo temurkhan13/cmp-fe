@@ -78,7 +78,6 @@ const AiAssistantChat = () => {
 
   useEffect(() => {
     // If no folder is available, throw an error
-    console.log(selectedWorkspace,'...................seleceyted')
     if (selectedWorkspace && selectedWorkspace?.folders?.length === 0) {
       handleError("No folders available in the selected workspace.");
     }
