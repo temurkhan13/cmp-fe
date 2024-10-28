@@ -1,177 +1,226 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Workspaces from './Workspaces';
 import CountingCards from './CountingCards';
 import Folder from './Folder';
 import Account from './Account';
-import { IoPeople } from 'react-icons/io5';
-import { HiDotsHorizontal } from 'react-icons/hi';
-import { SlQuestion } from 'react-icons/sl';
-import DashboardCard from '@components/common/DashboardCard';
+import NotificationBar from '../../common/NotificationBar.jsx';  // Import the NotificationBar component
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetWorkspacesQuery } from '../../../redux/api/workspaceApi';
 import {
-  setSelectedWorkspace,
+  fetchDashboardStats,
+  selectDashboardStats,
   selectWorkspace,
+  setSelectedWorkspace,
 } from '../../../redux/slices/workspacesSlice';
 import {
-  selectAllWorkspaces,
-  selectAllChats,
-} from '../../../redux/selectors/selectors';
+  fetchFolderData,
+  resetFolderState,
+  selectFolderData,
+  setSelectedFolder,
+} from '../../../redux/slices/folderSlice';
+import DashboardCard from './DashboardCard.jsx';
+
+// Reusable Section Grid Component
+const SectionGrid = ({ title, items, itemType, onRemove }) => (
+  <div className="section">
+    <div className="workspace-header">
+      <p className="collection-heading">{title}</p>
+    </div>
+    <div className="grid">
+      {items.map((item) => (
+        <DashboardCard
+          key={item.id}
+          data={{ ...item, type: itemType }}
+          onRemove={onRemove}
+        />
+      ))}
+    </div>
+  </div>
+);
 
 const DashboardHomeComp = () => {
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth.user?.id);
-  const { data: workspaces } = useGetWorkspacesQuery(userId);
-  const workspacess = useSelector(selectAllWorkspaces);
+  const dashboardStats = useSelector(selectDashboardStats);
   const selectedWorkspace = useSelector(selectWorkspace);
-  const activeFolder = useSelector((state) => state.workspaces.selectedFolder);
-  const chats = useSelector(selectAllChats);
+  const folderData = useSelector(selectFolderData);
+  const [currentFolder, setCurrentFolder] = useState(null);
+  const [error, setError] = useState(null);  // State to handle errors
+  const [showNotification, setShowNotification] = useState(false); // Control notification visibility
 
+  // Fetch dashboard stats when component mounts
   useEffect(() => {
-    if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
-      dispatch(setSelectedWorkspace(workspaces[0]));
+    const fetchStats = async () => {
+      try {
+        await dispatch(fetchDashboardStats()).unwrap();
+      } catch (err) {
+        handleError('Failed to fetch dashboard stats.');
+      }
+    };
+    fetchStats();
+  }, [dispatch]);
+
+  // Automatically select the first workspace if none is selected
+  useEffect(() => {
+    if (dashboardStats?.workspaces?.length > 0 && !selectedWorkspace) {
+      dispatch(setSelectedWorkspace(dashboardStats.workspaces[0]));
+      setCurrentFolder(null);
+      dispatch(resetFolderState());
     }
-  }, [workspaces, selectedWorkspace, dispatch]);
+  }, [dashboardStats, selectedWorkspace, dispatch]);
 
-  const convertTimestampToRelativeTime = (timestamp) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const differenceInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  // Automatically select the first folder within the selected workspace
+  useEffect(() => {
+    if (folderData?.length > 0 && !currentFolder) {
+      handleFolderSelection(folderData[0]);
+    }
+  }, [folderData, currentFolder]);
 
-    if (differenceInDays === 0) return 'Today';
-    if (differenceInDays === 1) return '1 day ago';
-    if (differenceInDays <= 2) return `${differenceInDays} days ago`;
-    if (differenceInDays <= 30) return `Previous ${differenceInDays} days`;
-    return 'Older than 30 days';
+  // Error handler
+  const handleError = (message) => {
+    setError(message);
+    setShowNotification(true);
+  };
+
+  // Folder selection handler
+  const handleFolderSelection = async (folder, workspaceId = null) => {
+    const activeWorkspaceId = workspaceId || selectedWorkspace?.id;
+    if (!activeWorkspaceId) {
+      handleError("No workspace ID available.");
+      return;
+    }
+
+    setCurrentFolder(folder);
+    dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
+
+    try {
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder.id })).unwrap();
+    } catch (err) {
+      handleError('Failed to fetch folder data.');
+    }
+  };
+
+  // Handle workspace change
+  const handleWorkspaceChange = (workspace) => {
+    dispatch(setSelectedWorkspace(workspace));
+    setCurrentFolder(null);
+    dispatch(resetFolderState());
+
+    if (workspace?.folders?.length > 0) {
+      const firstFolder = workspace.folders[0];
+      handleFolderSelection(firstFolder, workspace.id);
+    }
+  };
+
+  // Remove item handler (for assessments, chats, etc.)
+  const handleRemoveItem = (itemId, itemType) => {
+    setCurrentFolder((prevFolder) => ({
+      ...prevFolder,
+      [itemType]: prevFolder[itemType].filter((item) => item.id !== itemId),
+    }));
+  };
+
+  // Triggered when data needs to be re-fetched or updated
+  const handleDataUpdated = () => {
+    dispatch(fetchDashboardStats());
   };
 
   return (
     <div className="dashboard">
-      <CountingCards activeWorkspace={selectedWorkspace} />
+      {/* Counting cards to display workspace/project stats */}
+      <CountingCards
+        activeWorkspace={dashboardStats.activeWorkspace}
+        totalWorkspaces={dashboardStats.totalWorkspaces}
+        totalProjects={dashboardStats.totalProjects}
+      />
+
+      {/* Account details */}
       <Account />
+
+      {/* Workspace selector component */}
       <Workspaces
         activeWorkspace={selectedWorkspace}
-        workspaces={workspacess}
+        workspaces={dashboardStats.workspaces}
+        onWorkspaceUpdated={handleDataUpdated}
+        onWorkspaceChange={handleWorkspaceChange}
       />
-      <Folder activeWorkspace={selectedWorkspace} />
-      <section className="generate" style={{ marginTop: '2rem' }}>
-        <div className="container">
-          <div
-            className="left-buttons"
-            style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
-          >
-            <button className="arrow-btn">
-              <SlQuestion size={25} />
-            </button>
-            <p className="assistant-heading">Change AI Assistance</p>
+
+      {/* Folder selector component */}
+      <Folder
+        activeWorkspace={selectedWorkspace}
+        onFolderSelect={handleFolderSelection}
+        onFolderUpdate={handleDataUpdated}
+      />
+
+      {/* Render folder data */}
+      {selectedWorkspace?.folders?.length > 0 && currentFolder && folderData?.length > 0 && (
+        <section className="folder-details">
+          <div className="container">
+            {folderData[0]?.assessments?.length > 0 && (
+              <SectionGrid
+                title="Assessments"
+                items={folderData[0].assessments}
+                itemType="assessments"
+                onRemove={(id) => handleRemoveItem(id, 'assessments')}
+              />
+            )}
+            {folderData[0]?.chats?.length > 0 && (
+              <SectionGrid
+                title="Chats"
+                items={folderData[0].chats}
+                itemType="chats"
+                onRemove={(id) => handleRemoveItem(id, 'chats')}
+              />
+            )}
+            {folderData[0]?.sitemaps?.length > 0 && (
+              <SectionGrid
+                title="Sitemaps"
+                items={folderData[0].sitemaps}
+                itemType="sitemaps"
+                onRemove={(id) => handleRemoveItem(id, 'sitemaps')}
+              />
+            )}
+            {folderData[0]?.wireframes?.length > 0 && (
+              <SectionGrid
+                title="Wireframes"
+                items={folderData[0].wireframes}
+                itemType="wireframes"
+                onRemove={(id) => handleRemoveItem(id, 'wireframes')}
+              />
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <div
-        className="card-wrapper"
-        style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
-      >
-        {chats &&
-          chats.map((chat, index) => (
-            <div key={index}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <DashboardCard chat={chat} />
-              </div>
-              <div className="fileDetails">
-                <div className="fileName">
-                  {chat.chatTitle}
-                  <IoPeople color="gray" style={{ marginLeft: '0.3rem' }} />
-                </div>
-                <div>
-                  <span>in</span>
-                  <span className="folderName">{activeFolder?.folderName}</span>
-                  <span>
-                    • Created {convertTimestampToRelativeTime(chat.CreatedAt)}
-                    <HiDotsHorizontal style={{ fontSize: '1.2rem' }} />
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-      </div>
-
-      <section className="generate" style={{ marginTop: '2rem' }}>
-        <div className="container">
-          <div className="left-buttons">
-            <button className="arrow-btn">{/* <SlQuestion /> */}</button>
-            <p className="assistant-heading">AI Assessment</p>
-          </div>
-        </div>
-      </section>
-
-      <div
-        className="card-wrapper"
-        style={{ margin: '20px', display: 'flex', flexWrap: 'wrap' }}
-      ></div>
+      {/* Error Notification */}
+      {showNotification && (
+        <NotificationBar
+          message={error}
+          type="error"
+          onClose={() => setShowNotification(false)}
+        />
+      )}
 
       <style>{`
         .dashboard {
           display: flex;
           flex-direction: column;
         }
-        .generate {
-          background-color: white;
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          grid-gap: 1rem;
+          justify-items: center;
+          align-items: start;
+          padding: 15px;
         }
-        .generate .container {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1%;
-          height: 10vh;
-        }
-        .generate .arrow-btn {
-          height: 40px;
-          border: none;
-          border-radius: 50%;
-          background: transparent;
-        }
-        .generate .assistant-heading {
-          font-family: 'Poppins';
-          font-size: 2rem;
-          font-weight: 600;
-          line-height: 36px;
-          color: black;
-        }
-        .files {
-          border-right: 2px solid lightgray;
-        }
-        .files-heading {
-          font-size: 2.5rem;
-          font-weight: 600;
+
+        .section {
           margin-top: 2rem;
-          padding: 0 3rem;
         }
-        .card-wrapper {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          margin-top: 20px;
-        }
-        .fileDetails {
-          margin-top: 1rem;
-          margin-bottom: 3rem;
-        }
-        .fileName {
-          font-size: 1.125rem;
+
+        .collection-heading {
+          font-size: 1.5rem;
           font-weight: bold;
-          margin-top: 1rem;
-        }
-        .folderName {
-          color: #0066ff;
-          font-size: 1.1rem;
-          margin-left: 0.5rem;
-        }
-        .left-buttons{
-        display:flex;
-        align-items:center;
-        gap: 1rem;
-        margin-left:2rem;
         }
       `}</style>
     </div>
