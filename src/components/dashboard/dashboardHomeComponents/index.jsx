@@ -3,7 +3,7 @@ import Workspaces from './Workspaces';
 import CountingCards from './CountingCards';
 import Folder from './Folder';
 import Account from './Account';
-import NotificationBar from '../../common/NotificationBar.jsx';  // Import the NotificationBar component
+import NotificationBar from '../../common/NotificationBar.jsx'; // Import the NotificationBar component
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDashboardStats,
@@ -19,7 +19,6 @@ import {
 } from '../../../redux/slices/folderSlice';
 import DashboardCard from './DashboardCard.jsx';
 
-// Reusable Section Grid Component
 const SectionGrid = ({ title, items, itemType, onRemove }) => (
   <div className="section">
     <div className="workspace-header">
@@ -43,7 +42,7 @@ const DashboardHomeComp = () => {
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
   const [currentFolder, setCurrentFolder] = useState(null);
-  const [error, setError] = useState(null);  // State to handle errors
+  const [error, setError] = useState(null); // State to handle errors
   const [showNotification, setShowNotification] = useState(false); // Control notification visibility
 
   // Fetch dashboard stats when component mounts
@@ -64,6 +63,8 @@ const DashboardHomeComp = () => {
       dispatch(setSelectedWorkspace(dashboardStats.workspaces[0]));
       setCurrentFolder(null);
       dispatch(resetFolderState());
+    } else if (!dashboardStats?.workspaces?.length) {
+      handleError("No workspaces available.");
     }
   }, [dashboardStats, selectedWorkspace, dispatch]);
 
@@ -71,8 +72,10 @@ const DashboardHomeComp = () => {
   useEffect(() => {
     if (folderData?.length > 0 && !currentFolder) {
       handleFolderSelection(folderData[0]);
+    } else if (selectedWorkspace && !folderData?.length) {
+      handleError("No folders available in the selected workspace.");
     }
-  }, [folderData, currentFolder]);
+  }, [folderData, currentFolder, selectedWorkspace]);
 
   // Error handler
   const handleError = (message) => {
@@ -126,32 +129,44 @@ const DashboardHomeComp = () => {
   return (
     <div className="dashboard">
       {/* Counting cards to display workspace/project stats */}
-      <CountingCards
-        activeWorkspace={dashboardStats.activeWorkspace}
-        totalWorkspaces={dashboardStats.totalWorkspaces}
-        totalProjects={dashboardStats.totalProjects}
-      />
+      {dashboardStats ? (
+        <CountingCards
+          activeWorkspace={dashboardStats.activeWorkspace}
+          totalWorkspaces={dashboardStats.totalWorkspaces}
+          totalProjects={dashboardStats.totalProjects}
+        />
+      ) : (
+        <div>No data available for dashboard stats.</div>
+      )}
 
       {/* Account details */}
       <Account />
 
       {/* Workspace selector component */}
-      <Workspaces
-        activeWorkspace={selectedWorkspace}
-        workspaces={dashboardStats.workspaces}
-        onWorkspaceUpdated={handleDataUpdated}
-        onWorkspaceChange={handleWorkspaceChange}
-      />
+      {dashboardStats?.workspaces?.length > 0 ? (
+        <Workspaces
+          activeWorkspace={selectedWorkspace}
+          workspaces={dashboardStats.workspaces}
+          onWorkspaceUpdated={handleDataUpdated}
+          onWorkspaceChange={handleWorkspaceChange}
+        />
+      ) : (
+        <div>No workspaces available.</div>
+      )}
 
       {/* Folder selector component */}
-      <Folder
-        activeWorkspace={selectedWorkspace}
-        onFolderSelect={handleFolderSelection}
-        onFolderUpdate={handleDataUpdated}
-      />
+      {selectedWorkspace ? (
+        <Folder
+          activeWorkspace={selectedWorkspace}
+          onFolderSelect={handleFolderSelection}
+          onFolderUpdate={handleDataUpdated}
+        />
+      ) : (
+        <div>No workspace selected.</div>
+      )}
 
       {/* Render folder data */}
-      {selectedWorkspace?.folders?.length > 0 && currentFolder && folderData?.length > 0 && (
+      {selectedWorkspace?.folders?.length > 0 && currentFolder && folderData?.length > 0 ? (
         <section className="folder-details">
           <div className="container">
             {folderData[0]?.assessments?.length > 0 && (
@@ -188,6 +203,8 @@ const DashboardHomeComp = () => {
             )}
           </div>
         </section>
+      ) : (
+        <div>No folder data available.</div>
       )}
 
       {/* Error Notification */}
