@@ -230,6 +230,7 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
           background-color: white;
           padding: 20px;
           border-radius: 8px;
+          width:500px;
         }
         .modal-form-content {
           display: flex;
@@ -265,6 +266,14 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
           text-align: center;
           font-size: 1.6rem;
           color: gray;
+        }
+        .workspace-input,
+        .workspace-description {
+          border: 1px solid #ccc;
+          width: 100%;
+          border-radius: 1rem;
+          padding: 1rem;
+          font-size: 1.5rem;
         }
       `}</style>
     </div>

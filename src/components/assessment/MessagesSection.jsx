@@ -7,7 +7,6 @@ import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
 import { IoAttach, IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { IoSend } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci';
-import UserPic from '../../assets/chat/user.png';
 import AiPic from '../../assets/dashboard/sidebarLogo.png';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import TonePopup from '../../components/common/TonePopup';
@@ -39,6 +38,7 @@ import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
+import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 
 const TopBar = ({
   progress,
@@ -93,22 +93,29 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
+  const currentWorkspace = useSelector(selectWorkspace);
+
+
   const selectedAssessmentTitle = useSelector(
     (state) => state.workspaces.currentSelectedTitle
   );
 
   console.log(selectedAssessmentTitle, 'selectedAssessmentTitle');
-  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  console.log(currentWorkspace,'currentWorkspace............');
+
+  // const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const folderId =  useSelector(selectSelectedFolder);
+
   // custom hooks
   const { StartAssessment } = usestartAssessment();
   const { AssessmentReport } = useAssessmentReport({
-    workspaceId,
-    folderId,
+    workspaceId:currentWorkspace.id,
+    folderId: folderId?.id || null,
     assessmentId,
   });
   const { GenerateSingleReport } = useGenerateSingleReport({
-    workspaceId,
-    folderId,
+    workspaceId:currentWorkspace.id,
+    folderId: folderId?.id || null,
     assessmentId,
   });
   const { fixGrammar } = useGrammarFix();
@@ -395,16 +402,16 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
       console.log(initialResponse, 'initialMessage');
       const initialMessage =
-        initialResponse.report[0].subReport[0].questionAnswer[0].question
+        initialResponse?.report[0]?.subReport[0]?.questionAnswer[0]?.question
           .content;
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
 
-      handleAssessmentSelect(filteredFolders[0].assessments[0]);
+      handleAssessmentSelect(filteredFolders[0]?.assessments[0]);
       // setAssessmentId(filteredFolders[0].assessments[0]._id);
       setAssessmentId(initialResponse._id);
-      setSubReportId(initialResponse.report[0].subReport[0]._id);
+      setSubReportId(initialResponse.report[0]?.subReport[0]._id);
       // setSubReportId(
       //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
       // );

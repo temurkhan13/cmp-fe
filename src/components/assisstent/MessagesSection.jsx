@@ -93,7 +93,6 @@
     const [addBookmark] = useAddBookmarkMutation();
     const userId = useSelector((state) => state.auth.user?.id);
     const { data: workspaces } = useGetWorkspacesQuery(userId);
-    console.log(workspaces);
     const workspaceId = useSelector(
       (state) => state.workspaces.currentWorkspaceId
     );
@@ -133,7 +132,7 @@
 
       const { data: chat, refetch } = useGetChatQuery({
         workspaceId,
-        folderId: folderId?.id,
+        folderId: folderId?._id,
         chatId,
       });
 
@@ -377,7 +376,6 @@
       setSelectedTone(tone);
       setLoading(true);
       try {
-        console.log('selected Text', selectedText);
         const response = await ChangeToneFun(selectedText, tone);
         if (response) {
           applyFixedText(response);
@@ -431,7 +429,6 @@
       //   ],
       // };
       //dispatch(addBookmark(bookmark));
-      console.log('bookmarked: ' + messageId);
 
       // Dispatch action to add bookmark
       await addBookmark({
@@ -451,7 +448,7 @@
         // Simulate sending message
         const data = await addMessage({
           workspaceId: workspaceId,
-          folderId: folderId.id,
+          folderId: folderId._id,
           chatId: chatId ? chatId : 'newChat',
           message: text,
           files: file,
@@ -461,11 +458,10 @@
           dispatch(
             getChatsAsync({
               workspaceId: currentWorkspace.id,
-              folderId: folderId.id,
+              folderId: folderId._id,
             })
           )
             .then((response) => {
-              console.log(response.payload.data, 'myChatmyChatresponse');
               dispatch(setChats(response.payload.data));
               if (response.payload.data.length > 0) {
                 dispatch(setCurrentChatId(response.payload.data[0]._id));
@@ -508,9 +504,7 @@
     // }, []);
     useEffect(() => {
       scrollToBottom();
-      console.log(chat);
     }, [chat]);
-    console.log('chat', chat);
 
     return (
       <div className="chat-message-wrapper">

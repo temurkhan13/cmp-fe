@@ -63,6 +63,7 @@ const NewChat = () => {
 
   useEffect(() => {
     // if(myChats?.length > 0){
+    console.log('myChat',myChats)
       setShowableChats(myChats)
     // }
   },[myChats])
@@ -108,8 +109,8 @@ const NewChat = () => {
 
   const switchFolder = (folder) => {
     dispatch(setSelectedFolder(folder));
-    if (folder.id && currentWorkspace?.id) {
-      dispatch(getChatsAsync({ workspaceId: currentWorkspace.id, folderId: folder.id }))
+    if (folder._id && currentWorkspace?.id) {
+      dispatch(getChatsAsync({ workspaceId: currentWorkspace.id, folderId: folder._id }))
         .then((response) => {
           dispatch(setChats(response.payload.data));
         })
