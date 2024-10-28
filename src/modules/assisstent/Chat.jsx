@@ -25,7 +25,7 @@ const AiAssistantChat = () => {
   const userId = useSelector((state) => state.auth.user?.id) || localStorage.getItem('userId');
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const selectedWorkspace = useSelector(selectWorkspace);
-  const selectedFolder = useSelector(selectSelectedFolder);
+    const selectedFolder = useSelector(selectSelectedFolder);
   const workspacess = useSelector(selectAllWorkspaces);
 
   const [currentChat, setCurrentChat] = useState(null);

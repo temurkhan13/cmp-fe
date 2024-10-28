@@ -1,15 +1,21 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { FaFolderTree } from 'react-icons/fa6';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { selectWorkspace } from '../../redux/slices/workspacesSlice';
-import { useSelector } from 'react-redux';
+import { selectWorkspace, setCurrentChatId } from '../../redux/slices/workspacesSlice';
 import useManagerChat from '@hooks/useManagerChat';
 import DashboardCard from '@components/common/DashboardCard';
 import Folder from './dashboardHomeComponents/Folder';
 import { truncateText } from '../../utils/helperFunction';
 
 const MyAssessmentComp = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { managerData, error } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
   const selectedWorkspace = useSelector(selectWorkspace);
@@ -49,36 +55,65 @@ const MyAssessmentComp = () => {
 
   return (
     <div className="container">
+      {/* AI Assessment Section */}
       <div className="section">
         <p className="sectionTitle">AI Assessment</p>
-        <Folder activeWorkspace={selectedWorkspace} />
-      </div>
+        <div className="center-buttons">
+          <Folder activeWorkspace={selectedWorkspace} />
+        </div>
 
-      <div className="cardWrapper" style={{display: 'none'}}>
-        {cardData.map((card, index) => (
-          <div key={index}>
-            <DashboardCard chat={''} />
-            <div className="fileDetails">
-              <div className="fileName">
-                File Name
-                <IoPeople className="peopleIcon" />
-              </div>
-              <div>
-                <span>in</span>
-                <span className="folderName">folderName</span>
-                <span>
-                  • Modified 2 days ago
-                  <HiDotsHorizontal className="dotsIcon" />
-                </span>
-              </div>
+        {/* New Assistant Button */}
+        <section className="generate" style={{ marginTop: '2rem' }}>
+          <div className="container">
+            <div className="left-buttons">
+              <p className="assistant-heading">
+                <FaFolderTree /> Assistant
+              </p>
+            </div>
+
+            <div className="center-buttons">
+              <button
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                className="assiss-btn"
+                onClick={() => {
+                  dispatch(setCurrentChatId(null));
+                  navigate('/assessment/chat');
+                }}
+              >
+                New Assistant
+                <AiOutlinePlus className="icon" />
+              </button>
             </div>
           </div>
-        ))}
+        </section>
+
+        {/* Assessment Cards */}
+        <div className="cardWrapper">
+          {cardData.map((card, index) => (
+            <div key={index}>
+              <DashboardCard chat={card.content} />
+              <div className="fileDetails">
+                <div className="fileName">
+                  File Name
+                  <IoPeople className="peopleIcon" />
+                </div>
+                <div>
+                  <span>in</span>
+                  <span className="folderName">folderName</span>
+                  <span>
+                    • Modified 2 days ago
+                    <HiDotsHorizontal className="dotsIcon" />
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Component Styles */}
       <style>{`
         .container {
-          // background-color: #f9f9f9;
           padding: 1rem 2rem;
         }
 

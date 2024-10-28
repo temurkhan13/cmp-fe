@@ -7,6 +7,8 @@ import {
   selectCurrentWorkspace,
 } from '../redux/selectors/selectors';
 import config from '../config/config';
+import { selectSelectedFolder } from '../redux/slices/folderSlice.js';
+import { selectWorkspace } from '../redux/slices/workspacesSlice.js';
 
 const useStartAssessment = () => {
   const [error, setError] = useState(null);
@@ -16,7 +18,11 @@ const useStartAssessment = () => {
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
-  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const currentWorkspace = useSelector(selectWorkspace);
+
+  // const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const folderId =  useSelector(selectSelectedFolder);
+
 
   const StartAssessment = async (message, assessmentName, Questions) => {
     try {
@@ -35,8 +41,9 @@ const useStartAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
+      console.log(folderId,'folderID..............')
       const response = await axios.post(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment/`,
+        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${folderId?.id}/assessment/`,
         {
           // message: message || '',
           // history: [],
