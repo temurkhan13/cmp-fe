@@ -1,6 +1,26 @@
-// workspaceSlice.js
-import { createSlice } from '@reduxjs/toolkit';
-import { workspaceApi } from '../api/workspaceApi';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import config from '../../config/config';
+import { workspaceApi } from '../api/workspaceApi'; // Import the workspaceApi
+
+// Fetch dashboard stats thunk
+export const fetchDashboardStats = createAsyncThunk(
+  'workspaces/fetchDashboardStats',
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${config.apiURL}/workspace/user/dashboard-stats`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const workspacesSlice = createSlice({
   name: 'workspaces',
@@ -12,7 +32,10 @@ const workspacesSlice = createSlice({
     currentFolderId: null,
     currentChatId: null,
     currentAssessmentId: null,
-    currentSelectedTitle: ''
+    currentSelectedTitle: '',
+    dashboardStats: null, // New state for dashboard stats
+    loading: false,
+    error: null,
   },
   reducers: {
     setSelectedWorkspace: (state, action) => {
@@ -34,25 +57,35 @@ const workspacesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // When getWorkspacesQuery is fulfilled, automatically store workspaces in Redux
+    // Handle the fetchDashboardStats thunk
+    builder
+      .addCase(fetchDashboardStats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDashboardStats.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.dashboardStats = payload;
+        // Set the first workspace as default
+        if (payload.workspaces && payload.workspaces.length > 0) {
+          state.selectedWorkspace = payload.workspaces[0];
+          state.currentWorkspaceId = payload.workspaces[0].id;
+        }
+      })
+      .addCase(fetchDashboardStats.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+      });
+
+    // Use the matcher from workspaceApi
     builder.addMatcher(
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
         state.workspaces = payload.results;
         state.selectedWorkspace = payload.results[0]; // Select first workspace by default if none is selected
         state.currentWorkspaceId = state.selectedWorkspace.id;
-        if (!state.selectedWorkspace && payload.length > 0) {
-          state.workspaces.selectedWorkspace = payload.results[0]; // Select first workspace by default if none is selected
-        }
       }
     );
-    // builder.addMatcher(
-    //   workspaceApi.endpoints.getWorkspace.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.selectedWorkspace = payload;
-    //     state.currentWorkspaceId = payload.id;
-    //   }
-    // );
   },
 });
 
@@ -61,7 +94,13 @@ export const {
   setCurrentChatId,
   setCurrentAssessmentId,
   setSelectedFolder,
-  setCurrentSelectedTitle
+  setCurrentSelectedTitle,
 } = workspacesSlice.actions;
+
+// Selectors
 export const selectWorkspace = (state) => state.workspaces.selectedWorkspace;
+export const selectDashboardStats = (state) => state.workspaces.dashboardStats;
+export const selectLoading = (state) => state.workspaces.loading;
+export const selectError = (state) => state.workspaces.error;
+
 export default workspacesSlice.reducer;

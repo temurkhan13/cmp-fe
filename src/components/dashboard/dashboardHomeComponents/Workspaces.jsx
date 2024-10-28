@@ -2,28 +2,28 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsWindowStack } from 'react-icons/bs';
-import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { RxCross2 } from 'react-icons/rx';
-import { IoFolderOpen } from 'react-icons/io5';
-
 import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
-import { useAddWorkspaceMutation,useGetWorkspacesQuery,useMoveToTrashMutation, useRestoreFromTrashMutation, useUpdateWorkspaceMutation } from '../../../redux/api/workspaceApi';
-import CustomModal from '../../customModal/CustomModal';
+import { useAddWorkspaceMutation, useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
+import NotificationBar from '../../common/NotificationBar';
+import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
 
-const Workspaces = ({ activeWorkspace, workspaces }) => {
+const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspaceChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
-  const [newWorkspaceDescription, setNewWorkspaceDescription] = useState('');
-  const [descriptionErrorMessage, setDescriptionErrorMessage] = useState('');
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
+  const [newWorkspaceDescription, setNewWorkspaceDescription] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showNotification, setShowNotification] = useState(false); // For NotificationBar
   const modalRef = useRef(null);
 
   const dispatch = useDispatch();
   const [addWorkspace] = useAddWorkspaceMutation();
+  const [moveToTrash] = useMoveToTrashMutation();
 
+  // Close modal on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -37,80 +37,78 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
     };
   }, []);
 
+  const showError = (message) => {
+    setErrorMessage(message);
+    setShowNotification(true);
+  };
+
   const handleNewWorkspaceSubmit = async (e) => {
     e.preventDefault();
     if (newWorkspaceName.trim().length < 3) {
-      setErrorMessage('Workspace name must be at least 3 characters long.');
-      // Validate workspace description
-      if (newWorkspaceDescription.trim() === '') {
-        setDescriptionErrorMessage('Workspace description cannot be empty.');
-      } else {
-        setDescriptionErrorMessage(''); // Clear the error message if valid
-      }
+      showError('Workspace name must be at least 3 characters long.');
+      return;
+    }
+    if (newWorkspaceDescription.trim() === '') {
+      showError('Workspace description cannot be empty.');
       return;
     }
 
     try {
-      await addWorkspace({ workspaceName: newWorkspaceName }).unwrap();
+      await addWorkspace({
+        workspaceName: newWorkspaceName,
+        workspaceDescription: newWorkspaceDescription,
+      }).unwrap();
+
+      // Clear inputs and close modal
       setNewWorkspaceName('');
+      setNewWorkspaceDescription('');
       setIsNewWorkspaceModalOpen(false);
-      setErrorMessage(''); // Clear the error message after successful submission
+      onWorkspaceUpdated();
     } catch (error) {
-      console.error('Failed to add workspace:', error);
+      showError('Failed to add workspace.');
     }
   };
 
   const handleWorkspaceSwitch = (workspace) => {
     dispatch(setReduxSelectedWorkspace(workspace));
+    setIsModalOpen(false);
+    onWorkspaceChange(workspace);
   };
 
-  const truncateString = (str, num) =>
-    str.length > num ? str.slice(0, num) + '...' : str;
+  const truncateString = (str, num) => (str.length > num ? str.slice(0, num) + '...' : str);
 
   return (
     <div className="collection">
       <div className="workspace-header">
         <p className="collection-heading">Workspaces</p>
-        <button
-          className="workspace-btn"
-          onClick={() => setIsNewWorkspaceModalOpen(true)}
-        >
+        <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>
           New Workspace <AiOutlinePlus className="icon" />
         </button>
       </div>
 
       <div className="icons">
-  {workspaces.map((workspace, index) => (
-    <div key={index} className="icon-container">
-      <BsWindowStack
-        onClick={() => {
-          setSelectedWorkspace(workspace);
-          setIsModalOpen(true);
-          console.log('selectedWork:', workspace);
-          console.log('selectedWorkSpace:', selectedWorkspace);
-        }}
-        // Compare unique property like id to check if the workspace is selected
-        style={ selectedWorkspace?.id === workspace.id 
-          ? { color: 'black', transform: 'scale(1.1)' } 
-          : { color: 'grey' }}
-        className="collection-icon"
-      />
-      <span className="icon-label" title={workspace.workspaceName}>
-        {truncateString(workspace.workspaceName, 8)}
-      </span>
-    </div>
-  ))}
-</div>
-
+        {workspaces.map((workspace, index) => (
+          <div key={index} className="icon-container">
+            <BsWindowStack
+              onClick={() => {
+                setSelectedWorkspace(workspace);
+                setIsModalOpen(true);
+              }}
+              style={selectedWorkspace?.id === workspace.id ? { color: 'black' } : { color: 'grey' }}
+              className="collection-icon"
+            />
+            <span className="icon-label" title={workspace.workspaceName}>
+              {truncateString(workspace.workspaceName, 8)}
+            </span>
+          </div>
+        ))}
+      </div>
 
       {isModalOpen && selectedWorkspace && (
         <div className="modal" ref={modalRef}>
           <div className="modal-wrapper">
             <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
-            <button
-              className="modal-closebtn"
-              onClick={() => setIsModalOpen(false)}
-            >
+            <button className="modal-closebtn" onClick={() => setIsModalOpen(false)}>
               <RxCross2 />
             </button>
           </div>
@@ -118,6 +116,10 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
             <ModalSections
               selectedWorkspace={selectedWorkspace}
               handleWorkspaceSwitch={handleWorkspaceSwitch}
+              moveToTrash={moveToTrash}
+              setIsModalOpen={setIsModalOpen}
+              showError={showError} // Pass error handler to modal
+              onWorkspaceUpdated={onWorkspaceUpdated}
             />
           </div>
         </div>
@@ -127,51 +129,38 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
         <div className="modal" ref={modalRef}>
           <div className="modal-wrapper">
             <h3 className="modal-heading">Create New Workspace</h3>
-            <button
-              className="modal-closebtn"
-              onClick={() => setIsNewWorkspaceModalOpen(false)}
-            >
+            <button className="modal-closebtn" onClick={() => setIsNewWorkspaceModalOpen(false)}>
               <RxCross2 />
             </button>
           </div>
-
           <div className="input-wrapper">
-            {/* Workspace Name Input */}
             <input
               type="text"
               className="workspace-input"
               value={newWorkspaceName}
-              onChange={(e) => {
-                setNewWorkspaceName(e.target.value);
-                if (e.target.value.length >= 3) {
-                  setErrorMessage('');
-                }
-              }}
+              onChange={(e) => setNewWorkspaceName(e.target.value)}
               placeholder="Enter workspace name"
             />
-            {/* Error Message */}
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-            {/* Workspace Description Input */}
             <textarea
               className="workspace-description"
               value={newWorkspaceDescription}
               onChange={(e) => setNewWorkspaceDescription(e.target.value)}
               placeholder="Enter workspace description"
             />
-            {descriptionErrorMessage && (
-              <p className="error-message">{descriptionErrorMessage}</p>
-            )}
-
-            {/* Create Button */}
-            <button
-              onClick={handleNewWorkspaceSubmit}
-              className="create-workspace-btn"
-            >
+            <button onClick={handleNewWorkspaceSubmit} className="create-workspace-btn">
               Create
             </button>
           </div>
         </div>
+      )}
+
+      {showNotification && (
+        <NotificationBar
+          message={errorMessage}
+          type="error"
+          duration={5000}
+          onClose={() => setShowNotification(false)}
+        />
       )}
 
       <style>{`
@@ -198,10 +187,6 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
           font-weight: 600;
           padding: 1rem 2rem;
           background-color: #c3e11d;
-        }
-        .icon {
-          font-size: 2rem;
-          color:black;
         }
         .icons {
           padding: 0 3rem;
@@ -238,14 +223,16 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
           padding: 20px;
           box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
           border-radius: 1rem;
+          width: 400px;
+          z-index: 999;
         }
         .modal-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 2rem;
+          margin-bottom: 1rem;
+        }
         .modal-heading {
           font-size: 2rem;
           padding-bottom: 1rem;
@@ -254,102 +241,24 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
           border: none;
           background-color: lightgray;
           font-size: 2rem;
-          display:flex;
-          align-items:center;
+          display: flex;
+          align-items: center;
           padding: 0.5rem;
-          margin:0.5rem;
+          margin: 0.5rem;
           border-radius: 50%;
         }
-        .modal-content {
-
-        }
-        .section{
-        margin-right:1rem;
-        margin-left:1rem;
-        }
-        .modal-sections{
+        .input-wrapper {
           display: flex;
           flex-direction: column;
+          gap: 2rem;
         }
-          .section-folders {
-    display: flex;
-    gap: 0.5rem;
-    width: 30rem;
-    overflow-x: auto;
-    scrollbar-width:thin;
-}
-           .link_chat{
-           display:flex;
-           align-items: center;
-           justify-content:center;
-           gap:0.3rem;
-           border:none;
-           font-size:1.4rem;
-           font-weight:600;
-           color:#0B1444;
-           border-radius:1rem;
-           padding:1rem 1rem;
-           background-color:#C3E11D;
-           text-decoration:none;
-           }
-           .section-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size:1.7rem;
-    font-weight: 600;
-}
-        .folder-wrapper {
-    height: 18rem;
-    margin: 1rem 0;
-    overflow-y: auto;
-    border: 1px solid lightgray;
-    border-radius: 1rem;
-    scrollbar-width:thin;
-
-}
-        .folder-icon{
-        font-size: 1.2rem;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content: center;
-        padding:0.5rem;
-        border-radius:0.8rem;
-        &:hover{
-        background-color:#f1f1f1;
-        cursor:pointer;
-
-        }
-        }
-        .section-list-item{
-        list-style:none;
-        display:flex;
-        align-items:center;
-        gap:0.5rem;
-        font-size:1.5rem;
-        padding:1rem;
-        border-radius:1rem;
-        margin:0 0.5rem;
-        &:hover{
-        background-color:#f1f1f1;
-        cursor:pointer;
-        }
-        }
-        .section-list-item:first-child{
-        margin-top:0.5rem;
-        }
-        .workspace-input {
+        .workspace-input,
+        .workspace-description {
           border: 1px solid #ccc;
           width: 100%;
           border-radius: 1rem;
-          outline:none;
           padding: 1rem;
-          text-align: left;
           font-size: 1.5rem;
-        }
-        .workspace-input::placeholder {
-        font-size: 1.5rem;
         }
         .create-workspace-btn {
           border: none;
@@ -359,204 +268,42 @@ const Workspaces = ({ activeWorkspace, workspaces }) => {
           border-radius: 1rem;
           background-color: #c3e11d;
         }
-        .input-wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-          .workspace-dropdown{
-          position:relative;
-          display: flex;
-          font-size:1.3rem;
-          position:absolute;
-          background-color:white;
-          border-radius:1rem;
-          z-index:1;
-          top:25%;
-          left:-20%;
-          box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-          }
-          .workspace-dropdown ul li{
-          cursor:pointer;
-          padding:1rem 1rem;
-          list-style:none;
-          &:hover{
-          background-color:#f0f0f0;
-          border-radius:1rem;
-          }
-          }
-          .workspace-rename-input{
-          border:1px solid lightgray;
-          padding:1rem;
-          border-radius:1rem;
-          width:100%;
-          outline:none;
-          }
-          .cancel-button, 
-          .save-button{
-          border:none;
-          font-weight:600;
-          font-size:1.5rem;
-          padding:1rem 2rem;
-          border-radius:1rem;
-          background-color: #c3e11d;
-          }
-          .rename-section{
-          display: flex;
-          // align-items: center;
-          flex-direction: column;
-          gap:1rem;
-          }
-          .workspace-rename-buttns{
-          display:flex;
-          // align-items: center;
-          justify-content:space-between; 
-          margin-bottom:1rem;
-          }
-          .error-message{
-          color: red;
-          font-size:1.1rem;
-          margin: 0;
-          }
-          .workspace-description {
-  width: 100%;
-  height: 80px;
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 14px;
-  outline:none;
-  border:1px solid lightgray;
-  border-radius: 1rem;
-}
       `}</style>
     </div>
   );
 };
 
-const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
-  const [workspaceDropdownOpen, setWorkspaceDropdownOpen] = useState(false);
-  const [isMoveToTrashModalOpen, setMoveToTrashModalOpen] = useState(false);
-
-  const [moveToTrash] = useMoveToTrashMutation();
-  const [updateWorkspace, { isSuccess }] = useUpdateWorkspaceMutation();
-  const { refetch } = useGetWorkspacesQuery(selectedWorkspace.userId);
+const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, setIsModalOpen, showError, onWorkspaceUpdated }) => {
   const [isRenaming, setIsRenaming] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(selectedWorkspace.workspaceName);
   const [errorMessage, setErrorMessage] = useState('');
-  const dropdownRef = useRef(null);
-
-  // Set the input value to the workspace name when the modal opens
-  useEffect(() => {
-    if (selectedWorkspace) {
-      setInputValue(selectedWorkspace.workspaceName);
-    }
-  }, [selectedWorkspace]);
-
-  const handleWorkspaceDropdown = () => {
-    setWorkspaceDropdownOpen(!workspaceDropdownOpen);
-  };
-
-  const handleRenameClick = () => {
-    setIsRenaming(true);
-    setWorkspaceDropdownOpen(false); // Close dropdown when renaming starts
-  };
-
-  const handleCancelRename = () => {
-    setIsRenaming(false);
-    setErrorMessage('');
-    setInputValue(selectedWorkspace.workspaceName); // Reset to the current workspace name
-  };
 
   const handleSaveRename = async () => {
     if (inputValue.trim().length < 3) {
-      setErrorMessage('Please enter at least 3 characters.');
-    } else {
-      try {
-        // Log the data before making the request to ensure it's correct
-        console.log('Sending to API:', {
-          workspaceId: selectedWorkspace.id,  // Ensure workspaceId is correct
-          workspaceName: inputValue.trim(),   // The new workspace name
-        });
-  
-        // Trigger the mutation to save the updated workspace name
-        const updatedWorkspace = await updateWorkspace({
-          workspaceId: selectedWorkspace.id,   // Ensure workspaceId is correct
-          workspaceName: inputValue.trim(),    // The new workspace name
-        }).unwrap();
-  
-        console.log('API response (updated workspace):', updatedWorkspace); // Log the API response
-  
-        // Refetch workspace data to update the UI after a successful mutation
-        refetch();  // Assuming you have a refetch function from your query
-        setIsRenaming(false); // Exit renaming mode
-        setErrorMessage('');  // Clear error message
-      } catch (error) {
-        setErrorMessage('Failed to update the workspace name.');
-        console.error('Error updating workspace:', error);
-      }
+      showError('Please enter at least 3 characters.');
+      return;
+    }
+    try {
+      // Trigger the update workspace mutation
+      await updateWorkspace({ id: selectedWorkspace.id, workspaceName: inputValue }).unwrap();
+      setIsRenaming(false); // Close renaming state
+    } catch (error) {
+      showError('Failed to rename workspace.');
     }
   };
 
-  const truncateString = (str, num) =>
-    str.length > num ? str.slice(0, num) + '...' : str;
-
-  const handleClickOutside = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setWorkspaceDropdownOpen(false);
-    }
-  };
-  const handleCloseMoveToTrashModal = () => {
-    setMoveToTrashModalOpen(false);
-  };
-  const handleProceedMoveToTrash = () => {
-    handleMoveToTrash();
-    setMoveToTrashModalOpen(false);
-  };
-  
   const handleMoveToTrash = async () => {
     try {
-      console.log(selectedWorkspace)
-      const saveUserId = selectedWorkspace.userId;
-      console.log("User ID:", saveUserId);
-      await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id }).unwrap();  
-      refetch(); 
+      await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id }).unwrap();
+      setIsModalOpen(false); // Close the modal after deletion
+      onWorkspaceUpdated()
     } catch (error) {
-      console.error('Error moving to trash:', error);
+      showError('Error moving workspace to trash.');
     }
   };
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
-    <ul className="modal-sections">
-      <BiDotsVerticalRounded
-        size={22}
-        onClick={handleWorkspaceDropdown}
-        style={{ cursor: 'pointer', marginBottom: '1rem' }}
-      />
-      {workspaceDropdownOpen && (
-        <div className="workspace-dropdown" ref={dropdownRef}>
-          <ul>
-            <li className="workspace-menu-item" onClick={handleRenameClick}>
-              Rename
-            </li>
-            <li
-              onClick={() => {
-                setMoveToTrashModalOpen(true);
-                setWorkspaceDropdownOpen(false);
-              }}
-            >
-              Delete Permanently
-            </li>
-          </ul>
-        </div>
-      )}
-
+    <div>
       {isRenaming ? (
         <div className="rename-section">
           <input
@@ -565,9 +312,8 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
             className="workspace-rename-input"
             onChange={(e) => setInputValue(e.target.value)}
           />
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <div className="workspace-rename-buttns">
-            <button className="cancel-button" onClick={handleCancelRename}>
+          <div className="workspace-rename-buttons">
+            <button className="cancel-button" onClick={() => setIsRenaming(false)}>
               Cancel
             </button>
             <button className="save-button" onClick={handleSaveRename}>
@@ -575,58 +321,77 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch }) => {
             </button>
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <button className="modal-buttons link_chat" onClick={() => handleWorkspaceSwitch(selectedWorkspace)}>
+            Switch Workspace
+          </button>
+          <button className="modal-buttons delete-button" onClick={handleMoveToTrash}>
+            Move to Trash
+          </button>
+        </div>
+      )}
 
-      <button
-        className="link_chat"
-        onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
-      >
-        Switch Workspace <AiOutlinePlus className="icon" />
-      </button>
-
-      <div className="folder-wrapper">
-        {selectedWorkspace?.folders.map((folder, index) => (
-          <li key={index} className="section-list-item">
-            <IoFolderOpen
-              className="file-icon"
-              style={{ color: 'gray', fontSize: '2rem' }}
-            />
-            <p>{truncateString(folder.folderName, 9)}</p>
-          </li>
-        ))}
-      </div>
-      {
-        <CustomModal
-          isOpen={isMoveToTrashModalOpen}
-          onClose={handleCloseMoveToTrashModal}
-          onProceed={handleProceedMoveToTrash}
-          heading="Move to trash"
-          bodyContent={
-            <div>
-              Are you sure you want to move this file to the
-              <br /> trash? It will remain there for 30 days before being
-              <br />
-              permanently deleted.
-            </div>
-          }
-          cancelText="Cancel"
-          proceedText="Proceed"
-        />
-      }
-    </ul>
+      <style>{`
+        .rename-section {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .workspace-rename-input {
+          border: 1px solid lightgray;
+          padding: 1rem;
+          border-radius: 1rem;
+          width: 100%;
+        }
+        .workspace-rename-buttons {
+          display: flex;
+          justify-content: space-between;
+        }
+        .cancel-button,
+        .save-button {
+          border: none;
+          font-weight: 600;
+          font-size: 1.5rem;
+          padding: 1rem 2rem;
+          border-radius: 1rem;
+          background-color: #c3e11d;
+        }
+        .modal-buttons{
+         margin-top: 1rem;
+          border: none;
+          font-weight: 600;
+          font-size: 1.2rem;
+          padding: 1rem 2rem;
+          border-radius: 1rem;
+        }
+        .link_chat
+        {
+          background-color: #c3e11d;
+        }
+        .delete-button {
+        background-color:red;
+        color:white;
+        }
+      `}</style>
+    </div>
   );
 };
 
 ModalSections.propTypes = {
-  selectedWorkspace: PropTypes.shape({
-    workspaceName: PropTypes.string.isRequired,
-    folders: PropTypes.arrayOf(
-      PropTypes.shape({
-        folderName: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-  }).isRequired,
+  selectedWorkspace: PropTypes.object.isRequired,
   handleWorkspaceSwitch: PropTypes.func.isRequired,
+  moveToTrash: PropTypes.func.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
+  onWorkspaceUpdated: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired, // New error handler prop
+};
+
+Workspaces.propTypes = {
+  activeWorkspace: PropTypes.object,
+  workspaces: PropTypes.array.isRequired,
+  onWorkspaceUpdated: PropTypes.func.isRequired,
+  onWorkspaceChange: PropTypes.func.isRequired,
 };
 
 export default Workspaces;

@@ -12,6 +12,9 @@ import userReducer from '../slices/userSlice';
 import authReducer from '../slices/authSlice';
 import workspacesReducer from '../slices/workspacesSlice';
 import chatReducer from '../slices/chatSlice';
+import trashReducer from '../slices/trashSlice';
+import folderReducer from '../slices/folderSlice';
+
 import { workspaceApi } from '../api/workspaceApi';
 
 // Custom middleware to trigger loading bar actions for RTK Query requests
@@ -76,6 +79,8 @@ const store = configureStore({
     auth: persistedAuthReducer,
     loadingBar: loadingBarReducer,
     chat: persistedChatReducer,
+    trash: trashReducer,
+    folder: folderReducer,
     [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
   },
   middleware: (getDefaultMiddleware) =>

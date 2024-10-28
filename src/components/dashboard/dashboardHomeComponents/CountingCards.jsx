@@ -1,16 +1,7 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { selectAllFolders } from '../../../redux/selectors/selectors';
 
-const CountingCards = ({ activeWorkspace }) => {
-  const workspaces = useSelector((state) => state.workspaces.workspaces);
-  const projects = useSelector(selectAllFolders);
-
-  const totalWorkspaces = workspaces ? workspaces.length : 0;
-  const totalProjects = projects ? projects.length : 0;
-  const activeWorkspaceName = activeWorkspace
-    ? activeWorkspace.workspaceName
-    : 'None';
+const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
+  const activeWorkspaceName = activeWorkspace || 'No Active Workspace';
 
   const cardData = [
     { title: 'Active Workspace', count: activeWorkspaceName },
@@ -89,15 +80,9 @@ const CountingCards = ({ activeWorkspace }) => {
 };
 
 CountingCards.propTypes = {
-  activeWorkspace: PropTypes.shape({
-    workspaceName: PropTypes.string,
-  }),
-  projects: PropTypes.arrayOf(PropTypes.object).isRequired,
-  workspaces: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-CountingCards.defaultProps = {
-  activeWorkspace: null,
+  activeWorkspace: PropTypes.string.isRequired,
+  totalWorkspaces: PropTypes.number.isRequired,
+  totalProjects: PropTypes.number.isRequired,
 };
 
 export default CountingCards;
