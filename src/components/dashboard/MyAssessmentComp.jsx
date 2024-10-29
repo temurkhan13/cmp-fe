@@ -11,14 +11,59 @@ import useManagerChat from '@hooks/useManagerChat';
 import DashboardCard from '@components/common/DashboardCard';
 import Folder from './dashboardHomeComponents/Folder';
 import { truncateText } from '../../utils/helperFunction';
+import {
+  fetchFolderData,
+  resetFolderState,
+  selectFolderData, selectSelectedFolder,
+  setSelectedFolder
+} from '../../redux/slices/folderSlice.js';
 
 const MyAssessmentComp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const selectedWorkspace = useSelector(selectWorkspace);
+  const folderData = useSelector(selectFolderData);
+  const selectedFolder = useSelector(selectSelectedFolder)
+
   const { managerData, error } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
-  const selectedWorkspace = useSelector(selectWorkspace);
+
+  const [currentFolder, setCurrentFolder] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+
+  useEffect(() => {
+    // Reset folder and set first folder if available
+    setCurrentFolder(null);
+    dispatch(resetFolderState());
+
+    if (selectedWorkspace?.folders?.length > 0) {
+      const firstFolder = selectedWorkspace.folders[0];
+      handleFolderSelection(firstFolder, selectedWorkspace.id);
+    }
+  }, [selectedWorkspace]);
+
+  useEffect(() => {
+
+  }, [selectedFolder]);
+
+  const handleFolderSelection = async (folder, workspaceId = null) => {
+    const activeWorkspaceId = workspaceId || selectedWorkspace?.id;
+    if (!activeWorkspaceId) {
+      // handleError("No workspace ID available.");
+      return;
+    }
+
+    setCurrentFolder(folder);
+    dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
+
+    try {
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id })).unwrap();
+    } catch (err) {
+      // handleError('Failed to fetch folder data.');
+    }
+  };
+
 
   useEffect(() => {
     if (managerData) {
