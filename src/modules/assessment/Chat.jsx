@@ -39,7 +39,7 @@ import data from '../../data';
 import {
   setSelectedWorkspace,
   selectWorkspace,
-  setCurrentAssessmentId,
+  setCurrentAssessmentId, setCurrentChatId
 } from '../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import {
@@ -47,6 +47,7 @@ import {
   MessagesSection,
   NewChat,
 } from '../../components/assessment';
+import { fetchFolderData, setSelectedFolder } from '../../redux/slices/folderSlice.js';
 
 const Chat = () => {
   const dispatch = useDispatch();
@@ -63,15 +64,40 @@ const Chat = () => {
     setSelectedAssessment(assessment);
   };
 
+
+
+  // Handle initial data loading and workspace selection
   useEffect(() => {
     if (chatId) {
       dispatch(setCurrentAssessmentId(chatId));
     }
+
     if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
-      const firstWorkspace = workspaces[0];
-      dispatch(setSelectedWorkspace(firstWorkspace));
+      dispatch(setSelectedWorkspace(workspaces[0]));
     }
+
+    if (selectedWorkspace?.folders?.length > 0) {
+      handleFolderSelection(selectedWorkspace.folders[0], selectedWorkspace.id);
+    }
+
   }, [workspaces, selectedWorkspace, dispatch, chatId]);
+
+
+  const handleFolderSelection = async (folder, workspaceId = null) => {
+    const activeWorkspaceId = workspaceId || selectedWorkspace?.id;
+    if (!activeWorkspaceId) {
+      // handleError("No workspace ID available.");
+      return;
+    }
+
+    dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
+
+    try {
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id })).unwrap();
+    } catch (err) {
+      // handleError('Failed to fetch folder data.');
+    }
+  };
 
   return (
     <div className="assessmentChat">

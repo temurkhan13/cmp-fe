@@ -94,7 +94,7 @@ const AiAssistantChat = () => {
     dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
 
     try {
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder.id })).unwrap();
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id })).unwrap();
     } catch (err) {
       handleError('Failed to fetch folder data.');
     }

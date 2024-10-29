@@ -43,7 +43,7 @@ const useStartAssessment = () => {
       const token = localStorage.getItem('token');
       console.log(folderId,'folderID..............')
       const response = await axios.post(
-        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${folderId?.id}/assessment/`,
+        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${folderId?._id}/assessment/`,
         {
           // message: message || '',
           // history: [],
