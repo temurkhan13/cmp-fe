@@ -15,6 +15,8 @@ import {
 } from '../../redux/api/workspaceApi';
 import NotificationBar from '../common/NotificationBar.jsx';
 import { RxCross2 } from 'react-icons/rx';
+import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
+import { useSelector } from 'react-redux';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const [error, setError] = useState(null); // For displaying error notifications
   const [moveToTrash] = useMoveToTrashMutation();
   const { refetch } = useGetWorkspacesQuery(workspace.id);
+  const folderId =  useSelector(selectSelectedFolder);
 
   const modalRef = useRef(null);
 
@@ -51,9 +54,12 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   };
 
   const handleOpenFolder = () => {
+    console.log(selectedFolder, 'selectedFolder')
     dispatch(setSelectedReduxFolder(selectedFolder)); // Set in Redux
-    onFolderSelect(selectedFolder); // Pass selected folder to parent
+    // onFolderSelect(selectedFolder); // Pass selected folder to parent
     closeModal(); // Close modal after selecting
+    navigate('/assessment/chat');
+
   };
 
   const handleCloseError = () => setError(null); // Close error notification

@@ -73,7 +73,7 @@ const DashboardHomeComp = () => {
     if (folderData?.length > 0 && !currentFolder) {
       handleFolderSelection(folderData[0]);
     } else if (selectedWorkspace && !folderData?.length) {
-      handleError("No folders available in the selected workspace.");
+      // handleError("No folders available in the selected workspace.");
     }
   }, [folderData, currentFolder, selectedWorkspace]);
 
