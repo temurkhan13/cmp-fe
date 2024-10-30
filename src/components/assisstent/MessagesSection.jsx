@@ -445,10 +445,11 @@
 
       setLoading(true); // Show spinner
       try {
+        console.log(folderId,'folderrrr is here')
         // Simulate sending message
         const data = await addMessage({
           workspaceId: workspaceId,
-          folderId: folderId._id,
+          folderId: folderId._id || folderId.id,
           chatId: chatId ? chatId : 'newChat',
           message: text,
           files: file,
@@ -458,7 +459,7 @@
           dispatch(
             getChatsAsync({
               workspaceId: currentWorkspace.id,
-              folderId: folderId._id,
+              folderId: folderId._id || folderId.id,
             })
           )
             .then((response) => {

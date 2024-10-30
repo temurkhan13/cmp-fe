@@ -102,20 +102,27 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
   console.log(selectedAssessmentTitle, 'selectedAssessmentTitle');
   console.log(currentWorkspace,'currentWorkspace............');
+  const [folderId, setFolderId] = useState('');
 
   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
-  const folderId =  useSelector(selectSelectedFolder);
+  const folder =  useSelector(selectSelectedFolder);
+
+  useEffect(() => {
+    if(folder){
+      setFolderId(folder.id || folder._id);
+    }
+  },[folder])
 
   // custom hooks
   const { StartAssessment } = usestartAssessment();
   const { AssessmentReport } = useAssessmentReport({
     workspaceId:currentWorkspace.id,
-    folderId: folderId?.id || null,
+    folderId: folder?.id || folderId,
     assessmentId,
   });
   const { GenerateSingleReport } = useGenerateSingleReport({
     workspaceId:currentWorkspace.id,
-    folderId: folderId?.id || null,
+    folderId: folder?.id || folderId,
     assessmentId,
   });
   const { fixGrammar } = useGrammarFix();

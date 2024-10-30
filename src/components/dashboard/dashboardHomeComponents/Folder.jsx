@@ -230,7 +230,6 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
           background-color: white;
           padding: 20px;
           border-radius: 8px;
-          width:500px;
         }
         .modal-form-content {
           display: flex;

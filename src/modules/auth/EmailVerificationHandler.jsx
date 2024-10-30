@@ -146,13 +146,21 @@ const EmailVerificationHandler = () => {
   };
 
   useEffect(() => {
-    if(verificationData){
-      const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      // Parse if userData exists
       const parsedData = JSON.parse(userData);
-      setVerificationData(parsedData.verificationCode.verify);
-    }
+      const isVerified = parsedData?.verificationCode?.verify ?? false;
+      const hasGoogleId = parsedData?.googleId !== null;
 
-  }, [verificationData]);
+      // Set the verification state based on both conditions
+      setVerificationData(isVerified || hasGoogleId);
+    } else {
+      // Handle missing user data in localStorage
+      setVerificationData(false); // or any default value you prefer
+    }
+  }, []);
+
 
   return (
     <>
