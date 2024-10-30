@@ -50,8 +50,8 @@ const NewChat = () => {
   const myChats = useSelector((state) => state.chat.chats);
 
   useEffect(() => {
-    if(selectedFolder?.id && currentWorkspace?.id){
-      dispatch(getChatsAsync({workspaceId: currentWorkspace.id , folderId: selectedFolder.id}))
+    if((selectedFolder?.id || selectedFolder?._id) && currentWorkspace?.id){
+      dispatch(getChatsAsync({workspaceId: currentWorkspace.id , folderId: selectedFolder._id || selectedFolder.id}))
       .then((response) => {
         dispatch(setChats(response.payload.data))
       })
@@ -109,8 +109,8 @@ const NewChat = () => {
 
   const switchFolder = (folder) => {
     dispatch(setSelectedFolder(folder));
-    if (folder._id && currentWorkspace?.id) {
-      dispatch(getChatsAsync({ workspaceId: currentWorkspace.id, folderId: folder._id }))
+    if ((folder._id || folder.id) && currentWorkspace?.id) {
+      dispatch(getChatsAsync({ workspaceId: currentWorkspace.id, folderId: folder._id || folder.id }))
         .then((response) => {
           dispatch(setChats(response.payload.data));
         })
