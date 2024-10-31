@@ -54,11 +54,10 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   };
 
   const handleOpenFolder = () => {
-    console.log(selectedFolder, 'selectedFolder')
     dispatch(setSelectedReduxFolder(selectedFolder)); // Set in Redux
-    // onFolderSelect(selectedFolder); // Pass selected folder to parent
+    onFolderSelect(selectedFolder); // Pass selected folder to parent
     closeModal(); // Close modal after selecting
-    navigate('/assessment/chat');
+    // navigate('/assessment/chat');
 
   };
 
@@ -82,7 +81,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
         {workspace.folders.map((folder, index) => (
           <div key={index} className="file" onClick={() => openModal(folder)}>
             <span className="icon">
-              <BiSolidFolderOpen style={{ fontSize: '5rem', color: 'gray' }} />
+              <BiSolidFolderOpen style={folderId?.id == folder.id ? { color: 'black',fontSize: "5rem" } : { color: 'grey',fontSize: "5rem" }} />
             </span>
             <p>{truncateText(folder.folderName, 10)}</p>
           </div>

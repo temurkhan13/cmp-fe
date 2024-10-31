@@ -95,8 +95,8 @@ const NewChat = () => {
   const handleChatSelect = (chatId) => {
     const currentUrl = window.location.pathname;
     const newUrl = currentUrl.replace(
-      /\/assisstant\/chat\/[^/]+$/,
-      `/assisstant/chat/${chatId}`
+      /\/assistant\/chat\/[^/]+$/,
+      `/assistant/chat/${chatId}`
     );
     window.history.replaceState(null, '', newUrl);
     dispatch(setCurrentChatId(chatId));

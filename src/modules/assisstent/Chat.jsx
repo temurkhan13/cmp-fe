@@ -32,29 +32,29 @@ const AiAssistantChat = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
-  // Persist selected workspace and folder in localStorage
-  useEffect(() => {
-    if (selectedWorkspace) {
-      localStorage.setItem('selectedWorkspace', JSON.stringify(selectedWorkspace));
-    }
-
-    if (selectedFolder) {
-      localStorage.setItem('selectedFolder', JSON.stringify(selectedFolder));
-    }
-  }, [selectedWorkspace, selectedFolder]);
+  // // Persist selected workspace and folder in localStorage
+  // useEffect(() => {
+  //   if (selectedWorkspace) {
+  //     localStorage.setItem('selectedWorkspace', JSON.stringify(selectedWorkspace));
+  //   }
+  //
+  //   if (selectedFolder) {
+  //     localStorage.setItem('selectedFolder', JSON.stringify(selectedFolder));
+  //   }
+  // }, [selectedWorkspace, selectedFolder]);
 
   // Retrieve persisted workspace and folder from localStorage on mount
-  useEffect(() => {
-    const storedWorkspace = JSON.parse(localStorage.getItem('selectedWorkspace'));
-    const storedFolder = JSON.parse(localStorage.getItem('selectedFolder'));
-
-    if (storedWorkspace) {
-      dispatch(setSelectedWorkspace(storedWorkspace));
-    }
-    if (storedFolder) {
-      dispatch(setSelectedFolder(storedFolder));
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const storedWorkspace = JSON.parse(localStorage.getItem('selectedWorkspace'));
+  //   const storedFolder = JSON.parse(localStorage.getItem('selectedFolder'));
+  //
+  //   if (storedWorkspace) {
+  //     dispatch(setSelectedWorkspace(storedWorkspace));
+  //   }
+  //   if (storedFolder) {
+  //     dispatch(setSelectedFolder(storedFolder));
+  //   }
+  // }, [dispatch]);
 
   // Handle initial data loading and workspace selection
   useEffect(() => {

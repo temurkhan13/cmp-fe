@@ -8,6 +8,7 @@ import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redu
 import { useAddWorkspaceMutation, useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
 import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
+import { FaFolderTree } from 'react-icons/fa6';
 
 const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspaceChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +32,7 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
         setIsNewWorkspaceModalOpen(false);
       }
     };
+    setSelectedWorkspace(activeWorkspace)
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -79,15 +81,27 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
 
   return (
     <div className="collection">
-      <div className="workspace-header">
-        <p className="collection-heading">Workspaces</p>
-        <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>
-          New Workspace <AiOutlinePlus className="icon" />
-        </button>
-      </div>
+      {/*<div className="workspace-header">*/}
+      {/*  <p className="collection-heading">Workspaces</p>*/}
+      {/*  <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>*/}
+      {/*    New Workspace <AiOutlinePlus className="icon" />*/}
+      {/*  </button>*/}
+
+        <div className="container-heading">
+          <div className="left-buttons">
+            <p className="assistant-heading">
+              <FaFolderTree />
+              Workspaces
+            </p>
+          </div>
+          <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>
+            New Workspace <AiOutlinePlus className="icon" />
+          </button>
+        </div>
+      {/*</div>*/}
 
       <div className="icons">
-        {workspaces.map((workspace, index) => (
+        {workspaces?.map((workspace, index) => (
           <div key={index} className="icon-container">
             <BsWindowStack
               onClick={() => {
@@ -102,6 +116,12 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
             </span>
           </div>
         ))}
+
+        {workspaces?.length <= 0 && (
+          <div className="no-projects">
+          <p>No Workspace available.</p>
+          </div>
+          )}
       </div>
 
       {isModalOpen && selectedWorkspace && (
@@ -189,7 +209,7 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
           background-color: #c3e11d;
         }
         .icons {
-          padding: 0 3rem;
+          padding: 5px 3rem;
           display: flex;
           flex-wrap: wrap;
           gap: 0.3rem;

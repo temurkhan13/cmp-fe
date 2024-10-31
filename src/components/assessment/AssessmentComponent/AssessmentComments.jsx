@@ -111,10 +111,10 @@ const AssessmentComments = ({ comments }) => {
       </div>
       <hr />
       <div className="chat-container">
-        {comments.length === 0 ? (
+        {comments?.length === 0 ? (
           <NoDataAvailable message="No comments available." />
         ) : (
-          comments.map((comment) => (
+          comments?.map((comment) => (
             <div key={comment.commentId}>
               <div className="comment-container">
                 <span className="comment-time">{comment.timestamp}</span>

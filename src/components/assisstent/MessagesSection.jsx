@@ -132,7 +132,7 @@
 
       const { data: chat, refetch } = useGetChatQuery({
         workspaceId,
-        folderId: folderId?._id,
+        folderId: folderId?._id || folderId?.id,
         chatId,
       });
 
@@ -433,7 +433,7 @@
       // Dispatch action to add bookmark
       await addBookmark({
         workspaceId,
-        folderId: folderId.id,
+        folderId: folderId._id || folderId.id,
         chatId,
         messageId, // Send the whole bookmark data
       }).unwrap();
@@ -734,7 +734,7 @@
               refetch();
             }}
             workspaceId={workspaceId}
-            folderId={folderId.id}
+            folderId={folderId._id || folderId.id}
             chatId={chatId}
             messageId={messageId}
           />
