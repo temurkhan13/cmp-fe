@@ -12,7 +12,7 @@ import {
   fetchFolderData,
   resetFolderState,
   selectFolderData,
-  selectSelectedFolder, setSelectedFolder
+  selectSelectedFolder, setSelectedFolder, toggleFolderActivation
 } from '../../redux/slices/folderSlice.js';
 
 const AiAssistant = () => {
@@ -31,11 +31,11 @@ const AiAssistant = () => {
 
   useEffect(() => {
     // Reset folder and set first folder if available
-    setCurrentFolder(null);
-    dispatch(resetFolderState());
-
+    // setCurrentFolder(null);
+    // dispatch(resetFolderState());
     if (selectedWorkspace?.folders?.length > 0) {
       const firstFolder = selectedWorkspace.folders[0];
+      // console.log(firstFolder,'forstFolder')
       handleFolderSelection(firstFolder, selectedWorkspace.id);
     }
   }, [selectedWorkspace]);
@@ -53,9 +53,10 @@ const AiAssistant = () => {
 
     setCurrentFolder(folder);
     dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
+    dispatch(toggleFolderActivation({ workspaceId: activeWorkspaceId, folderId: folder?._id || folder?.id, isActive: true }));
 
     try {
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id })).unwrap();
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id || folder.id })).unwrap();
     } catch (err) {
       handleError('Failed to fetch folder data.');
     }
@@ -69,7 +70,7 @@ const AiAssistant = () => {
   // Handle removing chat from the current folder
   const handleRemoveChat = async () => {
     const activeWorkspaceId =  selectedWorkspace?.id;
-    await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: currentFolder.id })).unwrap();
+    await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: currentFolder._id || currentFolder.id })).unwrap();
 
   };
 
@@ -83,14 +84,14 @@ const AiAssistant = () => {
         <Component.Dashboard.Header />
       </div>
 
-      <Folder activeWorkspace={selectedWorkspace} />
+      <Folder activeWorkspace={selectedWorkspace} onFolderSelect={handleFolderSelection} />
 
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
           <div className="left-buttons">
             <p className="assistant-heading">
               <FaFolderTree />
-              Assistant
+              AI Assistant
             </p>
           </div>
 
@@ -100,7 +101,7 @@ const AiAssistant = () => {
               className="assiss-btn"
               onClick={() => {
                 dispatch(setCurrentChatId(null));
-                navigate('/assisstant/chat');
+                navigate('/assistant/chat');
               }}
             >
               New Assistant
@@ -118,6 +119,11 @@ const AiAssistant = () => {
               key={item.id}
               data={{ ...item, type: 'chat' }}
               onRemove={(id) => handleRemoveChat(id)} // Handle chat removal
+              OnClick={() => {
+                console.log('heloooooooooooooooo')
+                  dispatch(setCurrentChatId(item.id));
+                  navigate(`/assistant/chat/${item.id}`);
+              }}
             />
           ))}
         </div>

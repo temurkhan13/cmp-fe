@@ -77,6 +77,7 @@ const Chat = () => {
     }
 
     if (selectedWorkspace?.folders?.length > 0) {
+      console.log(selectedWorkspace.folders,'dataaa');
       handleFolderSelection(selectedWorkspace.folders[0], selectedWorkspace.id);
     }
 
@@ -93,7 +94,8 @@ const Chat = () => {
     dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
 
     try {
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id })).unwrap();
+      console.log(folder,'....................')
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id || folder.id })).unwrap();
     } catch (err) {
       // handleError('Failed to fetch folder data.');
     }

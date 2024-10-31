@@ -2,12 +2,12 @@ import Module from '../../modules';
 const assisstantRoutesData = [
   {
     title: '',
-    path: '/assisstant/chat',
+    path: '/assistant/chat',
     element: Module.Assisstant.Chat,
   },
   {
     title: '',
-    path: '/assisstant/chat/:id',
+    path: '/assistant/chat/:id',
     element: Module.Assisstant.Chat,
   },
 ];

@@ -59,6 +59,9 @@ const Header = () => {
     persistor.purge();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('selectedFolder');
+    localStorage.removeItem('selectedWorkspace');
+
     // OR if you want to clear everything
     // localStorage.clear();
     navigate('/log-in');

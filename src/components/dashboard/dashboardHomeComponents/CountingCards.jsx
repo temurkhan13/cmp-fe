@@ -19,7 +19,7 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
               fontSize: `${String(card.count).length > 3 ? '2.8rem' : '5rem'}`,
             }}
           >
-            {card.count}
+            {card.count || 0}
           </div>
           <div className="count-heading">
             <div>{card.title}</div>

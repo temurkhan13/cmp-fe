@@ -8,14 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { selectWorkspace, setCurrentChatId } from '../../redux/slices/workspacesSlice';
 import useManagerChat from '@hooks/useManagerChat';
-import DashboardCard from '@components/common/DashboardCard';
+import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard.jsx';
 import Folder from './dashboardHomeComponents/Folder';
 import { truncateText } from '../../utils/helperFunction';
 import {
   fetchFolderData,
   resetFolderState,
   selectFolderData, selectSelectedFolder,
-  setSelectedFolder
+  setSelectedFolder, toggleFolderActivation
 } from '../../redux/slices/folderSlice.js';
 
 const MyAssessmentComp = () => {
@@ -56,9 +56,10 @@ const MyAssessmentComp = () => {
 
     setCurrentFolder(folder);
     dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
+    dispatch(toggleFolderActivation({ workspaceId: activeWorkspaceId, folderId: folder?._id || folder?.id, isActive: true }));
 
     try {
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id })).unwrap();
+      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id || folder.id })).unwrap();
     } catch (err) {
       // handleError('Failed to fetch folder data.');
     }
@@ -74,29 +75,35 @@ const MyAssessmentComp = () => {
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error: {error}</div>;
 
-  const cardData = [
-    {
-      userName: 'You',
-      content: truncateText(
-        'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
-        55
-      ),
-    },
-    {
-      userName: 'John Doe',
-      content: truncateText(
-        'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
-        55
-      ),
-    },
-    {
-      userName: 'Jane Smith',
-      content: truncateText(
-        'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
-        55
-      ),
-    },
-  ];
+  // const cardData = [
+  //   {
+  //     userName: 'You',
+  //     content: truncateText(
+  //       'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
+  //       55
+  //     ),
+  //   },
+  //   {
+  //     userName: 'John Doe',
+  //     content: truncateText(
+  //       'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
+  //       55
+  //     ),
+  //   },
+  //   {
+  //     userName: 'Jane Smith',
+  //     content: truncateText(
+  //       'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
+  //       55
+  //     ),
+  //   },
+  // ];
+
+  const handleRemoveChat = async () => {
+    const activeWorkspaceId =  selectedWorkspace?.id;
+    await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: currentFolder._id || currentFolder.id })).unwrap();
+
+  };
 
   return (
     <div className="container">
@@ -133,26 +140,43 @@ const MyAssessmentComp = () => {
         </section>
 
         {/* Assessment Cards */}
-        <div className="cardWrapper">
-          {cardData.map((card, index) => (
-            <div key={index}>
-              <DashboardCard chat={card.content} />
-              <div className="fileDetails">
-                <div className="fileName">
-                  File Name
-                  <IoPeople className="peopleIcon" />
-                </div>
-                <div>
-                  <span>in</span>
-                  <span className="folderName">folderName</span>
-                  <span>
-                    • Modified 2 days ago
-                    <HiDotsHorizontal className="dotsIcon" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/*<div className="cardWrapper">*/}
+        {/*  {cardData.map((card, index) => (*/}
+        {/*    <div key={index}>*/}
+        {/*      <DashboardCard chat={card.content} />*/}
+        {/*      <div className="fileDetails">*/}
+        {/*        <div className="fileName">*/}
+        {/*          File Name*/}
+        {/*          <IoPeople className="peopleIcon" />*/}
+        {/*        </div>*/}
+        {/*        <div>*/}
+        {/*          <span>in</span>*/}
+        {/*          <span className="folderName">folderName</span>*/}
+        {/*          <span>*/}
+        {/*            • Modified 2 days ago*/}
+        {/*            <HiDotsHorizontal className="dotsIcon" />*/}
+        {/*          </span>*/}
+        {/*        </div>*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  ))}*/}
+        {/*</div>*/}
+        <div className="section">
+          <div className="workspace-header"></div>
+          <div className="grid">
+            {folderData && folderData[0]?.assessments?.map((item) => (
+              <DashboardCard
+                key={item.id}
+                data={{ ...item, type: 'chat' }}
+                onRemove={(id) => handleRemoveChat(id)} // Handle chat removal
+                OnClick={() => {
+                  console.log('heloooooooooooooooo');
+                  dispatch(setCurrentChatId(item.id));
+                  navigate(`/assessment/chat/${item.id}`);
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

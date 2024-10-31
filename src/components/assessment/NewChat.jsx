@@ -39,9 +39,10 @@ const NewChat = () => {
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentAssessment);
-  const selectedFolder = useSelector((state) =>
-    selectFolderById(state, currentFolder._id)
-  );
+  console.log(currentFolder,'currentFolder')
+  // const selectedFolder = useSelector((state) =>
+  //   selectFolderById(state, currentFolder._id)
+  // );
   const chats = useSelector(selectAllAssessments);
 
   const capitalizeFirstWord = (str) => {
@@ -108,7 +109,7 @@ const NewChat = () => {
 
   useEffect(() => {
     console.log('', currentFolder, currentChat, currentWorkspace);
-  }, [currentFolder, currentChat, currentWorkspace, chats, selectedFolder]);
+  }, [currentFolder, currentChat, currentWorkspace, chats]);
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;

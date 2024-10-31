@@ -14,7 +14,7 @@ const ItemTypeEnum = Object.freeze({
   WIREFRAME: 'wireframe',
 });
 
-const DashboardCard = ({ data = {}, onRemove }) => {
+const DashboardCard = ({ data = {}, onRemove , OnClick}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [moveToTrash, { isLoading, isError, error }] = useMoveToTrashMutation();
   const [showNotification, setShowNotification] = useState(false);
@@ -60,7 +60,7 @@ const DashboardCard = ({ data = {}, onRemove }) => {
 
   return (
     <>
-      <div className="card">
+      <div className="card" onClick={OnClick}>
         <div className="info">
           <h3>{displayName}</h3>
           <p>Created on: {createdAt}</p>

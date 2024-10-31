@@ -3,6 +3,30 @@ import axios from 'axios';
 import config from '../../config/config';
 import { workspaceApi } from '../api/workspaceApi'; // Import the workspaceApi
 
+// Thunk for updating workspace activation status
+export const updateWorkspaceStatus = createAsyncThunk(
+  'workspaces/updateWorkspaceStatus',
+  async ({ workspaceId, isActive }, { rejectWithValue }) => {
+    try {
+      console.log('hellooooooooooooooooo')
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(
+        `${config.apiURL}/workspace/${workspaceId}`,
+        { isActive },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Fetch dashboard stats thunk
 export const fetchDashboardStats = createAsyncThunk(
   'workspaces/fetchDashboardStats',
@@ -39,8 +63,12 @@ const workspacesSlice = createSlice({
   },
   reducers: {
     setSelectedWorkspace: (state, action) => {
-      state.selectedWorkspace = action.payload;
-      state.currentWorkspaceId = action.payload.id;
+      const selectedWorkspace = action.payload;
+      state.selectedWorkspace = selectedWorkspace;
+      state.currentWorkspaceId = selectedWorkspace.id;
+
+      // Dispatch the updateWorkspaceStatus thunk to patch the workspace status
+      updateWorkspaceStatus({ workspaceId: selectedWorkspace.id, isActive: true });
     },
     setSelectedFolder: (state, action) => {
       state.selectedFolder = action.payload;
@@ -74,6 +102,16 @@ const workspacesSlice = createSlice({
       })
       .addCase(fetchDashboardStats.rejected, (state, { payload }) => {
         state.loading = false;
+        state.error = payload;
+      })
+      // Handle the updateWorkspaceStatus thunk
+      .addCase(updateWorkspaceStatus.fulfilled, (state, action) => {
+        const updatedWorkspace = state.workspaces.find(ws => ws.id === action.payload.id);
+        if (updatedWorkspace) {
+          updatedWorkspace.isActive = action.payload.isActive;
+        }
+      })
+      .addCase(updateWorkspaceStatus.rejected, (state, { payload }) => {
         state.error = payload;
       });
 
