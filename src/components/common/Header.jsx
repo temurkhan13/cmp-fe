@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
-import { BiSearch } from 'react-icons/bi';
+import { BiPlus, BiSearch } from 'react-icons/bi';
 import { FaUserPlus } from 'react-icons/fa6';
 
 import Components from '@components';
@@ -13,16 +13,18 @@ import SearchDropdown from '../CustomDropdown/SearchDropdown';
 import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
 import { Questionnaire } from '../../modules/assessment';
+import { useLocation } from 'react-router-dom';
 
 const searchUser = ['John', 'abigale', 'mosa'];
 
-const Header = ({ activeWorkspace, workspaces }) => {
+const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
     useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-
+  const location = useLocation();
+  console.log(location, '27');
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
@@ -68,6 +70,41 @@ const Header = ({ activeWorkspace, workspaces }) => {
         <Components.Feature.Button className="secondry">
           {activeWorkspace?.workspaceName}
         </Components.Feature.Button>
+        {(siteMapId && location.pathname === '/sitemap/new') ||
+        location.pathname === `/sitemap/${siteMapId}` ? (
+          <div>
+            <div
+              style={{
+                margin: '16px 0',
+                display: 'flex',
+                justifyContent: 'end',
+              }}
+            >
+              <div style={{}}>
+                <a
+                  style={{
+                    width: '100%',
+                    background: '#C3E11B',
+                    border: 'none',
+                    padding: '5px',
+                    borderRadius: '6px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    marginTop: '5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'black',
+                    textDecoration: 'none',
+                  }}
+                  href="http://139.59.4.99:3500/"
+                >
+                  <BiPlus></BiPlus>
+                  Create Wireframe
+                </a>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
       <section>
         <div>
@@ -112,7 +149,6 @@ const Header = ({ activeWorkspace, workspaces }) => {
             className="ProfileImage"
             onClick={toggleProfileDropdown}
             style={{ cursor: 'pointer' }}
-
           />
         ) : (
           <div onClick={toggleProfileDropdown} className="initials-placeholder">
@@ -130,7 +166,9 @@ const Header = ({ activeWorkspace, workspaces }) => {
           isOpen={isImproveResponseModalOpen}
           onClose={handleCloseImproveResponseModal}
         >
-          <Questionnaire handleCloseImproveResponseModal={handleCloseImproveResponseModal} />
+          <Questionnaire
+            handleCloseImproveResponseModal={handleCloseImproveResponseModal}
+          />
         </Modal>
       )}
     </div>

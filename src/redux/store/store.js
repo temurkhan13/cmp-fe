@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import {
   loadingBarMiddleware,
@@ -58,11 +58,30 @@ const chatPersistConfig = {
   storage,
 };
 
+// Persisted Configuration
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['businessInfo', 'workspaces', 'user', 'auth', 'chat'],
+};
+
+const rootReducer = (state, action) => {
+  console.log(action.type,'66666666666666')
+  if (action.type === 'auth/logout') {
+    storage.removeItem('persist:root')
+    return appReducer(undefined, action)
+  }
+  return appReducer(state, action);
+};
+
 // Persisted reducers
 const persistedBusinessInfoReducer = persistReducer(
   businessInfoPersistConfig,
   businessInfoReducer
 );
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const persistedWorkspacesReducer = persistReducer(
   workspacesPersistConfig,
   workspacesReducer
@@ -71,18 +90,20 @@ const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
 
+export const appReducer = combineReducers({
+  businessInfo: persistedBusinessInfoReducer,
+  workspaces: persistedWorkspacesReducer,
+  user: persistedUserReducer,
+  auth: persistedAuthReducer,
+  loadingBar: loadingBarReducer,
+  chat: persistedChatReducer,
+  trash: trashReducer,
+  folder: folderReducer,
+  [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
+});
+
 const store = configureStore({
-  reducer: {
-    businessInfo: persistedBusinessInfoReducer,
-    workspaces: persistedWorkspacesReducer,
-    user: persistedUserReducer,
-    auth: persistedAuthReducer,
-    loadingBar: loadingBarReducer,
-    chat: persistedChatReducer,
-    trash: trashReducer,
-    folder: folderReducer,
-    [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable serializable check for redux-persist
