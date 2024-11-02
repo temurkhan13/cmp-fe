@@ -12,8 +12,6 @@ function List() {
   const [sitemaps, setSitemaps] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
-  const dataaaaaaaaaaaa = useSelector((state) => state.workspaces);
-  console.log(dataaaaaaaaaaaa, '16666666666666')
 
   async function getData(url = `${config.apiURL}/dpb/sitemap`) {
     const response = await fetch(url, {
