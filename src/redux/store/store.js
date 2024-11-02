@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+// import { persistStore, persistReducer } from 'redux-persist';
 import {
   loadingBarMiddleware,
   showLoading,
   hideLoading,
   loadingBarReducer,
 } from 'react-redux-loading-bar';
-import storage from 'redux-persist/lib/storage'; // This defaults to localStorage for web
+// import storage from 'redux-persist/lib/storage'; // This defaults to localStorage for web
 import businessInfoReducer from '../slices/businessInfoSlice';
 import userReducer from '../slices/userSlice';
 import authReducer from '../slices/authSlice';
@@ -32,77 +32,74 @@ const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
   return next(action);
 };
 
-// Persist configuration for each reducer
-const businessInfoPersistConfig = {
-  key: 'businessInfo',
-  storage,
-};
+// // Persist configuration for each reducer
+// const businessInfoPersistConfig = {
+//   key: 'businessInfo',
+//   storage,
+// };
+//
+// const workspacesPersistConfig = {
+//   key: 'workspaces',
+//   storage,
+// };
+//
+// const userPersistConfig = {
+//   key: 'user',
+//   storage,
+// };
+//
+// const authPersistConfig = {
+//   key: 'auth',
+//   storage,
+// };
+//
+// const chatPersistConfig = {
+//   key: 'chat',
+//   storage,
+// };
 
-const workspacesPersistConfig = {
-  key: 'workspaces',
-  storage,
-};
+// // Persisted Configuration
+// const persistConfig = {
+//   key: 'root',
+//   storage,
+//   whitelist: ['businessInfo', 'workspaces', 'user', 'auth', 'chat'],
+// };
 
-const userPersistConfig = {
-  key: 'user',
-  storage,
-};
-
-const authPersistConfig = {
-  key: 'auth',
-  storage,
-};
-
-const chatPersistConfig = {
-  key: 'chat',
-  storage,
-};
-
-// Persisted Configuration
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['businessInfo', 'workspaces', 'user', 'auth', 'chat'],
-};
-
-const rootReducer = (state, action) => {
-  if (action.type === 'auth/logout') {
-    storage.removeItem('persist:root')
-    return appReducer(undefined, action)
-  }
-  return appReducer(state, action);
-};
+// const rootReducer = (state, action) => {
+//   if (action.type === 'auth/logout') {
+//     storage.removeItem('persist:root')
+//     return appReducer(undefined, action)
+//   }
+//   return appReducer(state, action);
+// };
 
 // Persisted reducers
-const persistedBusinessInfoReducer = persistReducer(
-  businessInfoPersistConfig,
-  businessInfoReducer
-);
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-const persistedWorkspacesReducer = persistReducer(
-  workspacesPersistConfig,
-  workspacesReducer
-);
-const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
-const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
-const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
+// const persistedBusinessInfoReducer = persistReducer(
+//   businessInfoPersistConfig,
+//   businessInfoReducer
+// );
+// const persistedWorkspacesReducer = persistReducer(
+//   workspacesPersistConfig,
+//   workspacesReducer
+// );
+// const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
+// const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+// const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
 
 export const appReducer = combineReducers({
-  businessInfo: persistedBusinessInfoReducer,
-  workspaces: persistedWorkspacesReducer,
-  user: persistedUserReducer,
-  auth: persistedAuthReducer,
+  businessInfo: businessInfoReducer,
+  workspaces: workspacesReducer,
+  user: userReducer,
+  auth: authReducer,
   loadingBar: loadingBarReducer,
-  chat: persistedChatReducer,
+  chat: chatReducer,
   trash: trashReducer,
   folder: folderReducer,
   [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
 });
 
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: appReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable serializable check for redux-persist
@@ -112,6 +109,8 @@ const store = configureStore({
       .concat(workspaceApi.middleware), // Add middleware for RTK Query
 });
 
-const persistor = persistStore(store);
+// const persistor = persistStore(store);
 
-export { store, persistor };
+export { store
+  // , persistor
+};

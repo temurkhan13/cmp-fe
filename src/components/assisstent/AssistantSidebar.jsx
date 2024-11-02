@@ -59,13 +59,13 @@ const AssistantSidebar = (props) => {
             <FaHistory className="icon" size={20} />
             <span className="tooltip">Version History</span>
           </span>
-          <span
-            className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}
-            onClick={() => setIsMediaModalOpen(true)}
-          >
-            <FaImages className="icon" size={20} />
-            <span className="tooltip">Media</span>
-          </span>
+          {/*<span*/}
+          {/*  className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}*/}
+          {/*  onClick={() => setIsMediaModalOpen(true)}*/}
+          {/*>*/}
+          {/*  <FaImages className="icon" size={20} />*/}
+          {/*  <span className="tooltip">Media</span>*/}
+          {/*</span>*/}
           <span
             className={`iconButton ${isCommentsModalOpen ? 'active' : ''}`}
             onClick={() => setIsCommentsModalOpen(true)}
@@ -90,19 +90,19 @@ const AssistantSidebar = (props) => {
           onClose={closeModal}
         />
       )}
-      {isMediaModalOpen && (
-        <SideBarModal
-          title="Media"
-          bodyContent={
-            <Media
-              images={currentChat.images}
-              documents={currentChat.documents}
-              links={currentChat.links}
-            />
-          }
-          onClose={closeModal}
-        />
-      )}
+      {/*{isMediaModalOpen && (*/}
+      {/*  <SideBarModal*/}
+      {/*    title="Media"*/}
+      {/*    bodyContent={*/}
+      {/*      <Media*/}
+      {/*        images={currentChat.images}*/}
+      {/*        documents={currentChat.documents}*/}
+      {/*        links={currentChat.links}*/}
+      {/*      />*/}
+      {/*    }*/}
+      {/*    onClose={closeModal}*/}
+      {/*  />*/}
+      {/*)}*/}
       {isCommentsModalOpen && (
         <SideBarModal
           title="Comments"

@@ -1,0 +1,92 @@
+.folders-files {
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.heading {
+    font-size: 1.5em;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    margin-left: 2rem;
+}
+
+.files-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.file {
+    cursor: pointer;
+    margin: 0.5rem;
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.file:hover {
+    background-color: #f0f0f0;
+    border-radius: 0.8rem;
+}
+
+.icon {
+    display: block;
+    margin: auto;
+}
+
+.fs-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /*transform: translate(-50%, -50%);*/
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    width: 400px;
+    z-index: 999;
+}
+
+.modal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.modal-heading {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.modal-closebtn {
+    border: none;
+    background-color: lightgray;
+    font-size: 2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.folder-modal-button {
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.switch-btn {
+    background-color: #c3e11d;
+    color: #0b1444;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+}

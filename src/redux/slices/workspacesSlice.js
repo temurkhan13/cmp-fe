@@ -101,8 +101,9 @@ const workspacesSlice = createSlice({
         state.dashboardStats = payload;
         // Set the first workspace as default
         if (payload.workspaces && payload.workspaces.length > 0) {
-          state.selectedWorkspace = payload.workspaces[0];
-          state.currentWorkspaceId = payload.workspaces[0].id;
+        const activeWorkspace = payload.workspaces.find(workspace => workspace.isActive) || payload.results[0];
+          state.selectedWorkspace =activeWorkspace;
+          state.currentWorkspaceId =activeWorkspace?.id;
         }
       })
       .addCase(fetchDashboardStats.rejected, (state, { payload }) => {
@@ -126,12 +127,20 @@ const workspacesSlice = createSlice({
     builder.addMatcher(
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
-        if (payload?.results && payload?.result?.length > 0) {
-          state.workspaces = payload?.results;
-          state.selectedWorkspace = payload.results[0]; // Select first workspace by default if none is selected
-          state.currentWorkspaceId = payload.results[0].id;
+        // Find the active workspace or fall back to the first one if none are active
+        const activeWorkspace = payload.results.find(workspace => workspace.isActive) || payload.results[0];
+        // Set the workspaces and default selection
+        if(activeWorkspace) {
+          state.workspaces = payload.results;
+          state.selectedWorkspace = activeWorkspace;
+          state.currentWorkspaceId = activeWorkspace?.id;
+          const activeFolder =  activeWorkspace?.folders?.find(folder => folder.isActive) || (activeWorkspace.folders && activeWorkspace.folders[0])
+          if(activeFolder) {
+            state.selectedFolder = activeFolder;
+            state.currentFolderId = activeFolder?.id
+          }
         }
-      }
+        }
     );
   },
 });
