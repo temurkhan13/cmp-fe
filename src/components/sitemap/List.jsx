@@ -5,12 +5,15 @@ import { BiPlus, BiPlusCircle } from 'react-icons/bi';
 import Loading from './Loading';
 import NoData from './NoData';
 import config from '../../config/config.js';
+import { useSelector } from 'react-redux';
 
 function List() {
   let navigate = useNavigate();
   const [sitemaps, setSitemaps] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
+  const dataaaaaaaaaaaa = useSelector((state) => state.workspaces);
+  console.log(dataaaaaaaaaaaa, '16666666666666')
 
   async function getData(url = `${config.apiURL}/dpb/sitemap`) {
     const response = await fetch(url, {
@@ -136,11 +139,13 @@ function List() {
                   })}
                 </div>
               )}
-              <div style={{
-                margin: '16px 0',
-                display: 'flex',
-                justifyContent: 'end'
-              }}>
+              {/* <div
+                style={{
+                  margin: '16px 0',
+                  display: 'flex',
+                  justifyContent: 'end',
+                }}
+              >
                 <div style={{}}>
                   <a
                     style={{
@@ -155,28 +160,27 @@ function List() {
                       display: 'flex',
                       alignItems: 'center',
                       color: 'black',
-                      textDecoration: 'none'
+                      textDecoration: 'none',
                     }}
-                    href='http://139.59.4.99:3500/'
+                    href="http://139.59.4.99:3500/"
                   >
                     <BiPlus></BiPlus>
                     Create Wireframe
                   </a>
                 </div>
-
-              </div>
+              </div> */}
               <div
                 style={{
                   margin: '16px 0',
                   display: 'flex',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
                 }}
               >
                 <span
                   style={{
                     fontSize: '28px',
                     fontWeight: '600',
-                    color: 'rgba(10, 10, 10, 1)'
+                    color: 'rgba(10, 10, 10, 1)',
                   }}
                 >
                   Digital Playbook
@@ -266,7 +270,7 @@ function List() {
                       margin: '16px 0',
                     }}
                   >
-                    {sitemaps.map(({ id }) => {
+                    {sitemaps.map(({ id,name }) => {
                       return (
                         <div
                           style={{
@@ -292,7 +296,7 @@ function List() {
                               fontWeight: '500',
                             }}
                           >
-                            Filename
+                            {name}
                           </span>
                           <span
                             style={{

@@ -22,6 +22,7 @@ import Comments from '../assisstent/assistantModal/Comments';
 import Loading from './Loading';
 import Edge from './Edge';
 import config from '../../config/config';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 const nodeTypes = {
   custom: Node,
 };
@@ -56,6 +57,9 @@ const SitemapLayoutFlow = ({ id }) => {
   const [prompt, setPrompt] = useState('');
   const [isPromptVisible, setPromptVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Navigate to a route so that i  can refetch on reload
+  const navigate = useNavigate();
 
   const closeModal = () => {
     setIsVersionHistoryModalOpen(false);
@@ -327,6 +331,7 @@ const SitemapLayoutFlow = ({ id }) => {
     setIsLoading(false);
     setPromptVisible(false);
     let siteMapId = res.id;
+    navigate({ pathname: `/sitemap/${res.id}` }, { replace: true });
 
     res.stages.forEach((stage) => {
       addChildNode(
