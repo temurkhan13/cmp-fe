@@ -98,7 +98,6 @@ const workspacesSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchDashboardStats.fulfilled, (state, { payload }) => {
-        debugger;
         state.loading = false;
         state.dashboardStats = payload;
         // Set the first workspace as default
