@@ -66,7 +66,6 @@ const persistConfig = {
 };
 
 const rootReducer = (state, action) => {
-  console.log(action.type,'66666666666666')
   if (action.type === 'auth/logout') {
     storage.removeItem('persist:root')
     return appReducer(undefined, action)

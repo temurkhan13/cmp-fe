@@ -8,7 +8,6 @@ export const updateWorkspaceStatus = createAsyncThunk(
   'workspaces/updateWorkspaceStatus',
   async ({ workspaceId, isActive }, { rejectWithValue }) => {
     try {
-      console.log('hellooooooooooooooooo');
       const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${config.apiURL}/workspace/${workspaceId}`,
