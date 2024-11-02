@@ -13,6 +13,7 @@ import SearchDropdown from '../CustomDropdown/SearchDropdown';
 import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
 import { Questionnaire } from '../../modules/assessment';
+import UserProfilePic from '../../assets/chat/user.png';
 
 const searchUser = ['John', 'abigale', 'mosa'];
 
@@ -106,14 +107,12 @@ const Header = ({ activeWorkspace, workspaces }) => {
           </div>
         </div>
         {photoPath ? (
-          <img
-            src={photoPath}
-            alt="profile"
-            className="ProfileImage"
-            onClick={toggleProfileDropdown}
-            style={{ cursor: 'pointer' }}
-
-          />
+          <img src={photoPath || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
+               alt="profile"
+               className="ProfileImage"
+               onClick={toggleProfileDropdown}
+               style={{ cursor: 'pointer' }}
+               onError={(e) => e.target.src = 'https://avatar.iran.liara.run/public/boy?username=Ash'}/>
         ) : (
           <div onClick={toggleProfileDropdown} className="initials-placeholder">
             {getInitials()}

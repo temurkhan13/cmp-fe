@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsWindowStack } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
@@ -108,7 +108,7 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
                 setSelectedWorkspace(workspace);
                 setIsModalOpen(true);
               }}
-              style={selectedWorkspace?.id === workspace.id ? { color: 'black' } : { color: 'grey' }}
+              style={activeWorkspace?.id === workspace.id ? { color: 'black' } : { color: 'grey' }}
               className="collection-icon"
             />
             <span className="icon-label" title={workspace.workspaceName}>
@@ -398,20 +398,20 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, 
   );
 };
 
-ModalSections.propTypes = {
-  selectedWorkspace: PropTypes.object.isRequired,
-  handleWorkspaceSwitch: PropTypes.func.isRequired,
-  moveToTrash: PropTypes.func.isRequired,
-  setIsModalOpen: PropTypes.func.isRequired,
-  onWorkspaceUpdated: PropTypes.func.isRequired,
-  showError: PropTypes.func.isRequired, // New error handler prop
-};
-
-Workspaces.propTypes = {
-  activeWorkspace: PropTypes.object,
-  workspaces: PropTypes.array.isRequired,
-  onWorkspaceUpdated: PropTypes.func.isRequired,
-  onWorkspaceChange: PropTypes.func.isRequired,
-};
+// ModalSections.propTypes = {
+//   selectedWorkspace: PropTypes.object.isRequired,
+//   handleWorkspaceSwitch: PropTypes.func.isRequired,
+//   moveToTrash: PropTypes.func.isRequired,
+//   setIsModalOpen: PropTypes.func.isRequired,
+//   onWorkspaceUpdated: PropTypes.func.isRequired,
+//   showError: PropTypes.func.isRequired, // New error handler prop
+// };
+//
+// Workspaces.propTypes = {
+//   activeWorkspace: PropTypes.object,
+//   workspaces: PropTypes.array.isRequired,
+//   onWorkspaceUpdated: PropTypes.func.isRequired,
+//   onWorkspaceChange: PropTypes.func.isRequired,
+// };
 
 export default Workspaces;
