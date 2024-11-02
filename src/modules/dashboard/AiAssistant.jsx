@@ -1,9 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import Component from '@components';
 import DashboardLayout from '@layout/DashboardLayout';
 import Folder from '../../components/dashboard/dashboardHomeComponents/Folder';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectWorkspace, setCurrentChatId } from '../../redux/slices/workspacesSlice';
+import {
+  fetchDashboardStats,
+  selectWorkspace,
+  setCurrentChatId,
+  setSelectedWorkspace,
+  updateWorkspaceStatus,
+} from '../../redux/slices/workspacesSlice';
 import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard.jsx';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaFolderTree } from 'react-icons/fa6';
@@ -12,71 +18,105 @@ import {
   fetchFolderData,
   resetFolderState,
   selectFolderData,
-  selectSelectedFolder, setSelectedFolder, toggleFolderActivation
+  setSelectedFolder,
+  toggleFolderActivation,
 } from '../../redux/slices/folderSlice.js';
 
 const AiAssistant = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Selectors
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
-  const selectedFolder = useSelector(selectSelectedFolder)
-  const activeFolder = useSelector((state) => state.workspaces.selectedFolder);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState('grid');
-  const [currentFolder, setCurrentFolder] = useState(null);
+  // Local States
   const [error, setError] = useState(null);
-  const [showNotification, setShowNotification] = useState(false);
+  const [currentFolder, setCurrentFolder] = useState(null);
 
-  useEffect(() => {
-    // Reset folder and set first folder if available
-    // setCurrentFolder(null);
-    // dispatch(resetFolderState());
-    if (selectedWorkspace?.folders?.length > 0) {
-      const firstFolder = selectedWorkspace.folders[0];
-      // console.log(firstFolder,'forstFolder')
-      handleFolderSelection(firstFolder, selectedWorkspace.id);
-    }
+  // Memoize Active Workspace
+  const activeWorkspace = useMemo(() => {
+    return (
+      selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
+      selectedWorkspace?.folders?.[0]
+    );
   }, [selectedWorkspace]);
 
+  const [isFetched, setIsFetched] = useState(false);
+
+  const handleFolderSelection = useCallback(
+    async (folder, workspaceId = selectedWorkspace?.id) => {
+      if (!workspaceId) {
+        setError("No workspace ID available.");
+        return;
+      }
+
+      setCurrentFolder(folder);
+      dispatch(setSelectedFolder(folder));
+      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+
+      try {
+        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+      } catch {
+        setError('Failed to fetch folder data.');
+      }
+    },
+    [dispatch, selectedWorkspace]
+  );
+
+  const handleWorkspaceChange = useCallback(
+    (workspace) => {
+      dispatch(setSelectedWorkspace(workspace));
+      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(resetFolderState());
+
+      if (workspace?.folders?.length > 0) {
+        const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+        handleFolderSelection(firstFolder, workspace.id);
+      }
+    },
+    [dispatch, handleFolderSelection]
+  );
+
+// Function to Fetch Stats - Runs Only Once
   useEffect(() => {
+    const fetchStats = async () => {
+      if (isFetched) return; // Prevent further calls if already fetched
 
-  }, [selectedFolder]);
+      try {
+        const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
+        const initialWorkspace =
+          dashboardStats.workspaces.find((ws) => ws.isActive) ||
+          dashboardStats.workspaces[0];
+        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+          dispatch(setSelectedWorkspace(initialWorkspace));
+          handleWorkspaceChange(initialWorkspace);
+        }
+        setIsFetched(true); // Mark as fetched after successful load
+      } catch {
+        setError('Failed to fetch dashboard stats.');
+      }
+    };
 
-  const handleFolderSelection = async (folder, workspaceId = null) => {
-    const activeWorkspaceId = workspaceId || selectedWorkspace?.id;
-    if (!activeWorkspaceId) {
-      handleError("No workspace ID available.");
-      return;
+    fetchStats();
+  }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
+
+
+  const handleRemoveChat = useCallback(async () => {
+    if (currentFolder) {
+      await dispatch(
+        fetchFolderData({ workspaceId: selectedWorkspace.id, folderId: currentFolder.id })
+      ).unwrap();
     }
-
-    setCurrentFolder(folder);
-    dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
-    dispatch(toggleFolderActivation({ workspaceId: activeWorkspaceId, folderId: folder?._id || folder?.id, isActive: true }));
-
-    try {
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id || folder.id })).unwrap();
-    } catch (err) {
-      handleError('Failed to fetch folder data.');
-    }
-  };
-
-  const handleError = (message) => {
-    setError(message);
-    setShowNotification(true);
-  };
-
-  // Handle removing chat from the current folder
-  const handleRemoveChat = async () => {
-    const activeWorkspaceId =  selectedWorkspace?.id;
-    await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: currentFolder._id || currentFolder.id })).unwrap();
-
-  };
+  }, [dispatch, selectedWorkspace, currentFolder]);
 
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  const handleDataUpdated = useCallback(() => {
+    dispatch(fetchDashboardStats());
+  }, [dispatch]);
 
   return (
     <DashboardLayout>
@@ -84,7 +124,7 @@ const AiAssistant = () => {
         <Component.Dashboard.Header />
       </div>
 
-      <Folder activeWorkspace={selectedWorkspace} onFolderSelect={handleFolderSelection} />
+      <Folder activeWorkspace={selectedWorkspace} onFolderSelect={handleFolderSelection} onFolderUpdate={handleDataUpdated} />
 
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
@@ -114,15 +154,14 @@ const AiAssistant = () => {
       <div className="section">
         <div className="workspace-header"></div>
         <div className="grid">
-          {folderData && folderData[0]?.chats?.map((item) => (
+          {folderData?.[0]?.chats?.map((item) => (
             <DashboardCard
               key={item.id}
               data={{ ...item, type: 'chat' }}
-              onRemove={(id) => handleRemoveChat(id)} // Handle chat removal
-              OnClick={() => {
-                console.log('heloooooooooooooooo')
-                  dispatch(setCurrentChatId(item.id));
-                  navigate(`/assistant/chat/${item.id}`);
+              onRemove={() => handleRemoveChat()}
+              onClick={() => {
+                dispatch(setCurrentChatId(item.id));
+                navigate(`/assistant/chat/${item.id}`);
               }}
             />
           ))}
@@ -143,14 +182,16 @@ const AiAssistant = () => {
           margin-top: 2rem;
         }
 
-        .userName {
+        .userName, .fileName {
           font-size: 1.125rem;
           font-weight: bold;
         }
+
         .chatContent {
           font-size: 1.2rem;
           margin: 0.5rem 0;
         }
+
         .footer {
           display: flex;
           justify-content: space-between;
@@ -161,12 +202,6 @@ const AiAssistant = () => {
           margin-bottom: 3rem;
         }
         
-        .fileName {
-          font-size: 1.125rem;
-          font-weight: bold;
-          margin-top: 1rem;
-        }
-
         .folderName {
           color: #0066ff;
           font-size: 1.1rem;
