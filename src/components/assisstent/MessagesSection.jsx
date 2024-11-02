@@ -33,6 +33,7 @@
   import { useCallback } from 'react';
   import { logo } from '../../assets/common/index';
   import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
+  import { FaUser } from "react-icons/fa";
 
   // import {
   //   addMessage,
@@ -540,15 +541,19 @@
                         : null
                     }
                   >
-                    <div>
+                    <div className={message && message.sender ? 'chat-container right' : 'chat-container left'}>
                       {message && message.sender ? (
-                        <div className="card">
-                          <div>
-                            <img src={userProfilePhoto} alt="avatar" />
+                        <div className="card user-card">
+                          <div className="user-avatar">
+                            <img
+                              src={userProfilePhoto || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
+                              alt="avatar"
+                              onError={(e) => e.target.src = 'https://avatar.iran.liara.run/public/boy?username=Ash'}
+                            />
+                            {/*<FaUser />*/}
                           </div>
-                          <div>
-                            <p className="Heading">You</p>
-                            {/* <div className="msg">{item.content}</div> */}
+                          <div className="user-message">
+                            {/*<p className="heading">You</p>*/}
                             {message.text && (
                               <div className="msg" data-message-id={message._id}>
                                 <ReactMarkdown>{message.text}</ReactMarkdown>
@@ -565,16 +570,22 @@
                                 </a>
                               </div>
                             )}
-                            <div>
-                              <LuPencil />
-                            </div>
+                            {/*<div className="edit-icon">*/}
+                            {/*  <LuPencil />*/}
+                            {/*</div>*/}
                           </div>
                         </div>
                       ) : (
-                        <div className="card">
-                          <div className="header">
-                            <img src={AiPic} alt="avatar" className="avatar" />
-                            <p className="heading">ChangeAI</p>
+                        <div className="card ai-card">
+                          <div className="ai-avatar">
+                            <img
+                              src={AiPic || 'https://via.placeholder.com/50'}
+                              alt="avatar"
+                              className="avatar"
+                              onError={(e) => e.target.src = 'https://via.placeholder.com/50'}
+                            />
+                          </div>
+                          <div className="ai-message">
                             {message && (
                               <div className="msg" data-message-id={message._id}>
                                 <ReactMarkdown>{message.text}</ReactMarkdown>
@@ -582,19 +593,19 @@
                             )}
                           </div>
                           <div className="message-action-icons">
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Copy">
                               <FaCopy style={{ cursor: 'pointer' }} />
                               <span className="tooltip-assessment">Copy</span>
                             </div>
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Like">
                               <FaThumbsUp />
                               <span className="tooltip-assessment">Like</span>
                             </div>
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Dislike">
                               <FaThumbsDown />
                               <span className="tooltip-assessment">Dislike</span>
                             </div>
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Comment">
                               <FaCommentAlt
                                 data-message-id={message._id}
                                 onClick={handleCommentClick}
@@ -602,22 +613,20 @@
                               />
                               <span className="tooltip-assessment">Comment</span>
                             </div>
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Regenerate">
                               <FaSync />
-                              <span className="tooltip-assessment">
-                                Regenerate
-                              </span>
+                              <span className="tooltip-assessment">Regenerate</span>
                             </div>
-                            <div className="message-icon-wrapper">
-                              <FaBookmark
-                                onClick={() => handleAddBookmark(message._id)}
-                              />
+                            <div className="message-icon-wrapper" title="Bookmark">
+                              <FaBookmark onClick={() => handleAddBookmark(message._id)} />
                               <span className="tooltip-assessment">Bookmark</span>
                             </div>
                           </div>
                         </div>
                       )}
                     </div>
+
+
                   </div>
                 ))}
             </div>
@@ -690,7 +699,7 @@
                 right: '10px',
                 cursor: 'pointer',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'center'
               }}
             >
               <img
