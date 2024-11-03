@@ -72,7 +72,7 @@ export const loginAsync = createAsyncThunk(
 // Async thunk action to handle login
 export const getUserAsync = createAsyncThunk(
   'auth/getUser',
-  async ( userId , thunkAPI) => {
+  async (userId, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
       const config = {
@@ -80,7 +80,7 @@ export const getUserAsync = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(`${baseURL}/users/${userId}`,config);
+      const response = await axios.get(`${baseURL}/users/${userId}`, config);
       const user = response.data;
       // Store token and user in localStorage
       localStorage.setItem('user', JSON.stringify(user));
@@ -149,7 +149,8 @@ export const codeVerifyAsync = createAsyncThunk(
 // Async thunk action to resend email verification code
 export const resentVerificationCodeAsync = createAsyncThunk(
   'auth/email/send-verification',
-  async (_, thunkAPI) => { // Destructure the first argument to ignore it
+  async (_, thunkAPI) => {
+    // Destructure the first argument to ignore it
     const token = localStorage.getItem('token');
     const config = {
       headers: {
@@ -158,7 +159,11 @@ export const resentVerificationCodeAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.post(`${baseURL}/email/send-verification`, {}, config);
+      const response = await axios.post(
+        `${baseURL}/email/send-verification`,
+        {},
+        config
+      );
       return response.data;
     } catch (error) {
       // Handle errors gracefully
@@ -172,7 +177,8 @@ export const resentVerificationCodeAsync = createAsyncThunk(
 // Async thunk action to resend email verification code
 export const forgetPasswordGetCodeAsync = createAsyncThunk(
   'auth/forgot/password',
-  async (email, thunkAPI) => { // Destructure the first argument to ignore it
+  async (email, thunkAPI) => {
+    // Destructure the first argument to ignore it
     const token = localStorage.getItem('token');
     const config = {
       headers: {
@@ -181,7 +187,11 @@ export const forgetPasswordGetCodeAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.post(`${baseURL}/forgot/password`, {email}, config);
+      const response = await axios.post(
+        `${baseURL}/forgot/password`,
+        { email },
+        config
+      );
       return response.data;
     } catch (error) {
       // Handle errors gracefully
@@ -194,7 +204,8 @@ export const forgetPasswordGetCodeAsync = createAsyncThunk(
 
 export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
   'auth/reset/password',
-  async ({email, OTP, newPassword}, thunkAPI) => { // Destructure the first argument to ignore it
+  async ({ email, OTP, newPassword }, thunkAPI) => {
+    // Destructure the first argument to ignore it
     const token = localStorage.getItem('token');
     const config = {
       headers: {
@@ -203,7 +214,11 @@ export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.post(`${baseURL}/reset/password`, {email, OTP, newPassword}, config);
+      const response = await axios.post(
+        `${baseURL}/reset/password`,
+        { email, OTP, newPassword },
+        config
+      );
       return response.data;
     } catch (error) {
       // Handle errors gracefully
@@ -244,7 +259,7 @@ const authSlice = createSlice({
     },
     resetLoading: (state) => {
       state.isLoggedIn = false; // Reset error to null
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -313,7 +328,8 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 // Export async actions
-export const { logout, rehydrateToken, resetError, resetLoading } = authSlice.actions;
+export const { logout, rehydrateToken, resetError, resetLoading } =
+  authSlice.actions;
 export {
   loginAsync as login,
   getUserAsync as getUser,

@@ -100,7 +100,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     (state) => state.workspaces.currentSelectedTitle
   );
 
-  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle');
+  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle',selectedAssessment);
   console.log(currentWorkspace,'currentWorkspace............');
   const [folderId, setFolderId] = useState('');
 

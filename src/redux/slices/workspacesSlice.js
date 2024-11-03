@@ -8,7 +8,6 @@ export const updateWorkspaceStatus = createAsyncThunk(
   'workspaces/updateWorkspaceStatus',
   async ({ workspaceId, isActive }, { rejectWithValue }) => {
     try {
-      console.log('hellooooooooooooooooo')
       const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${config.apiURL}/workspace/${workspaceId}`,
@@ -33,12 +32,15 @@ export const fetchDashboardStats = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${config.apiURL}/workspace/user/dashboard-stats`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.get(
+        `${config.apiURL}/workspace/user/dashboard-stats`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -68,7 +70,10 @@ const workspacesSlice = createSlice({
       state.currentWorkspaceId = selectedWorkspace.id;
 
       // Dispatch the updateWorkspaceStatus thunk to patch the workspace status
-      updateWorkspaceStatus({ workspaceId: selectedWorkspace.id, isActive: true });
+      updateWorkspaceStatus({
+        workspaceId: selectedWorkspace.id,
+        isActive: true,
+      });
     },
     setSelectedFolder: (state, action) => {
       state.selectedFolder = action.payload;
@@ -96,8 +101,9 @@ const workspacesSlice = createSlice({
         state.dashboardStats = payload;
         // Set the first workspace as default
         if (payload.workspaces && payload.workspaces.length > 0) {
-          state.selectedWorkspace = payload.workspaces[0];
-          state.currentWorkspaceId = payload.workspaces[0].id;
+        const activeWorkspace = payload.workspaces.find(workspace => workspace.isActive) || payload.results[0];
+          state.selectedWorkspace =activeWorkspace;
+          state.currentWorkspaceId =activeWorkspace?.id;
         }
       })
       .addCase(fetchDashboardStats.rejected, (state, { payload }) => {
@@ -106,7 +112,9 @@ const workspacesSlice = createSlice({
       })
       // Handle the updateWorkspaceStatus thunk
       .addCase(updateWorkspaceStatus.fulfilled, (state, action) => {
-        const updatedWorkspace = state.workspaces.find(ws => ws.id === action.payload.id);
+        const updatedWorkspace = state.workspaces.find(
+          (ws) => ws.id === action.payload.id
+        );
         if (updatedWorkspace) {
           updatedWorkspace.isActive = action.payload.isActive;
         }
@@ -119,10 +127,20 @@ const workspacesSlice = createSlice({
     builder.addMatcher(
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
-        state.workspaces = payload.results;
-        state.selectedWorkspace = payload.results[0]; // Select first workspace by default if none is selected
-        state.currentWorkspaceId = state.selectedWorkspace.id;
-      }
+        // Find the active workspace or fall back to the first one if none are active
+        const activeWorkspace = payload.results.find(workspace => workspace.isActive) || payload.results[0];
+        // Set the workspaces and default selection
+        if(activeWorkspace) {
+          state.workspaces = payload.results;
+          state.selectedWorkspace = activeWorkspace;
+          state.currentWorkspaceId = activeWorkspace?.id;
+          const activeFolder =  activeWorkspace?.folders?.find(folder => folder.isActive) || (activeWorkspace.folders && activeWorkspace.folders[0])
+          if(activeFolder) {
+            state.selectedFolder = activeFolder;
+            state.currentFolderId = activeFolder?.id
+          }
+        }
+        }
     );
   },
 });

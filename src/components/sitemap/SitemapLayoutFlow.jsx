@@ -22,6 +22,9 @@ import Comments from '../assisstent/assistantModal/Comments';
 import Loading from './Loading';
 import Edge from './Edge';
 import config from '../../config/config';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 const nodeTypes = {
   custom: Node,
 };
@@ -56,6 +59,13 @@ const SitemapLayoutFlow = ({ id }) => {
   const [prompt, setPrompt] = useState('');
   const [isPromptVisible, setPromptVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const userData = localStorage.getItem('user');
+  const authToken = localStorage.getItem('token');
+
+  const selectedWorkspace = useSelector(selectWorkspace);
+
+  // Navigate to a route so that i  can refetch on reload
+  const navigate = useNavigate();
 
   const closeModal = () => {
     setIsVersionHistoryModalOpen(false);
@@ -299,12 +309,32 @@ const SitemapLayoutFlow = ({ id }) => {
     }
   };
 
+  console.log(selectedWorkspace, '313333333');
+  const linkWorkSpaceAndSiteMap = async (sitemapId) => {
+    const folderId = selectedWorkspace.folders.find(
+      (folder) => folder?.isActive
+    );
+    await fetch(
+      `${config.apiURL}/workspace/${selectedWorkspace.id}/folder/${folderId.id}/sitemap`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          sitemapId: sitemapId,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+  };
   const onInit = async (
     stage = 'Playbook Introduction',
     nodeId = '',
     nodeData = [],
     sitemapId = ''
   ) => {
+    const parsedUserData = userData ? JSON.parse(userData) : null;
     if (prompt === '') {
       alert('Please enter a message');
       return;
@@ -312,11 +342,10 @@ const SitemapLayoutFlow = ({ id }) => {
     setIsLoading(true);
     setPromptVisible(false);
     const payload = {
-      user_id: '11',
-      chat_id: '22',
+      user_id: parsedUserData?.id,
       message: prompt,
       sitemapName: stage,
-      request: stage === 'Playbook Introduction' ? 'POST' : 'PATCH',
+      // request: stage === 'Playbook Introduction' ? 'POST' : 'PATCH',
     };
 
     let res =
@@ -324,9 +353,13 @@ const SitemapLayoutFlow = ({ id }) => {
         ? await postData(`${config.apiURL}/dpb/sitemap`, payload)
         : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
 
+    if (stage === 'Playbook Introduction' && res) {
+      await linkWorkSpaceAndSiteMap(res?.id);
+    }
     setIsLoading(false);
     setPromptVisible(false);
     let siteMapId = res.id;
+    navigate({ pathname: `/sitemap/${res?.id}` }, { replace: true });
 
     res.stages.forEach((stage) => {
       addChildNode(

@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+// import { persistStore, persistReducer } from 'redux-persist';
 import {
   loadingBarMiddleware,
   showLoading,
@@ -16,6 +16,8 @@ import trashReducer from '../slices/trashSlice';
 import folderReducer from '../slices/folderSlice';
 
 import { workspaceApi } from '../api/workspaceApi';
+import persistReducer from 'redux-persist/es/persistReducer';
+import persistStore from 'redux-persist/es/persistStore';
 
 // Custom middleware to trigger loading bar actions for RTK Query requests
 const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
@@ -32,57 +34,76 @@ const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
   return next(action);
 };
 
-// Persist configuration for each reducer
-const businessInfoPersistConfig = {
-  key: 'businessInfo',
-  storage,
-};
+// // Persist configuration for each reducer
+// const businessInfoPersistConfig = {
+//   key: 'businessInfo',
+//   storage,
+// };
+//
+// const workspacesPersistConfig = {
+//   key: 'workspaces',
+//   storage,
+// };
+//
+// const userPersistConfig = {
+//   key: 'user',
+//   storage,
+// };
+//
+// const authPersistConfig = {
+//   key: 'auth',
+//   storage,
+// };
+//
+// const chatPersistConfig = {
+//   key: 'chat',
+//   storage,
+// };
 
-const workspacesPersistConfig = {
-  key: 'workspaces',
+// // Persisted Configuration
+const persistConfig = {
+  key: 'root',
   storage,
-};
-
-const userPersistConfig = {
-  key: 'user',
-  storage,
-};
-
-const authPersistConfig = {
-  key: 'auth',
-  storage,
-};
-
-const chatPersistConfig = {
-  key: 'chat',
-  storage,
+  whitelist: ['workspaces'],
 };
 
 // Persisted reducers
-const persistedBusinessInfoReducer = persistReducer(
-  businessInfoPersistConfig,
-  businessInfoReducer
-);
-const persistedWorkspacesReducer = persistReducer(
-  workspacesPersistConfig,
-  workspacesReducer
-);
-const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
-const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
-const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
+// const persistedBusinessInfoReducer = persistReducer(
+//   businessInfoPersistConfig,
+//   businessInfoReducer
+// );
+// const persistedWorkspacesReducer = persistReducer(
+//   workspacesPersistConfig,
+//   workspacesReducer
+// );
+// const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
+// const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+// const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
+
+export const appReducer = combineReducers({
+  businessInfo: businessInfoReducer,
+  workspaces: workspacesReducer,
+  user: userReducer,
+  auth: authReducer,
+  loadingBar: loadingBarReducer,
+  chat: chatReducer,
+  trash: trashReducer,
+  folder: folderReducer,
+  [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
+});
+
+const rootReducer = (state, action) => {
+  if (action.type === 'auth/logout') {
+    storage.removeItem('persist:root');
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: {
-    businessInfo: persistedBusinessInfoReducer,
-    workspaces: persistedWorkspacesReducer,
-    user: persistedUserReducer,
-    auth: persistedAuthReducer,
-    loadingBar: loadingBarReducer,
-    chat: persistedChatReducer,
-    trash: trashReducer,
-    folder: folderReducer,
-    [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable serializable check for redux-persist

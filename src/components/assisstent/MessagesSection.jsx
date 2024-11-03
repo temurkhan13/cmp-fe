@@ -1,7 +1,6 @@
   import { useState, useEffect, useRef } from 'react';
   import PropTypes from 'prop-types';
   import '@styles/chat/ChatMessage.scss';
-  import { LuPencil } from 'react-icons/lu';
   import {
     FaCopy,
     FaThumbsUp,
@@ -32,7 +31,12 @@
   import { useSelector, useDispatch } from 'react-redux';
   import { useCallback } from 'react';
   import { logo } from '../../assets/common/index';
-  import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
+  import {
+  useDislikeChatMessageMutation,
+  useGetWorkspacesQuery,
+  useLikeChatMessageMutation, useRemoveBookmarkMutation, useUpdateChatMutation
+} from '../../redux/api/workspaceApi';
+  import { FaUser } from "react-icons/fa";
 
   // import {
   //   addMessage,
@@ -56,7 +60,7 @@
 
   import * as FaIcons from 'react-icons/fa';
   // import { v4 as uuidv4 } from 'uuid';
-  import { setChats } from '../../redux/slices/chatSlice';
+  import { deleteBookmark, setChats } from '../../redux/slices/chatSlice';
   import { getChatsAsync } from '../../redux/slices/workspaceSlice';
   import { selectWorkspace, setCurrentChatId } from '../../redux/slices/workspacesSlice';
   import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
@@ -90,7 +94,12 @@
     //api Integration
     const [addMessage] = useAddMessageMutation();
     const [updateMessage] = useUpdateMessageMutation();
+    const [updateChat] = useUpdateChatMutation();
     const [addBookmark] = useAddBookmarkMutation();
+    const [removeBookmark] = useRemoveBookmarkMutation();
+    // const [likeChatMessage,dislikeChatMessage] = useLikeDislikeChatMutation()
+    const [likeChatMessage] = useLikeChatMessageMutation();
+    const [dislikeChatMessage] = useDislikeChatMessageMutation();
     const userId = useSelector((state) => state.auth.user?.id);
     const { data: workspaces } = useGetWorkspacesQuery(userId);
     const workspaceId = useSelector(
@@ -252,7 +261,8 @@
           }
 
           if (response) {
-            applyFixedText(response);
+            await applyFixedText(response);
+            refetch()
           }
         } catch (error) {
           console.error('Asi AI', error);
@@ -263,7 +273,7 @@
       [fixGrammar, improveWriting, summarize, selectedText]
     );
 
-    // Memoize applyFixedText function
+    // // Memoize applyFixedText function
     // const applyFixedText = useCallback(
     //   (newText) => {
     //     const updatedChat = chat.map((message) => {
@@ -277,9 +287,11 @@
     //       return message;
     //     });
     //     console.log('chatttt :' + chat);
-    //   //  setChat(updatedChat);
-    //     //dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
-
+    //    // setChat(updatedChat);
+    //    //  dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
+    //
+    //     refetch()
+    //
     //     setPopupVisible(false);
     //   },
     //   [chat, selectedText, dispatch, workspaceId, chatId]
@@ -301,10 +313,11 @@
         // You might want to use a local state to manage this, as shown in the example
 
         try {
+          console.log(updatedMessages,'updatedMessages',chat)
           // Optionally dispatch an action or make an API call to update the message
           // await Promise.all(
           //   updatedMessages
-          //     .filter((msg) => msg.text !== message.text)
+          //     .filter((msg) => msg.text !== updatedMessages.text)
           //     .map((message) =>
           //       updateMessage({
           //         workspaceId,
@@ -315,8 +328,15 @@
           //       })
           //     )
           // );
+          console.log(workspaceId,folderId,chatId)
+          updateChat({
+            workspaceId,
+            folderId: folderId.id || folderId._id,
+            chatId,
+          chat : {...chat, generalMessages:updatedMessages }
+          })
           // Refetch the chat to get the latest data from the server
-          //  await refetch();
+           await refetch();
         } catch (error) {
           console.error('Failed to update message:', error);
           // Handle error (e.g., show an error message to the user)
@@ -413,7 +433,7 @@
     const handleClosePopup = () => {
       setPopupVisible(false);
     };
-    const handleAddBookmark = async (messageId) => {
+    const handleAddBookmark = async (message) => {
       // const bookmark = {
       //   bookmarkId: 'bookmarkId3',
       //   userId: 'userId4',
@@ -430,13 +450,34 @@
       // };
       //dispatch(addBookmark(bookmark));
 
+
+      const bookmark =  chat && chat.bookmarks?.filter(
+        (bookmark) =>
+          bookmark.messageId === message._id &&
+          bookmark.userId === JSON.parse(localStorage.getItem('user')).id
+      )
+
+
+      if(bookmark && bookmark.length > 0 ){
+        await removeBookmark({
+          workspaceId,
+          folderId: folderId._id || folderId.id,
+          chatId,
+          messageId: message._id,
+          bookmarkId: bookmark[0]._id, // Send the whole bookmark data
+        }).unwrap();
+      }
+      else {
+        await addBookmark({
+          workspaceId,
+          folderId: folderId._id || folderId.id,
+          chatId,
+          messageId:message._id, // Send the whole bookmark data
+        }).unwrap();
+      }
+
+
       // Dispatch action to add bookmark
-      await addBookmark({
-        workspaceId,
-        folderId: folderId._id || folderId.id,
-        chatId,
-        messageId, // Send the whole bookmark data
-      }).unwrap();
       refetch(); // Trigger the chat query to refetch
     };
 
@@ -507,6 +548,34 @@
       scrollToBottom();
     }, [chat]);
 
+    const handleLikeClick = async (message) => {
+      console.log(message,'message')
+      await likeChatMessage({
+        workspaceId,
+        folderId: folderId._id || folderId.id,
+        chatId,
+        messageId:message._id, // Send the whole bookmark data
+      }).unwrap();
+      refetch(); // Trigger the chat query to refetch
+    }
+
+    const handleDislikeMessage = async (message) => {
+      console.log(message,'message')
+      console.log(JSON.parse(localStorage.getItem('user')).id)
+      console.log(message?.reactions?.some((react) => react.user == JSON.parse(localStorage.getItem('user')).id),'message')
+      await dislikeChatMessage({
+        workspaceId,
+        folderId: folderId._id || folderId.id,
+        chatId,
+        messageId:message._id, // Send the whole bookmark data
+      }).unwrap();
+      refetch(); // Trigger the chat query to refetch
+    }
+
+    const handleCopyMessage = (text) => {
+      navigator.clipboard.writeText(text)
+    };
+
     return (
       <div className="chat-message-wrapper">
           <ScaleLoader color={'#000000'} loading={loading} size={150} />
@@ -540,15 +609,19 @@
                         : null
                     }
                   >
-                    <div>
+                    <div className={message && message.sender ? 'chat-container right' : 'chat-container left'}>
                       {message && message.sender ? (
-                        <div className="card">
-                          <div>
-                            <img src={userProfilePhoto} alt="avatar" />
+                        <div className="card user-card">
+                          <div className="user-avatar">
+                            <img
+                              src={userProfilePhoto || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
+                              alt="avatar"
+                              onError={(e) => e.target.src = 'https://avatar.iran.liara.run/public/boy?username=Ash'}
+                            />
+                            {/*<FaUser />*/}
                           </div>
-                          <div>
-                            <p className="Heading">You</p>
-                            {/* <div className="msg">{item.content}</div> */}
+                          <div className="user-message">
+                            {/*<p className="heading">You</p>*/}
                             {message.text && (
                               <div className="msg" data-message-id={message._id}>
                                 <ReactMarkdown>{message.text}</ReactMarkdown>
@@ -565,16 +638,77 @@
                                 </a>
                               </div>
                             )}
-                            <div>
-                              <LuPencil />
+                            {/*<div className="edit-icon">*/}
+                            {/*  <LuPencil />*/}
+                            {/*</div>*/}
+                          </div>
+                          <div className="message-action-icons">
+                            <div className="message-icon-wrapper" title="Copy"
+                                 onClick={() => handleCopyMessage(message.text)}>
+                              <FaCopy style={{ cursor: 'pointer' }} />
+                              <span className="tooltip-assessment">Copy</span>
+                            </div>
+                            <div className="message-icon-wrapper" title="Like" onClick={() => handleLikeClick(message)}
+                            >
+                              <FaThumbsUp style={
+                                message?.reactions?.some((react) => react.user == JSON.parse(localStorage.getItem('user')).id && react.type == 'like')
+                                  ? { color: 'blue' }
+                                  : {}
+                              } />
+                              <span className="tooltip-assessment">Like</span>
+                            </div>
+                            <div
+                              className="message-icon-wrapper"
+                              title="Dislike"
+                              onClick={() => handleDislikeMessage(message)}
+                            >
+                              <FaThumbsDown style={
+                                message?.reactions?.some((react) => react.user == JSON.parse(localStorage.getItem('user')).id && react.type == 'dislike')
+                                  ? { color: 'blue' }
+                                  : {}
+                              } />
+                              <span className="tooltip-assessment">Dislike</span>
+                            </div>
+                            {/*<div className="message-icon-wrapper" title="Comment">*/}
+                            {/*  <FaCommentAlt*/}
+                            {/*    data-message-id={message._id}*/}
+                            {/*    onClick={handleCommentClick}*/}
+                            {/*    style={{ cursor: 'pointer' }}*/}
+                            {/*  />*/}
+                            {/*  <span className="tooltip-assessment">Comment</span>*/}
+                            {/*</div>*/}
+                            {/*<div className="message-icon-wrapper" title="Regenerate">*/}
+                            {/*  <FaSync />*/}
+                            {/*  <span className="tooltip-assessment">Regenerate</span>*/}
+                            {/*</div>*/}
+                            <div className="message-icon-wrapper" title="Bookmark">
+                              <FaBookmark onClick={() => handleAddBookmark(message)}
+                                          style={
+                                            chat.bookmarks?.some(
+                                              (bookmark) =>
+                                                bookmark.messageId === message._id &&
+                                                bookmark.userId === JSON.parse(localStorage.getItem('user')).id
+                                            )
+                                              ? { color: 'blue' }
+                                              : {}
+                                          }
+                              />
+                              <span className="tooltip-assessment">Bookmark</span>
                             </div>
                           </div>
+
                         </div>
                       ) : (
-                        <div className="card">
-                          <div className="header">
-                            <img src={AiPic} alt="avatar" className="avatar" />
-                            <p className="heading">ChangeAI</p>
+                        <div className="card ai-card">
+                          <div className="ai-avatar">
+                            <img
+                              src={AiPic || 'https://via.placeholder.com/50'}
+                              alt="avatar"
+                              className="avatar"
+                              onError={(e) => e.target.src = 'https://via.placeholder.com/50'}
+                            />
+                          </div>
+                          <div className="ai-message">
                             {message && (
                               <div className="msg" data-message-id={message._id}>
                                 <ReactMarkdown>{message.text}</ReactMarkdown>
@@ -582,19 +716,33 @@
                             )}
                           </div>
                           <div className="message-action-icons">
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Copy"
+                                 onClick={() => handleCopyMessage(message.text)}>
                               <FaCopy style={{ cursor: 'pointer' }} />
                               <span className="tooltip-assessment">Copy</span>
                             </div>
-                            <div className="message-icon-wrapper">
-                              <FaThumbsUp />
+                            <div className="message-icon-wrapper" title="Like" onClick={() => handleLikeClick(message)}
+                            >
+                              <FaThumbsUp style={
+                                message?.reactions?.some((react) => react.user == JSON.parse(localStorage.getItem('user')).id && react.type == 'like')
+                                  ? { color: 'blue' }
+                                  : {}
+                              } />
                               <span className="tooltip-assessment">Like</span>
                             </div>
-                            <div className="message-icon-wrapper">
-                              <FaThumbsDown />
+                            <div
+                              className="message-icon-wrapper"
+                              title="Dislike"
+                              onClick={() => handleDislikeMessage(message)}
+                            >
+                              <FaThumbsDown style={
+                                message?.reactions?.some((react) => react.user == JSON.parse(localStorage.getItem('user')).id && react.type == 'dislike')
+                                  ? { color: 'blue' }
+                                  : {}
+                              } />
                               <span className="tooltip-assessment">Dislike</span>
                             </div>
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Comment">
                               <FaCommentAlt
                                 data-message-id={message._id}
                                 onClick={handleCommentClick}
@@ -602,15 +750,21 @@
                               />
                               <span className="tooltip-assessment">Comment</span>
                             </div>
-                            <div className="message-icon-wrapper">
+                            <div className="message-icon-wrapper" title="Regenerate">
                               <FaSync />
-                              <span className="tooltip-assessment">
-                                Regenerate
-                              </span>
+                              <span className="tooltip-assessment">Regenerate</span>
                             </div>
-                            <div className="message-icon-wrapper">
-                              <FaBookmark
-                                onClick={() => handleAddBookmark(message._id)}
+                            <div className="message-icon-wrapper" title="Bookmark">
+                              <FaBookmark onClick={() => handleAddBookmark(message)}
+                                          style={
+                                            chat.bookmarks?.some(
+                                              (bookmark) =>
+                                                bookmark.messageId === message._id &&
+                                                bookmark.userId === JSON.parse(localStorage.getItem('user')).id
+                                            )
+                                              ? { color: 'blue' }
+                                              : {}
+                                          }
                               />
                               <span className="tooltip-assessment">Bookmark</span>
                             </div>
@@ -618,6 +772,8 @@
                         </div>
                       )}
                     </div>
+
+
                   </div>
                 ))}
             </div>
@@ -690,7 +846,7 @@
                 right: '10px',
                 cursor: 'pointer',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'center'
               }}
             >
               <img
@@ -720,9 +876,9 @@
               onKeyDown={HandleEnterKey}
             />
             <div className="icons">
-              <label htmlFor="file-input">
-                <IoAttach className="send-icon " />
-              </label>
+              {/*<label htmlFor="file-input">*/}
+              {/*  <IoAttach className="send-icon " />*/}
+              {/*</label>*/}
               <IoSend onClick={handleSendMessage} className="send-icon " />
             </div>
           </div>
