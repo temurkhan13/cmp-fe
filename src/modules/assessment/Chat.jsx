@@ -1,36 +1,6 @@
-// import { useState } from 'react';
-// import Components from '../../components';
-// import data from '../../data';
-
-// const Chat = () => {
-//   const [selectedAssessment, setSelectedAssessment] = useState(null);
-
-//   const handleAssessmentSelect = (assessment) => {
-//     setSelectedAssessment(assessment);
-//   };
-
-//   return (
-//     <div className="assessmentChat">
-//       <Components.Common.Header />
-//       <section>
-//         <NewChat data={data.chat.newChatDummyData} />
-//         <MessagesSection
-//           data={data.chat.dummyChatData}
-//           selectedAssessment={selectedAssessment}
-//         />
-//         <Assessments
-//           onAssessmentSelect={handleAssessmentSelect}
-//         />
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Chat;
-
 import Components from '../../components';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
@@ -39,7 +9,7 @@ import data from '../../data';
 import {
   setSelectedWorkspace,
   selectWorkspace,
-  setCurrentAssessmentId, setCurrentChatId
+  setCurrentAssessmentId, setCurrentChatId, fetchDashboardStats, updateWorkspaceStatus, setCurrentSelectedTitle
 } from '../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import {
@@ -47,59 +17,137 @@ import {
   MessagesSection,
   NewChat,
 } from '../../components/assessment';
-import { fetchFolderData, setSelectedFolder } from '../../redux/slices/folderSlice.js';
+import {
+  fetchFolderData,
+  resetFolderState, selectFolderData,
+  setSelectedFolder,
+  toggleFolderActivation
+} from '../../redux/slices/folderSlice.js';
 
 const Chat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams(); // Extract chatId from the URL
   const userId = useSelector((state) => state.auth.user?.id) || localStorage.getItem('userId');
-  
+
 
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
+  const folderData = useSelector(selectFolderData);
+
   const [selectedAssessment, setSelectedAssessment] = useState(null);
 
   const handleAssessmentSelect = (assessment) => {
+    console.log(assessment,'assessment')
+    if(assessment) {
+      dispatch(
+        setCurrentSelectedTitle(
+          assessment ||
+          assessment.ReportTitle ||
+          assessment.report[0].subReport[0].ReportTitle ||
+          assessment.report[0].ReportTitle
+        )
+      )
+    }
     setSelectedAssessment(assessment);
   };
 
 
+  const [currentFolder, setCurrentFolder] = useState(null);
 
-  // Handle initial data loading and workspace selection
+
+  // Memoize Active Workspace
+  const activeWorkspace = useMemo(() => {
+    return (
+      selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
+      selectedWorkspace?.folders?.[0]
+    );
+  }, [selectedWorkspace]);
+
+  const [isFetched, setIsFetched] = useState(false);
+
+
+  const handleFolderSelection = useCallback(
+    async (folder, workspaceId = activeWorkspace?.id) => {
+      if (!workspaceId) return
+
+      console.log(folder,'/.//////////////')
+
+      dispatch(setSelectedFolder(folder));
+      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+
+      try {
+        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+      } catch {
+        showError('Failed to fetch folder data.');
+      }
+    },
+    [dispatch, activeWorkspace]
+  );
+
+  const handleWorkspaceChange = useCallback(
+    (workspace) => {
+      dispatch(setSelectedWorkspace(workspace));
+      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(resetFolderState());
+
+      console.log(workspace,'workspace');
+
+      if (workspace?.folders?.length > 0) {
+        const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+        handleFolderSelection(firstFolder, workspace.id);
+      }
+    },
+    [dispatch, handleFolderSelection]
+  );
+
   useEffect(() => {
-    if (chatId) {
-      dispatch(setCurrentAssessmentId(chatId));
+    const fetchStats = async () => {
+      if (isFetched) return; // Prevent further calls if already fetched
+
+      try {
+        const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
+        const initialWorkspace =
+          dashboardStats.workspaces.find((ws) => ws.isActive) ||
+          dashboardStats.workspaces[0];
+        console.log(initialWorkspace,'initial workspace')
+        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+          dispatch(setSelectedWorkspace(initialWorkspace));
+          handleWorkspaceChange(initialWorkspace);
+        }
+        else{
+          if (selectedWorkspace?.folders?.length > 0) {
+            const firstFolder = selectedWorkspace.folders.find((folder) => folder.isActive) || selectedWorkspace.folders[0];
+            handleFolderSelection(firstFolder, selectedWorkspace.id);
+          }
+        }
+        setIsFetched(true); // Mark as fetched after successful load
+      } catch {
+        // setError('Failed to fetch dashboard stats.');
+      }
+    };
+
+    fetchStats();
+  }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
+
+  const handleRemoveChat = useCallback(async () => {
+    if (currentFolder) {
+      await dispatch(
+        fetchFolderData({ workspaceId: selectedWorkspace.id, folderId: currentFolder.id })
+      ).unwrap();
     }
+  }, [dispatch, selectedWorkspace, currentFolder]);
 
-    if (workspaces && workspaces.length > 0 && !selectedWorkspace) {
-      dispatch(setSelectedWorkspace(workspaces[0]));
-    }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
-    if (selectedWorkspace?.folders?.length > 0) {
-      console.log(selectedWorkspace.folders,'dataaa');
-      handleFolderSelection(selectedWorkspace.folders[0], selectedWorkspace.id);
-    }
-
-  }, [workspaces, selectedWorkspace, dispatch, chatId]);
+  const handleDataUpdated = useCallback(() => {
+    dispatch(fetchDashboardStats());
+  }, [dispatch]);
 
 
-  const handleFolderSelection = async (folder, workspaceId = null) => {
-    const activeWorkspaceId = workspaceId || selectedWorkspace?.id;
-    if (!activeWorkspaceId) {
-      // handleError("No workspace ID available.");
-      return;
-    }
-
-    dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
-
-    try {
-      console.log(folder,'....................')
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id || folder.id })).unwrap();
-    } catch (err) {
-      // handleError('Failed to fetch folder data.');
-    }
-  };
+  console.log(currentFolder,'cirrent folder data',folderData);
 
   return (
     <div className="assessmentChat">
@@ -112,7 +160,7 @@ const Chat = () => {
 
         <MessagesSection handleAssessmentSelect={handleAssessmentSelect} selectedAssessment={selectedAssessment} />
 
-        <Assessments onAssessmentSelect={handleAssessmentSelect} />
+        <Assessments handleAssessmentSelect={handleAssessmentSelect} />
       </section>
     </div>
   );
