@@ -309,7 +309,6 @@ const SitemapLayoutFlow = ({ id }) => {
     }
   };
 
-  console.log(selectedWorkspace, '313333333');
   const linkWorkSpaceAndSiteMap = async (sitemapId) => {
     const folderId = selectedWorkspace.folders.find(
       (folder) => folder?.isActive
@@ -487,6 +486,10 @@ const SitemapLayoutFlow = ({ id }) => {
   useEffect(() => {
     getSitemap();
   }, [id]);
+
+
+  
+
 
   return (
     <ReactFlow
