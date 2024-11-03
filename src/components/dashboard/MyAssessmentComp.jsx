@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { IoPeople } from 'react-icons/io5';
 import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -6,123 +6,120 @@ import { FaFolderTree } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { selectWorkspace, setCurrentChatId } from '../../redux/slices/workspacesSlice';
-import useManagerChat from '@hooks/useManagerChat';
-import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard.jsx';
-import Folder from './dashboardHomeComponents/Folder';
-import { truncateText } from '../../utils/helperFunction';
 import {
-  fetchFolderData,
-  resetFolderState,
-  selectFolderData, selectSelectedFolder,
-  setSelectedFolder, toggleFolderActivation
-} from '../../redux/slices/folderSlice.js';
+  fetchDashboardStats,
+  selectWorkspace,
+  setCurrentChatId,
+  setSelectedWorkspace,
+  updateWorkspaceStatus,
+} from '../../redux/slices/workspacesSlice';
+import useManagerChat from '@hooks/useManagerChat';
+import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard';
+import Folder from './dashboardHomeComponents/Folder';
+import { fetchFolderData, resetFolderState, selectFolderData, selectSelectedFolder, setSelectedFolder, toggleFolderActivation } from '../../redux/slices/folderSlice';
+import { RiNewspaperLine } from 'react-icons/ri';
 
 const MyAssessmentComp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
-  const selectedFolder = useSelector(selectSelectedFolder)
+  const selectedFolder = useSelector(selectSelectedFolder);
 
-  const { managerData, error } = useManagerChat();
+  const { managerData } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
-
+  const [error, setError] = useState(null);
   const [currentFolder, setCurrentFolder] = useState(null);
-  const [showNotification, setShowNotification] = useState(false);
+  const [isFetched, setIsFetched] = useState(false);
 
-  useEffect(() => {
-    // Reset folder and set first folder if available
-    setCurrentFolder(null);
-    dispatch(resetFolderState());
-
-    if (selectedWorkspace?.folders?.length > 0) {
-      const firstFolder = selectedWorkspace.folders[0];
-      handleFolderSelection(firstFolder, selectedWorkspace.id);
-    }
+  const activeWorkspace = useMemo(() => {
+    return (
+      selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
+      selectedWorkspace?.folders?.[0]
+    );
   }, [selectedWorkspace]);
 
+  const handleFolderSelection = useCallback(
+    async (folder, workspaceId = selectedWorkspace?.id) => {
+      if (!workspaceId) {
+        setError('No workspace ID available.');
+        return;
+      }
+
+      setCurrentFolder(folder);
+      dispatch(setSelectedFolder(folder));
+      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+
+      try {
+        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+      } catch {
+        setError('Failed to fetch folder data.');
+      }
+    },
+    [dispatch, selectedWorkspace]
+  );
+
+  const handleWorkspaceChange = useCallback(
+    (workspace) => {
+      dispatch(setSelectedWorkspace(workspace));
+      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(resetFolderState());
+
+      const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+      handleFolderSelection(firstFolder, workspace.id);
+    },
+    [dispatch, handleFolderSelection]
+  );
+
   useEffect(() => {
-
-  }, [selectedFolder]);
-
-  const handleFolderSelection = async (folder, workspaceId = null) => {
-    const activeWorkspaceId = workspaceId || selectedWorkspace?.id;
-    if (!activeWorkspaceId) {
-      // handleError("No workspace ID available.");
-      return;
-    }
-
-    setCurrentFolder(folder);
-    dispatch(setSelectedFolder(folder)); // Set the selected folder in Redux store
-    dispatch(toggleFolderActivation({ workspaceId: activeWorkspaceId, folderId: folder?._id || folder?.id, isActive: true }));
-
-    try {
-      await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder._id || folder.id })).unwrap();
-    } catch (err) {
-      // handleError('Failed to fetch folder data.');
-    }
-  };
-
+    const fetchStats = async () => {
+      if (isFetched) return;
+      try {
+        const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
+        const initialWorkspace = dashboardStats.workspaces.find((ws) => ws.isActive) || dashboardStats.workspaces[0];
+        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+          dispatch(setSelectedWorkspace(initialWorkspace));
+          handleWorkspaceChange(initialWorkspace);
+        }
+        setIsFetched(true);
+      } catch {
+        setError('Failed to fetch dashboard stats.');
+      }
+    };
+    fetchStats();
+  }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
   useEffect(() => {
-    if (managerData) {
-      setIsLoading(false);
-    }
+    if (managerData) setIsLoading(false);
   }, [managerData]);
+
+  const handleRemoveChat = useCallback(async () => {
+    if (currentFolder) {
+      await dispatch(fetchFolderData({ workspaceId: selectedWorkspace.id, folderId: currentFolder.id })).unwrap();
+    }
+  }, [dispatch, selectedWorkspace, currentFolder]);
+
+  const handleDataUpdated = useCallback(() => {
+    dispatch(fetchDashboardStats());
+  }, [dispatch]);
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error: {error}</div>;
 
-  // const cardData = [
-  //   {
-  //     userName: 'You',
-  //     content: truncateText(
-  //       'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
-  //       55
-  //     ),
-  //   },
-  //   {
-  //     userName: 'John Doe',
-  //     content: truncateText(
-  //       'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
-  //       55
-  //     ),
-  //   },
-  //   {
-  //     userName: 'Jane Smith',
-  //     content: truncateText(
-  //       'Lorem ipsum dolor sit sapiente quae nobis porro, sed cum molestiae!',
-  //       55
-  //     ),
-  //   },
-  // ];
-
-  const handleRemoveChat = async () => {
-    const activeWorkspaceId =  selectedWorkspace?.id;
-    await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: currentFolder._id || currentFolder.id })).unwrap();
-
-  };
-
   return (
-    <div className="container">
-      {/* AI Assessment Section */}
+    <div className="">
       <div className="section">
-        <p className="sectionTitle">AI Assessment</p>
         <div className="center-buttons">
-          <Folder activeWorkspace={selectedWorkspace} />
+          <Folder activeWorkspace={selectedWorkspace} onFolderSelect={handleFolderSelection} onFolderUpdate={handleDataUpdated} />
         </div>
 
-        {/* New Assistant Button */}
         <section className="generate" style={{ marginTop: '2rem' }}>
           <div className="container">
             <div className="left-buttons">
               <p className="assistant-heading">
-                <FaFolderTree /> Assistant
+                <RiNewspaperLine size={30} /> Assessments
               </p>
             </div>
-
             <div className="center-buttons">
               <button
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
@@ -139,99 +136,64 @@ const MyAssessmentComp = () => {
           </div>
         </section>
 
-        {/* Assessment Cards */}
-        {/*<div className="cardWrapper">*/}
-        {/*  {cardData.map((card, index) => (*/}
-        {/*    <div key={index}>*/}
-        {/*      <DashboardCard chat={card.content} />*/}
-        {/*      <div className="fileDetails">*/}
-        {/*        <div className="fileName">*/}
-        {/*          File Name*/}
-        {/*          <IoPeople className="peopleIcon" />*/}
-        {/*        </div>*/}
-        {/*        <div>*/}
-        {/*          <span>in</span>*/}
-        {/*          <span className="folderName">folderName</span>*/}
-        {/*          <span>*/}
-        {/*            • Modified 2 days ago*/}
-        {/*            <HiDotsHorizontal className="dotsIcon" />*/}
-        {/*          </span>*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
         <div className="section">
           <div className="workspace-header"></div>
           <div className="grid">
-            {folderData && folderData[0]?.assessments?.map((item) => (
-              <DashboardCard
-                key={item.id}
-                data={{ ...item, type: 'chat' }}
-                onRemove={(id) => handleRemoveChat(id)} // Handle chat removal
-                OnClick={() => {
-                  console.log('heloooooooooooooooo');
-                  dispatch(setCurrentChatId(item.id));
-                  navigate(`/assessment/chat/${item.id}`);
-                }}
-              />
-            ))}
+            {folderData &&
+              folderData[0]?.assessments?.map((item) => (
+                <DashboardCard
+                  key={item.id}
+                  data={{ ...item, type: 'chat' }}
+                  onRemove={() => handleRemoveChat()}
+                  onClick={() => {
+                    dispatch(setCurrentChatId(item.id));
+                    navigate(`/assessment/chat/${item.id}`);
+                  }}
+                />
+              ))}
           </div>
         </div>
       </div>
 
       {/* Component Styles */}
       <style>{`
-        .container {
-          padding: 1rem 2rem;
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          grid-gap: 1rem;
+          justify-items: center;
+          align-items: start;
+          padding: 15px;
         }
 
         .section {
           margin-top: 2rem;
         }
 
-        .sectionTitle {
-          font-weight: 500;
-          font-size: 2rem;
-          margin-bottom: 2rem;
+        .userName, .fileName {
+          font-size: 1.125rem;
+          font-weight: bold;
         }
 
-        .cardWrapper {
+        .chatContent {
+          font-size: 1.2rem;
+          margin: 0.5rem 0;
+        }
+
+        .footer {
           display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          margin-top: 20px;
+          justify-content: space-between;
+          align-items: center;
         }
 
         .fileDetails {
-          margin: 0.2rem 1.5rem;
-          font-size: 1rem;
           margin-bottom: 3rem;
         }
-
-        .fileName {
-          font-size: 1.125rem;
-          font-weight: bold;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
+        
         .folderName {
           color: #0066ff;
           font-size: 1.1rem;
           margin-left: 0.5rem;
-        }
-
-        .dotsIcon {
-          cursor: pointer;
-          font-size: 1.4rem;
-          color: gray;
-        }
-
-        .peopleIcon {
-          font-size: 1.5rem;
-          color: black;
         }
       `}</style>
     </div>

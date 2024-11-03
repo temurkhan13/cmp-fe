@@ -24,7 +24,7 @@
   // padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: end;
   margin-bottom: 2rem;
   border-radius: 8px;
   &::-webkit-scrollbar {
@@ -154,6 +154,7 @@
     .msg {
       margin: 1.5% 0;
       color: rgba(0, 0, 0, 0.715);
+      text-align: center;
     }
     svg {
       font-size: 13px;
