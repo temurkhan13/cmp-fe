@@ -6,31 +6,42 @@ import Loading from './Loading';
 import NoData from './NoData';
 import config from '../../config/config.js';
 import { useSelector } from 'react-redux';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
+import { timeAgo } from './helper.js';
 
 function List() {
   let navigate = useNavigate();
   const [sitemaps, setSitemaps] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
+  const selectedWorkspace = useSelector(selectWorkspace);
+  console.log(selectedWorkspace, '177777');
 
-  async function getData(url = `${config.apiURL}/dpb/sitemap`) {
-    const response = await fetch(url, {
+  async function getData(
+    workSpaceId,
+    url = `${config.apiURL}/workspace/user/sitemaps`
+  ) {
+    const authToken = localStorage.getItem('token');
+    const response = await fetch(`${url}?workspaceId=${workSpaceId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
       },
     });
+
     return response.json(); // parses JSON response into native JavaScript objects
   }
 
   const onInit = async () => {
     setLoading(true);
-    let res = await getData();
+    let res = await getData(selectedWorkspace?.id);
 
-    if (res.results) {
-      setSitemaps(res.results);
-      setLoading(false);
+    if (res?.length>0) {
+      setSitemaps(res);
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -96,9 +107,12 @@ function List() {
                     margin: '16px 0',
                   }}
                 >
-                  {sitemaps.slice(-4).map(({ id }) => {
+                  {sitemaps.slice(-4).map(({ id,name,updatedAt }) => {
                     return (
                       <div
+                      key={
+                        `${id}-recent`
+                      }
                         style={{
                           display: 'flex',
                           flexDirection: 'column',
@@ -122,16 +136,16 @@ function List() {
                             fontWeight: '500',
                           }}
                         >
-                          Filename
+                          {name}
                         </span>
-                        <span
+                     {updatedAt ?   <span
                           style={{
                             fontSize: '14px',
                             color: 'rgba(10, 10, 10, 0.46)',
                           }}
                         >
-                          Modifies 2 days ago
-                        </span>
+                          Modifies {timeAgo(updatedAt)}
+                        </span> : null}
                       </div>
                     );
                   })}
@@ -207,7 +221,7 @@ function List() {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <span
                   style={{
                     fontSize: '16px',
@@ -217,7 +231,7 @@ function List() {
                 >
                   Folders
                 </span>
-              </div>
+              </div> */}
 
               <div>
                 <span
@@ -268,9 +282,12 @@ function List() {
                       margin: '16px 0',
                     }}
                   >
-                    {sitemaps.map(({ id,name }) => {
+                    {sitemaps.map(({ id, name,updatedAt }) => {
                       return (
                         <div
+                        key={
+                          `${id}-files`
+                        }
                           style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -296,14 +313,14 @@ function List() {
                           >
                             {name}
                           </span>
-                          <span
-                            style={{
-                              fontSize: '14px',
-                              color: 'rgba(10, 10, 10, 0.46)',
-                            }}
-                          >
-                            Modifies 2 days ago
-                          </span>
+                          {updatedAt ?   <span
+                          style={{
+                            fontSize: '14px',
+                            color: 'rgba(10, 10, 10, 0.46)',
+                          }}
+                        >
+                          Modifies {timeAgo(updatedAt)}
+                        </span> : null}
                         </div>
                       );
                     })}

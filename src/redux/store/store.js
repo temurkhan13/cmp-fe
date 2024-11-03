@@ -6,7 +6,7 @@ import {
   hideLoading,
   loadingBarReducer,
 } from 'react-redux-loading-bar';
-// import storage from 'redux-persist/lib/storage'; // This defaults to localStorage for web
+import storage from 'redux-persist/lib/storage'; // This defaults to localStorage for web
 import businessInfoReducer from '../slices/businessInfoSlice';
 import userReducer from '../slices/userSlice';
 import authReducer from '../slices/authSlice';
@@ -16,6 +16,8 @@ import trashReducer from '../slices/trashSlice';
 import folderReducer from '../slices/folderSlice';
 
 import { workspaceApi } from '../api/workspaceApi';
+import persistReducer from 'redux-persist/es/persistReducer';
+import persistStore from 'redux-persist/es/persistStore';
 
 // Custom middleware to trigger loading bar actions for RTK Query requests
 const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
@@ -59,19 +61,11 @@ const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
 // };
 
 // // Persisted Configuration
-// const persistConfig = {
-//   key: 'root',
-//   storage,
-//   whitelist: ['businessInfo', 'workspaces', 'user', 'auth', 'chat'],
-// };
-
-// const rootReducer = (state, action) => {
-//   if (action.type === 'auth/logout') {
-//     storage.removeItem('persist:root')
-//     return appReducer(undefined, action)
-//   }
-//   return appReducer(state, action);
-// };
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['workspaces'],
+};
 
 // Persisted reducers
 // const persistedBusinessInfoReducer = persistReducer(
@@ -98,8 +92,18 @@ export const appReducer = combineReducers({
   [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
 });
 
+const rootReducer = (state, action) => {
+  if (action.type === 'auth/logout') {
+    storage.removeItem('persist:root');
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: appReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable serializable check for redux-persist
@@ -109,8 +113,6 @@ const store = configureStore({
       .concat(workspaceApi.middleware), // Add middleware for RTK Query
 });
 
-// const persistor = persistStore(store);
+const persistor = persistStore(store);
 
-export { store
-  // , persistor
-};
+export { store, persistor };
