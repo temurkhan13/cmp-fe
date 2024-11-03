@@ -9,7 +9,7 @@ import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
 import { logout } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
-import { persistor } from '../../redux/store/store.js';
+// import { persistor } from '../../redux/store/store.js';
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -56,7 +56,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     await dispatch(logout());
-    persistor.purge();
+    // persistor.purge();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('selectedFolder');
@@ -109,6 +109,7 @@ const Header = () => {
           </div>
         )}
 
+        
         {dropdownOpen && (
           <div className="dropdownMenu">
             <div

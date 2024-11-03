@@ -24,7 +24,7 @@
   // padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: end;
   margin-bottom: 2rem;
   border-radius: 8px;
   &::-webkit-scrollbar {
@@ -154,6 +154,7 @@
     .msg {
       margin: 1.5% 0;
       color: rgba(0, 0, 0, 0.715);
+      text-align: center;
     }
     svg {
       font-size: 13px;
@@ -283,4 +284,112 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 2rem;
+}
+.chat-container {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.chat-container.right {
+  justify-content: flex-end;
+}
+
+.chat-container.left {
+  justify-content: flex-start;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 12px;
+  max-width: 60%;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.user-card {
+  background-color: #f0f0f0;
+  text-align: right;
+  flex-direction: row-reverse;
+  margin-right: 20px;
+}
+
+.ai-card {
+  background-color: #e0e7ff;
+  text-align: left;
+}
+
+.user-avatar,
+.ai-avatar {
+  margin: 0 1rem;
+}
+
+.user-message,
+.ai-message {
+  max-width: 100%;
+  padding: 10px;
+}
+
+.msg {
+  margin: 0.5rem 0;
+}
+
+.message-action-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.message-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.message-icon-wrapper:hover .tooltip-assessment {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(5px);
+}
+
+.tooltip-assessment {
+  font-size: 0.75rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  position: absolute;
+  top: 100%; /* Position the tooltip below the icon */
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  transform: translateY(-5px); /* Adjust initial position for smooth hover transition */
+  margin-top: 5px;
+  z-index: 10;
+}
+
+.user-avatar img,
+.ai-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.edit-icon {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #888;
+  cursor: pointer;
 }

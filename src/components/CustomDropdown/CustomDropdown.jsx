@@ -173,29 +173,29 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
           </Dropdown.Item>
         </Dropdown.Submenu>
       </Dropdown.Item>
-      <hr style={styles.straightLine} />
-      <Dropdown.Item>
-        <button style={styles.clickBtn} onClick={handleOpenMoveToModal}>
-          <RiFolderTransferFill
-            style={{ marginRight: '0.5rem', fontSize: '1.5rem' }}
-          />
-          Move to
-        </button>
-        <CustomModal
-          isOpen={isMoveToModalOpen}
-          onClose={handleCloseMoveToModal}
-          onProceed={handleProceedMoveTo}
-          heading="Move to folder"
-          bodyContent={<MoveToModal folders={folders} />}
-          cancelText="Cancel"
-          proceedText="Move"
-        />
-      </Dropdown.Item>
-      <Dropdown.Item>
-        <MdInsertLink style={{ marginRight: '0.5rem', fontSize: '1.5rem' }} />
-        Copy link
-      </Dropdown.Item>
-      <hr style={styles.straightLine} />
+      {/*<hr style={styles.straightLine} />*/}
+      {/*<Dropdown.Item>*/}
+        {/*<button style={styles.clickBtn} onClick={handleOpenMoveToModal}>*/}
+        {/*  <RiFolderTransferFill*/}
+        {/*    style={{ marginRight: '0.5rem', fontSize: '1.5rem' }}*/}
+        {/*  />*/}
+        {/*  Move to*/}
+        {/*</button>*/}
+      {/*  <CustomModal*/}
+      {/*    isOpen={isMoveToModalOpen}*/}
+      {/*    onClose={handleCloseMoveToModal}*/}
+      {/*    onProceed={handleProceedMoveTo}*/}
+      {/*    heading="Move to folder"*/}
+      {/*    bodyContent={<MoveToModal folders={folders} />}*/}
+      {/*    cancelText="Cancel"*/}
+      {/*    proceedText="Move"*/}
+      {/*  />*/}
+      {/*</Dropdown.Item>*/}
+      {/*<Dropdown.Item>*/}
+      {/*  <MdInsertLink style={{ marginRight: '0.5rem', fontSize: '1.5rem' }} />*/}
+      {/*  Copy link*/}
+      {/*</Dropdown.Item>*/}
+      {/*<hr style={styles.straightLine} />*/}
       <Dropdown.Item>
         <button style={styles.clickBtn} onClick={handleOpenMoveToTrashModal}>
           <IoMdTrash style={{ marginRight: '0.5rem', fontSize: '1.5rem' }} />

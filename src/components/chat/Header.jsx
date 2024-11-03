@@ -79,15 +79,17 @@ const Header = () => {
               </li>
             ))}
 
-            <li>
-              <button className={styles.share}>
-                <RiUserSharedLine />
-                <span>Share</span>
-              </button>
-            </li>
+            {/*<li>*/}
+            {/*  <button className={styles.share}>*/}
+            {/*    <RiUserSharedLine />*/}
+            {/*    <span>Share</span>*/}
+            {/*  </button>*/}
+            {/*</li>*/}
           </ul>
 
-          <img src={UserProfilePic} alt="ProfileLogo" />
+          <img src={UserProfilePic || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
+                         alt="ProfileLogo"
+                         onError={(e) => e.target.src = 'https://avatar.iran.liara.run/public/boy?username=Ash'}/>
         </nav>
       </div>
     </header>
