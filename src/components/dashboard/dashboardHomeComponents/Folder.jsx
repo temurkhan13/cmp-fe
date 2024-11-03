@@ -8,6 +8,7 @@ import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NotificationBar from '../../common/NotificationBar';
 import './styles/Folder.css';
+import { BiSolidFolderOpen } from 'react-icons/bi';
 
 const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
   const [addFolder] = useAddFolderMutation();
@@ -63,7 +64,10 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
         <div className="container">
           <div className="left-buttons">
             <p className="assistant-heading">
-              <FaFolderTree /> Projects
+              {/*<FaFolderTree />*/}
+              <BiSolidFolderOpen size={30}
+              />
+              Projects
             </p>
           </div>
           <div className="center-buttons">

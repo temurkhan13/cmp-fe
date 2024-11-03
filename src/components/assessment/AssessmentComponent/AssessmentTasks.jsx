@@ -10,7 +10,7 @@ import {
 } from '../../../redux/slices/workspacesSlice';
 import assessmentQnaData from '../../../data/chat/assessmentQnaData';
 
-const AssessmentTasks = ({ tasks }) => {
+const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -126,14 +126,7 @@ const AssessmentTasks = ({ tasks }) => {
                   <div className="task-info">
                     <span
                       className="task-name"
-                      onClick={() =>
-                        dispatch(
-                          setCurrentSelectedTitle(
-                            assessment.ReportTitle ||
-                              assessment.report[0].subReport[0].ReportTitle ||
-                              assessment.report[0].ReportTitle
-                          )
-                        )
+                      onClick={handleAssessmentSelect(assessment)
                       }
                     >
                       {currentReport.ReportTitle
@@ -184,10 +177,7 @@ const AssessmentTasks = ({ tasks }) => {
                   <div className="task-info">
                     <span
                       className="task-name"
-                      onClick={() => {
-
-                        dispatch(setCurrentSelectedTitle(assessment))
-                      }}
+                      onClick={()=>handleAssessmentSelect(assessment)}
                     >
                       {assessment}
                     </span>

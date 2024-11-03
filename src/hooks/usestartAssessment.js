@@ -1,18 +1,26 @@
-import { useState } from 'react';
-import apiClient from '../api/axios';
-import { useSelector } from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import {
-  selectCurrentFolder,
-  selectCurrentWorkspace,
-} from '../redux/selectors/selectors';
 import config from '../config/config';
-import { selectSelectedFolder } from '../redux/slices/folderSlice.js';
-import { selectWorkspace } from '../redux/slices/workspacesSlice.js';
+import {
+  fetchFolderData, resetFolderState,
+  selectSelectedFolder,
+  setSelectedFolder,
+  toggleFolderActivation
+} from '../redux/slices/folderSlice.js';
+import {
+  fetchDashboardStats,
+  selectWorkspace,
+  setSelectedWorkspace,
+  updateWorkspaceStatus
+} from '../redux/slices/workspacesSlice.js';
 
 const useStartAssessment = () => {
+  const dispatch = useDispatch()
   const [error, setError] = useState(null);
   const businessInfo = useSelector((state) => state.businessInfo);
+  const [currentFolder, setCurrentFolder] = useState(null);
+
   //const currentWorkspaceId = '66dc950e740af833ee34b3c5';// useSelector(selectCurrentWorkspace);
   //const currentFolderId = '66dc950e740af833ee34b3c6';// useSelector(selectCurrentFolder)
   const workspaceId = useSelector(
@@ -21,8 +29,73 @@ const useStartAssessment = () => {
   const currentWorkspace = useSelector(selectWorkspace);
 
   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  // const selectedWorkspace = useSelector(selectWorkspace);
+
   const folderId =  useSelector(selectSelectedFolder);
 
+  const [isFetched, setIsFetched] = useState(false);
+
+  const handleFolderSelection = useCallback(
+    async (folder, workspaceId = currentWorkspace?.id) => {
+      if (!workspaceId) {
+        setError("No workspace ID available.");
+        return;
+      }
+
+      setCurrentFolder(folder);
+      dispatch(setSelectedFolder(folder));
+      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+
+      try {
+        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+      } catch {
+        setError('Failed to fetch folder data.');
+      }
+    },
+    [dispatch, currentWorkspace]
+  );
+
+  const handleWorkspaceChange = useCallback(
+    (workspace) => {
+      dispatch(setSelectedWorkspace(workspace));
+      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(resetFolderState());
+
+      if (workspace?.folders?.length > 0) {
+        const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+        handleFolderSelection(firstFolder, workspace.id);
+      }
+    },
+    [dispatch, handleFolderSelection]
+  );
+
+// Function to Fetch Stats - Runs Only Once
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (isFetched) return; // Prevent further calls if already fetched
+
+      try {
+        const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
+        const initialWorkspace =
+          dashboardStats.workspaces.find((ws) => ws.isActive) ||
+          dashboardStats.workspaces[0];
+        if (!currentWorkspace || currentWorkspace.id !== initialWorkspace.id) {
+          dispatch(setSelectedWorkspace(initialWorkspace));
+          handleWorkspaceChange(initialWorkspace);
+        }
+        setIsFetched(true); // Mark as fetched after successful load
+      } catch {
+        setError('Failed to fetch dashboard stats.');
+      }
+    };
+
+    fetchStats();
+  }, [dispatch, isFetched, currentWorkspace, handleWorkspaceChange]);
+
+
+  const handleDataUpdated = useCallback(() => {
+    dispatch(fetchDashboardStats());
+  }, [dispatch]);
 
   const StartAssessment = async (message, assessmentName, Questions) => {
     try {
@@ -43,7 +116,7 @@ const useStartAssessment = () => {
       const token = localStorage.getItem('token');
       console.log(folderId,'folderID..............')
       const response = await axios.post(
-        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${folderId?._id}/assessment/`,
+        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${folderId?._id || folderId?.id}/assessment/`,
         {
           // message: message || '',
           // history: [],
