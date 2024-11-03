@@ -430,6 +430,7 @@ export const {
   deleteImage,
   addDocument,
   deleteDocument,
+
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

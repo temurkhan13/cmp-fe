@@ -79,12 +79,12 @@ const Header = () => {
               </li>
             ))}
 
-            <li>
-              <button className={styles.share}>
-                <RiUserSharedLine />
-                <span>Share</span>
-              </button>
-            </li>
+            {/*<li>*/}
+            {/*  <button className={styles.share}>*/}
+            {/*    <RiUserSharedLine />*/}
+            {/*    <span>Share</span>*/}
+            {/*  </button>*/}
+            {/*</li>*/}
           </ul>
 
           <img src={UserProfilePic || 'https://avatar.iran.liara.run/public/boy?username=Ash'}

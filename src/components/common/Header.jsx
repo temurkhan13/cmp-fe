@@ -138,10 +138,10 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
             activeIcon={activeIcon}
             handleIconClick={handleIconClick}
           />
-          <div className="shareBtn" onClick={handleOpenShareModal}>
-            <FaUserPlus />
-            <span>Share</span>
-          </div>
+          {/*<div className="shareBtn" onClick={handleOpenShareModal}>*/}
+          {/*  <FaUserPlus />*/}
+          {/*  <span>Share</span>*/}
+          {/*</div>*/}
         </div>
         {photoPath ? (
           <img src={photoPath || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
