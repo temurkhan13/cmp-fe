@@ -73,6 +73,7 @@ const DashboardHomeComp = () => {
   const [activeWorkspace, setActiveWorkspace] = useState(null);
 
   useEffect(() => {
+    console.log('helooooooooooooooooo')
     const fetchStats = async () => {
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
