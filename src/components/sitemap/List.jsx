@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SitemapImg } from '../../assets/dashboard';
 import { useNavigate } from 'react-router-dom';
-import { BiPlus, BiPlusCircle } from 'react-icons/bi';
+import { BiPlus } from 'react-icons/bi';
 import Loading from './Loading';
 import NoData from './NoData';
 import config from '../../config/config.js';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
+import { BsFilePlayFill } from 'react-icons/bs';
 
 function List() {
   let navigate = useNavigate();
@@ -33,11 +34,16 @@ function List() {
     return response.json(); // parses JSON response into native JavaScript objects
   }
 
+  const recentModifiedSiteMap = useMemo(() => {
+    return sitemaps?.length > 0
+      ? sitemaps?.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      : [];
+  }, [sitemaps]);
   const onInit = async () => {
     setLoading(true);
     let res = await getData(selectedWorkspace?.id);
 
-    if (res?.length>0) {
+    if (res?.length > 0) {
       setSitemaps(res);
     }
 
@@ -70,7 +76,17 @@ function List() {
                 flexDirection: 'column',
               }}
             >
-              <div>
+              <section className="generate" style={{ marginTop: '2rem' }}>
+                <div className="container">
+                  <div className="left-buttons">
+                    <p className="assistant-heading">
+                      <BsFilePlayFill />
+                      Recently Modified Digital Playbook
+                    </p>
+                  </div>
+                </div>
+              </section>
+              {/* <div>
                 <span
                   style={{
                     fontSize: '16px',
@@ -80,7 +96,7 @@ function List() {
                 >
                   Recent files
                 </span>
-              </div>
+              </div> */}
               {loading ? (
                 <div
                   style={{
@@ -104,51 +120,53 @@ function List() {
                     alignItems: 'flex-start',
                     flexWrap: 'wrap',
                     width: '100%',
-                    margin: '16px 0',
+                    margin: '16px 3rem',
                   }}
                 >
-                  {sitemaps.slice(-4).map(({ id,name,updatedAt }) => {
-                    return (
-                      <div
-                      key={
-                        `${id}-recent`
-                      }
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '16px',
-                          marginRight: '16px',
-                          marginBottom: '16px',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                          navigate(`/sitemap/${id}`);
-                        }}
-                      >
-                        <img
-                          src={SitemapImg}
-                          height="120px"
-                          width="268px"
-                        ></img>
-                        <span
+                  {recentModifiedSiteMap
+                    ?.slice(0, 4)
+                    ?.map(({ _id, name, updatedAt }) => {
+                      return (
+                        <div
+                          key={`${_id}-recent`}
                           style={{
-                            fontSize: '16px',
-                            fontWeight: '500',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            marginRight: '16px',
+                            marginBottom: '16px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => {
+                            navigate(`/sitemap/${_id}`);
                           }}
                         >
-                          {name}
-                        </span>
-                     {updatedAt ?   <span
-                          style={{
-                            fontSize: '14px',
-                            color: 'rgba(10, 10, 10, 0.46)',
-                          }}
-                        >
-                          Modifies {timeAgo(updatedAt)}
-                        </span> : null}
-                      </div>
-                    );
-                  })}
+                          <img
+                            src={SitemapImg}
+                            height="120px"
+                            width="268px"
+                          ></img>
+                          <span
+                            style={{
+                              fontSize: '16px',
+                              fontWeight: '500',
+                            }}
+                          >
+                            {name}
+                          </span>
+                          {updatedAt ? (
+                            <span
+                              style={{
+                                fontSize: '14px',
+                                color: 'rgba(10, 10, 10, 0.46)',
+                              }}
+                            >
+                              Modifies {timeAgo(updatedAt)}
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    })}
                 </div>
               )}
               {/* <div
@@ -181,14 +199,42 @@ function List() {
                   </a>
                 </div>
               </div> */}
-              <div
+              <section className="generate" style={{ marginTop: '2rem' }}>
+                <div className="container">
+                  <div className="left-buttons">
+                    <p className="assistant-heading">
+                      <BsFilePlayFill />
+                      Digital Playbook
+                    </p>
+                  </div>
+
+                  <div className="center-buttons">
+                    <button
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                      }}
+                      className="assiss-btn"
+                      onClick={() => {
+                        navigate('/sitemap/new');
+                      }}
+                    >
+                      <BiPlus></BiPlus>
+                      Create Template
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              {/* <div
                 style={{
                   margin: '16px 0',
                   display: 'flex',
                   justifyContent: 'space-between',
                 }}
               >
-                <span
+                 <span
                   style={{
                     fontSize: '28px',
                     fontWeight: '600',
@@ -196,8 +242,8 @@ function List() {
                   }}
                 >
                   Digital Playbook
-                </span>
-                <div style={{}}>
+                </span> 
+                 <div style={{}}>
                   <button
                     style={{
                       width: '100%',
@@ -218,8 +264,8 @@ function List() {
                     <BiPlus></BiPlus>
                     Create Template
                   </button>
-                </div>
-              </div>
+                </div> 
+              </div> */}
 
               {/* <div>
                 <span
@@ -233,7 +279,7 @@ function List() {
                 </span>
               </div> */}
 
-              <div>
+              {/* <div>
                 <span
                   style={{
                     fontSize: '16px',
@@ -243,7 +289,7 @@ function List() {
                 >
                   Files
                 </span>
-              </div>
+              </div> */}
 
               <div
                 style={{
@@ -279,15 +325,13 @@ function List() {
                       alignItems: 'flex-start',
                       flexWrap: 'wrap',
                       width: '100%',
-                      margin: '16px 0',
+                      margin: '16px 3rem',
                     }}
                   >
-                    {sitemaps.map(({ id, name,updatedAt }) => {
+                    {sitemaps.map(({ _id, name, updatedAt }) => {
                       return (
                         <div
-                        key={
-                          `${id}-files`
-                        }
+                          key={`${_id}-files`}
                           style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -297,7 +341,7 @@ function List() {
                             cursor: 'pointer',
                           }}
                           onClick={() => {
-                            navigate(`/sitemap/${id}`);
+                            navigate(`/sitemap/${_id}`);
                           }}
                         >
                           <img
@@ -313,14 +357,16 @@ function List() {
                           >
                             {name}
                           </span>
-                          {updatedAt ?   <span
-                          style={{
-                            fontSize: '14px',
-                            color: 'rgba(10, 10, 10, 0.46)',
-                          }}
-                        >
-                          Modifies {timeAgo(updatedAt)}
-                        </span> : null}
+                          {updatedAt ? (
+                            <span
+                              style={{
+                                fontSize: '14px',
+                                color: 'rgba(10, 10, 10, 0.46)',
+                              }}
+                            >
+                              Modifies {timeAgo(updatedAt)}
+                            </span>
+                          ) : null}
                         </div>
                       );
                     })}
