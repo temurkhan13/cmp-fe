@@ -64,6 +64,7 @@
   import { getChatsAsync } from '../../redux/slices/workspaceSlice';
   import { selectWorkspace, setCurrentChatId } from '../../redux/slices/workspacesSlice';
   import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
+  import useInspire from '../../hooks/AiFeatureHooks/useInspire.js';
 
   const MessagesSection = ({ setCurrentChat }) => {
     const dispatch = useDispatch();
@@ -181,6 +182,10 @@
     const { LongText } = useLonger();
     const { error, chatWithdoc } = useChat();
     console.debug(selectedTone, responseLength, askAi, chatWithdoc);
+    const { handleInspire } = useInspire();
+    const [firstPrompt, setFirstPrompt] = useState('');
+
+
 
     const renderIcon = (iconName, style = {}) => {
       const IconComponent = FaIcons[iconName];
@@ -528,15 +533,44 @@
         handleSendMessage();
       }
     };
+    // const handleInspireClick = async () => {
+    //   //Todo: will implement Inspire
+    //   // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
+    //   // const inspiredText = await handleInspire(answers[currentQuestionKey]);
+    //   // setAnswers({
+    //   //   ...answers,
+    //   //   [currentQuestionKey]: inspiredText,
+    //   // });
+    // };
+
     const handleInspireClick = async () => {
-      //Todo: will implement Inspire
-      // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
-      // const inspiredText = await handleInspire(answers[currentQuestionKey]);
-      // setAnswers({
-      //   ...answers,
-      //   [currentQuestionKey]: inspiredText,
-      // });
+      try {
+        setLoading(true);
+        // Check if chat and generalMessages are defined and not empty
+        const lastChat = chat.generalMessages.filter(message=>message.from == 'user');
+        console.log(lastChat,'lastchat')
+        const lastMessage = lastChat?.[lastChat.length - 1]?.text;
+
+        if (lastMessage) {
+          // Use the last message for inspiration
+          const inspiredText = await handleInspire(lastMessage);
+
+          setFirstPrompt(inspiredText);
+          console.log(inspiredText, 'inspiredText');
+          setText(inspiredText);
+          handleSendMessage();
+        } else {
+          console.warn('No general messages found or no text available in the last message.');
+        }
+      } catch (error) {
+        console.error('An error occurred in handleInspireClick:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+
+
+
 
     // useEffect(() => {
     //   document.addEventListener('mouseup', handleTextSelect);
@@ -841,7 +875,7 @@
           <div className="input-container">
             <div
               style={{
-                position: 'left',
+                position: 'absolute',
                 bottom: '10px',
                 right: '10px',
                 cursor: 'pointer',
@@ -863,22 +897,42 @@
                     width: '16px',
                     height: '16px',
                     animation: 'spin 1s linear infinite',
-                    marginLeft: '8px',
+                    marginLeft: '8px'
                   }}
                 />
               )}
             </div>
-            <input
-              type="text"
+            <textarea
               placeholder="Enter text here.."
               value={text}
               onChange={(e) => setText(e.target.value)}
-              onKeyDown={HandleEnterKey}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage(); // Send message on Enter
+                }
+              }}
+              onInput={(e) => {
+                e.target.style.height = 'auto'; // Reset height
+                e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height
+              }}
+              style={{
+                resize: 'none',
+                overflowY: 'auto',
+                height: 'auto',
+                maxHeight: '150px', // Set maximum height before scroll
+                width: '100%', // Full width of the container
+                border: '1px solid #ddd',
+                borderRadius: '10px',
+                padding: '8px 12px',
+                fontSize: '14px',
+                fontFamily: 'Arial, sans-serif',
+                boxSizing: 'border-box',
+                outline: 'none'
+              }}
+              rows={1} // Initial row
             />
             <div className="icons">
-              {/*<label htmlFor="file-input">*/}
-              {/*  <IoAttach className="send-icon " />*/}
-              {/*</label>*/}
               <IoSend onClick={handleSendMessage} className="send-icon " />
             </div>
           </div>
@@ -886,7 +940,7 @@
         {showCommentPopup && (
           <CommentPopup
             onClose={() => {
-              setShowCommentPopup(false)
+              setShowCommentPopup(false);
               refetch();
             }}
             workspaceId={workspaceId}
@@ -933,7 +987,7 @@
 
   // Define prop types for validation
   MessagesSection.propTypes = {
-    setCurrentChat: PropTypes.func.isRequired, // Validate that it's a required function
+    setCurrentChat: PropTypes.func.isRequired // Validate that it's a required function
   };
 
   // Optionally, define defaultProps if needed
