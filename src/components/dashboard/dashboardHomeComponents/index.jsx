@@ -20,6 +20,7 @@ import {
 import DashboardCard from './DashboardCard.jsx';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
+import { GiWireframeGlobe } from "react-icons/gi";
 import { IoIosChatboxes } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import './styles/DashboardHome.css'
@@ -42,7 +43,7 @@ const SectionGrid = ({ title, items, itemType, onRemove }) => {
       <div className="container-heading">
         <div className="left-buttons">
           <p className="assistant-heading">
-            {itemType === 'assessments' ? <RiNewspaperLine /> : itemType === 'chats' ? <IoIosChatboxes /> : <FaFolderTree />}
+            {itemType === 'assessments' ? <RiNewspaperLine /> : itemType === 'chats' ? <IoIosChatboxes /> : itemType === 'wireframes' ? <GiWireframeGlobe/> :  <FaFolderTree />}
             {title}
           </p>
         </div>

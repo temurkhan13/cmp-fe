@@ -90,8 +90,8 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
         <div className="container-heading">
           <div className="left-buttons">
             <p className="assistant-heading">
-              <FaFolderTree />
-              Workspaces
+              <BsWindowStack size={30}/>
+                Workspaces
             </p>
           </div>
           <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>
