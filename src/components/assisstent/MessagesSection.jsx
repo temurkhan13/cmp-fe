@@ -872,12 +872,12 @@
               {file ? file.name : ''}
             </label>
           </div>
-          <div className="input-container">
+          <div className="input-container" style={{position:'relative'}}>
             <div
               style={{
                 position: 'absolute',
-                bottom: '10px',
-                right: '10px',
+                bottom: '8px',
+                right: '99% ',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center'

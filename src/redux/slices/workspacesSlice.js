@@ -101,7 +101,7 @@ const workspacesSlice = createSlice({
         state.dashboardStats = payload;
         // Set the first workspace as default
         if (payload.workspaces && payload.workspaces.length > 0) {
-        const activeWorkspace = payload.workspaces.find(workspace => workspace.isActive) || payload.results[0];
+        const activeWorkspace = payload.workspaces.find(workspace => workspace.isActive) || (payload.results && payload.results[0]);
           state.selectedWorkspace =activeWorkspace;
           state.currentWorkspaceId =activeWorkspace?.id;
         }
