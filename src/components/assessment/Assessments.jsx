@@ -275,12 +275,11 @@ const Comment = {
   ],
 };
 
-const Assessments = ({handleAssessmentSelect}) => {
+const Assessments = ({ handleAssessmentSelect }) => {
   const [activeIcon, setActiveIcon] = useState(null);
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
   };
-
 
   return (
     <>
@@ -331,7 +330,12 @@ const Assessments = ({handleAssessmentSelect}) => {
       {activeIcon === 'question' && (
         <SideBarModal
           title="Assessments"
-          bodyContent={<AssessmentTasks tasks={tasks} handleAssessmentSelect={handleAssessmentSelect}/>}
+          bodyContent={
+            <AssessmentTasks
+              tasks={tasks}
+              handleAssessmentSelect={handleAssessmentSelect}
+            />
+          }
           onClose={() => setActiveIcon(null)}
         />
       )}

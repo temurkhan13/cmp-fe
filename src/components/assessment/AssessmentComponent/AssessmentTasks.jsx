@@ -176,13 +176,11 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
               const taskColors = getColor(false);
               return (
                 <div className="task-item" key={index}>
-                  <div className="task-info">
-                    <span
-                      className="task-name"
-                      onClick={() => handleAssessmentSelect(assessment)}
-                    >
-                      {assessment}
-                    </span>
+                  <div
+                    className="task-info"
+                    onClick={() => handleAssessmentSelect(assessment)}
+                  >
+                    <span className="task-name">{assessment}</span>
                     <span
                       className={`task-progress hover-show`}
                       style={{

@@ -18,8 +18,12 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
 
   // Validation schema for new folder creation
   const validationSchema = Yup.object({
-    projectName: Yup.string().required('Project Name is required').min(3, 'Project Name must be at least 3 characters'),
-    companySize: Yup.string().required('Company Size is required').matches(/^[0-9]+$/, 'Company Size must be a number'),
+    projectName: Yup.string()
+      .required('Project Name is required')
+      .min(3, 'Project Name must be at least 3 characters'),
+    companySize: Yup.string()
+      .required('Company Size is required')
+      .matches(/^[0-9]+$/, 'Company Size must be a number'),
     companyName: Yup.string().required('Company Name is required'),
     jobTitle: Yup.string().required('Job Title is required'),
     industry: Yup.string().required('Industry is required'),
@@ -33,25 +37,28 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
     industry: '',
   };
 
-  const handleNewFolderSubmit = useCallback(async (values, { resetForm }) => {
-    try {
-      await addFolder({
-        workspaceId: activeWorkspace.id,
-        folderName: values.projectName,
-        businessInfo: {
-          companySize: values.companySize,
-          companyName: values.companyName,
-          jobTitle: values.jobTitle,
-          industry: values.industry,
-        },
-      }).unwrap();
-      setIsNewFolderModalOpen(false);
-      resetForm();
-      onFolderUpdate(); // Notify the parent component to refresh folder data
-    } catch (error) {
-      showError('Failed to add Project.');
-    }
-  }, [addFolder, activeWorkspace?.id, onFolderUpdate]);
+  const handleNewFolderSubmit = useCallback(
+    async (values, { resetForm }) => {
+      try {
+        await addFolder({
+          workspaceId: activeWorkspace.id,
+          folderName: values.projectName,
+          businessInfo: {
+            companySize: values.companySize,
+            companyName: values.companyName,
+            jobTitle: values.jobTitle,
+            industry: values.industry,
+          },
+        }).unwrap();
+        setIsNewFolderModalOpen(false);
+        resetForm();
+        onFolderUpdate(); // Notify the parent component to refresh folder data
+      } catch (error) {
+        showError('Failed to add Project.');
+      }
+    },
+    [addFolder, activeWorkspace?.id, onFolderUpdate]
+  );
 
   const showError = useCallback((message) => {
     setErrorMessage(message);
@@ -65,13 +72,15 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
           <div className="left-buttons">
             <p className="assistant-heading">
               {/*<FaFolderTree />*/}
-              <BiSolidFolderOpen size={30}
-              />
+              <BiSolidFolderOpen size={30} />
               Projects
             </p>
           </div>
           <div className="center-buttons">
-            <button className="assiss-btn" onClick={() => setIsNewFolderModalOpen(true)}>
+            <button
+              className="assiss-btn"
+              onClick={() => setIsNewFolderModalOpen(true)}
+            >
               New Project <AiOutlinePlus className="icon" />
             </button>
           </div>
@@ -80,7 +89,11 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
 
       {/* Show the FileStructure based on the selected workspace */}
       {activeWorkspace && activeWorkspace.folders?.length > 0 ? (
-        <FileStructure workspace={activeWorkspace} onFolderSelect={onFolderSelect} onFolderUpdate={onFolderUpdate} />
+        <FileStructure
+          workspace={activeWorkspace}
+          onFolderSelect={onFolderSelect}
+          onFolderUpdate={onFolderUpdate}
+        />
       ) : (
         <div className="no-projects">
           <p>No projects associated with this workspace.</p>
@@ -88,9 +101,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
       )}
 
       {isNewFolderModalOpen && (
-        <Modal title="Create New Project" isOpen={isNewFolderModalOpen} onClose={() => setIsNewFolderModalOpen(false)}>
+        <Modal
+          title="Create New Project"
+          isOpen={isNewFolderModalOpen}
+          onClose={() => setIsNewFolderModalOpen(false)}
+        >
           <div className="modal-content">
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleNewFolderSubmit}>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleNewFolderSubmit}
+            >
               {({ errors, touched }) => (
                 <Form className="modal-form-content">
                   <label className="modal-label">Project Name</label>
@@ -98,9 +119,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     type="text"
                     name="projectName"
                     placeholder="Enter project name"
-                    className={`workspace-input ${touched.projectName && errors.projectName ? 'error-border' : ''}`}
+                    className={`workspace-input ${
+                      touched.projectName && errors.projectName
+                        ? 'error-border'
+                        : ''
+                    }`}
                   />
-                  <ErrorMessage name="projectName" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="projectName"
+                    component="div"
+                    className="error-message"
+                  />
 
                   <p className="business-info-heading">Your Business Info</p>
                   <hr />
@@ -110,38 +139,68 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     type="text"
                     name="companyName"
                     placeholder="Enter Company Name"
-                    className={`workspace-input ${touched.companyName && errors.companyName ? 'error-border' : ''}`}
+                    className={`workspace-input ${
+                      touched.companyName && errors.companyName
+                        ? 'error-border'
+                        : ''
+                    }`}
                   />
-                  <ErrorMessage name="companyName" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="companyName"
+                    component="div"
+                    className="error-message"
+                  />
 
                   <label className="modal-label">Company Size</label>
                   <Field
                     type="text"
                     name="companySize"
                     placeholder="Enter company size"
-                    className={`workspace-input ${touched.companySize && errors.companySize ? 'error-border' : ''}`}
+                    className={`workspace-input ${
+                      touched.companySize && errors.companySize
+                        ? 'error-border'
+                        : ''
+                    }`}
                   />
-                  <ErrorMessage name="companySize" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="companySize"
+                    component="div"
+                    className="error-message"
+                  />
 
                   <label className="modal-label">Job Title</label>
                   <Field
                     type="text"
                     name="jobTitle"
                     placeholder="Enter job title"
-                    className={`workspace-input ${touched.jobTitle && errors.jobTitle ? 'error-border' : ''}`}
+                    className={`workspace-input ${
+                      touched.jobTitle && errors.jobTitle ? 'error-border' : ''
+                    }`}
                   />
-                  <ErrorMessage name="jobTitle" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="jobTitle"
+                    component="div"
+                    className="error-message"
+                  />
 
                   <label className="modal-label">Industry</label>
                   <Field
                     type="text"
                     name="industry"
                     placeholder="Enter Industry"
-                    className={`workspace-input ${touched.industry && errors.industry ? 'error-border' : ''}`}
+                    className={`workspace-input ${
+                      touched.industry && errors.industry ? 'error-border' : ''
+                    }`}
                   />
-                  <ErrorMessage name="industry" component="div" className="error-message" />
+                  <ErrorMessage
+                    name="industry"
+                    component="div"
+                    className="error-message"
+                  />
 
-                  <button type="submit" className="create-workspace-btn">Create</button>
+                  <button type="submit" className="create-workspace-btn">
+                    Create
+                  </button>
                 </Form>
               )}
             </Formik>
@@ -150,7 +209,12 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
       )}
 
       {showNotification && (
-        <NotificationBar message={errorMessage} type="error" duration={5000} onClose={() => setShowNotification(false)} />
+        <NotificationBar
+          message={errorMessage}
+          type="error"
+          duration={5000}
+          onClose={() => setShowNotification(false)}
+        />
       )}
     </div>
   );

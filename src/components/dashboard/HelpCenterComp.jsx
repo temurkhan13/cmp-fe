@@ -3,7 +3,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { MdDashboard, MdAssistant, MdAssessment } from 'react-icons/md';
 import { BsFilePlayFill } from 'react-icons/bs';
 import { FaSitemap, FaQuestionCircle } from 'react-icons/fa';
-import heading from '../../assets/dashboard/heading.svg';
+import headingss from '../../assets/dashboard/heading.svg';
 
 const HelpCenterComp = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,77 +22,162 @@ const HelpCenterComp = () => {
       icon: <MdAssessment />,
     },
     { name: 'Digital Playbook', href: '#playbook', icon: <BsFilePlayFill /> },
-    { name: 'Sitemaps', href: '#sitemaps', icon: <FaSitemap /> },
-    {
-      name: 'Frequently asked questions',
-      href: '#faqs',
-      icon: <FaQuestionCircle />,
-    },
   ];
 
   const sections = [
     {
       id: 'dashboard',
-      title: 'AI Introduction',
+      title: 'Dashboard',
       content: (
         <div>
           <p>
-            Artificial Intelligence (AI) refers to the simulation of human
-            intelligence in machines, enabling them to perform tasks that
-            typically require human cognition. These tasks include learning,
-            reasoning, problem-solving, and decision-making, allowing AI systems
-            to adapt and improve over time. AI has evolved rapidly, influencing
-            various industries by automating processes, analyzing vast amounts
-            of data, and improving operational efficiency. The integration of AI
-            into everyday life is transforming how we interact with technology,
-            from virtual assistants to advanced data analytics. AI-powered tools
-            enhance productivity, streamline workflows, and provide valuable
-            insights across sectors such as healthcare, finance, and education,
-            making AI an essential part of modern technological advancements.
+            The Dashboard is your central hub for accessing key insights and
+            navigating through the Change AI application. It provides an
+            at-a-glance view of your ongoing projects, workspaces, and recent
+            activities, helping you stay organized and focused on your tasks.
+            Key features include: Quick Stats: Displays essential metrics for
+            Workspaces, Projects, Recent AI Assistants, AI Assessments, Digital
+            Playbook, and the Current Plan. Allows you to instantly assess your
+            progress and identify areas that need attention. Workspace
+            Management: Create and delete workspaces directly from the dashboard
+            with a single click, making it easy to set up new projects or remove
+            outdated ones. Keep your workspaces organized and relevant to your
+            current goals. Recent Chats and Navigation: Access your recent chats
+            directly from the dashboard, allowing you to quickly pick up where
+            you left off. Helps streamline your workflow by minimizing the need
+            to search for ongoing conversations and recent actions. With the
+            Dashboard, you can manage your activities in one place, saving time
+            and reducing the need to navigate through multiple sections.
           </p>
-          <img
-            src="path/to/image1.jpg"
-            alt="AI"
-            style={{ width: '100%', borderRadius: '8px' }}
-          />
-          <a href="#" style={{ color: '#007bff', textDecoration: 'underline' }}>
-            Learn more
-          </a>
         </div>
       ),
       style: { backgroundColor: '#f0f8ff', padding: '2rem' },
     },
     {
       id: 'assistant',
-      title: 'Assistant Chat',
+      title: 'AI Assistant',
       content: (
         <div>
           <p>
-            AI-powered chat systems offer real-time responses, enhancing the
-            flow of conversations by providing instant and accurate replies.
-            This enables seamless communication, especially in professional and
-            customer service settings where quick solutions are essential. AI
-            integration into chat platforms improves efficiency, reduces wait
-            times, and ensures users receive relevant information without delay.
-            With seamless integration, AI systems can be incorporated into
-            various applications, supporting a range of tasks beyond simple
-            conversation. From handling queries to assisting in workflows, AI
-            enhances user experience by automating processes and delivering
-            personalized interactions, ultimately making communication more
-            intuitive and efficient.
+            The AI Assistant is your smart, AI-powered chatbot, designed to
+            support you with change management queries and provide on-the-spot
+            assistance for a variety of tasks. It’s packed with features that
+            enhance your interactions and improve efficiency: Real-Time
+            Assistance: Get instant responses to your change management
+            questions, powered by AI to deliver accurate and relevant answers.
+            Offers expert support at your fingertips, minimizing the time you
+            spend searching for information. Quick Action Options: Change Tone:
+            Instantly adjust the tone of selected messages to align with your
+            communication style or audience requirements. Comment and Bookmark:
+            Add comments or bookmark key conversations for easy reference in the
+            future. Switch Projects: Seamlessly switch between projects within
+            the chat, helping you stay organized and manage multiple projects
+            without losing track. Recent Chats Panel: View your recent
+            conversations in the left drawer, enabling you to quickly jump back
+            into previous discussions. Enhances productivity by keeping your
+            recent activities readily accessible. The AI Assistant is designed
+            to streamline your communication and optimize your workflow by
+            providing contextual support as you work.
           </p>
-          <ul>
-            <li>Real-time responses</li>
-            <li>Seamless integration</li>
-          </ul>
-          <img
-            src="path/to/image2.jpg"
-            alt="Chat"
-            style={{ width: '100%', borderRadius: '8px' }}
-          />
         </div>
       ),
       style: { backgroundColor: '#faebd7', padding: '2rem' },
+    },
+    {
+      id: 'assessment',
+      title: 'AI Assessment',
+      content: (
+        <div>
+          <p>
+            The AI Assessment module helps you create, customize, and download
+            comprehensive change management reports tailored to your
+            organization’s needs. This tool simplifies the assessment process,
+            making it easier for users to generate insightful reports with
+            minimal effort. Here’s how it works: Step-by-Step Assessment
+            Journey: Start by selecting an assessment from a library of 24
+            change management reports. The Change AI bot will guide you through
+            a series of questions to help build your report. If you’re unsure of
+            any answers, use the “Inspire Me” button to get ideas and guidance.
+            Customizable Report Editor: After answering the questions, the
+            generated report can be opened in an intuitive editor. Modify,
+            enhance, and personalize the report to better fit your
+            organization's specific needs and insights. Downloadable Reports:
+            Once you're satisfied with your report, download it for easy sharing
+            and record-keeping. Allows you to deliver professional, data-driven
+            reports that support decision-making and change management efforts
+            within your team. The AI Assessment module empowers you to create
+            impactful reports with AI-driven assistance, transforming complex
+            assessments into user-friendly, actionable documents.
+          </p>
+        </div>
+      ),
+      style: { backgroundColor: '#F0F0F0', padding: '2rem' },
+    },
+    {
+      id: 'playbook',
+      title: 'Digital Playbook',
+      content: (
+        <div>
+          <p>
+            The Digital Playbook is your go-to resource for structuring and
+            visualizing digital strategies, featuring two main modules: Sitemap
+            and Wireframe. This tool helps you conceptualize and organize your
+            digital plans with a high level of customization: Sitemap
+            Generation: Automatically generates a comprehensive sitemap based on
+            your inputs, which can be modified to suit your specific
+            requirements. Provides a clear visual structure of your digital
+            initiatives, making it easy to plan and present your project
+            roadmap. Wireframe Playground: Drag-and-drop functionality lets you
+            add and arrange elements such as text, images, graphs, and tables,
+            enabling you to design and visualize your strategies interactively.
+            Ideal for laying out complex ideas in a visual format, improving
+            understanding and communication within your team. Playbook
+            Customization and Download: The Digital Playbook includes data
+            relevant to your projects, which can be edited for personalization.
+            Export your finalized playbook as a PDF for easy sharing and
+            presentation. The Digital Playbook makes it simple to develop,
+            organize, and communicate your digital strategies, helping you
+            transform ideas into actionable plans with a professional and
+            visually engaging approach.
+          </p>
+        </div>
+      ),
+      style: { backgroundColor: '#faebf1', padding: '2rem' },
+    },
+  ];
+
+  const heading = [
+    {
+      id: 'dashboard',
+      title: 'Dashboard',
+      content: (
+        <div className="help-Heading">Stay in Control, All in One Place</div>
+      ),
+    },
+    {
+      id: 'assistant',
+      title: 'AI Assistant',
+      content: (
+        <div className="help-Heading">
+          "Your Smart Guide for Seamless Change
+        </div>
+      ),
+    },
+    {
+      id: 'assessment',
+      title: 'AI Assessment',
+      content: (
+        <div className="help-Heading">Insightful Reports Made Effortless</div>
+      ),
+    },
+    {
+      id: 'playbook',
+      title: 'Digital Playbook',
+      content: (
+        <div className="help-Heading">
+          Visualize and Build Your Digital Roadmap
+        </div>
+      ),
     },
   ];
 
@@ -137,9 +222,18 @@ const HelpCenterComp = () => {
           sidebarOpen ? 'sidebar-open' : 'sidebar-closed'
         }`}
       >
-        <div className="help-Heading">
-          Revolutionizing world through smart Innovation
-        </div>
+        {heading.map((section, index) => (
+          <section
+            key={section.id}
+            id={section.id}
+            className={`content-heading ${
+              activeSection === index ? 'active' : ''
+            }`}
+            style={activeSection === index ? section.style : {}}
+          >
+            {section.content}
+          </section>
+        ))}
         {sections.map((section, index) => (
           <section
             key={section.id}
@@ -171,7 +265,7 @@ const HelpCenterComp = () => {
           margin-bottom: 2rem;
           color: white;
           border-radius: 2rem;
-          background-image: url(${heading});
+          background-image: url(${headingss});
           background-repeat: no-repeat;
           background-size: cover;
         }
@@ -256,6 +350,25 @@ const HelpCenterComp = () => {
         .content-section.active {
           display: block;
           opacity: 1;
+        }
+          .content-heading {
+          display: none;
+          opacity: 0;
+          transition: opacity 0.5s ease-in-out;
+        }
+        .content-heading.active {
+          display: block;
+          margin-top: 10px;
+          opacity: 1;
+          width: 100%;
+          font-size: 3.5rem;
+          font-weight: 600;
+          text-align: center;
+          color: white;
+          border-radius: 2rem;
+          background-image: url(${heading});
+          background-repeat: no-repeat;
+          background-size: cover;
         }
         .helpcenter-sidebar::-webkit-scrollbar {
           width: 8px;
