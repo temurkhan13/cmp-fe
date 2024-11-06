@@ -44,7 +44,6 @@ const Chat = () => {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
 
   const handleAssessmentSelect = (assessment) => {
-    console.log(assessment, 'assessment');
     if (assessment) {
       dispatch(
         setCurrentSelectedTitle(

@@ -3,23 +3,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import config from '../config/config';
 import {
-  fetchFolderData, resetFolderState,
+  fetchFolderData,
+  resetFolderState,
   selectSelectedFolder,
   setSelectedFolder,
-  toggleFolderActivation
+  toggleFolderActivation,
 } from '../redux/slices/folderSlice.js';
 import {
   fetchDashboardStats,
   selectWorkspace,
   setSelectedWorkspace,
-  updateWorkspaceStatus
+  updateWorkspaceStatus,
 } from '../redux/slices/workspacesSlice.js';
 
 const useStartAssessment = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const businessInfo = useSelector((state) => state.businessInfo);
   const [currentFolder, setCurrentFolder] = useState(null);
+  const [isReportGenerated, setIsReportGenerated] = useState(false);
+  const [report, setReport] = useState(null);
 
   //const currentWorkspaceId = '66dc950e740af833ee34b3c5';// useSelector(selectCurrentWorkspace);
   //const currentFolderId = '66dc950e740af833ee34b3c6';// useSelector(selectCurrentFolder)
@@ -31,23 +34,31 @@ const useStartAssessment = () => {
   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
   // const selectedWorkspace = useSelector(selectWorkspace);
 
-  const folderId =  useSelector(selectSelectedFolder);
+  const folderId = useSelector(selectSelectedFolder);
 
   const [isFetched, setIsFetched] = useState(false);
 
   const handleFolderSelection = useCallback(
     async (folder, workspaceId = currentWorkspace?.id) => {
       if (!workspaceId) {
-        setError("No workspace ID available.");
+        setError('No workspace ID available.');
         return;
       }
 
       setCurrentFolder(folder);
       dispatch(setSelectedFolder(folder));
-      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+      dispatch(
+        toggleFolderActivation({
+          workspaceId,
+          folderId: folder.id,
+          isActive: true,
+        })
+      );
 
       try {
-        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+        await dispatch(
+          fetchFolderData({ workspaceId, folderId: folder.id })
+        ).unwrap();
       } catch {
         console.log('Failed to fetch folder data.');
       }
@@ -58,18 +69,22 @@ const useStartAssessment = () => {
   const handleWorkspaceChange = useCallback(
     (workspace) => {
       dispatch(setSelectedWorkspace(workspace));
-      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(
+        updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
+      );
       dispatch(resetFolderState());
 
       if (workspace?.folders?.length > 0) {
-        const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+        const firstFolder =
+          workspace.folders.find((folder) => folder.isActive) ||
+          workspace.folders[0];
         handleFolderSelection(firstFolder, workspace.id);
       }
     },
     [dispatch, handleFolderSelection]
   );
 
-// Function to Fetch Stats - Runs Only Once
+  // Function to Fetch Stats - Runs Only Once
   useEffect(() => {
     const fetchStats = async () => {
       if (isFetched) return; // Prevent further calls if already fetched
@@ -92,7 +107,6 @@ const useStartAssessment = () => {
     fetchStats();
   }, [dispatch, isFetched, currentWorkspace, handleWorkspaceChange]);
 
-
   const handleDataUpdated = useCallback(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
@@ -114,9 +128,11 @@ const useStartAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      console.log(folderId,'folderID..............')
+      console.log(folderId, 'folderID..............');
       const response = await axios.post(
-        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${folderId?._id || folderId?.id}/assessment/`,
+        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${
+          folderId?._id || folderId?.id
+        }/assessment/`,
         {
           // message: message || '',
           // history: [],
@@ -130,6 +146,11 @@ const useStartAssessment = () => {
           },
         }
       );
+      if (response.data && response.data.isReportGenerated) {
+        setIsReportGenerated(true);
+        setReport(response.data.report[0].finalReport);
+        return response.data;
+      }
       console.log('hook response: A:', response.data);
       console.log('hook response: B', response.data.report[0]);
       console.log(
@@ -147,7 +168,7 @@ const useStartAssessment = () => {
     }
   };
 
-  return { error, StartAssessment };
+  return { error, StartAssessment, isReportGenerated, report };
 };
 
 export default useStartAssessment;

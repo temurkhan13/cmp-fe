@@ -6,7 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
 import CustomModal from '../customModal/CustomModal';
 import { truncateText } from '../../utils/helperFunction';
-import { useMoveToTrashMutation, useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
+import {
+  useMoveToTrashMutation,
+  useGetWorkspacesQuery,
+} from '../../redux/api/workspaceApi';
 import NotificationBar from '../common/NotificationBar';
 import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
@@ -37,7 +40,10 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
 
   const handleProceedMoveToTrash = useCallback(async () => {
     try {
-      await moveToTrash({ entityType: 'folder', id: selectedFolder.id }).unwrap();
+      await moveToTrash({
+        entityType: 'folder',
+        id: selectedFolder.id,
+      }).unwrap();
       refetch();
       onFolderUpdate();
     } catch {
@@ -58,16 +64,27 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   return (
     <section className="folders-files">
       {error && (
-        <NotificationBar message={error} type="error" onClose={handleCloseError} />
+        <NotificationBar
+          message={error}
+          type="error"
+          onClose={handleCloseError}
+        />
       )}
 
       <div className="heading">
-        <p>Your &ldquo;{workspace.workspaceName}&rdquo; contains the following projects:</p>
+        <p>
+          Your &ldquo;{workspace.workspaceName}&rdquo; contains the following
+          projects:
+        </p>
       </div>
 
       <div className="files-container">
         {workspace.folders.map((folder) => (
-          <div key={folder.id} className="file" onClick={() => openModal(folder)}>
+          <div
+            key={folder.id}
+            className="file"
+            onClick={() => openModal(folder)}
+          >
             <span className="icon">
               <BiSolidFolderOpen
                 style={
@@ -100,7 +117,8 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
           bodyContent={
             <div>
               Are you sure you want to move this file to the trash?
-              <br /> It will remain there for 30 days before being permanently deleted.
+              <br /> It will remain there for 30 days before being permanently
+              deleted.
             </div>
           }
           cancelText="Cancel"

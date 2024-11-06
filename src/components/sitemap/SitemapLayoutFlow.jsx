@@ -487,10 +487,6 @@ const SitemapLayoutFlow = ({ id }) => {
     getSitemap();
   }, [id]);
 
-
-  
-
-
   return (
     <ReactFlow
       nodes={nodes}

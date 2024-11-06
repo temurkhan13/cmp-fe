@@ -68,7 +68,7 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
   return (
     <div className="dashboard">
       <section className="generate">
-        <div className="container">
+        <div className="container-heading">
           <div className="left-buttons">
             <p className="assistant-heading">
               {/*<FaFolderTree />*/}

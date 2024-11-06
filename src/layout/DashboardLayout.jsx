@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import 'boxicons/css/boxicons.min.css';
 import '../../scss/modules/dashboard/dashboardLayout.scss';
@@ -18,8 +18,8 @@ import { IoSettingsSharp } from 'react-icons/io5';
 import { GiArtificialHive } from 'react-icons/gi';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
-
 const DashboardLayout = ({ children }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,12 +35,11 @@ const DashboardLayout = ({ children }) => {
           await dispatch(getUser(userId)); // Dispatch action to get user data
         }
       } catch (error) {
-        console.error("Error fetching user data", error);
+        console.error('Error fetching user data', error);
       }
     };
     fetchUserData(); // Call the async function inside useEffect
   }, []); // Empty dependency array to run only once
-
 
   const Menu = [
     {
@@ -100,6 +99,9 @@ const DashboardLayout = ({ children }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+  const handlePlanRoute = () => {
+    navigate('/choose-plan');
   };
 
   return (
@@ -171,10 +173,15 @@ const DashboardLayout = ({ children }) => {
         <div className="upgrade-plan">
           <button
             className="upgrade-button"
-            onClick={openModal}
+            // onClick={openModal}
+            onClick={handlePlanRoute}
             style={{
               padding: isOpen ? '1.5rem 3rem' : '1rem',
               marginRight: isOpen ? '2rem' : '3rem',
+              width: '100%',
+              backgroundColor: '#f0f0f0',
+              color: '#00316f',
+              fontWeight: '500',
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center' }}>

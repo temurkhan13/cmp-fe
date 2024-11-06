@@ -31,7 +31,7 @@ const CommentPopup = ({
     };
   }, [onClose]);
 
-  const HandleEnterKey = (e) => {
+  const handleEnterKey = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSend();
@@ -40,7 +40,6 @@ const CommentPopup = ({
 
   const handleSend = async () => {
     if (comment.trim()) {
-      console.log('Comment sent:', chatId, comment, messageId);
       const text = comment;
       await addComment({ workspaceId, folderId, chatId, messageId, text });
       setComment('');
@@ -66,15 +65,19 @@ const CommentPopup = ({
               onChange={(e) => setComment(e.target.value)}
               placeholder="Reply"
               onClick={(e) => e.stopPropagation()}
-              onKeyDown={HandleEnterKey}
+              onKeyDown={handleEnterKey}
             />
-            <div className="user-icon">
+            {/* <div className="user-icon">
               <MdOutlineAttachFile />
             </div>
             <div className="mention-icon">
               <MdAlternateEmail />
-            </div>
-            <div onClick={handleSend} className="send-icon">
+            </div> */}
+            <div
+              onClick={handleSend}
+              className="send-icon"
+              style={{ color: comment.trim() ? 'black' : 'gray' }} // Conditional color
+            >
               <RiSendPlane2Fill />
             </div>
           </div>
@@ -115,9 +118,8 @@ const CommentPopup = ({
         .user-icon, .mention-icon, .send-icon {
           font-size: 2rem;
           cursor: pointer;
-        }
-        .send-icon {
-          color: gray;
+          // display:flex;
+          align-items: center;
         }
       `}</style>
     </>

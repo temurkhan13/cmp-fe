@@ -230,6 +230,7 @@ const Card = ({ plan }) => {
           text-align: center;
           cursor: not-allowed;
           margin-bottom: 10px;
+          width: 100%;
         }
         .upgrade-button {
           background-color: #C3E11D;
@@ -243,6 +244,7 @@ const Card = ({ plan }) => {
           align-items: center;
           justify-content: center;
           gap: 5px;
+          width: 100%;
         }
         .plan-billing-card ul {
           list-style: none;

@@ -4,6 +4,7 @@ import CountingCards from './CountingCards';
 import Folder from './Folder';
 import Account from './Account';
 import NotificationBar from '../../common/NotificationBar.jsx';
+import { ImTree } from 'react-icons/im';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDashboardStats,
@@ -268,7 +269,7 @@ const DashboardHomeComp = () => {
               onRemove={(id) => handleRemoveItem(id, 'wireframes')}
             />
           ) : (
-            <NoDataMessage title="Wireframes" icon={<FaFolderTree />} />
+            <NoDataMessage title="Wireframes" icon={<ImTree />} />
           )}
         </div>
       </section>

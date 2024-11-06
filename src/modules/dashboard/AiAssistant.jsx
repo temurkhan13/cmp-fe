@@ -11,8 +11,8 @@ import {
   updateWorkspaceStatus,
 } from '../../redux/slices/workspacesSlice';
 import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard.jsx';
+import NoData from '../../components/common/NoDataAvailable.jsx';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { FaFolderTree } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import {
   fetchFolderData,
@@ -21,6 +21,7 @@ import {
   setSelectedFolder,
   toggleFolderActivation,
 } from '../../redux/slices/folderSlice.js';
+import { IoIosChatboxes } from 'react-icons/io';
 
 const AiAssistant = () => {
   const navigate = useNavigate();
@@ -116,16 +117,31 @@ const AiAssistant = () => {
     fetchStats();
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
-  const handleRemoveChat = useCallback(async () => {
-    if (currentFolder) {
-      await dispatch(
-        fetchFolderData({
-          workspaceId: selectedWorkspace.id,
-          folderId: currentFolder.id,
-        })
-      ).unwrap();
+// <<<<<<< feature/assessmnet_design
+  useEffect(() => {
+    // Check if folder data is available; if not, fetch it
+    if (!folderData || folderData.length === 0) {
+      // Assuming selectedWorkspace and activeFolder are necessary
+      if (selectedWorkspace && activeWorkspace) {
+        dispatch(
+          fetchFolderData({
+            workspaceId: selectedWorkspace.id,
+            folderId: activeWorkspace.id,
+          })
+        ).catch(() => setError('Failed to load folder data.'));
+      }
+// =======
+//   const handleRemoveChat = useCallback(async () => {
+//     if (currentFolder) {
+//       await dispatch(
+//         fetchFolderData({
+//           workspaceId: selectedWorkspace.id,
+//           folderId: currentFolder.id,
+//         })
+//       ).unwrap();
+// >>>>>>> main
     }
-  }, [dispatch, selectedWorkspace, currentFolder]);
+  }, [dispatch, folderData, selectedWorkspace, activeWorkspace]);
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -141,6 +157,14 @@ const AiAssistant = () => {
         <Component.Dashboard.Header />
       </div>
 
+// <<<<<<< feature/assessmnet_design
+      <div className="selected-workspace-name">
+        <p>
+          Workspace <span>{selectedWorkspace?.workspaceName}</span>
+        </p>
+      </div>
+// =======
+// >>>>>>> main
       <Folder
         activeWorkspace={selectedWorkspace}
         onFolderSelect={handleFolderSelection}
@@ -151,7 +175,7 @@ const AiAssistant = () => {
         <div className="container">
           <div className="left-buttons">
             <p className="assistant-heading">
-              <FaFolderTree />
+              <IoIosChatboxes />
               AI Assistant
             </p>
           </div>
@@ -165,8 +189,8 @@ const AiAssistant = () => {
                 navigate('/assistant/chat');
               }}
             >
-              New Assistant
-              <AiOutlinePlus className="icon" />
+              Create Assistant
+              <AiOutlinePlus className="icon" size={18} />
             </button>
           </div>
         </div>
@@ -175,21 +199,40 @@ const AiAssistant = () => {
       <div className="section">
         <div className="workspace-header"></div>
         <div className="grid">
-          {folderData?.[0]?.chats?.map((item) => (
-            <DashboardCard
-              key={item.id}
-              data={{ ...item, type: 'chat' }}
-              onRemove={() => handleRemoveChat()}
-              onClick={() => {
-                dispatch(setCurrentChatId(item.id));
-                navigate(`/assistant/chat/${item.id}`);
-              }}
-            />
-          ))}
+          {folderData?.[0]?.chats.length > 0 ? (
+            folderData?.[0]?.chats?.map((item) => (
+              <DashboardCard
+                key={item.id}
+                data={{ ...item, type: 'chats' }}
+                onRemove={() => handleRemoveChat()}
+                onClick={() => {
+                  dispatch(setCurrentChatId(item.id));
+                  navigate(`/assistant/chat/${item.id}`);
+                }}
+              />
+            ))
+          ) : (
+            <NoData message="No Data Available" />
+          )}
         </div>
       </div>
 
       <style>{`
+      .selected-workspace-name{
+      position:absolute;
+      top:2rem;
+      left:4rem;
+    p{
+    font-size:1.5rem;
+    font-weight:600;
+    span{
+    padding:1rem;
+    background-color:#f5f5f5;
+    border-radius:1rem;
+    border:1px solid gray;
+    }
+    }
+      }
         .grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

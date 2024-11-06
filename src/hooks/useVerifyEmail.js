@@ -14,15 +14,13 @@ const useVerifyEmail = () => {
     setError(null);
 
     try {
-
-      const response = await apiClient.post(
-        '/auth/verification',
-        {"verificationCode": parseInt( code.value.newValue) }
-      );
+      const response = await apiClient.post('/auth/verification', {
+        verificationCode: parseInt(code.value.newValue),
+      });
       setLoading(false);
       console.log(response);
       if (response.data) {
-        navigate('/choose-plain');
+        navigate('/choose-plan');
       }
     } catch (err) {
       setLoading(false);
