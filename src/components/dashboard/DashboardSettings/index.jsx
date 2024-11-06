@@ -43,12 +43,12 @@ const SettingsTabs = () => {
         >
           Change Password
         </button> */}
-        <button
+        {/* <button
           className={activeTab === 'notifications' ? 'active' : ''}
           onClick={() => setActiveTab('notifications')}
         >
           Notifications
-        </button>
+        </button> */}
       </div>
       <div className="tab-content">{renderContent()}</div>
       <style>{`

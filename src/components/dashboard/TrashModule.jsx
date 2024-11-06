@@ -13,7 +13,12 @@ const TrashModule = () => {
 
   // Ensure the state is not undefined
   const trashState = useSelector((state) => state.trash || {});
-  const { workspaces = [], folders = [], assessments = [], chats = [] } = trashState.trashItems || {};
+  const {
+    workspaces = [],
+    folders = [],
+    assessments = [],
+    chats = [],
+  } = trashState.trashItems || {};
   const isLoading = trashState.isLoading || false;
   const error = trashState.error || null;
 
@@ -56,8 +61,7 @@ const TrashModule = () => {
           onClick={() => setActiveTab('Assessment')}
         >
           Assessment
-        </button>
-        {' '}
+        </button>{' '}
         <button
           className={`tab ${activeTab === 'Sitemap' ? 'active' : ''}`}
           onClick={() => setActiveTab('Sitemap')}
@@ -70,10 +74,14 @@ const TrashModule = () => {
         {error && <p>{error}</p>}
         {!isLoading && !error && (
           <>
-            {activeTab === 'Workspace' && <TrashWorkspaceTab workspaces={workspaces} />}
+            {activeTab === 'Workspace' && (
+              <TrashWorkspaceTab workspaces={workspaces} />
+            )}
             {activeTab === 'Folder' && <FolderTab folders={folders} />}
             {activeTab === 'Assistant' && <TrashAssistant chats={chats} />}
-            {activeTab === 'Assessment' && <TrashAssessment assessments={assessments} />}
+            {activeTab === 'Assessment' && (
+              <TrashAssessment assessments={assessments} />
+            )}
             {activeTab === 'Sitemap' && <TrashSitemap />}
           </>
         )}
@@ -82,8 +90,6 @@ const TrashModule = () => {
         .trash-container {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          justify-content: center;
           text-align: center;
         }
         .heading {
@@ -123,7 +129,6 @@ const TrashModule = () => {
           margin-top: 7.5rem;
           display: flex;
           flex-direction: column;
-          align-items: center;
         }
       `}</style>
     </div>

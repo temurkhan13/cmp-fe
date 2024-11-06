@@ -509,6 +509,14 @@ export const workspaceApi = createApi({
         method: 'PATCH',
       }),
     }),
+    addFeedback: builder.mutation({
+      query: (newFeedback) => ({
+        url: 'feedback',
+        method: 'POST',
+        body: newFeedback,
+      }),
+      // invalidatesTags: ['Workspace'],
+    }),
   }),
 });
 
@@ -561,4 +569,5 @@ export const {
   useRestoreFromTrashMutation,
   useLikeChatMessageMutation,
   useDislikeChatMessageMutation,
+  useAddFeedbackMutation,
 } = workspaceApi;
