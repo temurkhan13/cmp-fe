@@ -158,9 +158,7 @@ const HelpCenterComp = () => {
       id: 'assistant',
       title: 'AI Assistant',
       content: (
-        <div className="help-Heading">
-          "Your Smart Guide for Seamless Change
-        </div>
+        <div className="help-Heading">Your Smart Guide for Seamless Change</div>
       ),
     },
     {

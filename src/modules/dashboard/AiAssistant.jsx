@@ -47,18 +47,26 @@ const AiAssistant = () => {
   const handleFolderSelection = useCallback(
     async (folder, workspaceId = selectedWorkspace?.id) => {
       if (!workspaceId) {
-        setError("No workspace ID available.");
+        setError('No workspace ID available.');
         return;
       }
 
       setCurrentFolder(folder);
       dispatch(setSelectedFolder(folder));
-      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+      dispatch(
+        toggleFolderActivation({
+          workspaceId,
+          folderId: folder.id,
+          isActive: true,
+        })
+      );
 
       try {
-        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+        await dispatch(
+          fetchFolderData({ workspaceId, folderId: folder.id })
+        ).unwrap();
       } catch {
-        setError('Failed to fetch folder data.');
+        console.log('Failed to fetch folder data.');
       }
     },
     [dispatch, selectedWorkspace]
@@ -67,18 +75,22 @@ const AiAssistant = () => {
   const handleWorkspaceChange = useCallback(
     (workspace) => {
       dispatch(setSelectedWorkspace(workspace));
-      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(
+        updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
+      );
       dispatch(resetFolderState());
 
       if (workspace?.folders?.length > 0) {
-        const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+        const firstFolder =
+          workspace.folders.find((folder) => folder.isActive) ||
+          workspace.folders[0];
         handleFolderSelection(firstFolder, workspace.id);
       }
     },
     [dispatch, handleFolderSelection]
   );
 
-// Function to Fetch Stats - Runs Only Once
+  // Function to Fetch Stats - Runs Only Once
   useEffect(() => {
     const fetchStats = async () => {
       if (isFetched) return; // Prevent further calls if already fetched
@@ -88,7 +100,10 @@ const AiAssistant = () => {
         const initialWorkspace =
           dashboardStats.workspaces.find((ws) => ws.isActive) ||
           dashboardStats.workspaces[0];
-        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+        if (
+          !selectedWorkspace ||
+          selectedWorkspace.id !== initialWorkspace.id
+        ) {
           dispatch(setSelectedWorkspace(initialWorkspace));
           handleWorkspaceChange(initialWorkspace);
         }
@@ -101,11 +116,13 @@ const AiAssistant = () => {
     fetchStats();
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
-
   const handleRemoveChat = useCallback(async () => {
     if (currentFolder) {
       await dispatch(
-        fetchFolderData({ workspaceId: selectedWorkspace.id, folderId: currentFolder.id })
+        fetchFolderData({
+          workspaceId: selectedWorkspace.id,
+          folderId: currentFolder.id,
+        })
       ).unwrap();
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
@@ -124,7 +141,11 @@ const AiAssistant = () => {
         <Component.Dashboard.Header />
       </div>
 
-      <Folder activeWorkspace={selectedWorkspace} onFolderSelect={handleFolderSelection} onFolderUpdate={handleDataUpdated} />
+      <Folder
+        activeWorkspace={selectedWorkspace}
+        onFolderSelect={handleFolderSelection}
+        onFolderUpdate={handleDataUpdated}
+      />
 
       <section className="generate" style={{ marginTop: '2rem' }}>
         <div className="container">
