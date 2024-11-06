@@ -28,7 +28,7 @@ const TonePopup = ({
               onClick={() => setShowAskAi(true)}
               style={{ color: 'rgba(0, 102, 255, 1)', fontWeight: 400 }}
             >
-              <RiMagicFill /> Ask AI
+              <RiMagicFill /> Inspire me
             </button>
           </div>
           <div className="dropdown">
