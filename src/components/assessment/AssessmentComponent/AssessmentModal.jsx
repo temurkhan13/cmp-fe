@@ -23,14 +23,13 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
   };
 
   return (
-    <div className="modalOverlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="header">
-          <h2 className="title">{title}</h2>
-          <div className="headerButtons">
+    <div className="modalOverlayy" onClick={onClose}>
+      <div className="modall" onClick={(e) => e.stopPropagation()}>
+        <div className="headerr">
+          <div className="headerButtonss">
             {/* <button className="generate-button" onClick={handleRegenerate}>
               <IoSync style={{ marginRight: '0.5rem' }} /> Regenerate
-            </button> */}
+              </button> */}
             <button
               className="edit-button"
               style={{ display: 'none' }}
@@ -44,19 +43,18 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
             {isModalOpen && (
               <EditModal isOpen={isModalOpen} onClose={closeModal} />
             )}
-            <div className="dropdown">
-              <button className="dropdown-btn">Download</button>
-            </div>
-            <button className="closeButton" onClick={onClose}>
-              <RxCross2 style={{ fontSize: '2rem' }} />
-            </button>
           </div>
         </div>
-        <hr className="separator" />
-        <div className="content">{content}</div>
+        <div style={{ position: 'relative' }}>
+          <h2 className="titlee">{title}</h2>
+          <button className="closeButton" onClick={onClose}>
+            <RxCross2 style={{ fontSize: '2rem' }} />
+          </button>
+          <div className="content">{content}</div>
+        </div>
       </div>
       <style>{`
-        .modalOverlay {
+        .modalOverlayy {
           position: fixed;
           top: 0;
           left: 0;
@@ -69,29 +67,31 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
           align-items: center;
           z-index: 10;
         }
-        .modal {
+        .modall {
           left:20%;
           right:100%;
-          height: 30vh;
+          height: 100%;
           display: flex;
+          overflow-y: scroll;
+          background-color: white;
           padding: 2rem;
-          width: 60% !important;
+          width: fit-content !important;
           // border-radius: 0.5rem;
           // flex-direction: column;
           // box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
         }
-        .header {
+        .headerr {
           display: flex;
           justify-content: space-between;
           align-items: center;
           padding: 0.625rem 1.25rem;
           border-bottom: 0.0625rem solid #ddd;
         }
-        .title {
+        .titlee {
           margin: 0;
           font-size: 1.5rem;
         }
-        .headerButtons {
+        .headerButtonss {
           display: flex;
           align-items: center;
           justify-content: center;
@@ -142,6 +142,9 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
         .closeButton {
           background-color: transparent;
           border: none;
+          position: absolute;
+          right: -15px;
+          top: -10px;
           font-size: 1.5rem;
           cursor: pointer;
           background-color: #f1f1f1;

@@ -9,7 +9,11 @@ import data from '../../data';
 import {
   setSelectedWorkspace,
   selectWorkspace,
-  setCurrentAssessmentId, setCurrentChatId, fetchDashboardStats, updateWorkspaceStatus, setCurrentSelectedTitle
+  setCurrentAssessmentId,
+  setCurrentChatId,
+  fetchDashboardStats,
+  updateWorkspaceStatus,
+  setCurrentSelectedTitle,
 } from '../../redux/slices/workspacesSlice';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import {
@@ -19,16 +23,18 @@ import {
 } from '../../components/assessment';
 import {
   fetchFolderData,
-  resetFolderState, selectFolderData,
+  resetFolderState,
+  selectFolderData,
   setSelectedFolder,
-  toggleFolderActivation
+  toggleFolderActivation,
 } from '../../redux/slices/folderSlice.js';
 
 const Chat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams(); // Extract chatId from the URL
-  const userId = useSelector((state) => state.auth.user?.id) || localStorage.getItem('userId');
-
+  const userId =
+    useSelector((state) => state.auth.user?.id) ||
+    localStorage.getItem('userId');
 
   const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
@@ -38,23 +44,20 @@ const Chat = () => {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
 
   const handleAssessmentSelect = (assessment) => {
-    console.log(assessment,'assessment')
-    if(assessment) {
+    if (assessment) {
       dispatch(
         setCurrentSelectedTitle(
           assessment ||
-          assessment.ReportTitle ||
-          assessment.report[0].subReport[0].ReportTitle ||
-          assessment.report[0].ReportTitle
+            assessment.ReportTitle ||
+            assessment.report[0].subReport[0].ReportTitle ||
+            assessment.report[0].ReportTitle
         )
-      )
+      );
     }
     setSelectedAssessment(assessment);
   };
 
-
   const [currentFolder, setCurrentFolder] = useState(null);
-
 
   // Memoize Active Workspace
   const activeWorkspace = useMemo(() => {
@@ -66,18 +69,25 @@ const Chat = () => {
 
   const [isFetched, setIsFetched] = useState(false);
 
-
   const handleFolderSelection = useCallback(
     async (folder, workspaceId = activeWorkspace?.id) => {
-      if (!workspaceId) return
+      if (!workspaceId) return;
 
-      console.log(folder,'/.//////////////')
+      console.log(folder, '/.//////////////');
 
       dispatch(setSelectedFolder(folder));
-      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+      dispatch(
+        toggleFolderActivation({
+          workspaceId,
+          folderId: folder.id,
+          isActive: true,
+        })
+      );
 
       try {
-        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+        await dispatch(
+          fetchFolderData({ workspaceId, folderId: folder.id })
+        ).unwrap();
       } catch {
         showError('Failed to fetch folder data.');
       }
@@ -88,13 +98,17 @@ const Chat = () => {
   const handleWorkspaceChange = useCallback(
     (workspace) => {
       dispatch(setSelectedWorkspace(workspace));
-      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(
+        updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
+      );
       dispatch(resetFolderState());
 
-      console.log(workspace,'workspace');
+      console.log(workspace, 'workspace');
 
       if (workspace?.folders?.length > 0) {
-        const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+        const firstFolder =
+          workspace.folders.find((folder) => folder.isActive) ||
+          workspace.folders[0];
         handleFolderSelection(firstFolder, workspace.id);
       }
     },
@@ -110,14 +124,18 @@ const Chat = () => {
         const initialWorkspace =
           dashboardStats.workspaces.find((ws) => ws.isActive) ||
           dashboardStats.workspaces[0];
-        console.log(initialWorkspace,'initial workspace')
-        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+        console.log(initialWorkspace, 'initial workspace');
+        if (
+          !selectedWorkspace ||
+          selectedWorkspace.id !== initialWorkspace.id
+        ) {
           dispatch(setSelectedWorkspace(initialWorkspace));
           handleWorkspaceChange(initialWorkspace);
-        }
-        else{
+        } else {
           if (selectedWorkspace?.folders?.length > 0) {
-            const firstFolder = selectedWorkspace.folders.find((folder) => folder.isActive) || selectedWorkspace.folders[0];
+            const firstFolder =
+              selectedWorkspace.folders.find((folder) => folder.isActive) ||
+              selectedWorkspace.folders[0];
             handleFolderSelection(firstFolder, selectedWorkspace.id);
           }
         }
@@ -133,7 +151,10 @@ const Chat = () => {
   const handleRemoveChat = useCallback(async () => {
     if (currentFolder) {
       await dispatch(
-        fetchFolderData({ workspaceId: selectedWorkspace.id, folderId: currentFolder.id })
+        fetchFolderData({
+          workspaceId: selectedWorkspace.id,
+          folderId: currentFolder.id,
+        })
       ).unwrap();
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
@@ -146,8 +167,7 @@ const Chat = () => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
 
-
-  console.log(currentFolder,'cirrent folder data',folderData);
+  console.log(currentFolder, 'cirrent folder data', folderData);
 
   return (
     <div className="assessmentChat">
@@ -158,7 +178,10 @@ const Chat = () => {
       <section>
         <NewChat data={data.chat.newChatDummyData} />
 
-        <MessagesSection handleAssessmentSelect={handleAssessmentSelect} selectedAssessment={selectedAssessment} />
+        <MessagesSection
+          handleAssessmentSelect={handleAssessmentSelect}
+          selectedAssessment={selectedAssessment}
+        />
 
         <Assessments handleAssessmentSelect={handleAssessmentSelect} />
       </section>
