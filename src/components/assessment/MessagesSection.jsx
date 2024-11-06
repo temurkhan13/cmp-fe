@@ -557,8 +557,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 <div
                   className={
                     item.role === 'user'
-                      ? 'chat-container right'
-                      : 'chat-container left'
+                      ? 'chat-container-assisstant right'
+                      : 'chat-container-assisstant left'
                   }
                 >
                   {item.role === 'user' ? (
