@@ -46,10 +46,16 @@
 }
 
 .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 500px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.modal-content-project {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
 }
 
 .modal-form-content {
@@ -58,8 +64,8 @@
   gap: 10px;
 }
 
-.modal-form-content input::placeholder{
-    text-align: left;
+.modal-form-content input::placeholder {
+  text-align: left;
 }
 
 .create-workspace-btn {
