@@ -11,7 +11,7 @@ export const workspaceApi = createApi({
       //query: () => 'workspace',
       providesTags: ['Workspace'],
     }),
-      // `workspace/id`
+    // `workspace/id`
     getWorkspace: builder.query({
       query: (workspaceId) => `workspace/${workspaceId}`,
       providesTags: ['Workspace'],
@@ -40,10 +40,10 @@ export const workspaceApi = createApi({
 
     // Folders
     addFolder: builder.mutation({
-      query: ({ workspaceId, folderName,businessInfo }) => ({
+      query: ({ workspaceId, folderName, businessInfo }) => ({
         url: `workspace/${workspaceId}/folder`,
         method: 'POST',
-        body: { folderName ,businessInfo},
+        body: { folderName, businessInfo },
       }),
     }),
     updateFolder: builder.mutation({
@@ -79,7 +79,7 @@ export const workspaceApi = createApi({
     }),
 
     updateChat: builder.mutation({
-      query: ({ workspaceId, folderId, chatId,chat }) => ({
+      query: ({ workspaceId, folderId, chatId, chat }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}`,
         method: 'PATCH',
         body: chat,
@@ -104,7 +104,7 @@ export const workspaceApi = createApi({
           });
         }
 
-        console.log(folderId,'..............')
+        console.log(folderId, '..............');
 
         // Use the actual chatId or handle for a new chat
         return {
@@ -404,7 +404,7 @@ export const workspaceApi = createApi({
       }),
     }),
     removeBookmark: builder.mutation({
-      query: ({ workspaceId, folderId, chatId,messageId, bookmarkId }) => ({
+      query: ({ workspaceId, folderId, chatId, messageId, bookmarkId }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark/${bookmarkId}`,
         method: 'DELETE',
       }),
@@ -414,7 +414,7 @@ export const workspaceApi = createApi({
     likeChatMessage: builder.mutation({
       query: ({ workspaceId, folderId, chatId, messageId }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/toggle-like`,
-        method: 'POST'
+        method: 'POST',
       }),
       invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
         { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },

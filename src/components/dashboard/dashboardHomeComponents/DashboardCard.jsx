@@ -3,8 +3,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 import { useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
+import { truncateText } from '../../../utils/helperFunction';
 import './styles/DashboardCard.css';
+import { FaFolderTree } from 'react-icons/fa6';
+import { RiNewspaperLine } from 'react-icons/ri';
+import { IoIosChatboxes } from 'react-icons/io';
 
+// Enum for item types
 const ItemTypeEnum = Object.freeze({
   WORKSPACE: 'workspace',
   FOLDER: 'folder',
@@ -14,27 +19,59 @@ const ItemTypeEnum = Object.freeze({
   WIREFRAME: 'wireframe',
 });
 
+// Function to map type for displaying correct icon
+const getEntityType = (type) => {
+  const typeMapping = {
+    chats: 'chats',
+    assessments: 'assessment',
+    sitemaps: 'sitemap',
+  };
+  return typeMapping[type] || type;
+};
+
 const DashboardCard = ({ data = {}, onRemove, onClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [moveToTrash, { isLoading, isError }] = useMoveToTrashMutation();
+  const [moveToTrash, { isLoading }] = useMoveToTrashMutation();
   const [showNotification, setShowNotification] = useState(false);
   const menuRef = useRef(null);
+  const mountedRef = useRef(true); // Track component mounting status
 
-  const handleMoveToTrash = useCallback(async () => {
-    try {
-      await moveToTrash({ entityType: data.type, id: data.id }).unwrap();
-      onRemove(data.id);
-    } catch {
-      setShowNotification(true);
-    }
-    setIsMenuOpen(false);
-  }, [moveToTrash, data.id, data.type, onRemove]);
+  // Track mounting status to avoid setting state on an unmounted component
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
-  const handleCloseNotification = useCallback(() => setShowNotification(false), []);
+  const handleMoveToTrash = useCallback(
+    async (event) => {
+      event.stopPropagation();
+      setIsMenuOpen(false);
+      try {
+        const entityType = getEntityType(data.type);
+        await moveToTrash({ entityType, id: data.id }).unwrap();
+        if (mountedRef.current) onRemove(data.id);
+      } catch (error) {
+        console.error('Error moving item to trash:', error);
+        if (mountedRef.current) setShowNotification(true);
+      }
+    },
+    [moveToTrash, data.id, data.type, onRemove]
+  );
 
-  const displayName = data.name || data.title || data.chatTitle || 'Unknown Item';
-  const createdAt = data.createdAt ? new Date(data.createdAt).toLocaleDateString() : 'N/A';
+  const handleCloseNotification = useCallback(
+    () => setShowNotification(false),
+    []
+  );
 
+  const displayName =
+    data.name || data.title || data.chatTitle || 'Unknown Item';
+  const createdAt = data.createdAt
+    ? new Date(data.createdAt).toLocaleDateString()
+    : 'N/A';
+
+  // Close the dropdown menu when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -47,30 +84,48 @@ const DashboardCard = ({ data = {}, onRemove, onClick }) => {
 
   return (
     <>
-      <div className="card" onClick={onClick}>
+      <div className="card-dashboard" onClick={onClick}>
+        <div>
+          {data.type === 'chats' ? (
+            <IoIosChatboxes size={20} color="grey" />
+          ) : data.type === 'assessment' ? (
+            <RiNewspaperLine size={20} color="grey" />
+          ) : data.type === 'sitemap' ? (
+            <FaFolderTree size={20} color="grey" />
+          ) : (
+            <FaFolderTree size={20} color="grey" />
+          )}
+        </div>
         <div className="info">
-          <h3>{displayName}</h3>
-          <p>Created on: {createdAt}</p>
+          <div>
+            <h3>{truncateText(displayName, 20)}</h3>
+            <p>Created on: {createdAt}</p>
+          </div>
         </div>
 
         <div className="actions" ref={menuRef}>
           <FiMoreVertical
             className="more-icon"
             onClick={(event) => {
-              event.stopPropagation(); // Prevent the card's onClick from firing
+              event.stopPropagation();
               setIsMenuOpen(!isMenuOpen);
             }}
+            size={18}
+            color="#000"
           />
           {isMenuOpen && (
             <div className="dropdown-menu">
-              <button className="dropdown-item" onClick={handleMoveToTrash} disabled={isLoading}>
+              <button
+                className="dropdown-item"
+                onClick={handleMoveToTrash}
+                disabled={isLoading}
+              >
                 {isLoading ? 'Moving...' : 'Move to Trash'}
               </button>
             </div>
           )}
         </div>
       </div>
-
       {showNotification && (
         <NotificationBar
           message="Failed to move to trash. Please try again."

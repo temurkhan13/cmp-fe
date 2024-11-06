@@ -647,8 +647,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                   <div
                     className={
                       message && message.sender
-                        ? 'chat-container right'
-                        : 'chat-container left'
+                        ? 'chat-container-assisstant right'
+                        : 'chat-container-assisstant left'
                     }
                   >
                     {message && message.sender ? (
@@ -711,7 +711,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       JSON.parse(localStorage.getItem('user'))
                                         .id && react.type == 'like'
                                 )
-                                  ? { color: 'blue' }
+                                  ? { color: '#c1de1c' }
                                   : {}
                               }
                             />
@@ -730,7 +730,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       JSON.parse(localStorage.getItem('user'))
                                         .id && react.type == 'dislike'
                                 )
-                                  ? { color: 'blue' }
+                                  ? { color: '#c1de1c' }
                                   : {}
                               }
                             />
@@ -762,7 +762,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       JSON.parse(localStorage.getItem('user'))
                                         .id
                                 )
-                                  ? { color: 'blue' }
+                                  ? { color: '#c1de1c' }
                                   : {}
                               }
                             />
@@ -811,7 +811,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       JSON.parse(localStorage.getItem('user'))
                                         .id && react.type == 'like'
                                 )
-                                  ? { color: 'blue' }
+                                  ? { color: '#c1de1c' }
                                   : {}
                               }
                             />
@@ -830,7 +830,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       JSON.parse(localStorage.getItem('user'))
                                         .id && react.type == 'dislike'
                                 )
-                                  ? { color: 'blue' }
+                                  ? { color: '#c1de1c' }
                                   : {}
                               }
                             />
@@ -844,7 +844,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                             />
                             <span className="tooltip-assessment">Comment</span>
                           </div>
-                          <div
+                          {/* <div
                             className="message-icon-wrapper"
                             title="Regenerate"
                           >
@@ -852,7 +852,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                             <span className="tooltip-assessment">
                               Regenerate
                             </span>
-                          </div>
+                          </div> */}
                           <div
                             className="message-icon-wrapper"
                             title="Bookmark"
@@ -867,7 +867,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       JSON.parse(localStorage.getItem('user'))
                                         .id
                                 )
-                                  ? { color: 'blue' }
+                                  ? { color: '#c1de1c' }
                                   : {}
                               }
                             />
@@ -942,22 +942,23 @@ const MessagesSection = ({ setCurrentChat }) => {
           </label>
         </div>
         <div className="input-container" style={{ position: 'relative' }}>
-          <div
+          {/* <div
             style={{
               position: 'absolute',
-              bottom: '8px',
-              right: '99% ',
+              bottom: '13px',
+              right: '99%',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
             }}
           >
-            <img
-              src={InpireMeIcon}
-              alt="Inspire Me"
-              onClick={handleInspireClick}
-            />
-            {loading && (
+            {!loading ? (
+              <img
+                src={InpireMeIcon}
+                alt="Inspire Me"
+                onClick={handleInspireClick}
+              />
+            ) : (
               <div
                 style={{
                   border: '2px solid rgba(0, 0, 0, 0.1)',
@@ -970,7 +971,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                 }}
               />
             )}
-          </div>
+          </div> */}
+
           <textarea
             placeholder="Enter text here.."
             value={text}
@@ -993,7 +995,7 @@ const MessagesSection = ({ setCurrentChat }) => {
               width: '100%', // Full width of the container
               border: 'none',
               borderRadius: '10px',
-              padding: '8px 12px',
+              padding: '15px 12px',
               fontSize: '14px',
               fontFamily: 'Arial, sans-serif',
               boxSizing: 'border-box',
