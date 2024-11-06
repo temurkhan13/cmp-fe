@@ -106,7 +106,7 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
           isOpen={isNewFolderModalOpen}
           onClose={() => setIsNewFolderModalOpen(false)}
         >
-          <div className="modal-content">
+          <div className="modal-content-project">
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}

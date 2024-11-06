@@ -392,7 +392,12 @@ const ModalSections = ({
           </div>
         </div>
       ) : (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <button
             className="modal-buttons link_chat"
             onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
