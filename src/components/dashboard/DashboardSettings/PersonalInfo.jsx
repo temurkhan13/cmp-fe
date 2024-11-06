@@ -1,63 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.auth.user); // Assuming current user is stored in auth state
+  const currentUser = useSelector((state) => state.auth.user);
 
-  const [avatar, setAvatar] = useState(currentUser?.photoPath || '');
+  const [avatar, setAvatar] = useState(currentUser?.photoPath || ''); // default avatar or current photo
   const [firstName, setFirstName] = useState(currentUser?.firstName || '');
   const [lastName, setLastName] = useState(currentUser?.lastName || '');
   const [email, setEmail] = useState(currentUser?.email || '');
-  const [companyName, setCompanyName] = useState(currentUser?.companyName || '');
+  const [companyName, setCompanyName] = useState(
+    currentUser?.companyName || ''
+  );
   const [selectedFile, setSelectedFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [hasChanged, setHasChanged] = useState(false);
+
+  // Track changes to fields
+  useEffect(() => {
+    setHasChanged(
+      firstName !== currentUser?.firstName ||
+        lastName !== currentUser?.lastName ||
+        email !== currentUser?.email ||
+        companyName !== currentUser?.companyName ||
+        selectedFile !== null
+    );
+  }, [firstName, lastName, email, companyName, selectedFile, currentUser]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.size <= 1024 * 1024) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatar(e.target.result);
-      };
+      reader.onload = (e) => setAvatar(e.target.result);
       reader.readAsDataURL(file);
-      setSelectedFile(file); // Save file for uploading
+      setSelectedFile(file);
     } else {
       alert('File size should be less than 1 MB.');
     }
   };
 
-  // Function to generate initials image when avatar is deleted
+  const handleImageDelete = () => {
+    const generatedImage = generateInitialsImage();
+    setAvatar(generatedImage);
+    setSelectedFile(null);
+  };
+
   const generateInitialsImage = () => {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
+    const initials = `${firstName?.[0] || ''}${
+      lastName?.[0] || ''
+    }`.toUpperCase();
 
     canvas.width = 200;
     canvas.height = 200;
-
-    // Set background color
-    context.fillStyle = '#C3E11D'; // Same color as avatar background
+    context.fillStyle = '#C3E11D';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Set text style
     context.font = 'bold 80px Arial';
-    context.fillStyle = '#0B1444'; // Same color as text
+    context.fillStyle = '#0B1444';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-
-    // Draw the initials in the center
     context.fillText(initials, canvas.width / 2, canvas.height / 2);
 
     return canvas.toDataURL('image/png');
-  };
-
-  const handleImageDelete = () => {
-    const generatedImage = generateInitialsImage(); // Generate the initials image
-    setAvatar(generatedImage); // Set it as avatar
-    setSelectedFile(null); // Clear selected file
   };
 
   const validateForm = () => {
@@ -71,10 +79,12 @@ const PersonalInfo = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
+      setLoading(true);
+
       const updatedUserData = {
         firstName,
         lastName,
@@ -82,8 +92,10 @@ const PersonalInfo = () => {
         companyName,
       };
 
-      // If there's no selected file, use the generated initials image
-      const imageToSend = selectedFile ? selectedFile : dataURLToFile(avatar, 'initials.png');
+      // If no image selected, use the default avatar or generated initials image
+      const imageToSend = selectedFile
+        ? selectedFile
+        : dataURLToFile(avatar, 'initials.png');
 
       const formData = {
         userId: currentUser.id,
@@ -91,15 +103,20 @@ const PersonalInfo = () => {
         photoPath: imageToSend,
       };
 
-      dispatch(updateUserAsync(formData)).then((result) => {
+      try {
+        const result = await dispatch(updateUserAsync(formData));
+
         if (updateUserAsync.fulfilled.match(result)) {
           setSuccessMessage('Changes have been updated successfully!');
         } else {
           setErrors({ form: 'Failed to update user information.' });
         }
-
-        setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
-      });
+      } catch (error) {
+        setErrors({ form: 'Failed to update user information.' });
+      } finally {
+        setLoading(false);
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
     }
   };
 
@@ -108,10 +125,9 @@ const PersonalInfo = () => {
     const arr = dataUrl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
+    const u8arr = new Uint8Array(bstr.length);
+    for (let i = 0; i < bstr.length; i++) {
+      u8arr[i] = bstr.charCodeAt(i);
     }
     return new File([u8arr], filename, { type: mime });
   };
@@ -213,14 +229,18 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        <button type="submit" className="save-button">
-          Save Changes
+        <button
+          type="submit"
+          className="save-button"
+          disabled={!hasChanged || loading}
+        >
+          {loading ? 'Saving...' : 'Save Changes'}
         </button>
-
-        {successMessage && <p className="success-message">{successMessage}</p>}
-        {errors.form && <p className="error-message">{errors.form}</p>}
+        {errors.form && <small className="error">{errors.form}</small>}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
       </form>
-
       <style>{`
         .personal-info {
           margin: 0 auto;

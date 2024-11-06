@@ -4,7 +4,7 @@ import Header from '../../components/dashboard/Header';
 
 const radioOptions = [
   {
-    label: 'Assisstant Chat',
+    label: 'AI Assisstant',
     checkboxes: [
       'Version History',
       'Gallery',
@@ -14,7 +14,7 @@ const radioOptions = [
     ],
   },
   {
-    label: 'Assessment Chat',
+    label: 'AI Assessment',
     checkboxes: [
       'Version History',
       'Reports',
@@ -25,13 +25,13 @@ const radioOptions = [
     ],
   },
   {
-    label: 'Sitemap',
+    label: 'Digital Playbook',
     checkboxes: ['Improve Layouts', 'Improve Al Responses', 'Comments'],
   },
-  {
-    label: 'Wireframes',
-    checkboxes: ['-----'],
-  },
+  // {
+  //   label: 'Wireframes',
+  //   checkboxes: ['-----'],
+  // },
 ];
 
 const Feedback = () => {

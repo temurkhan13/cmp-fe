@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+import PropTypes from 'prop-types';
 import { RiMagicFill } from 'react-icons/ri';
 import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
 import { FaLocationArrow } from 'react-icons/fa6';
-import PropTypes from 'prop-types';
 
 const TonePopup = ({
   onToneChange,
@@ -12,30 +13,107 @@ const TonePopup = ({
   onClose,
 }) => {
   const [showAskAi, setShowAskAi] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setShowAskAi(false); // Close the dropdown when clicking outside
+    }
+  };
+
+  // Prevent the dropdown from closing when clicking inside it
+  const handleClickInsideDropdown = (e) => {
+    e.stopPropagation(); // Prevent closing dropdown when clicking inside
+  };
+
+  const handleAskAiToggle = (e) => {
+    e.stopPropagation();
+    setShowAskAi((prev) => !prev); // Toggle dropdown state
+  };
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      HandleAskAi(inputValue);
+      setInputValue('');
+      e.stopPropagation(); // Prevent closing the dropdown when pressing Enter
+    }
+  };
 
   const handleOptionClick = () => {
     onClose();
   };
 
-  const handleAskAiToggle = (e) => {
-    e.stopPropagation();
-    setShowAskAi(!showAskAi);
-  };
+  // Attach event listener to close the dropdown if clicked outside
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="PopupBox">
       {!showAskAi ? (
         <div className="navbar">
-          <div className="dropdown">
+          <div
+            className="dropdown"
+            ref={dropdownRef}
+            onClick={handleClickInsideDropdown}
+          >
             <button
               className="dropbtn"
               onClick={handleAskAiToggle}
-              style={{ color: 'rgba(0, 102, 255, 1)', fontWeight: 400 }}
+              style={{
+                color: 'rgba(0, 102, 255, 1)',
+                fontWeight: 400,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}
             >
-              <RiMagicFill /> Ask AI
+              <RiMagicFill /> Inspire Me
             </button>
+            <div className="dropdownContent">
+              <a
+                href="#"
+                onClick={() => {
+                  HandleAskAi('Improve Writing');
+                  handleOptionClick();
+                }}
+              >
+                Improve Writing
+              </a>
+              <a
+                href="#"
+                onClick={() => {
+                  HandleAskAi('Fix Spelling & Grammar');
+                  handleOptionClick();
+                }}
+              >
+                Fix Grammar
+              </a>
+              <a
+                href="#"
+                onClick={() => {
+                  HandleAskAi('Summarize');
+                  handleOptionClick();
+                }}
+              >
+                Summarize
+              </a>
+            </div>
           </div>
-          <div className="dropdown">
+          <div
+            className="dropdown"
+            ref={dropdownRef}
+            onClick={handleClickInsideDropdown}
+          >
             <button className="dropbtn">
               <RxMagicWand /> Change Tone
             </button>
@@ -96,7 +174,11 @@ const TonePopup = ({
               </a>
             </div>
           </div>
-          <div className="dropdown">
+          <div
+            className="dropdown"
+            ref={dropdownRef}
+            onClick={handleClickInsideDropdown}
+          >
             <button className="dropbtn">
               <BsFilterLeft /> Response Length
             </button>
@@ -144,73 +226,14 @@ const TonePopup = ({
         <div className="navbar">
           <div
             className="dropdown"
+            ref={dropdownRef}
+            onClick={handleClickInsideDropdown}
             style={{
               minWidth: '100%',
               padding: '5px 5px',
               borderRadius: '10px',
             }}
-          >
-            <button
-              className="dropbtn"
-              style={{
-                width: '400px',
-                display: 'flex',
-                textAlign: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid lightgray',
-                outline: 'none',
-                padding: '10px',
-                fontFamily: 'inherit',
-                margin: '4px',
-                background: 'white',
-                borderRadius: '5px',
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <RiMagicFill style={{ color: 'rgba(0, 102, 255, 1)' }} />
-              <input
-                type="text"
-                style={{
-                  border: 'none',
-                  outline: 'none',
-                  flex: 1,
-                  margin: '0 10px',
-                }}
-                placeholder="Ask AI to edit or generate..."
-              />
-              <FaLocationArrow />
-            </button>
-            <div className="dropdownContent">
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Improve Writing');
-                  handleOptionClick();
-                }}
-              >
-                Improve Writing
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Fix Spelling & Grammar');
-                  handleOptionClick();
-                }}
-              >
-                Fix Spelling & Grammar
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Summarize');
-                  handleOptionClick();
-                }}
-              >
-                Summarize
-              </a>
-            </div>
-          </div>
+          ></div>
         </div>
       )}
     </div>

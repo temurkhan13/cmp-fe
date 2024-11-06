@@ -101,8 +101,7 @@ const DashboardHomeComp = () => {
         handleWorkspaceChange(activeWorkspace);
         // }
       } catch {
-        setError('Failed to fetch dashboard stats.');
-        setShowNotification(true);
+        console.log('failed to fetch dashboard stats.');
       }
     };
     fetchStats();
@@ -136,8 +135,7 @@ const DashboardHomeComp = () => {
             })
           ).unwrap();
         } catch {
-          setError('Failed to fetch folder data.');
-          setShowNotification(true);
+          console.log('Failed to fetch folder data.');
         }
       }
     },

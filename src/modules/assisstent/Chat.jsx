@@ -68,7 +68,7 @@ const AiAssistantChat = () => {
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
       } catch {
-        showError('Failed to fetch folder data.');
+        console.log('Failed to fetch folder data.');
       }
     },
     [dispatch, activeWorkspace]
