@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Components from '@components';
 import NewChatSidebarModal from '../customModal/NewChatSidebarModal';
+import { truncateText } from '../../utils/helperFunction.js';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import {
   TbLayoutSidebarLeftCollapseFilled,
@@ -26,7 +27,11 @@ import {
 } from '../../redux/slices/workspacesSlice';
 import { setChats } from '../../redux/slices/chatSlice';
 import { getChatsAsync } from '../../redux/slices/workspaceSlice';
-import { selectFolderData, selectSelectedFolder, setSelectedFolder } from '../../redux/slices/folderSlice.js';
+import {
+  selectFolderData,
+  selectSelectedFolder,
+  setSelectedFolder,
+} from '../../redux/slices/folderSlice.js';
 
 const NewChat = () => {
   const projects = useSelector(selectAllFolders);
@@ -50,23 +55,28 @@ const NewChat = () => {
   const myChats = useSelector((state) => state.chat.chats);
 
   useEffect(() => {
-    if((selectedFolder?.id || selectedFolder?._id) && currentWorkspace?.id){
-      dispatch(getChatsAsync({workspaceId: currentWorkspace.id , folderId: selectedFolder._id || selectedFolder.id}))
-      .then((response) => {
-        dispatch(setChats(response.payload.data))
-      })
-      .catch(error => {
-        console.error(error, 'error')
-      })
+    if ((selectedFolder?.id || selectedFolder?._id) && currentWorkspace?.id) {
+      dispatch(
+        getChatsAsync({
+          workspaceId: currentWorkspace.id,
+          folderId: selectedFolder._id || selectedFolder.id,
+        })
+      )
+        .then((response) => {
+          dispatch(setChats(response.payload.data));
+        })
+        .catch((error) => {
+          console.error(error, 'error');
+        });
     }
-  },[currentWorkspace, currentFolder, dispatch, selectedFolder])
+  }, [currentWorkspace, currentFolder, dispatch, selectedFolder]);
 
   useEffect(() => {
     // if(myChats?.length > 0){
-    console.log('myChat',myChats)
-      setShowableChats(myChats)
+    console.log('myChat', myChats);
+    setShowableChats(myChats);
     // }
-  },[myChats])
+  }, [myChats]);
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -110,7 +120,12 @@ const NewChat = () => {
   const switchFolder = (folder) => {
     dispatch(setSelectedFolder(folder));
     if ((folder._id || folder.id) && currentWorkspace?.id) {
-      dispatch(getChatsAsync({ workspaceId: currentWorkspace.id, folderId: folder._id || folder.id }))
+      dispatch(
+        getChatsAsync({
+          workspaceId: currentWorkspace.id,
+          folderId: folder._id || folder.id,
+        })
+      )
         .then((response) => {
           dispatch(setChats(response.payload.data));
         })
@@ -132,12 +147,17 @@ const NewChat = () => {
     }
   };
 
-  const capitalizeFirstWord = (str='') => {
+  const capitalizeFirstWord = (str = '') => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  useEffect(() => {
-  }, [currentFolder, currentChat, currentWorkspace, chats, selectedFolder]);
+  useEffect(() => {}, [
+    currentFolder,
+    currentChat,
+    currentWorkspace,
+    chats,
+    selectedFolder,
+  ]);
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
@@ -256,7 +276,7 @@ const NewChat = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  {capitalizeFirstWord(chat.chatTitle)}
+                  {truncateText(capitalizeFirstWord(chat.chatTitle), 25)}
                 </Components.Feature.Text>
                 {hoveredChatIndex === index && (
                   <BsThreeDots

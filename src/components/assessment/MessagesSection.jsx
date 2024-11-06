@@ -52,6 +52,8 @@ import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
+import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
+import Editor from './AssessmentComponent/Editor.jsx';
 
 const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const location = useLocation();
@@ -74,9 +76,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
+  const [showReportButton, setShowReportButton] = useState(false);
   const currentWorkspace = useSelector(selectWorkspace);
 
   const selectedAssessmentTitle = useSelector(
@@ -101,8 +105,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   }, [folder]);
 
   // custom hooks
-  const { StartAssessment } = usestartAssessment();
-  const { AssessmentReport } = useAssessmentReport({
+  const {
+    StartAssessment,
+    report: startFinalReport,
+    isReportGenerated: isStartReportGenerated,
+  } = usestartAssessment();
+  const { AssessmentReport, isReportGenerated, report } = useAssessmentReport({
     workspaceId: currentWorkspace.id,
     folderId: folder?.id || folderId,
     assessmentId,
@@ -112,6 +120,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     folderId: folder?.id || folderId,
     assessmentId,
   });
+
+  useEffect(() => {
+    if (isReportGenerated || isStartReportGenerated) {
+      setShowReportButton(true);
+    }
+  }, [isReportGenerated, isStartReportGenerated]);
+
   const { fixGrammar } = useGrammarFix();
   const { improveWriting } = useImproveWriting();
   const { summarize } = useSummarize();
@@ -429,6 +444,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleStartAssessment = async (assessmentName) => {
+    console.log('Start');
     try {
       setAssessmentLoading(true);
       const initialResponse = await StartAssessment(
@@ -468,6 +484,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSingleReport = async () => {
+    setShowModal(true);
     setLoading(true);
     const data = await GenerateSingleReport();
     const fullUrl = `${data.data.report.finalReportURL}`;
@@ -520,6 +537,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const handleCopyMessage = (text) => {
     navigator.clipboard.writeText(text);
   };
+  console.log('show modal -> ', showModal);
 
   return (
     <div className="chat-message-wrapper">
@@ -557,8 +575,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 <div
                   className={
                     item.role === 'user'
-                      ? 'chat-container right'
-                      : 'chat-container left'
+                      ? 'chat-container-assisstant right'
+                      : 'chat-container-assisstant left'
                   }
                 >
                   {item.role === 'user' ? (
@@ -760,21 +778,23 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
               outline: 'none',
               fontSize: '1.5rem',
               fontWeight: '500',
-              display: 'flex',
+              display: showReportButton ? 'flex' : 'none',
               marginBottom: '1rem',
             }}
           >
             Generate a Single Report
           </button>
+
           <div className="Message_container">
             <div className="input-container">
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                  src={InpireMeIcon}
-                  alt="Inspire Me"
-                  onClick={handleInspireClick}
-                />
-                {loading && (
+                {!loading ? (
+                  <img
+                    src={InpireMeIcon}
+                    alt="Inspire Me"
+                    onClick={handleInspireClick}
+                  />
+                ) : (
                   <div
                     style={{
                       border: '2px solid rgba(0, 0, 0, 0.1)',
@@ -788,13 +808,37 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                   />
                 )}
               </div>
-              <input
-                type="text"
+              <textarea
                 placeholder="Enter text here.."
                 value={firstPrompt}
                 onChange={(e) => setFirstPrompt(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage(); // Send message on Enter
+                  }
+                }}
+                onInput={(e) => {
+                  e.target.style.height = 'auto'; // Reset height
+                  e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height
+                }}
+                style={{
+                  resize: 'none',
+                  overflowY: 'auto',
+                  height: 'auto',
+                  maxHeight: '150px', // Set maximum height before scroll
+                  width: '100%', // Full width of the container
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '8px 12px',
+                  fontSize: '14px',
+                  fontFamily: 'Arial, sans-serif',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                }}
+                rows={1} // Initial row
               />
-              <div className="icons">
+              <div className="icons" style={{ display: 'flex' }}>
                 <label htmlFor="file-input">
                   <IoAttach className="send-icon " />
                 </label>
@@ -804,6 +848,32 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           </div>
         </>
       )}
+      {showModal && (
+        <AssessmentModal
+          title={'something'}
+          content={
+            <Editor
+              title={'test'}
+              data={report ? report : startFinalReport}
+              placeholder="Type your text here..."
+              height="100vw"
+            />
+          }
+        />
+      )}
+      {/* {isStartReportGenerated && (
+            <AssessmentModal
+              title={'something'}
+              content={
+                <Editor
+                  title={'test'}
+                  data={startFinalReport}
+                  placeholder="Type your text here..."
+                  height="100vw"
+                />
+              }
+            />
+          )} */}
       <style>{`
             .header{
       display: flex;

@@ -154,7 +154,7 @@
     .msg {
       margin: 1.5% 0;
       color: rgba(0, 0, 0, 0.715);
-      text-align: justify;
+      text-align: left;
     }
     svg {
       font-size: 13px;
@@ -286,16 +286,16 @@
   justify-content: center;
   margin-bottom: 2rem;
 }
-.chat-container {
+.chat-container-assisstant {
   display: flex;
   margin-bottom: 1rem;
 }
 
-.chat-container.right {
+.chat-container-assisstant.right {
   justify-content: flex-end;
 }
 
-.chat-container.left {
+.chat-container-assisstant.left {
   justify-content: flex-start;
 }
 

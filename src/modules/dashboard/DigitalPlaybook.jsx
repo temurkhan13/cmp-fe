@@ -1,8 +1,6 @@
-import DashboardLayout from "@layout/DashboardLayout";
+import DashboardLayout from '@layout/DashboardLayout';
 const DigitalPlaybook = () => {
-  return (
-    <DashboardLayout>DigitalPlaybook</DashboardLayout>
-  )
-}
+  return <DashboardLayout>DigitalPlaybook</DashboardLayout>;
+};
 
-export default DigitalPlaybook
+export default DigitalPlaybook;

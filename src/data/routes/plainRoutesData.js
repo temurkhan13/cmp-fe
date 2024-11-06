@@ -2,7 +2,7 @@ import Module from '../../modules';
 const plainRoutesData = [
   {
     title: '',
-    path: 'choose-plain',
+    path: 'choose-plan',
     element: Module.Auth.ChoosePlain,
   },
   {

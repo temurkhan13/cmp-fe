@@ -18,7 +18,7 @@ import {
 import NoDataAvailable from '../../common/NoDataAvailable';
 
 import {
-  useRemoveCommentMutation
+  useRemoveCommentMutation,
   // useAddReplyMutation,
   // useUpdateReplyMutation,
   // useRemoveReplyMutation,
@@ -51,6 +51,10 @@ const Comments = ({ comments }) => {
       setUser(storedUser);
     }
   }, []);
+
+  const addLineBreaks = (text) => {
+    return text.replace(/(.{25})/g, '$1\n');
+  };
 
   const getInitials = () => {
     if (!user) {
@@ -98,7 +102,7 @@ const Comments = ({ comments }) => {
     if (isReply) {
       dispatch(removeReply({ commentId: parentCommentId, replyId: commentId }));
     } else {
-      await removeComment( {workspaceId, folderId, chatId, commentId})
+      await removeComment({ workspaceId, folderId, chatId, commentId });
     }
     setShowDropdown(false); // Close dropdown after deletion
     setSelectedComment(null);
@@ -183,7 +187,7 @@ const Comments = ({ comments }) => {
                         </Dropdown.Item>
                         <Dropdown.Item
                           onClick={() => {
-                            console.log(comment, 'commentcomment')
+                            console.log(comment, 'commentcomment');
                             handleDeleteComment(comment._id, false);
                           }}
                         >
@@ -206,7 +210,7 @@ const Comments = ({ comments }) => {
                       ) : (
                         <>
                           <p className="comment-text">
-                            <span>|</span> {comment.text}
+                            <span>|</span> {addLineBreaks(comment.text)}
                           </p>
                           <span className="comment-status">
                             {comment.status}
@@ -313,12 +317,12 @@ const Comments = ({ comments }) => {
                           handleAddReply(comment.commentId);
                       }}
                     />
-                    <div className="user-icon">
+                    {/* <div className="user-icon">
                       <MdOutlineAttachFile />
                     </div>
                     <div className="mention-icon">
                       <MdAlternateEmail />
-                    </div>
+                    </div> */}
                     <div
                       className="send-icon"
                       onClick={() => handleAddReply(comment.commentId)}
@@ -334,203 +338,214 @@ const Comments = ({ comments }) => {
       </div>
       <hr />
       <style>{`
-        .ProfileImage {
-        s  height: 4rem;
-          width: 4rem;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-        .initials-placeholder {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #007bff;
-          color: #ffffff;
-          font-size: 18px;
-          font-weight: bold;
-          text-align: center;
-          margin-right: 8px;
-          cursor: pointer;
-        }
-          .chat-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
-          }
-          .comment-container {
-            border-bottom: 1px solid #eee;
-            padding: 1rem 0;
-          }
-          .comment, .reply {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 0;
-            cursor: pointer;
-            position: relative;
-          }
-          .avatar {
-            font-size: 3rem;
-            margin-right: 1rem;
-          }
-          .comment-body input {
-            border: 1px solid gray;
-            outline: none;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-          }
-          .comment-content, .reply-content {
-            flex-grow: 1;
-          }
-          .comment-header, .reply-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          }
-          .comment-author, .reply-author {
-            font-size: 1.3rem;
-            font-weight: 500;
-          }
-          .comment-body, .reply-body {
-            margin-top: 0.5rem;
-          }
-          .reply-text {
-            font-size: 1.2rem;
-          }
-          .comment-time {
-            font-size: 0.9rem;
-            margin-left: 0.5rem;
-            color: gray;
-          }
-          .comment-status {
-            color: gray;
-            font-size: 1.2rem;
-          }
-          .replies-toggle {
-            color: blue;
-            cursor: pointer;
-            font-size: 1.1rem;
-          }
-          .options-icon {
-            cursor: pointer;
-          }
-          .comment-text {
-            font-size: 1.3rem;
-            color: gray;
-          }
-          .comment-text span {
-            color: black;
-            font-weight: bold;
-            font-size: 1.3rem;
-          }
-          .dropdown {
-            position: absolute;
-            right: 1rem;
-            top: 2.5rem;
-            background-color: #fff;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
-            border-radius: 0.5rem;
-            overflow: hidden;
-          }
-          .dropdown-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-          }
-          .dropdown-item:hover {
-            background-color: #f0f0f0;
-          }
-          .comment-input {
-            display: flex;
-            align-items: center;
-            border: 1px solid gray;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            width: 100%;
-          }
-          .comment-input input {
-            border: none;
-            outline: none;
-            flex-grow: 1;
-            margin:0 1rem;
-          }
-          .search-icon, .filter-icon {
-            cursor: pointer;
-            font-size: 1.5rem;
-          }
-          .filter-input {
-            flex-grow: 1;
-            border: none;
-            outline: none;
-          }
-          .filter-icon {
-            font-size: 1.5rem;
-            color: black;
-          }
-          .dropdown-menu {
-            position: absolute;
-            z-index: 10;
-            top:8rem;
-            right: 5rem;
-            width: 12rem;
-            background: white;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 0.5rem;
-            overflow: hidden;
-          }
-          .dropdown-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 0 auto;
-          }
-          .dropdown-menu ul li {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-          .dropdown-menu ul li:hover {
-            background: #f0f0f0;
-          }
-          .check-icon {
-            color: green;
-            font-size: 1rem;
-          }
-          .reply-wrapper {
-            display: flex;
-            // align-items: center;
-            padding: 0.5rem 0;
-            width: 100%;
-          }
-          .user-image {
-            flex: 0 0 3rem;
-            font-size: 2.5rem;
-            margin-right: 1rem;
-          }
-          .reply-box {
-            flex-grow: 1;
-          }
-          .input-wrapper {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 0.5rem;
-            width: 100%;
-          }
-          .input-wrapper input {
-            flex-grow: 1;
-            border: none;
-            outline: none;
-          }
-          .user-icon, .mention-icon, .send-icon {
-            font-size: 1.5rem;
-            margin-left: 1rem;
-            cursor: pointer;
-          }
-        `}</style>
+  .ProfileImage {
+   height: 4rem;
+    width: 4rem;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .initials-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+    .chat-container {
+    overflow-x: hidden;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .comment-container {
+      border-bottom: 1px solid #eee;
+      padding: 1rem 0;
+    }
+    .comment, .reply {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0;
+      cursor: pointer;
+      position: relative;
+    }
+    .avatar {
+      font-size: 3rem;
+      margin-right: 1rem;
+    }
+    .comment-body input {
+      border: 1px solid gray;
+      outline: none;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+    .comment-content, .reply-content {
+      flex-grow: 1;
+    }
+    .comment-header, .reply-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .comment-author, .reply-author {
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+    .comment-body, .reply-body {
+      margin-top: 0.5rem;
+    }
+    .reply-text {
+      font-size: 1.2rem;
+          white-space: pre-wrap;
+word-break: break-word;
+max-width: 100%;
+overflow-y: auto;
+padding-right: 1rem;
+    }
+    .comment-time {
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+      color: gray;
+    }
+    .comment-status {
+      color: gray;
+      font-size: 1.2rem;
+    }
+    .replies-toggle {
+      color: blue;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    .options-icon {
+      cursor: pointer;
+    }
+    .comment-text {
+      font-size: 1.3rem;
+      color: gray;
+        .comment-text {
+white-space: pre-wrap;
+word-break: break-word;
+max-width: 100%; 
+}
+    }
+    .comment-text span {
+      color: black;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    .dropdown {
+      position: absolute;
+      right: 1rem;
+      top: 2.5rem;
+      background-color: #fff;
+      box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+    }
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+    .comment-input {
+      display: flex;
+      align-items: center;
+      border: 1px solid gray;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+    .comment-input input {
+      border: none;
+      outline: none;
+      flex-grow: 1;
+      margin:0 1rem;
+    }
+    .search-icon, .filter-icon {
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+    .filter-input {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+    }
+    .filter-icon {
+      font-size: 1.5rem;
+      color: black;
+    }
+    .dropdown-menu {
+      position: absolute;
+      z-index: 10;
+      top:8rem;
+      right: 5rem;
+      width: 12rem;
+      background: white;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    .dropdown-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0 auto;
+    }
+    .dropdown-menu ul li {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dropdown-menu ul li:hover {
+      background: #f0f0f0;
+    }
+    .check-icon {
+      color: green;
+      font-size: 1rem;
+    }
+    .reply-wrapper {
+      display: flex;
+      // align-items: center;
+      padding: 0.5rem 0;
+      width: 100%;
+    }
+    .user-image {
+      flex: 0 0 3rem;
+      font-size: 2.5rem;
+      margin-right: 1rem;
+    }
+    .reply-box {
+      flex-grow: 1;
+    }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 0.5rem;
+      width: 100%;
+    }
+    .input-wrapper input {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+    }
+    .user-icon, .mention-icon, .send-icon {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      cursor: pointer;
+    }
+  `}</style>
     </>
   );
 };

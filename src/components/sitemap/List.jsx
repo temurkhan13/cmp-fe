@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
 import { BsFilePlayFill } from 'react-icons/bs';
+import { FaFolderTree } from 'react-icons/fa6';
+import NoDataAvailable from '../common/NoDataAvailable.jsx';
 
 function List() {
   let navigate = useNavigate();
@@ -78,11 +80,35 @@ function List() {
             >
               <section className="generate" style={{ marginTop: '2rem' }}>
                 <div className="container">
-                  <div className="left-buttons">
+                  <div
+                    // className="left-buttons"
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <p className="assistant-heading">
-                      <BsFilePlayFill />
-                      Recently Modified Digital Playbook
+                      <FaFolderTree />
+                      Sitemaps
                     </p>
+                    <div className="center-buttons">
+                      <button
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                        }}
+                        className="assiss-btn"
+                        onClick={() => {
+                          navigate('/sitemap/new');
+                        }}
+                      >
+                        Create Template
+                        <BiPlus />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -130,34 +156,46 @@ function List() {
                         <div
                           key={`${_id}-recent`}
                           style={{
+                            width: '100%',
+                            maxWidth: '350px',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '16px',
-                            marginRight: '16px',
-                            marginBottom: '16px',
+                            gap: '1rem',
+                            backgroundColor: '#f9f9f9',
+                            border: '1px solid #ddd',
+                            padding: '2rem',
+                            borderRadius: '1rem',
+                            margin: '0 1rem 1rem 0',
+                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                             cursor: 'pointer',
                           }}
                           onClick={() => {
                             navigate(`/sitemap/${_id}`);
                           }}
                         >
-                          <img
-                            src={SitemapImg}
-                            height="120px"
-                            width="268px"
-                          ></img>
-                          <span
+                          {/* <img src={SitemapImg} height="120px" width="268px" /> */}
+                          <div
                             style={{
-                              fontSize: '16px',
-                              fontWeight: '500',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '1rem',
                             }}
                           >
-                            {name}
-                          </span>
+                            <FaFolderTree size={18} />
+                            <span
+                              style={{
+                                fontSize: '1.5rem',
+                                fontWeight: '500',
+                              }}
+                            >
+                              {name}
+                            </span>
+                          </div>
+
                           {updatedAt ? (
                             <span
                               style={{
-                                fontSize: '14px',
+                                fontSize: '1.2rem',
                                 color: 'rgba(10, 10, 10, 0.46)',
                               }}
                             >
@@ -201,28 +239,39 @@ function List() {
               </div> */}
               <section className="generate" style={{ marginTop: '2rem' }}>
                 <div className="container">
-                  <div className="left-buttons">
+                  <div
+                    // className="left-buttons"
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <p className="assistant-heading">
                       <BsFilePlayFill />
                       Digital Playbook
                     </p>
-                  </div>
-
-                  <div className="center-buttons">
-                    <button
+                    ``
+                    <a
                       style={{
+                        padding: '0.9rem 1rem',
+                        borderRadius: '1rem',
+                        background: '#C3E11B',
+                        fontWeight: '500',
+                        fontSize: '1.5rem',
                         display: 'flex',
-                        alignItems: 'center',
                         gap: '0.5rem',
+                        alignItems: 'center',
+                        color: 'black',
+                        textDecoration: 'none',
                       }}
-                      className="assiss-btn"
-                      onClick={() => {
-                        navigate('/sitemap/new');
-                      }}
+                      href="http://139.59.4.99:3500/"
+                      target="_blank"
                     >
-                      <BiPlus></BiPlus>
-                      Create Template
-                    </button>
+                      Create Wireframe
+                      <BiPlus />
+                    </a>
                   </div>
                 </div>
               </section>
@@ -311,7 +360,7 @@ function List() {
                       alignItems: 'center',
                       flexWrap: 'wrap',
                       width: '100%',
-                      margin: '16px 0',
+                      margin: '1rem 0',
                     }}
                   >
                     <Loading />
@@ -325,31 +374,33 @@ function List() {
                       alignItems: 'flex-start',
                       flexWrap: 'wrap',
                       width: '100%',
-                      margin: '16px 3rem',
+                      margin: '1rem 3rem',
                     }}
                   >
-                    {sitemaps.map(({ _id, name, updatedAt }) => {
+                    {/* {sitemaps.map(({ _id, name, updatedAt }) => {
                       return (
                         <div
                           key={`${_id}-files`}
                           style={{
+                            width: '100%',
+                            maxWidth: '400px',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '16px',
-                            marginRight: '16px',
-                            marginBottom: '16px',
+                            gap: '1rem',
+                            backgroundColor: '#f9f9f9',
+                            border: '1px solid #ddd',
+                            padding: '2rem',
+                            borderRadius: '1rem',
+                            margin: '0 1rem 1rem 0',
+                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                             cursor: 'pointer',
                           }}
                           onClick={() => {
                             navigate(`/sitemap/${_id}`);
                           }}
                         >
-                          <img
-                            src={SitemapImg}
-                            height="120px"
-                            width="268px"
-                          ></img>
-                          <span
+                          {/* <img src={SitemapImg} height="120px" width="268px" /> */}
+                    {/* <span
                             style={{
                               fontSize: '16px',
                               fontWeight: '500',
@@ -369,7 +420,8 @@ function List() {
                           ) : null}
                         </div>
                       );
-                    })}
+                    })}  */}
+                    <NoDataAvailable message="No Digital play book available" />
                   </div>
                 )}
               </div>

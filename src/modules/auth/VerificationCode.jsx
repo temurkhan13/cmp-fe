@@ -67,7 +67,7 @@ const verification = () => {
               <Components.Feature.FormInput
                 name="password"
                 label=""
-                place="Reset Password"
+                place="Enter New Password"
               />
               {error && (
                 <div
@@ -87,6 +87,7 @@ const verification = () => {
                   letterSpacing: '0.24px',
                   color: 'rgba(10, 10, 10, 0.68)',
                   cursor: 'pointer',
+                  marginBottom: '1rem',
                 }}
                 onClick={() => navigate(-1)}
               >
