@@ -67,7 +67,7 @@ const AiAssistant = () => {
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
       } catch {
-        setError('Failed to fetch folder data.');
+        console.log('Failed to fetch folder data.');
       }
     },
     [dispatch, selectedWorkspace]
@@ -117,6 +117,7 @@ const AiAssistant = () => {
     fetchStats();
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
+// <<<<<<< feature/assessmnet_design
   useEffect(() => {
     // Check if folder data is available; if not, fetch it
     if (!folderData || folderData.length === 0) {
@@ -129,6 +130,16 @@ const AiAssistant = () => {
           })
         ).catch(() => setError('Failed to load folder data.'));
       }
+// =======
+//   const handleRemoveChat = useCallback(async () => {
+//     if (currentFolder) {
+//       await dispatch(
+//         fetchFolderData({
+//           workspaceId: selectedWorkspace.id,
+//           folderId: currentFolder.id,
+//         })
+//       ).unwrap();
+// >>>>>>> main
     }
   }, [dispatch, folderData, selectedWorkspace, activeWorkspace]);
 
@@ -146,11 +157,14 @@ const AiAssistant = () => {
         <Component.Dashboard.Header />
       </div>
 
+// <<<<<<< feature/assessmnet_design
       <div className="selected-workspace-name">
         <p>
           Workspace <span>{selectedWorkspace?.workspaceName}</span>
         </p>
       </div>
+// =======
+// >>>>>>> main
       <Folder
         activeWorkspace={selectedWorkspace}
         onFolderSelect={handleFolderSelection}

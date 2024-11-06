@@ -17,7 +17,13 @@ const AskAi = () => {
             <span>
               <RxMagicWand />
             </span>{' '}
-            <input type="text" placeholder="Ask AI to edit or generate..." />
+            <input
+              onChange={(e) => {
+                e.preventDefault();
+              }}
+              type="text"
+              placeholder="Ask AI to edit or generate..."
+            />
           </button>
           <div className="dropdown-content">
             <a href="#">Improve Writing</a>

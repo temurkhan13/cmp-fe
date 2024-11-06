@@ -60,7 +60,7 @@ const useStartAssessment = () => {
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
       } catch {
-        setError('Failed to fetch folder data.');
+        console.log('Failed to fetch folder data.');
       }
     },
     [dispatch, currentWorkspace]
