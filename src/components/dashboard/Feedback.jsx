@@ -1,28 +1,30 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-
+import { useAddFeedbackMutation } from '../../redux/api/workspaceApi';
+import commonModal from '../../components/common/Modal';
 const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
-  const [feedback, setFeedback] = useState('');
+  const [feedbackText, setFeedback] = useState('');
   const [rating, setRating] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  // Mutation hook
+  const [addFeedback, { isLoading, isError, isSuccess }] =
+    useAddFeedbackMutation();
 
   const handleRadioChange = (option) => {
-    if (selectedOption === option) {
-      // Deselect the radio button and close its checkboxes
-      setSelectedOption(null);
-      setSelectedCheckboxes({});
-    } else {
-      // Select the new radio button and clear checkboxes
-      setSelectedOption(option);
-      setSelectedCheckboxes({});
-    }
+    setSelectedOption(option);
+    setSelectedCheckboxes({});
+    setFormErrors((prev) => ({ ...prev, selectedOption: null }));
   };
 
   const handleCheckboxChange = (checkbox) => {
-    setSelectedCheckboxes((prevState) => ({
-      ...prevState,
-      [checkbox]: !prevState[checkbox],
+    setSelectedCheckboxes((prev) => ({
+      ...prev,
+      [checkbox]: !prev[checkbox],
     }));
   };
 
@@ -32,14 +34,50 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
 
   const handleRatingClick = (number) => {
     setRating(number);
+    setFormErrors((prev) => ({ ...prev, rating: null }));
   };
 
-  const handleSubmit = () => {
-    console.log('Selected Option:', selectedOption);
-    console.log('Selected Checkboxes:', selectedCheckboxes);
-    console.log('Feedback:', feedback);
-    console.log('Rating:', rating);
+  const validateForm = () => {
+    const errors = {};
+    if (!rating) errors.rating = 'Please select a rating';
+    if (!selectedOption) errors.selectedOption = 'Please select an option';
+    if (!feedbackText) errors.feedbackText = 'Please enter your feedback';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const feedbackData = {
+      rating,
+      category: {
+        name: selectedOption,
+        subcategories: radioOptions
+          .find((option) => option.label === selectedOption)
+          ?.checkboxes.map((checkbox) => ({
+            name: checkbox,
+            selected: !!selectedCheckboxes[checkbox],
+          })),
+      },
+      feedbackText,
+    };
+
+    try {
+      await addFeedback(feedbackData).unwrap();
+      setModalMessage('Feedback submitted successfully!');
+      setFeedback('');
+      setRating('');
+      setSelectedCheckboxes('');
+      setSelectedOption('');
+    } catch (error) {
+      setModalMessage('Error submitting feedback. Please try again.');
+    } finally {
+      setShowModal(true);
+    }
+  };
+
+  const closeModal = () => setShowModal(false);
 
   return (
     <div className="feedback-component">
@@ -61,6 +99,7 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
             </div>
           ))}
         </div>
+        {formErrors.rating && <p className="error-text">{formErrors.rating}</p>}
       </div>
       <form>
         <div className="radio-option">
@@ -86,7 +125,6 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
                     <input
                       type="checkbox"
                       name={checkbox}
-                      className="checkbox-input"
                       checked={selectedCheckboxes[checkbox] || false}
                       onChange={() => handleCheckboxChange(checkbox)}
                     />
@@ -96,36 +134,59 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
               </div>
             </div>
           ))}
+          {formErrors.selectedOption && (
+            <p className="error-text">{formErrors.selectedOption}</p>
+          )}
         </div>
         <div className="mood-section">
-          {/* <div className="face-moods">
-            <CiFaceSmile
-              className={`face-icon ${mood === 'smile' ? 'active-smile' : ''}`}
-              onClick={() => handleMoodClick('smile')}
-            />
-            <CiFaceMeh
-              className={`face-icon ${mood === 'meh' ? 'active-meh' : ''}`}
-              onClick={() => handleMoodClick('meh')}
-            />
-            <CiFaceFrown
-              className={`face-icon ${mood === 'frown' ? 'active-frown' : ''}`}
-              onClick={() => handleMoodClick('frown')}
-            />
-          </div> */}
           <label className="feedback-label">Your Feedback</label>
           <textarea
-            value={feedback}
+            value={feedbackText}
+            name="feedbackText"
             onChange={handleFeedbackChange}
             placeholder="Write your views here..."
           />
+          {formErrors.feedbackText && (
+            <p className="error-text">{formErrors.feedbackText}</p>
+          )}
         </div>
         <div className="submit-btn">
-          <button type="button" onClick={handleSubmit}>
-            Submit
+          <button type="button" onClick={handleSubmit} disabled={isLoading}>
+            {isLoading ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       </form>
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <p>{modalMessage}</p>
+            <button onClick={closeModal}>Close</button>
+          </div>
+        </div>
+      )}
       <style>{`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        .modal-content {
+          background: white;
+          padding: 2rem;
+          border-radius: 1rem;
+          text-align: center;
+        }
+          .modal-content p {
+          font-size: 1.5rem;
+          margin-bottom: 3rem;
+          }
         .feedback-component {
           padding: 2rem 0;
           border-radius: 0.5rem;

@@ -6,9 +6,12 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-
 import { useDispatch } from 'react-redux';
-import { register, resetError, resetLoading } from '../../redux/slices/authSlice';
+import {
+  register,
+  resetError,
+  resetLoading,
+} from '../../redux/slices/authSlice';
 import { useSelector } from 'react-redux';
 
 const SignUp = () => {
@@ -25,21 +28,20 @@ const SignUp = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-   // setIsLoading(true);
-   try {
-    console.log(values);
-   await dispatch(register({ registrationData: values }));   
-    //navigate('/dashboard');
-   } catch (error) {
-    console.log(error);
-   }
+    // setIsLoading(true);
+    try {
+      console.log(values);
+      await dispatch(register({ registrationData: values }));
+      //navigate('/dashboard');
+    } catch (error) {
+      console.log(error);
+    }
 
     setSubmitting(false);
   };
 
-
-   // Automatically navigate to dashboard after successful registration
-   useEffect(() => {
+  // Automatically navigate to dashboard after successful registration
+  useEffect(() => {
     if (user) {
       dispatch(resetLoading());
       navigate('/dashboard');
@@ -47,7 +49,7 @@ const SignUp = () => {
   }, [user, navigate, dispatch]);
 
   useEffect(() => {
-    if(error){
+    if (error) {
       setTimeout(() => {
         dispatch(resetError());
       }, 2000);
@@ -114,8 +116,8 @@ const SignUp = () => {
               <Components.Feature.Button
                 className="primary"
                 type="submit"
-                disabled={ isLoading || error} // Disable based on form validity, loading state, or error
-                >
+                disabled={isLoading || error} // Disable based on form validity, loading state, or error
+              >
                 {isLoading ? 'Signing up...' : 'Submit'}
               </Components.Feature.Button>
             </Form>

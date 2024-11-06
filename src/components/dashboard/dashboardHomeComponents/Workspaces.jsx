@@ -5,12 +5,20 @@ import { BsWindowStack } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
-import { useAddWorkspaceMutation, useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
+import {
+  useAddWorkspaceMutation,
+  useMoveToTrashMutation,
+} from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
 import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 
-const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspaceChange }) => {
+const Workspaces = ({
+  activeWorkspace,
+  workspaces,
+  onWorkspaceUpdated,
+  onWorkspaceChange,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [isNewWorkspaceModalOpen, setIsNewWorkspaceModalOpen] = useState(false);
@@ -18,12 +26,18 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
   const [newWorkspaceDescription, setNewWorkspaceDescription] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showNotification, setShowNotification] = useState(false); // For NotificationBar
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const modalRef = useRef(null);
 
   const dispatch = useDispatch();
   const [addWorkspace] = useAddWorkspaceMutation();
   const [moveToTrash] = useMoveToTrashMutation();
 
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setShowSuccessNotification(true);
+  };
   // Close modal on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,7 +46,7 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
         setIsNewWorkspaceModalOpen(false);
       }
     };
-    setSelectedWorkspace(activeWorkspace)
+    setSelectedWorkspace(activeWorkspace);
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -61,11 +75,13 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
         workspaceDescription: newWorkspaceDescription,
       }).unwrap();
 
-      // Clear inputs and close modal
       setNewWorkspaceName('');
       setNewWorkspaceDescription('');
       setIsNewWorkspaceModalOpen(false);
       onWorkspaceUpdated();
+
+      // Show success message
+      showSuccess('Workspace created successfully!');
     } catch (error) {
       showError('Failed to add workspace.');
     }
@@ -77,7 +93,8 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
     onWorkspaceChange(workspace);
   };
 
-  const truncateString = (str, num) => (str.length > num ? str.slice(0, num) + '...' : str);
+  const truncateString = (str, num) =>
+    str.length > num ? str.slice(0, num) + '...' : str;
 
   return (
     <div className="collection">
@@ -87,17 +104,20 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
       {/*    New Workspace <AiOutlinePlus className="icon" />*/}
       {/*  </button>*/}
 
-        <div className="container-heading">
-          <div className="left-buttons">
-            <p className="assistant-heading">
-              <BsWindowStack size={30}/>
-                Workspaces
-            </p>
-          </div>
-          <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>
-            New Workspace <AiOutlinePlus className="icon" />
-          </button>
+      <div className="container-heading">
+        <div className="left-buttons">
+          <p className="assistant-heading">
+            <BsWindowStack size={30} />
+            Workspaces
+          </p>
         </div>
+        <button
+          className="workspace-btn"
+          onClick={() => setIsNewWorkspaceModalOpen(true)}
+        >
+          New Workspace <AiOutlinePlus className="icon" />
+        </button>
+      </div>
       {/*</div>*/}
 
       <div className="icons">
@@ -108,7 +128,11 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
                 setSelectedWorkspace(workspace);
                 setIsModalOpen(true);
               }}
-              style={activeWorkspace?.id === workspace.id ? { color: 'black' } : { color: 'grey' }}
+              style={
+                activeWorkspace?.id === workspace.id
+                  ? { color: 'black' }
+                  : { color: 'grey' }
+              }
               className="collection-icon"
             />
             <span className="icon-label" title={workspace.workspaceName}>
@@ -119,16 +143,19 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
 
         {workspaces?.length <= 0 && (
           <div className="no-projects">
-          <p>No Workspace available.</p>
+            <p>No Workspace available.</p>
           </div>
-          )}
+        )}
       </div>
 
       {isModalOpen && selectedWorkspace && (
         <div className="modal" ref={modalRef}>
           <div className="modal-wrapper">
             <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
-            <button className="modal-closebtn" onClick={() => setIsModalOpen(false)}>
+            <button
+              className="modal-closebtn"
+              onClick={() => setIsModalOpen(false)}
+            >
               <RxCross2 />
             </button>
           </div>
@@ -149,7 +176,10 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
         <div className="modal" ref={modalRef}>
           <div className="modal-wrapper">
             <h3 className="modal-heading">Create New Workspace</h3>
-            <button className="modal-closebtn" onClick={() => setIsNewWorkspaceModalOpen(false)}>
+            <button
+              className="modal-closebtn"
+              onClick={() => setIsNewWorkspaceModalOpen(false)}
+            >
               <RxCross2 />
             </button>
           </div>
@@ -167,7 +197,10 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
               onChange={(e) => setNewWorkspaceDescription(e.target.value)}
               placeholder="Enter workspace description"
             />
-            <button onClick={handleNewWorkspaceSubmit} className="create-workspace-btn">
+            <button
+              onClick={handleNewWorkspaceSubmit}
+              className="create-workspace-btn"
+            >
               Create
             </button>
           </div>
@@ -293,7 +326,14 @@ const Workspaces = ({ activeWorkspace, workspaces, onWorkspaceUpdated, onWorkspa
   );
 };
 
-const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, setIsModalOpen, showError, onWorkspaceUpdated }) => {
+const ModalSections = ({
+  selectedWorkspace,
+  handleWorkspaceSwitch,
+  moveToTrash,
+  setIsModalOpen,
+  showError,
+  onWorkspaceUpdated,
+}) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [inputValue, setInputValue] = useState(selectedWorkspace.workspaceName);
   const [errorMessage, setErrorMessage] = useState('');
@@ -304,9 +344,12 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, 
       return;
     }
     try {
-      // Trigger the update workspace mutation
-      await updateWorkspace({ id: selectedWorkspace.id, workspaceName: inputValue }).unwrap();
-      setIsRenaming(false); // Close renaming state
+      await updateWorkspace({
+        id: selectedWorkspace.id,
+        workspaceName: inputValue,
+      }).unwrap();
+      setIsRenaming(false);
+      showSuccess('Workspace renamed successfully!'); // Show success message
     } catch (error) {
       showError('Failed to rename workspace.');
     }
@@ -314,9 +357,13 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, 
 
   const handleMoveToTrash = async () => {
     try {
-      await moveToTrash({ entityType: 'workspace', id: selectedWorkspace.id }).unwrap();
-      setIsModalOpen(false); // Close the modal after deletion
-      onWorkspaceUpdated()
+      await moveToTrash({
+        entityType: 'workspace',
+        id: selectedWorkspace.id,
+      }).unwrap();
+      setIsModalOpen(false);
+      onWorkspaceUpdated();
+      showSuccess('Workspace moved to trash successfully!'); // Show success message
     } catch (error) {
       showError('Error moving workspace to trash.');
     }
@@ -333,7 +380,10 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, 
             onChange={(e) => setInputValue(e.target.value)}
           />
           <div className="workspace-rename-buttons">
-            <button className="cancel-button" onClick={() => setIsRenaming(false)}>
+            <button
+              className="cancel-button"
+              onClick={() => setIsRenaming(false)}
+            >
               Cancel
             </button>
             <button className="save-button" onClick={handleSaveRename}>
@@ -343,10 +393,16 @@ const ModalSections = ({ selectedWorkspace, handleWorkspaceSwitch, moveToTrash, 
         </div>
       ) : (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <button className="modal-buttons link_chat" onClick={() => handleWorkspaceSwitch(selectedWorkspace)}>
+          <button
+            className="modal-buttons link_chat"
+            onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
+          >
             Switch Workspace
           </button>
-          <button className="modal-buttons delete-button" onClick={handleMoveToTrash}>
+          <button
+            className="modal-buttons delete-button"
+            onClick={handleMoveToTrash}
+          >
             Move to Trash
           </button>
         </div>

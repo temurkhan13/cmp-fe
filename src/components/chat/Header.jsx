@@ -87,9 +87,17 @@ const Header = () => {
             {/*</li>*/}
           </ul>
 
-          <img src={UserProfilePic || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
-                         alt="ProfileLogo"
-                         onError={(e) => e.target.src = 'https://avatar.iran.liara.run/public/boy?username=Ash'}/>
+          <img
+            src={
+              UserProfilePic ||
+              'https://avatar.iran.liara.run/public/boy?username=Ash'
+            }
+            alt="ProfileLogo"
+            onError={(e) =>
+              (e.target.src =
+                'https://avatar.iran.liara.run/public/boy?username=Ash')
+            }
+          />
         </nav>
       </div>
     </header>

@@ -2,7 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { FaFolder } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { restoreFromTrash, deleteFromTrash } from '../../redux/slices/trashSlice';
+import {
+  restoreFromTrash,
+  deleteFromTrash,
+} from '../../redux/slices/trashSlice';
 
 const TrashWorkspaceTab = ({ workspaces }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -42,16 +45,23 @@ const TrashWorkspaceTab = ({ workspaces }) => {
             <FaFolder className="folder-icon" />
             <div className="workspace-details">
               <h3 className="workspace-name">{workspace.workspaceName}</h3>
-              <p className="workspace-description">{workspace.workspaceDescription || 'No description'}</p>
+              <p className="workspace-description">
+                {workspace.workspaceDescription || 'No description'}
+              </p>
             </div>
             <div className="dropdown">
-              <button className="dropdown-button" onClick={() => toggleDropdown(workspace._id)}>
+              <button
+                className="dropdown-button"
+                onClick={() => toggleDropdown(workspace._id)}
+              >
                 <FiMoreHorizontal size={20} />
               </button>
               {dropdownOpen === workspace._id && (
                 <ul className="dropdown-menu" ref={dropdownRef}>
                   <li onClick={() => handleRestore(workspace._id)}>Restore</li>
-                  <li onClick={() => handleDeletePermanently(workspace._id)}>Delete Permanently</li>
+                  <li onClick={() => handleDeletePermanently(workspace._id)}>
+                    Delete Permanently
+                  </li>
                 </ul>
               )}
             </div>
@@ -69,9 +79,8 @@ const TrashWorkspaceTab = ({ workspaces }) => {
           flex-wrap: wrap; /* Wrap items if there's no space */
           gap: 15px; /* Space between items */
           padding: 0;
-          margin: 0;
+          margin: 0 0 0 50px;
           list-style: none;
-          justify-content: center; /* Center the items */
         }
         .workspace-item {
           display: flex;
