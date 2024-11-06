@@ -18,7 +18,7 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div
+        {/* <div
           className="dropdown-item"
           onClick={() => {
             // Handle Move to Folder
@@ -26,7 +26,7 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
           }}
         >
           <FaFolder className="newchat-icon" /> Move to Folder
-        </div>
+        </div> */}
         <div
           className="dropdown-item"
           onClick={() => {

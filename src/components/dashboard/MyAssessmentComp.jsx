@@ -16,7 +16,14 @@ import {
 import useManagerChat from '@hooks/useManagerChat';
 import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard';
 import Folder from './dashboardHomeComponents/Folder';
-import { fetchFolderData, resetFolderState, selectFolderData, selectSelectedFolder, setSelectedFolder, toggleFolderActivation } from '../../redux/slices/folderSlice';
+import {
+  fetchFolderData,
+  resetFolderState,
+  selectFolderData,
+  selectSelectedFolder,
+  setSelectedFolder,
+  toggleFolderActivation,
+} from '../../redux/slices/folderSlice';
 import { RiNewspaperLine } from 'react-icons/ri';
 
 const MyAssessmentComp = () => {
@@ -48,10 +55,18 @@ const MyAssessmentComp = () => {
 
       setCurrentFolder(folder);
       dispatch(setSelectedFolder(folder));
-      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+      dispatch(
+        toggleFolderActivation({
+          workspaceId,
+          folderId: folder.id,
+          isActive: true,
+        })
+      );
 
       try {
-        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+        await dispatch(
+          fetchFolderData({ workspaceId, folderId: folder.id })
+        ).unwrap();
       } catch {
         setError('Failed to fetch folder data.');
       }
@@ -62,10 +77,14 @@ const MyAssessmentComp = () => {
   const handleWorkspaceChange = useCallback(
     (workspace) => {
       dispatch(setSelectedWorkspace(workspace));
-      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(
+        updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
+      );
       dispatch(resetFolderState());
 
-      const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+      const firstFolder =
+        workspace.folders.find((folder) => folder.isActive) ||
+        workspace.folders[0];
       handleFolderSelection(firstFolder, workspace.id);
     },
     [dispatch, handleFolderSelection]
@@ -76,8 +95,13 @@ const MyAssessmentComp = () => {
       if (isFetched) return;
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        const initialWorkspace = dashboardStats.workspaces.find((ws) => ws.isActive) || dashboardStats.workspaces[0];
-        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+        const initialWorkspace =
+          dashboardStats.workspaces.find((ws) => ws.isActive) ||
+          dashboardStats.workspaces[0];
+        if (
+          !selectedWorkspace ||
+          selectedWorkspace.id !== initialWorkspace.id
+        ) {
           dispatch(setSelectedWorkspace(initialWorkspace));
           handleWorkspaceChange(initialWorkspace);
         }
@@ -95,7 +119,12 @@ const MyAssessmentComp = () => {
 
   const handleRemoveChat = useCallback(async () => {
     if (currentFolder) {
-      await dispatch(fetchFolderData({ workspaceId: selectedWorkspace.id, folderId: currentFolder.id })).unwrap();
+      await dispatch(
+        fetchFolderData({
+          workspaceId: selectedWorkspace.id,
+          folderId: currentFolder.id,
+        })
+      ).unwrap();
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
 
@@ -109,8 +138,17 @@ const MyAssessmentComp = () => {
   return (
     <div className="">
       <div className="section">
+        <div className="selected-workspace-name">
+          <p>
+            Workspace <span>{selectedWorkspace?.workspaceName}</span>
+          </p>
+        </div>
         <div className="center-buttons">
-          <Folder activeWorkspace={selectedWorkspace} onFolderSelect={handleFolderSelection} onFolderUpdate={handleDataUpdated} />
+          <Folder
+            activeWorkspace={selectedWorkspace}
+            onFolderSelect={handleFolderSelection}
+            onFolderUpdate={handleDataUpdated}
+          />
         </div>
 
         <section className="generate" style={{ marginTop: '2rem' }}>
@@ -129,7 +167,7 @@ const MyAssessmentComp = () => {
                   navigate('/assessment/chat');
                 }}
               >
-                New Assistant
+                Start Assessment
                 <AiOutlinePlus className="icon" />
               </button>
             </div>
@@ -157,6 +195,20 @@ const MyAssessmentComp = () => {
 
       {/* Component Styles */}
       <style>{`
+            .selected-workspace-name{
+    position:absolute;
+      top:2rem;
+      left:4rem;
+    p{
+    font-size:1.5rem;
+    font-weight:600;
+    span{
+    padding:1rem;
+    background-color:#f5f5f5;
+    border-radius:1rem;
+    border:1px solid gray;
+    }
+    }
         .grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

@@ -110,9 +110,12 @@ const Navbar = () => {
           >
             Login
           </button>
-          <button className="btn btn-primary"  onClick={() => {
-            navigate('/sign-up');
-          }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              navigate('/sign-up');
+            }}
+          >
             Get Started <FaArrowRight />
           </button>
         </div>

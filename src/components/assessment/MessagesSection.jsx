@@ -769,12 +769,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           <div className="Message_container">
             <div className="input-container">
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                  src={InpireMeIcon}
-                  alt="Inspire Me"
-                  onClick={handleInspireClick}
-                />
-                {loading && (
+                {!loading ? (
+                  <img
+                    src={InpireMeIcon}
+                    alt="Inspire Me"
+                    onClick={handleInspireClick}
+                  />
+                ) : (
                   <div
                     style={{
                       border: '2px solid rgba(0, 0, 0, 0.1)',
@@ -788,11 +789,35 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                   />
                 )}
               </div>
-              <input
-                type="text"
+              <textarea
                 placeholder="Enter text here.."
                 value={firstPrompt}
                 onChange={(e) => setFirstPrompt(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage(); // Send message on Enter
+                  }
+                }}
+                onInput={(e) => {
+                  e.target.style.height = 'auto'; // Reset height
+                  e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height
+                }}
+                style={{
+                  resize: 'none',
+                  overflowY: 'auto',
+                  height: 'auto',
+                  maxHeight: '150px', // Set maximum height before scroll
+                  width: '100%', // Full width of the container
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '8px 12px',
+                  fontSize: '14px',
+                  fontFamily: 'Arial, sans-serif',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                }}
+                rows={1} // Initial row
               />
               <div className="icons">
                 <label htmlFor="file-input">

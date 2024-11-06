@@ -68,7 +68,6 @@ const Header = () => {
     closeDropdowns();
   };
 
-
   const handleOpenChangePasswordModal = () => {
     setChangePasswordModalOpen(true);
     closeDropdowns();
@@ -84,17 +83,17 @@ const Header = () => {
       {/*  <LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} />*/}
       {/*</div>*/}
       <div className="ProfileBar">
-        <div className="bellWrapper" onClick={handleNotificationClick}>
+        {/* <div className="bellWrapper" onClick={handleNotificationClick}>
           <CiBellOn className="BellIcon" />
           {hasNotification && <span className="notificationDot" />}
-        </div>
+        </div> */}
 
-        {notificationOpen && (
+        {/* {notificationOpen && (
           <NotificationDropdown
             isOpen={notificationOpen}
             onClose={closeDropdowns}
           />
-        )}
+        )} */}
 
         {photoPath ? (
           <img
@@ -109,7 +108,6 @@ const Header = () => {
           </div>
         )}
 
-        
         {dropdownOpen && (
           <div className="dropdownMenu">
             <div
@@ -155,6 +153,7 @@ const Header = () => {
           display: flex;
           justify-content: end;
           padding: 1% 2%;
+          box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
         }
 
         .ProfileBar {

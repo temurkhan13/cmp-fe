@@ -130,22 +130,28 @@ const SignIn = () => {
                   className="password-toggle-icon"
                   onClick={togglePasswordVisibility}
                 >
-                  {showPassword ? <FaEyeSlash size={20}/> : <FaEye size={20}/>}
+                  {showPassword ? (
+                    <FaEyeSlash size={20} />
+                  ) : (
+                    <FaEye size={20} />
+                  )}
                 </span>
               </div>
-              {apiError && (
-                <p className="error-message">
-                  {apiError}
-                </p>
-              )}
+              {apiError && <p className="error-message">{apiError}</p>}
               <section className="signIn_remember mb_Tertiary">
-                <div>
-                  <input type="checkbox" />
+                <label
+                  style={{ display: 'flex', gap: '1rem' }}
+                  htmlFor="checkbox"
+                >
+                  <input id="checkbox" type="checkbox" />
                   <Components.Feature.Text className="secondary--light">
                     Remember Me
                   </Components.Feature.Text>
-                </div>
-                <Link to="/forgot-password/verification" className="forgot-password-link">
+                </label>
+                <Link
+                  to="/forgot-password/verification"
+                  className="forgot-password-link"
+                >
                   Forgot Password?
                 </Link>
               </section>

@@ -82,7 +82,7 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
               }}
             >
               <div style={{}}>
-                <a
+                {/* <a
                   style={{
                     width: '100%',
                     background: '#C3E11B',
@@ -98,10 +98,11 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
                     textDecoration: 'none',
                   }}
                   href="http://139.59.4.99:3500/"
+                  target="_blank"
                 >
-                  <BiPlus></BiPlus>
+                  <BiPlus />
                   Create Wireframe
-                </a>
+                </a> */}
               </div>
             </div>
           </div>
@@ -144,12 +145,20 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
           {/*</div>*/}
         </div>
         {photoPath ? (
-          <img src={photoPath || 'https://avatar.iran.liara.run/public/boy?username=Ash'}
-               alt="profile"
-               className="ProfileImage"
-               onClick={toggleProfileDropdown}
-               style={{ cursor: 'pointer' }}
-               onError={(e) => e.target.src = 'https://avatar.iran.liara.run/public/boy?username=Ash'}/>
+          <img
+            src={
+              photoPath ||
+              'https://avatar.iran.liara.run/public/boy?username=Ash'
+            }
+            alt="profile"
+            className="ProfileImage"
+            onClick={toggleProfileDropdown}
+            style={{ cursor: 'pointer' }}
+            onError={(e) =>
+              (e.target.src =
+                'https://avatar.iran.liara.run/public/boy?username=Ash')
+            }
+          />
         ) : (
           <div onClick={toggleProfileDropdown} className="initials-placeholder">
             {getInitials()}

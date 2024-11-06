@@ -4,26 +4,30 @@ import CountingCards from './CountingCards';
 import Folder from './Folder';
 import Account from './Account';
 import NotificationBar from '../../common/NotificationBar.jsx';
+import { ImTree } from 'react-icons/im';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDashboardStats,
   selectDashboardStats,
-  selectWorkspace, setCurrentChatId,
-  setSelectedWorkspace, updateWorkspaceStatus
+  selectWorkspace,
+  setCurrentChatId,
+  setSelectedWorkspace,
+  updateWorkspaceStatus,
 } from '../../../redux/slices/workspacesSlice';
 import {
   fetchFolderData,
   resetFolderState,
   selectFolderData,
-  setSelectedFolder, toggleFolderActivation
+  setSelectedFolder,
+  toggleFolderActivation,
 } from '../../../redux/slices/folderSlice';
 import DashboardCard from './DashboardCard.jsx';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
-import { GiWireframeGlobe } from "react-icons/gi";
+import { GiWireframeGlobe } from 'react-icons/gi';
 import { IoIosChatboxes } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import './styles/DashboardHome.css'
+import './styles/DashboardHome.css';
 
 const SectionGrid = ({ title, items, itemType, onRemove }) => {
   const navigate = useNavigate();
@@ -43,7 +47,15 @@ const SectionGrid = ({ title, items, itemType, onRemove }) => {
       <div className="container-heading">
         <div className="left-buttons">
           <p className="assistant-heading">
-            {itemType === 'assessments' ? <RiNewspaperLine /> : itemType === 'chats' ? <IoIosChatboxes /> : itemType === 'wireframes' ? <GiWireframeGlobe/> :  <FaFolderTree />}
+            {itemType === 'assessments' ? (
+              <RiNewspaperLine />
+            ) : itemType === 'chats' ? (
+              <IoIosChatboxes />
+            ) : itemType === 'wireframes' ? (
+              <GiWireframeGlobe />
+            ) : (
+              <FaFolderTree />
+            )}
             {title}
           </p>
         </div>
@@ -73,18 +85,20 @@ const DashboardHomeComp = () => {
   const [activeWorkspace, setActiveWorkspace] = useState(null);
 
   useEffect(() => {
-    console.log('helooooooooooooooooo')
+    console.log('helooooooooooooooooo');
     const fetchStats = async () => {
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        console.log(dashboardStats,'dashboardStatas')
-        const activeWorkspace = dashboardStats.workspaces.find(workspace => workspace.isActive) || dashboardStats.workspaces[0];
-        console.log(activeWorkspace,'activeWorksapce')
+        console.log(dashboardStats, 'dashboardStatas');
+        const activeWorkspace =
+          dashboardStats.workspaces.find((workspace) => workspace.isActive) ||
+          dashboardStats.workspaces[0];
+        console.log(activeWorkspace, 'activeWorksapce');
         // if (!selectedWorkspace || selectedWorkspace.id !== activeWorkspace.id) {
-          console.log('changing workspace')
-          dispatch(setSelectedWorkspace(activeWorkspace));
-          setActiveWorkspace(activeWorkspace)
-          handleWorkspaceChange(activeWorkspace);
+        console.log('changing workspace');
+        dispatch(setSelectedWorkspace(activeWorkspace));
+        setActiveWorkspace(activeWorkspace);
+        handleWorkspaceChange(activeWorkspace);
         // }
       } catch {
         setError('Failed to fetch dashboard stats.');
@@ -98,18 +112,29 @@ const DashboardHomeComp = () => {
     async (folder, workspaceId = null) => {
       const activeWorkspaceId = workspaceId || activeWorkspace?.id;
       if (!activeWorkspaceId) {
-        setError("No workspace ID available.");
+        setError('No workspace ID available.');
         setShowNotification(true);
         return;
       }
 
-      if(folder) {
+      if (folder) {
         setCurrentFolder(folder);
         dispatch(setSelectedFolder(folder));
-        dispatch(toggleFolderActivation({ workspaceId: activeWorkspaceId, folderId: folder.id, isActive: true }));
+        dispatch(
+          toggleFolderActivation({
+            workspaceId: activeWorkspaceId,
+            folderId: folder.id,
+            isActive: true,
+          })
+        );
 
         try {
-          await dispatch(fetchFolderData({ workspaceId: activeWorkspaceId, folderId: folder.id })).unwrap();
+          await dispatch(
+            fetchFolderData({
+              workspaceId: activeWorkspaceId,
+              folderId: folder.id,
+            })
+          ).unwrap();
         } catch {
           setError('Failed to fetch folder data.');
           setShowNotification(true);
@@ -122,13 +147,17 @@ const DashboardHomeComp = () => {
   const handleWorkspaceChange = useCallback(
     (workspace) => {
       dispatch(setSelectedWorkspace(workspace));
-      setActiveWorkspace(workspace)
-      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      setActiveWorkspace(workspace);
+      dispatch(
+        updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
+      );
       setCurrentFolder(null);
       dispatch(resetFolderState());
 
       if (workspace?.folders?.length > 0) {
-        const firstFolder = workspace.folders.find(folder => folder.isActive) || workspace.folders[0];
+        const firstFolder =
+          workspace.folders.find((folder) => folder.isActive) ||
+          workspace.folders[0];
         handleFolderSelection(firstFolder, workspace.id);
       }
     },
@@ -137,9 +166,11 @@ const DashboardHomeComp = () => {
 
   useEffect(() => {
     if (dashboardStats?.workspaces?.length > 0 && !selectedWorkspace) {
-      const activeWorkspace = dashboardStats.workspaces.find(workspace => workspace.isActive) || dashboardStats.workspaces[0];
-      console.log(activeWorkspace,'activeWorksapce')
-      setActiveWorkspace(activeWorkspace)
+      const activeWorkspace =
+        dashboardStats.workspaces.find((workspace) => workspace.isActive) ||
+        dashboardStats.workspaces[0];
+      console.log(activeWorkspace, 'activeWorksapce');
+      setActiveWorkspace(activeWorkspace);
       if (!selectedWorkspace || selectedWorkspace.id !== activeWorkspace.id) {
         dispatch(setSelectedWorkspace(activeWorkspace));
         handleWorkspaceChange(activeWorkspace);
@@ -153,11 +184,12 @@ const DashboardHomeComp = () => {
 
   useEffect(() => {
     if (selectedWorkspace?.folders?.length > 0 && !currentFolder) {
-      const activeFolder = selectedWorkspace.folders.find(folder => folder.isActive) || selectedWorkspace.folders[0];
+      const activeFolder =
+        selectedWorkspace.folders.find((folder) => folder.isActive) ||
+        selectedWorkspace.folders[0];
       handleFolderSelection(activeFolder, selectedWorkspace.id);
     }
   }, [selectedWorkspace, currentFolder]);
-
 
   const handleRemoveItem = useCallback((itemId, itemType) => {
     setCurrentFolder((prevFolder) => ({
@@ -170,7 +202,7 @@ const DashboardHomeComp = () => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
 
-  console.log(activeWorkspace,'activeeeeeee')
+  console.log(activeWorkspace, 'activeeeeeee');
 
   return (
     <div className="dashboard">
@@ -239,7 +271,7 @@ const DashboardHomeComp = () => {
               onRemove={(id) => handleRemoveItem(id, 'wireframes')}
             />
           ) : (
-            <NoDataMessage title="Wireframes" icon={<FaFolderTree />} />
+            <NoDataMessage title="Wireframes" icon={<ImTree />} />
           )}
         </div>
       </section>
