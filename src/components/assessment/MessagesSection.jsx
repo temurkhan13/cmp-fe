@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 
 import '../../styles/chat/ChatMessage.scss';
 import { LuPencil } from 'react-icons/lu';
-import { FaCopy, FaThumbsUp, FaThumbsDown, FaSync } from 'react-icons/fa';
+import {
+  FaCopy,
+  FaThumbsUp,
+  FaThumbsDown,
+  FaSync,
+  FaBookmark,
+} from 'react-icons/fa';
 import { IoAttach, IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { IoSend } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci';
@@ -33,41 +39,20 @@ import useAssessmentReport from '../../hooks/useAssessmentReport';
 import useChat from '../../hooks/useChat';
 import { useSelector } from 'react-redux';
 import assessmentQnaData from '../../data/chat/assessmentQnaData';
-import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
+import {
+  useDislikeChatMessageMutation,
+  useGetWorkspacesQuery,
+  useLikeChatMessageMutation,
+  useRemoveBookmarkMutation,
+  useAddBookmarkMutation,
+  useUpdateChatMutation,
+} from '../../redux/api/workspaceApi';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 
-const TopBar = ({
-  progress,
-  solvedQuestions,
-  totalQuestions,
-  topbarHeading,
-}) => {
-  return (
-    <div className="assessment-topbar">
-      <div className="topbar-heading">{topbarHeading}</div>
-      <div className="report">
-        <span>Progress:</span>
-        <span className="progress" style={{ backgroundColor: '#C3E11D' }}>
-          {progress}%
-        </span>
-      </div>
-      <div className="qa-container">
-        <span>Q&A:</span>
-        <span className="qa">
-          {solvedQuestions}/{totalQuestions}
-        </span>
-      </div>
-      <button className="edit-report-button">
-        Edit Report
-        <CiEdit size={20} />
-      </button>
-    </div>
-  );
-};
 const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const location = useLocation();
   const { Questions } = location.state || {};
@@ -88,40 +73,42 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [askAi, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
-  const [showTopBar, setShowTopBar] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
   const currentWorkspace = useSelector(selectWorkspace);
 
-
   const selectedAssessmentTitle = useSelector(
     (state) => state.workspaces.currentSelectedTitle
   );
 
-  console.log(selectedAssessmentTitle, 'selectedAssessmentTitle',selectedAssessment);
-  console.log(currentWorkspace,'currentWorkspace............');
+  console.log(
+    selectedAssessmentTitle,
+    'selectedAssessmentTitle',
+    selectedAssessment
+  );
+  console.log(currentWorkspace, 'currentWorkspace............');
   const [folderId, setFolderId] = useState('');
 
   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
-  const folder =  useSelector(selectSelectedFolder);
+  const folder = useSelector(selectSelectedFolder);
 
   useEffect(() => {
-    if(folder){
+    if (folder) {
       setFolderId(folder.id || folder._id);
     }
-  },[folder])
+  }, [folder]);
 
   // custom hooks
   const { StartAssessment } = usestartAssessment();
   const { AssessmentReport } = useAssessmentReport({
-    workspaceId:currentWorkspace.id,
+    workspaceId: currentWorkspace.id,
     folderId: folder?.id || folderId,
     assessmentId,
   });
   const { GenerateSingleReport } = useGenerateSingleReport({
-    workspaceId:currentWorkspace.id,
+    workspaceId: currentWorkspace.id,
     folderId: folder?.id || folderId,
     assessmentId,
   });
@@ -133,6 +120,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const { autoWritingFnc } = useAuto();
   const { shortText } = useShorter();
   const { LongText } = useLonger();
+  const [addBookmark] = useAddBookmarkMutation();
+  const [removeBookmark] = useRemoveBookmarkMutation();
+  const [likeChatMessage] = useLikeChatMessageMutation();
+  const [dislikeChatMessage] = useDislikeChatMessageMutation();
+  const chatId = useSelector((state) => state.workspaces.currentChatId);
   const userId = useSelector((state) => state.auth.user?.id);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
@@ -143,6 +135,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const { error, chatWithdoc } = useChat();
   const [photoPath, setPhotoPath] = useState('false');
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
@@ -171,13 +164,50 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     setFile(e.target.files[0]);
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setFile(e.dataTransfer.files[0]);
-  };
+  const handleAddBookmark = async (message) => {
+    // const bookmark = {
+    //   bookmarkId: 'bookmarkId3',
+    //   userId: 'userId4',
+    //   timestamp: '2024-07-12T12:40:00Z',
+    //   date: '2024-07-12',
+    //   messages: [
+    //     {
+    //       messageId: messageId,
+    //       sender: 'ChangeAI',
+    //       text: content,
+    //       savedBy: 'You',
+    //     },
+    //   ],
+    // };
+    //dispatch(addBookmark(bookmark));
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
+    const bookmark =
+      chat &&
+      chat.bookmarks?.filter(
+        (bookmark) =>
+          bookmark.messageId === message._id &&
+          bookmark.userId === JSON.parse(localStorage.getItem('user')).id
+      );
+
+    if (bookmark && bookmark.length > 0) {
+      await removeBookmark({
+        workspaceId,
+        folderId: folderId._id || folderId.id,
+        chatId,
+        messageId: message._id,
+        bookmarkId: bookmark[0]._id, // Send the whole bookmark data
+      }).unwrap();
+    } else {
+      await addBookmark({
+        workspaceId,
+        folderId: folderId._id || folderId.id,
+        chatId,
+        messageId: message._id, // Send the whole bookmark data
+      }).unwrap();
+    }
+
+    // Dispatch action to add bookmark
+    refetch(); // Trigger the chat query to refetch
   };
 
   const handleSendMessage = async () => {
@@ -297,6 +327,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       setPopupVisible(false);
     }
   };
+
   const getInitials = () => {
     if (!user) {
       return 'N/A';
@@ -457,31 +488,46 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     scrollToBottom();
   }, [chat]);
 
+  const handleLikeClick = async (message) => {
+    console.log(message, 'message');
+    await likeChatMessage({
+      workspaceId,
+      folderId: folderId._id || folderId.id,
+      chatId,
+      messageId: message._id, // Send the whole bookmark data
+    }).unwrap();
+    refetch(); // Trigger the chat query to refetch
+  };
+
+  const handleDislikeMessage = async (message) => {
+    console.log(message, 'message');
+    console.log(JSON.parse(localStorage.getItem('user')).id);
+    console.log(
+      message?.reactions?.some(
+        (react) => react.user == JSON.parse(localStorage.getItem('user')).id
+      ),
+      'message'
+    );
+    await dislikeChatMessage({
+      workspaceId,
+      folderId: folderId._id || folderId.id,
+      chatId,
+      messageId: message._id, // Send the whole bookmark data
+    }).unwrap();
+    refetch(); // Trigger the chat query to refetch
+  };
+
+  const handleCopyMessage = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <div className="chat-message-wrapper">
-      <div className="toggle-top-bar">
-        <button
-          onClick={() => setShowTopBar(!showTopBar)}
-          className="topbar-btn"
-        >
-          {showTopBar ? <IoChevronUp /> : <IoChevronDown />}
-        </button>
-      </div>
-      {showTopBar && (
-        <TopBar
-          topbarHeading="Change Management"
-          progress={50}
-          solvedQuestions={2}
-          totalQuestions={6}
-        />
-      )}
-
-        <ScaleLoader
-          color={'#000000'}
-          loading={loading || assessmentLoading}
-          size={150}
-        />
-
+      <ScaleLoader
+        color={'#000000'}
+        loading={loading || assessmentLoading}
+        size={150}
+      />
 
       <div className="chat-message">
         <input
@@ -503,14 +549,28 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
               />
             )}
 
-            {chat.map((item, index) => (
+            {chat.map((item, index, message) => (
               <div
                 key={index}
                 ref={index === chat.length - 1 ? messagesEndRef : null}
               >
-                <div>
+                <div
+                  className={
+                    item.role === 'user'
+                      ? 'chat-container right'
+                      : 'chat-container left'
+                  }
+                >
                   {item.role === 'user' ? (
-                    <div className="card">
+                    <div
+                      className="card user-card"
+                      style={{
+                        display: 'flex',
+                        // alignItems: 'flex-end',
+                        justifyContent: 'flex-end',
+                        // float: 'right',
+                      }}
+                    >
                       <div>
                         {photoPath ? (
                           <img
@@ -527,7 +587,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                         {/* <img src={UserPic} alt="avatar" /> */}
                       </div>
                       <div>
-                        <p className="Heading">You</p>
+                        {/* <p className="Heading">You</p> */}
                         {item.content && (
                           <div className="msg">
                             <ReactMarkdown>{item.content}</ReactMarkdown>
@@ -553,27 +613,85 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                     <div className="card">
                       <div className="header">
                         <img src={AiPic} alt="avatar" className="avatar" />
-                        <p className="heading">ChangeAI</p>
+                        {/* <p className="heading">ChangeAI</p> */}
                       </div>
                       <div className="msg">
                         <ReactMarkdown>{item.content}</ReactMarkdown>
                       </div>
                       <div className="message-action-icons">
-                        <div className="message-icon-wrapper">
-                          <FaCopy />
+                        <div
+                          className="message-icon-wrapper"
+                          title="Copy"
+                          onClick={() => handleCopyMessage(message.text)}
+                        >
+                          <FaCopy style={{ cursor: 'pointer' }} />
                           <span className="tooltip-assessment">Copy</span>
                         </div>
-                        <div className="message-icon-wrapper">
-                          <FaThumbsUp />
+                        <div
+                          className="message-icon-wrapper"
+                          title="Like"
+                          onClick={() => handleLikeClick(message)}
+                        >
+                          <FaThumbsUp
+                            style={
+                              message?.reactions?.some(
+                                (react) =>
+                                  react.user ==
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id && react.type == 'like'
+                              )
+                                ? { color: 'blue' }
+                                : {}
+                            }
+                          />
                           <span className="tooltip-assessment">Like</span>
                         </div>
-                        <div className="message-icon-wrapper">
-                          <FaThumbsDown />
+                        <div
+                          className="message-icon-wrapper"
+                          title="Dislike"
+                          onClick={() => handleDislikeMessage(message)}
+                        >
+                          <FaThumbsDown
+                            style={
+                              message?.reactions?.some(
+                                (react) =>
+                                  react.user ==
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id && react.type == 'dislike'
+                              )
+                                ? { color: 'blue' }
+                                : {}
+                            }
+                          />
                           <span className="tooltip-assessment">Dislike</span>
                         </div>
-                        <div className="message-icon-wrapper">
-                          <FaSync />
-                          <span className="tooltip-assessment">Regenerate</span>
+                        {/*<div className="message-icon-wrapper" title="Comment">*/}
+                        {/*  <FaCommentAlt*/}
+                        {/*    data-message-id={message._id}*/}
+                        {/*    onClick={handleCommentClick}*/}
+                        {/*    style={{ cursor: 'pointer' }}*/}
+                        {/*  />*/}
+                        {/*  <span className="tooltip-assessment">Comment</span>*/}
+                        {/*</div>*/}
+                        {/*<div className="message-icon-wrapper" title="Regenerate">*/}
+                        {/*  <FaSync />*/}
+                        {/*  <span className="tooltip-assessment">Regenerate</span>*/}
+                        {/*</div>*/}
+                        <div className="message-icon-wrapper" title="Bookmark">
+                          <FaBookmark
+                            onClick={() => handleAddBookmark(message)}
+                            style={
+                              chat.bookmarks?.some(
+                                (bookmark) =>
+                                  bookmark.messageId === message._id &&
+                                  bookmark.userId ===
+                                    JSON.parse(localStorage.getItem('user')).id
+                              )
+                                ? { color: 'blue' }
+                                : {}
+                            }
+                          />
+                          <span className="tooltip-assessment">Bookmark</span>
                         </div>
                       </div>
                     </div>
@@ -586,14 +704,16 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           <div className="defaultPage">
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
-                {selectedAssessment}
-                {selectedAssessmentTitle.report?.[0]?.subReport?.[0]
+                {selectedAssessment
+                  ? selectedAssessment
+                  : 'Change Management -Assesment'}
+                {/* {selectedAssessmentTitle.report?.[0]?.subReport?.[0]
                   ?.ReportTitle ||
-                  selectedAssessmentTitle.ReportTitle ||
+                  // selectedAssessmentTitle.ReportTitle ||
                   selectedAssessmentTitle ||
                   (assessmentQnaData.length > 0
                     ? assessmentQnaData[0]
-                    : '')}{' '}
+                    : '')}{' '} */}
               </p>
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
@@ -685,74 +805,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         </>
       )}
       <style>{`
-        .assessment-topbar {
-          display: flex;
-          align-items: center;
-          // flex-direction: column;
-          justify-content: space-between;
-          background-color: white;
-          gap: 1rem;
-          border-radius: 1rem;
-          padding: 1rem;
-          box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 15px;
-          position: absolute;
-          width:70%;
-          top:8.5rem;
-          // left:35%;
-          transition: all 0.3s ease-in-out;
-        }
-        .topbar-heading{
-        font-size: 1.5rem;
-
-          }
-        .report,
-        .qa-container {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-weight: 500;
-          padding-bottom:1rem;
-          gap:0.5rem;
-          
-        }
-        .progress,
-        .qa {
-          padding: 0.5rem;
-          border-radius: 1rem;
-          background-color: #C3E11D;
-          font-weight: 500;
-          text-align: center;
-          min-width: 5rem;
-          }
-          .edit-report-button {
-          padding: 1rem;
-          border-radius: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          background-color: #C3E11D;
-          gap: 5px;
-          font-weight: 500;
-          border: none;
-          // width:100%;
-        }
-        .topbar-btn{
-          position:absolute;
-          top:5rem;
-          border:none;
-          outline:none;
-          font-size:2rem;
-          background-color: lightgray;
-          padding:0.5rem 1rem;
-          border-radius:1rem;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          }
+            .header{
+      display: flex;
+      }
     .msg {
       margin: 1rem 0;
       font-size: 1rem;
+      text-align: justify;
     }
       .initials-placeholder {
           display: flex;

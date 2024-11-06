@@ -6,7 +6,7 @@ import { FaRegFolderOpen } from 'react-icons/fa6';
 import { FaTrash } from 'react-icons/fa';
 import { MdDelete, MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import DeleteModal from './DeleteModal';
-import {  } from '../../redux/slices/trashSlice'; // Import actions
+import {} from '../../redux/slices/trashSlice'; // Import actions
 
 const FolderCard = ({ folder }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -50,9 +50,7 @@ const FolderCard = ({ folder }) => {
       <div className="folder-content">
         <FaRegFolderOpen className="folder-icon" />
         <div className="folder-details">
-          <div className="folder-name">
-            {folder.folderName}
-          </div>
+          <div className="folder-name">{folder.folderName}</div>
         </div>
       </div>
       {isHovered && (
@@ -181,7 +179,6 @@ const TrashFolderTab = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
           text-align: center;
           color: #666;
         }
@@ -214,7 +211,6 @@ const FolderTab = () => {
         .folder-tab {
           display: flex;
           flex-wrap: wrap;
-          justify-content: center;
           gap: 2rem;
           padding: 2rem;
         }
