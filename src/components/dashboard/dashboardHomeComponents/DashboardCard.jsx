@@ -22,7 +22,7 @@ const ItemTypeEnum = Object.freeze({
 // Function to map type for displaying correct icon
 const getEntityType = (type) => {
   const typeMapping = {
-    chats: 'chats',
+    chats: 'chat',
     assessments: 'assessment',
     sitemaps: 'sitemap',
   };

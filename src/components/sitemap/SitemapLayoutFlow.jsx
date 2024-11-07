@@ -309,6 +309,8 @@ const SitemapLayoutFlow = ({ id }) => {
     }
   };
 
+  console.log('nodesj -> ', nodes);
+
   const linkWorkSpaceAndSiteMap = async (sitemapId) => {
     const folderId = selectedWorkspace.folders.find(
       (folder) => folder?.isActive

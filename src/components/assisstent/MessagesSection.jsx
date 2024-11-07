@@ -244,33 +244,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   // };
 
   // Memoize HandleAskAi function
-  const HandleAskAi = useCallback(
-    async (value) => {
-      try {
-        setLoading(true);
-        setAskAI(value);
-
-        let response;
-        if (value === 'Fix Spelling & Grammar') {
-          response = await fixGrammar(selectedText);
-        } else if (value === 'Improve Writing') {
-          response = await improveWriting(selectedText);
-        } else if (value === 'Summarize') {
-          response = await summarize(selectedText);
-        }
-
-        if (response) {
-          await applyFixedText(response);
-          refetch();
-        }
-      } catch (error) {
-        console.error('Asi AI', error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [fixGrammar, improveWriting, summarize, selectedText]
-  );
 
   // // Memoize applyFixedText function
   // const applyFixedText = useCallback(
@@ -308,9 +281,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         return message;
       });
 
-      // Optimistic update: Update UI immediately
-      // You might want to use a local state to manage this, as shown in the example
-
       try {
         console.log(updatedMessages, 'updatedMessages', chat);
         // Optionally dispatch an action or make an API call to update the message
@@ -327,8 +297,7 @@ const MessagesSection = ({ setCurrentChat }) => {
         //       })
         //     )
         // );
-        console.log(workspaceId, folderId, chatId);
-        updateChat({
+        await updateChat({
           workspaceId,
           folderId: folderId.id || folderId._id,
           chatId,
@@ -390,6 +359,34 @@ const MessagesSection = ({ setCurrentChat }) => {
       setPopupVisible(false); // Hide popup if selection is invalid
     }
   };
+
+  const HandleAskAi = useCallback(
+    async (value) => {
+      try {
+        setLoading(true);
+        setAskAI(value);
+
+        let response;
+        if (value === 'Fix Spelling & Grammar') {
+          response = await fixGrammar(selectedText);
+        } else if (value === 'Improve Writing') {
+          response = await improveWriting(selectedText);
+        } else if (value === 'Summarize') {
+          response = await summarize(selectedText);
+        }
+
+        if (response) {
+          await applyFixedText(response);
+          refetch();
+        }
+      } catch (error) {
+        console.error('Asi AI', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fixGrammar, improveWriting, summarize, selectedText]
+  );
 
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
@@ -995,7 +992,7 @@ const MessagesSection = ({ setCurrentChat }) => {
               width: '100%', // Full width of the container
               border: 'none',
               borderRadius: '10px',
-              padding: '15px 12px',
+              padding: '1rem',
               fontSize: '14px',
               fontFamily: 'Arial, sans-serif',
               boxSizing: 'border-box',
@@ -1003,8 +1000,13 @@ const MessagesSection = ({ setCurrentChat }) => {
             }}
             rows={1} // Initial row
           />
-          <div className="icons">
-            <IoSend onClick={handleSendMessage} className="send-icon" />
+          <div className="icons" style={{ display: 'flex' }}>
+            <IoSend
+              onClick={handleSendMessage}
+              className="send-icon"
+              color="#c3e11d"
+              size={20}
+            />
           </div>
         </div>
       </div>
