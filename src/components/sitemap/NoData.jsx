@@ -48,7 +48,7 @@ function NoData() {
               navigate('/sitemap/new');
             }}
           >
-            <BiPlus></BiPlus>
+            <BiPlus />
             Create Template
           </button>
         </div>

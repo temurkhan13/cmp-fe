@@ -10,7 +10,7 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 
 const AssistantSidebar = (props) => {
-  const currentChat =  props?.currentChat;
+  const currentChat = props?.currentChat;
   const [bookmarksShow, setBookmarksShow] = useState([]);
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
@@ -27,20 +27,22 @@ const AssistantSidebar = (props) => {
   };
 
   useEffect(() => {
-    const findingAllbookmarks = currentChat ? currentChat.bookmarks.map((item) => {
-      const foundMessage = currentChat.generalMessages.find(
-        (message) => message._id === item.messageId
-      )
+    const findingAllbookmarks = currentChat
+      ? currentChat.bookmarks.map((item) => {
+          const foundMessage = currentChat.generalMessages.find(
+            (message) => message._id === item.messageId
+          );
 
-      if (foundMessage) {
-        const date = new Date(foundMessage.createdAt);
-        const localDate = date.toLocaleString(); 
-        return {
-          ...foundMessage,
-          localDate,
-        };
-      }
-    }) : []
+          if (foundMessage) {
+            const date = new Date(foundMessage.createdAt);
+            const localDate = date.toLocaleString();
+            return {
+              ...foundMessage,
+              localDate,
+            };
+          }
+        })
+      : [];
     if (findingAllbookmarks.length > 0) {
       setBookmarksShow(findingAllbookmarks);
     }
@@ -50,7 +52,7 @@ const AssistantSidebar = (props) => {
     <>
       <section className="iconSection">
         <div className="iconContainer">
-          <span
+          {/* <span
             className={`iconButton ${
               isVersionHistoryModalOpen ? 'active' : ''
             }`}
@@ -58,7 +60,7 @@ const AssistantSidebar = (props) => {
           >
             <FaHistory className="icon" size={20} />
             <span className="tooltip">Version History</span>
-          </span>
+          </span> */}
           {/*<span*/}
           {/*  className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}*/}
           {/*  onClick={() => setIsMediaModalOpen(true)}*/}

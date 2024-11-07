@@ -28,15 +28,15 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-bottom-links">
             {bottomLinks.map((link, index) => (
-              <a key={index} href={link.href}>
+              <li key={index} href={link.href}>
                 {link.label}
-              </a>
+              </li>
             ))}
           </div>
           <div className="footer-socials">
-            <SocialIcon href="#" icon={<FaFacebook />} />
-            <SocialIcon href="#" icon={<FaInstagram />} />
-            <SocialIcon href="#" icon={<FaTwitter />} />
+            <SocialIcon icon={<FaFacebook />} />
+            <SocialIcon icon={<FaInstagram />} />
+            <SocialIcon icon={<FaTwitter />} />
           </div>
         </div>
       </div>
@@ -131,10 +131,11 @@ const Footer = () => {
           font-size: 1.4rem;
         }
 
-        .footer-bottom-links a {
+        .footer-bottom-links li {
           color: black;
           text-decoration: none;
           transition: color 0.2s ease;
+          list-style: none;
         }
 
         .footer-bottom-links a:hover {

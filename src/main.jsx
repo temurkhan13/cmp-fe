@@ -9,7 +9,12 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ScaleLoader } from 'react-spinners';
 
 const Loading = () => (
-  <ScaleLoader color={'#000000'} loading={true} size={150} />
+  <ScaleLoader
+    color={'#000000'}
+    loading={true}
+    style={{ display: 'flex', justifyContent: 'center' }}
+    size={150}
+  />
 );
 
 ReactDOM.createRoot(document.getElementById('root')).render(

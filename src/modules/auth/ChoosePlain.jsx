@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import Components from '../../components';
 import data from '../../data';
 
@@ -29,12 +30,12 @@ const ChoosePlain = () => {
           >
             Monthly
           </Components.Feature.Button>
-          <Components.Feature.Button
+          {/* <Components.Feature.Button
             className={`toggle${isActive ? '--active' : ''}`}
             onClick={toggleHandler}
           >
             Yearly
-          </Components.Feature.Button>
+          </Components.Feature.Button> */}
         </div>
       </center>
       <Components.Common.SubscriptionPlainsGrid

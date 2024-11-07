@@ -275,12 +275,11 @@ const Comment = {
   ],
 };
 
-const Assessments = ({handleAssessmentSelect}) => {
-  const [activeIcon, setActiveIcon] = useState(null);
+const Assessments = ({ handleAssessmentSelect }) => {
+  const [activeIcon, setActiveIcon] = useState('question');
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
   };
-
 
   return (
     <>
@@ -295,13 +294,13 @@ const Assessments = ({handleAssessmentSelect}) => {
             <FaRegQuestionCircle className="icon" />
             <span className="tooltip">Assessments</span>
           </span>
-          <span
+          {/* <span
             className={`iconButton ${activeIcon === 'clock' ? 'active' : ''}`}
             onClick={() => handleIconClick('clock')}
           >
             <PiClockCounterClockwiseBold className="icon" />
             <span className="tooltip">Version History</span>
-          </span>
+          </span> */}
           <span
             className={`iconButton ${activeIcon === 'gallery' ? 'active' : ''}`}
             onClick={() => handleIconClick('gallery')}
@@ -309,14 +308,14 @@ const Assessments = ({handleAssessmentSelect}) => {
             <FaImages className="icon" />
             <span className="tooltip">Images</span>
           </span>
-          <span
+          {/* <span
             className={`iconButton ${activeIcon === 'message' ? 'active' : ''}`}
             onClick={() => handleIconClick('message')}
           >
             <IoIosChatboxes className="icon" />
             <span className="tooltip">Comments</span>
-          </span>
-          <span
+          </span> */}
+          {/* <span
             className={`iconButton ${
               activeIcon === 'bookmark' ? 'active' : ''
             }`}
@@ -324,24 +323,29 @@ const Assessments = ({handleAssessmentSelect}) => {
           >
             <FaBookmark className="icon" />
             <span className="tooltip">Bookmark</span>
-          </span>
+          </span> */}
         </div>
       </section>
 
       {activeIcon === 'question' && (
         <SideBarModal
           title="Assessments"
-          bodyContent={<AssessmentTasks tasks={tasks} handleAssessmentSelect={handleAssessmentSelect}/>}
+          bodyContent={
+            <AssessmentTasks
+              tasks={tasks}
+              handleAssessmentSelect={handleAssessmentSelect}
+            />
+          }
           onClose={() => setActiveIcon(null)}
         />
       )}
-      {activeIcon === 'clock' && (
+      {/* {activeIcon === 'clock' && (
         <SideBarModal
           title="Version History"
           bodyContent={<AssessmentVersionHistory versions={versions} />}
           onClose={() => setActiveIcon(null)}
         />
-      )}
+      )} */}
       {activeIcon === 'gallery' && (
         <SideBarModal
           title="Images"
@@ -355,7 +359,7 @@ const Assessments = ({handleAssessmentSelect}) => {
           onClose={() => setActiveIcon(null)}
         />
       )}
-      {activeIcon === 'message' && (
+      {/* {activeIcon === 'message' && (
         <SideBarModal
           title="Comments"
           bodyContent={<AssessmentComments Comments={Comment} />}
@@ -378,7 +382,7 @@ const Assessments = ({handleAssessmentSelect}) => {
           }
           onClose={() => setActiveIcon(null)}
         />
-      )}
+      )} */}
 
       <style>{`
         .iconSection {

@@ -3,25 +3,19 @@ import { Formik, Form } from 'formik';
 import useVerifyEmail from '../../hooks/useVerifyEmail';
 import { useLocation } from 'react-router-dom';
 
-
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 import { verify } from '../../redux/slices/authSlice';
 
 const VerifyEmail = () => {
-
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const location = useLocation();
   const { email } = location.state;
   const initialValues = { number: '' };
   //const { verifyEmail, error } = useVerifyEmail();
-
-
 
   return (
     <Components.Feature.Container className="auth signIn">
@@ -46,24 +40,23 @@ const VerifyEmail = () => {
           {(formik) => (
             <Form>
               <Components.Feature.VerifyCode
-  name="number"
-  type="number"
-  label="Verification Code"
-  place="Enter 6-digit code"
-  handleVerification={async (value) => {
-    try {
-      const response = await dispatch(verify(value)).unwrap();
-      console.log(response.success);
-    //  if (response.success) {
-        navigate('/choose-plain');
-    //  }
-    } catch (error) {
-      console.error("Verification failed:", error);
-      // Handle error appropriately (e.g., show an error message to the user)
-    }
-  }}
-/>
-
+                name="number"
+                type="number"
+                label="Verification Code"
+                place="Enter 6-digit code"
+                handleVerification={async (value) => {
+                  try {
+                    const response = await dispatch(verify(value)).unwrap();
+                    console.log(response.success);
+                    //  if (response.success) {
+                    navigate('/choose-plan');
+                    //  }
+                  } catch (error) {
+                    console.error('Verification failed:', error);
+                    // Handle error appropriately (e.g., show an error message to the user)
+                  }
+                }}
+              />
               {/*error && (
                 <div
                   style={{

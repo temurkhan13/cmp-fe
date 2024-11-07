@@ -24,7 +24,7 @@
   // padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: center;
   margin-bottom: 2rem;
   border-radius: 8px;
   &::-webkit-scrollbar {
@@ -154,7 +154,7 @@
     .msg {
       margin: 1.5% 0;
       color: rgba(0, 0, 0, 0.715);
-      text-align: center;
+      text-align: left;
     }
     svg {
       font-size: 13px;
@@ -223,6 +223,7 @@
       .assessmentDefaultHeading {
         font-family: 'Poppins';
         font-weight: 600;
+        text-align: center;
         font-size: 1.6rem;
         line-height: 28px;
         letter-spacing: 0.12;
@@ -271,7 +272,7 @@
       outline: none;
     }
     svg {
-      font-size: 30px;
+      font-size: 2rem;
       padding: 0 10%;
     }
     .send-icon {
@@ -285,16 +286,16 @@
   justify-content: center;
   margin-bottom: 2rem;
 }
-.chat-container {
+.chat-container-assisstant {
   display: flex;
   margin-bottom: 1rem;
 }
 
-.chat-container.right {
+.chat-container-assisstant.right {
   justify-content: flex-end;
 }
 
-.chat-container.left {
+.chat-container-assisstant.left {
   justify-content: flex-start;
 }
 
@@ -373,7 +374,9 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;
-  transform: translateY(-5px); /* Adjust initial position for smooth hover transition */
+  transform: translateY(
+    -5px
+  ); /* Adjust initial position for smooth hover transition */
   margin-top: 5px;
   z-index: 10;
 }

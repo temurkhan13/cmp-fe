@@ -9,8 +9,9 @@ import {
   setCurrentSelectedTitle,
 } from '../../../redux/slices/workspacesSlice';
 import assessmentQnaData from '../../../data/chat/assessmentQnaData';
+import { CiEdit } from 'react-icons/ci';
 
-const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
+const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -39,7 +40,7 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
           const matchingAssessment = filteredFolders[0].assessments.find(
             (assessment) =>
               assessment.report[0].subReport.some((report) => {
-                console.log(assessment.report)
+                console.log(assessment.report);
                 if (report.ReportTitle === title) {
                   return assessment.report[0];
                 }
@@ -99,12 +100,14 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
       <div className="task-list-container">
         <div
           className="progress-bar"
-          style={{ cursor: 'pointer' }}
           onClick={generateAllReports}
+          style={{
+            fontSize: '1.4rem',
+            fontWeight: '500',
+            textAlign: 'center',
+          }}
         >
-          <span style={{ fontSize: '1.4rem', fontWeight: '500' }}>
-            Generate All Reports
-          </span>
+          Select a Report Template
         </div>
 
         {selectedFolder &&
@@ -126,8 +129,7 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
                   <div className="task-info">
                     <span
                       className="task-name"
-                      onClick={handleAssessmentSelect(assessment)
-                      }
+                      onClick={handleAssessmentSelect(assessment)}
                     >
                       {currentReport.ReportTitle
                         ? currentReport.subReport[0].ReportTitle
@@ -160,7 +162,7 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
                         className="complete-button"
                         onClick={() => viewReport(currentReport)}
                       >
-                        Link_Assessment
+                        <CiEdit />
                       </button>
                     </>
                   )}
@@ -174,13 +176,11 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
               const taskColors = getColor(false);
               return (
                 <div className="task-item" key={index}>
-                  <div className="task-info">
-                    <span
-                      className="task-name"
-                      onClick={()=>handleAssessmentSelect(assessment)}
-                    >
-                      {assessment}
-                    </span>
+                  <div
+                    className="task-info"
+                    onClick={() => handleAssessmentSelect(assessment)}
+                  >
+                    <span className="task-name">{assessment}</span>
                     <span
                       className={`task-progress hover-show`}
                       style={{
@@ -191,6 +191,8 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
                         paddingRight: '0.8rem',
                         fontSize: '1.2rem',
                         fontWeight: '500',
+                        position: 'absolute',
+                        right: '0',
                       }}
                     >
                       Not Started yet
@@ -243,7 +245,7 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
                           className="complete-button"
                           onClick={() => viewReport(currentReport)}
                         >
-                          Link_Assessment
+                          <CiEdit />
                         </button>
                       </>
                     )}
@@ -293,6 +295,7 @@ const AssessmentTasks = ({ tasks,handleAssessmentSelect }) => {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            position: relative;
           }
           .task-progress {
             font-size: 0.875rem; 
