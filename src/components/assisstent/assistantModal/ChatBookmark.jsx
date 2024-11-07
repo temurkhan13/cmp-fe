@@ -2,11 +2,14 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import { truncateText } from '../../../utils/helperFunction';
 
 const ChatBookmark = ({ date, messages }) => {
   const [bookmarks, setBookmarks] = useState(
     messages && messages.map(() => false)
   );
+
+  const [expandedTextIndex, setExpandedTextIndex] = useState(null); // State to track expanded text
 
   const toggleBookmark = (index) => {
     setBookmarks((prevBookmarks) =>
@@ -14,6 +17,10 @@ const ChatBookmark = ({ date, messages }) => {
         i === index ? !bookmarked : bookmarked
       )
     );
+  };
+
+  const toggleTextExpansion = (index) => {
+    setExpandedTextIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the expansion of the text
   };
 
   return (
@@ -26,7 +33,6 @@ const ChatBookmark = ({ date, messages }) => {
           messages.map((message, index) => (
             <div className="message" key={index}>
               <div className="date">{message.localDate}</div>
-
               <div className="header-content">
                 <div className="avatar">
                   {/* <img src={message.avatar} alt={`${message.sender} avatar`} /> */}
@@ -35,7 +41,7 @@ const ChatBookmark = ({ date, messages }) => {
                 <div className="content">
                   <div className="header">
                     <div className="sender">{message.from}</div>
-                    {bookmarks[index] ? (
+                    {/* {bookmarks[index] ? (
                       <FaBookmark
                         className="bookmark-icon"
                         onClick={() => toggleBookmark(index)}
@@ -45,11 +51,23 @@ const ChatBookmark = ({ date, messages }) => {
                         className="bookmark-icon"
                         onClick={() => toggleBookmark(index)}
                       />
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
-              <div className="bookmark-text">{message.text}</div>
+              <div className="bookmark-text">
+                {expandedTextIndex === index
+                  ? message.text
+                  : truncateText(message.text, 300)}{' '}
+                {/* Show full or truncated text based on state */}
+              </div>
+              <button
+                className="see-more-btn"
+                onClick={() => toggleTextExpansion(index)}
+              >
+                {expandedTextIndex === index ? 'See Less' : 'See More'}
+              </button>{' '}
+              {/* Toggle the button text */}
               <div className="saved-by">
                 <span> Saved by </span>
                 You
@@ -64,7 +82,7 @@ const ChatBookmark = ({ date, messages }) => {
             border-bottom: 1px solid #ddd;
             &:hover {
               background-color: #f1f1f1;
-              cursor: pointer;
+              // cursor: pointer;
             }
           }
           .date {
@@ -103,16 +121,23 @@ const ChatBookmark = ({ date, messages }) => {
             font-size: 1.5rem;
             font-weight: 500;
           }
-          .bookmark-icon {
-            cursor: pointer;
-            font-size: 1.5rem;
-          }
           .bookmark-text {
             margin-bottom: 0.5rem;
             border: 2px solid lightgray;
             font-size: 1.4rem;
             padding: 1rem;
             border-radius: 1rem;
+          }
+          .see-more-btn {
+            background: none;
+            border: none;
+            display:flex;
+            align-items: flex-end;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem 0;
+            text-align: left;
           }
           .saved-by {
             font-size: 1.1rem;
