@@ -130,16 +130,15 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
               visible={activeIcon === 'search'}
               onClose={closeActiveIcon}
             />
-          )}
-          <UserDropdown
-            activeIcon={activeIcon}
-            handleIconClick={handleIconClick}
-          />
-          <CustomDropdown
+          )} */}
+          {/* <UserDropdown
             activeIcon={activeIcon}
             handleIconClick={handleIconClick}
           /> */}
-
+          {/* <CustomDropdown
+            activeIcon={activeIcon}
+            handleIconClick={handleIconClick}
+          /> */}
           {/*<div className="shareBtn" onClick={handleOpenShareModal}>*/}
           {/*  <FaUserPlus />*/}
           {/*  <span>Share</span>*/}
