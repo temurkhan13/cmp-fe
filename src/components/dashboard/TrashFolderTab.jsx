@@ -6,7 +6,12 @@ import { FaRegFolderOpen } from 'react-icons/fa6';
 import { FaTrash } from 'react-icons/fa';
 import { MdDelete, MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import DeleteModal from './DeleteModal';
-import {} from '../../redux/slices/trashSlice'; // Import actions
+import {
+  restoreFromTrash,
+  deleteFromTrashAsync,
+  deleteFromTrash,
+  fetchTrashItemsAsync,
+} from '../../redux/slices/trashSlice'; // Import actions
 
 const FolderCard = ({ folder }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -20,23 +25,38 @@ const FolderCard = ({ folder }) => {
     setShowDropdown(false);
   };
 
-  const handleThreeDotsClick = () => setShowDropdown(!showDropdown);
+  const handleThreeDotsClick = () => setShowDropdown((prev) => !prev);
 
-  // Dispatch the restoreFolder action
-  const handleRestoreClick = () => {
-    // dispatch(restoreFolder(folder._id));
+  const handleRestoreClick = async () => {
+    try {
+      await dispatch(restoreFromTrash({ type: 'folder', id: folder._id }));
+      dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
+      setShowDropdown(false);
+    } catch (error) {
+      console.error('Error restoring workspace:', error);
+    }
   };
 
-  // Show delete modal
   const handleDeleteClick = () => {
     setShowDropdown(false);
     setShowDeleteModal(true);
   };
 
-  // Confirm delete action
-  const handleConfirmDelete = () => {
-    setShowDeleteModal(false);
-    // dispatch(deleteFolderPermanently(folder._id)); // Dispatch deleteFolderPermanently action
+  const handleConfirmDelete = async (id) => {
+    try {
+      setShowDeleteModal(false);
+      const resultAction = await dispatch(
+        deleteFromTrash({ type: 'folder', id: folder._id })
+      );
+      dispatch(fetchTrashItemsAsync());
+      if (deleteFromTrashAsync.rejected.match(resultAction)) {
+        console.error('Failed to delete item:', resultAction.error.message);
+      } else {
+        dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
+      }
+    } catch (error) {
+      console.error('Error dispatching deleteFromTrashAsync:', error);
+    }
   };
 
   const handleCancelDelete = () => setShowDeleteModal(false);
@@ -62,7 +82,7 @@ const FolderCard = ({ folder }) => {
         <div className="dropdown-menu">
           <div className="dropdown-item" onClick={handleRestoreClick}>
             <MdOutlineSettingsBackupRestore size={18} />
-            Restore
+            <p>Restore</p>
           </div>
           <div className="dropdown-item" onClick={handleDeleteClick}>
             <MdDelete size={18} />
@@ -80,16 +100,29 @@ const FolderCard = ({ folder }) => {
 
       <style>{`
         .folder-card {
-          display: flex;
-          align-items: center;
-          background: #f5f5f5;
-          border-radius: 1rem;
-          padding: 1rem;
-          margin: 1rem;
-          width:35rem;
+           display: flex;
+          flex-direction: row; /* Align items horizontally */
+          flex-wrap: wrap; /* Wrap items if there's no space */
+          gap: 15px; /* Space between items */
+          padding: 0;
           position: relative;
-          box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
-          transition: background 0.3s ease;
+          margin: 0 0 0 50px;
+          list-style: none;
+        }
+        .folder-card {
+          display: flex;
+          flex-direction: row; /* Folder icon on the left, content on the right */
+          align-items: center; /* Vertically align content */
+          justify-content: space-between;
+          width: 30%; /* Adjust width as needed for the layout */
+          min-width: 280px; /* Ensure items don't get too narrow */
+          max-width: 400px; /* Ensure items don't get too wide */
+          padding: 15px 20px; /* Adjusted padding */
+          background-color: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          margin-top: 10px;
+          transition: box-shadow 0.3s, background-color 0.3s; /* Smooth transitions */
         }
 
         .folder-card:hover {
@@ -108,18 +141,18 @@ const FolderCard = ({ folder }) => {
         }
 
         .folder-details {
-          display:flex;
-          flex-direction:column;
-          align-items:flex-start;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
         }
 
         .folder-name {
           font-weight: 600;
           margin-bottom: 0.5rem;
           font-size: 1.4rem;
-          display:flex;
-          align-items:center;
-          gap:0.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
 
         .three-dots {
@@ -136,16 +169,16 @@ const FolderCard = ({ folder }) => {
           border-radius: 1rem;
           box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
           z-index: 10;
-          font-size:1.4rem;
-          border:none;
+          font-size: 1.4rem;
+          border: none;
         }
 
         .dropdown-item {
           padding: 0.8rem 1.6rem;
           cursor: pointer;
-          display:flex;
+          display: flex;
           align-items: center;
-          gap:0.5rem;
+          gap: 0.5rem;
         }
 
         .dropdown-item:hover {
@@ -178,6 +211,8 @@ const TrashFolderTab = () => {
         .folder-content {
           display: flex;
           flex-direction: column;
+          justify-content: center;
+          margin: 0 auto;
           align-items: center;
           text-align: center;
           color: #666;
