@@ -13,9 +13,12 @@ const HeroSection = () => {
         <h1 class="hero-text">
           Transforming the <br /> future of <br /> Documentation
         </h1>
-        <button class="demo-button" onClick={() => {
-          navigate('/sign-up');
-        }}>
+        <button
+          class="demo-button"
+          onClick={() => {
+            navigate('/sign-up');
+          }}
+        >
           Get Free Demo <FaArrowRight className="rotate-icon" />
         </button>
       </div>
@@ -102,7 +105,7 @@ const HeroSection = () => {
       @media (min-width: 1280px) {
           .hero-text {
               font-size: 90px;
-              line-height: 90px;
+              line-height: 100px;
           }
           .content{
           margin-top: 100px;

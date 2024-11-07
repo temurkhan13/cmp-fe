@@ -10,9 +10,7 @@ const Accordian = (props) => {
         {title}
         <FaArrowRight className={isOpen ? 'icon-rotate' : 'icon'} />
       </div>
-      <div className={`accordion-body ${isOpen ? 'open' : ''}`}>
-        {desc}
-      </div>
+      <div className={`accordion-body ${isOpen ? 'open' : ''}`}>{desc}</div>
       <style>
         {`
           .accordion {
@@ -37,6 +35,7 @@ const Accordian = (props) => {
             background-color: #fff;
             border-bottom: 1px solid #ddd;
             transition: background-color 0.3s ease;
+            position: relative;
           }
 
           .accordion-header:hover {
@@ -60,9 +59,14 @@ const Accordian = (props) => {
           .icon {
             font-size: 18px;
             transition: transform 0.3s ease-out;
+            position: absolute;
+            right: 15px;
           }
 
           .icon-rotate {
+            font-size: 18px;
+            position: absolute;
+            right: 15px;
             transform: rotate(90deg);
           }
         `}
