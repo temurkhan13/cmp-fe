@@ -117,7 +117,7 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
             Improve Response
           </span>
 
-          <span
+          {/* <span
             className={activeIcon === 'search' ? 'active' : ''}
             onClick={() => handleIconClick('search')}
           >
@@ -130,15 +130,15 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
               visible={activeIcon === 'search'}
               onClose={closeActiveIcon}
             />
-          )}
-          <UserDropdown
+          )} */}
+          {/* <UserDropdown
             activeIcon={activeIcon}
             handleIconClick={handleIconClick}
-          />
-          <CustomDropdown
+          /> */}
+          {/* <CustomDropdown
             activeIcon={activeIcon}
             handleIconClick={handleIconClick}
-          />
+          /> */}
           {/*<div className="shareBtn" onClick={handleOpenShareModal}>*/}
           {/*  <FaUserPlus />*/}
           {/*  <span>Share</span>*/}
