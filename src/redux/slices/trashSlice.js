@@ -57,7 +57,7 @@ export const deleteFromTrashAsync = createAsyncThunk(
   async ({ type, id }, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const url = `${config.apiURL}/workspace/${type}/${id}/delete`;
+      const url = `${config.apiURL}/workspace/${type}/${id}/deleteFromTrash`;
       const response = await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,

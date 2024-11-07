@@ -309,6 +309,8 @@ const SitemapLayoutFlow = ({ id }) => {
     }
   };
 
+  console.log('nodesj -> ', nodes);
+
   const linkWorkSpaceAndSiteMap = async (sitemapId) => {
     const folderId = selectedWorkspace.folders.find(
       (folder) => folder?.isActive
@@ -391,6 +393,8 @@ const SitemapLayoutFlow = ({ id }) => {
         );
       });
     });
+    // onLayout('LR');
+    setLayouted(true);
   };
 
   const onPatch = async (
@@ -474,9 +478,6 @@ const SitemapLayoutFlow = ({ id }) => {
       });
     });
   };
-  useEffect(() => {
-    getSitemap();
-  }, [id]);
 
   useEffect(() => {
     if (!layouted) {
@@ -486,6 +487,10 @@ const SitemapLayoutFlow = ({ id }) => {
       setLayouted(true);
     }
   }, [layouted, onLayout, nodes, edges]);
+
+  useEffect(() => {
+    getSitemap();
+  }, [id]);
 
   return (
     <ReactFlow
@@ -585,7 +590,7 @@ const SitemapLayoutFlow = ({ id }) => {
                       padding: '5px',
                       borderRadius: '6px',
                       fontSize: '16px',
-                      fontWeight: 'bold',
+                      fontWeight: '500',
                       marginTop: '5px',
                     }}
                     disabled={isLoading}

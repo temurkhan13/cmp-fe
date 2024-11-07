@@ -18,12 +18,18 @@ import {
   toggleFolderActivation,
 } from '../../redux/slices/folderSlice';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
-import { AssistantSidebar, MessagesSection, NewChat } from '../../components/assisstent/index.js';
+import {
+  AssistantSidebar,
+  MessagesSection,
+  NewChat,
+} from '../../components/assisstent/index.js';
 
 const AiAssistantChat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams();
-  const userId = useSelector((state) => state.auth.user?.id) || localStorage.getItem('userId');
+  const userId =
+    useSelector((state) => state.auth.user?.id) ||
+    localStorage.getItem('userId');
   const { data: workspaces, error } = useGetWorkspacesQuery(userId);
   const selectedWorkspace = useSelector(selectWorkspace);
   const allWorkspaces = useSelector(selectAllWorkspaces);
@@ -35,7 +41,10 @@ const AiAssistantChat = () => {
   const [isFetched, setIsFetched] = useState(false);
 
   // Memoize active workspace for optimization
-  const activeWorkspace = useMemo(() => selectedWorkspace || allWorkspaces?.[0], [selectedWorkspace, allWorkspaces]);
+  const activeWorkspace = useMemo(
+    () => selectedWorkspace || allWorkspaces?.[0],
+    [selectedWorkspace, allWorkspaces]
+  );
 
   const showError = (message) => {
     setNotificationMessage(message);
@@ -47,11 +56,19 @@ const AiAssistantChat = () => {
       if (!workspaceId) return;
 
       dispatch(setSelectedFolder(folder));
-      dispatch(toggleFolderActivation({ workspaceId, folderId: folder.id, isActive: true }));
+      dispatch(
+        toggleFolderActivation({
+          workspaceId,
+          folderId: folder.id,
+          isActive: true,
+        })
+      );
       try {
-        await dispatch(fetchFolderData({ workspaceId, folderId: folder.id })).unwrap();
+        await dispatch(
+          fetchFolderData({ workspaceId, folderId: folder.id })
+        ).unwrap();
       } catch {
-        showError('Failed to fetch folder data.');
+        console.log('Failed to fetch folder data.');
       }
     },
     [dispatch, activeWorkspace]
@@ -60,10 +77,14 @@ const AiAssistantChat = () => {
   const handleWorkspaceChange = useCallback(
     (workspace) => {
       dispatch(setSelectedWorkspace(workspace));
-      dispatch(updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true }));
+      dispatch(
+        updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
+      );
       dispatch(resetFolderState());
 
-      const firstFolder = workspace.folders.find((folder) => folder.isActive) || workspace.folders[0];
+      const firstFolder =
+        workspace.folders.find((folder) => folder.isActive) ||
+        workspace.folders[0];
       if (firstFolder) handleFolderSelection(firstFolder, workspace.id);
     },
     [dispatch, handleFolderSelection]
@@ -76,12 +97,19 @@ const AiAssistantChat = () => {
 
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        const initialWorkspace = dashboardStats.workspaces.find((ws) => ws.isActive) || dashboardStats.workspaces[0];
+        const initialWorkspace =
+          dashboardStats.workspaces.find((ws) => ws.isActive) ||
+          dashboardStats.workspaces[0];
 
-        if (!selectedWorkspace || selectedWorkspace.id !== initialWorkspace.id) {
+        if (
+          !selectedWorkspace ||
+          selectedWorkspace.id !== initialWorkspace.id
+        ) {
           handleWorkspaceChange(initialWorkspace);
         } else if (selectedWorkspace?.folders?.length > 0) {
-          const firstFolder = selectedWorkspace.folders.find((folder) => folder.isActive) || selectedWorkspace.folders[0];
+          const firstFolder =
+            selectedWorkspace.folders.find((folder) => folder.isActive) ||
+            selectedWorkspace.folders[0];
           handleFolderSelection(firstFolder, selectedWorkspace.id);
         }
 
@@ -92,12 +120,18 @@ const AiAssistantChat = () => {
     };
 
     initializeWorkspaceAndFolder();
-  }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange, handleFolderSelection]);
+  }, [
+    dispatch,
+    isFetched,
+    selectedWorkspace,
+    handleWorkspaceChange,
+    handleFolderSelection,
+  ]);
 
   // Show error if no folders available in the selected workspace
   useEffect(() => {
     if (activeWorkspace?.folders?.length === 0) {
-      showError("No folders available in the selected workspace.");
+      showError('No folders available in the selected workspace.');
     }
   }, [activeWorkspace]);
 
@@ -109,7 +143,10 @@ const AiAssistantChat = () => {
 
   return (
     <div className="assessmentChat">
-      <Components.Common.Header activeWorkspace={activeWorkspace} workspaces={allWorkspaces} />
+      <Components.Common.Header
+        activeWorkspace={activeWorkspace}
+        workspaces={allWorkspaces}
+      />
 
       <section>
         <NewChat />
