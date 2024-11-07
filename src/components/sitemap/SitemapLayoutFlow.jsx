@@ -253,7 +253,7 @@ const SitemapLayoutFlow = ({ id }) => {
               { x: 0, y: 0 },
               node.heading,
               [],
-              res.stages.find(({ stage }) => stage === node.heading)._id,
+              node._id,
               siteMapId,
               false
             );
@@ -408,9 +408,10 @@ const SitemapLayoutFlow = ({ id }) => {
       return;
     }
     setIsLoading(true);
+    const parsedUserData = userData ? JSON.parse(userData) : null;
+
     const payload = {
-      user_id: '11',
-      chat_id: '22',
+      user_id: parsedUserData?.id,
       message: prompt,
       sitemapName: stageLabel,
       request: stageLabel === 'Playbook Introduction' ? 'POST' : 'PATCH',
@@ -503,7 +504,7 @@ const SitemapLayoutFlow = ({ id }) => {
       edgeTypes={edgeTypes}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
-      defaultZoom={0.2} // Default initial zoom level
+      // defaultzoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
         <button
