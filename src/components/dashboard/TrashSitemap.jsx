@@ -1,3 +1,38 @@
+import { FaTrash } from 'react-icons/fa';
+
+const TrashFolderTab = () => {
+  return (
+    <div className="folder-content">
+      <FaTrash size={50} />
+      <p className="trash-activity">No recent trash here</p>
+      <p>
+        Any file you trash will end up here. You&apos;ll have 30 days <br />
+        to restore them before they are automatically deleted <br />
+        from your Trash.
+      </p>
+      <style>{`
+        .folder-content {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin: 0 auto;
+          align-items: center;
+          text-align: center;
+          color: #666;
+        }
+        p {
+          margin: 0.3125rem 0;
+          font-size: 1.2rem;
+        }
+        .trash-activity {
+          font-size: 1.4rem;
+          font-weight: 600;
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const TrashSitemap = () => {
   const sitemaps = [
     { id: 1, name: 'Home Page', type: 'Landing', dateDeleted: '2024-09-05' },
@@ -7,13 +42,17 @@ const TrashSitemap = () => {
 
   return (
     <div className="sitemap-container">
-      {sitemaps.map((sitemap) => (
-        <div className="sitemap-card" key={sitemap.id}>
-          <h3>{sitemap.name}</h3>
-          <p>Type: {sitemap.type}</p>
-          <p>Date Deleted: {sitemap.dateDeleted}</p>
-        </div>
-      ))}
+      {sitemaps.length > 0 ? (
+        sitemaps.map((sitemap) => (
+          <div className="sitemap-card" key={sitemap.id}>
+            <h3>{sitemap.name}</h3>
+            <p>Type: {sitemap.type}</p>
+            <p>Date Deleted: {sitemap.dateDeleted}</p>
+          </div>
+        ))
+      ) : (
+        <TrashFolderTab />
+      )}
 
       <style>{`
         .sitemap-container {

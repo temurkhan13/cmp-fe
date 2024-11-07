@@ -722,17 +722,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           <div className="defaultPage">
             <div className="assessmentDefaultContianer">
               <p className="assessmentDefaultHeading">
-                {selectedAssessment
-                  ? selectedAssessment
-                  : 'Change Management -Assesment'}
-                {/* {selectedAssessmentTitle.report?.[0]?.subReport?.[0]
-                  ?.ReportTitle ||
-                  // selectedAssessmentTitle.ReportTitle ||
+                {selectedAssessment ||
+                  selectedAssessmentTitle.report?.[0]?.subReport?.[0]
+                    ?.ReportTitle ||
                   selectedAssessmentTitle ||
-                  (assessmentQnaData.length > 0
-                    ? assessmentQnaData[0]
-                    : '')}{' '} */}
+                  (assessmentQnaData.length > 0 ? assessmentQnaData[0] : '')}
               </p>
+
               <p className="assessmentDefaultSubHeading">
                 Evaluate the key aspects of a change initiative: objectives,
                 benefits, risks, and success metrics.
