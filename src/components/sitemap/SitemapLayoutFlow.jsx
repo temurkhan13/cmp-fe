@@ -393,6 +393,8 @@ const SitemapLayoutFlow = ({ id }) => {
         );
       });
     });
+    // onLayout('LR');
+    setLayouted(true);
   };
 
   const onPatch = async (
@@ -587,7 +589,7 @@ const SitemapLayoutFlow = ({ id }) => {
                       padding: '5px',
                       borderRadius: '6px',
                       fontSize: '16px',
-                      fontWeight: 'bold',
+                      fontWeight: '500',
                       marginTop: '5px',
                     }}
                     disabled={isLoading}

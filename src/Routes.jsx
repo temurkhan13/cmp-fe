@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthLayout, PlainsLayout } from './layout';
@@ -5,6 +6,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import Components from './components';
 import data from './data';
 import Layout from './components/LandingPage/services/Layout';
+import Loader from './components/common/Loader';
 
 const Routess = () => {
   return (
@@ -13,7 +15,14 @@ const Routess = () => {
         <Components.Feature.ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={<LandingPage />} />
+            <Route
+              path="/"
+              element={
+                <Suspense fallback={<Loader />}>
+                  <LandingPage />
+                </Suspense>
+              }
+            />
           </Route>
           <Route path="" element={<AuthLayout />}>
             {data.routes.authRoutesData.map((el) => (

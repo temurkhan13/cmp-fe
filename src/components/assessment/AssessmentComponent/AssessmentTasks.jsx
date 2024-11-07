@@ -191,6 +191,8 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
                         paddingRight: '0.8rem',
                         fontSize: '1.2rem',
                         fontWeight: '500',
+                        position: 'absolute',
+                        right: '0',
                       }}
                     >
                       Not Started yet
@@ -293,6 +295,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            position: relative;
           }
           .task-progress {
             font-size: 0.875rem; 

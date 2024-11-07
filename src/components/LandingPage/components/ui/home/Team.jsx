@@ -24,15 +24,9 @@ const Team = () => {
             </h2>
           </div>
           <div className="div2">
-            <h2>
-              <img src={teamslide1} alt="" />
-            </h2>
-            <h2>
-              <img src={teamslide2} alt="" />
-            </h2>
-            <h2>
-              <img src={teamslide1} alt="" />
-            </h2>
+            <img src={teamslide1} alt="" />
+            <img src={teamslide2} alt="" />
+            <img src={teamslide1} alt="" />
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ const PersonalInfo = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.user);
 
-  const [avatar, setAvatar] = useState(currentUser?.photoPath || ''); // default avatar or current photo
+  const [avatar, setAvatar] = useState(currentUser?.photoPath || '');
   const [firstName, setFirstName] = useState(currentUser?.firstName || '');
   const [lastName, setLastName] = useState(currentUser?.lastName || '');
   const [email, setEmail] = useState(currentUser?.email || '');
@@ -19,7 +19,15 @@ const PersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
 
-  // Track changes to fields
+  // Sync local state with currentUser from Redux store whenever it changes
+  useEffect(() => {
+    setAvatar(currentUser?.photoPath || '');
+    setFirstName(currentUser?.firstName || '');
+    setLastName(currentUser?.lastName || '');
+    setEmail(currentUser?.email || '');
+    setCompanyName(currentUser?.companyName || '');
+  }, [currentUser]);
+
   useEffect(() => {
     setHasChanged(
       firstName !== currentUser?.firstName ||
@@ -70,11 +78,9 @@ const PersonalInfo = () => {
 
   const validateForm = () => {
     const errors = {};
-
     if (email && !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       errors.email = 'Invalid email address.';
     }
-
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -84,7 +90,6 @@ const PersonalInfo = () => {
 
     if (validateForm()) {
       setLoading(true);
-
       const updatedUserData = {
         firstName,
         lastName,
@@ -92,10 +97,7 @@ const PersonalInfo = () => {
         companyName,
       };
 
-      // If no image selected, use the default avatar or generated initials image
-      const imageToSend = selectedFile
-        ? selectedFile
-        : dataURLToFile(avatar, 'initials.png');
+      const imageToSend = selectedFile ? selectedFile : null;
 
       const formData = {
         userId: currentUser.id,
@@ -108,6 +110,11 @@ const PersonalInfo = () => {
 
         if (updateUserAsync.fulfilled.match(result)) {
           setSuccessMessage('Changes have been updated successfully!');
+          // Directly update Redux store's user data after successful update
+          dispatch({
+            type: 'auth/updateUser',
+            payload: { ...currentUser, ...updatedUserData, photoPath: avatar },
+          });
         } else {
           setErrors({ form: 'Failed to update user information.' });
         }
@@ -118,18 +125,6 @@ const PersonalInfo = () => {
         setTimeout(() => setSuccessMessage(''), 3000);
       }
     }
-  };
-
-  // Helper function to convert Base64 to File
-  const dataURLToFile = (dataUrl, filename) => {
-    const arr = dataUrl.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    const u8arr = new Uint8Array(bstr.length);
-    for (let i = 0; i < bstr.length; i++) {
-      u8arr[i] = bstr.charCodeAt(i);
-    }
-    return new File([u8arr], filename, { type: mime });
   };
 
   return (
