@@ -537,6 +537,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const handleCopyMessage = (text) => {
     navigator.clipboard.writeText(text);
   };
+
+  const handleClose = () => {
+    setShowModal(false); // Set to false to hide the modal
+  };
   console.log('show modal -> ', showModal);
 
   return (
@@ -855,8 +859,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
               height="100vw"
             />
           }
+          onClose={handleClose} // Change `onclose` to `onClose` here
         />
       )}
+
       {/* {isStartReportGenerated && (
             <AssessmentModal
               title={'something'}

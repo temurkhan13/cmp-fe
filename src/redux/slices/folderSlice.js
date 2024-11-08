@@ -29,6 +29,10 @@ export const fetchFolderData = createAsyncThunk(
 export const toggleFolderActivation = createAsyncThunk(
   'folder/toggleFolderActivation',
   async ({ workspaceId, folderId, isActive }, { rejectWithValue }) => {
+    if (!workspaceId || !folderId) {
+      return rejectWithValue('Workspace ID or Folder ID is missing.');
+    }
+
     try {
       const token = localStorage.getItem('token');
       const response = await axios.patch(
@@ -41,9 +45,11 @@ export const toggleFolderActivation = createAsyncThunk(
           },
         }
       );
-      return { folderId, isActive: response.data.isActive }; // Return folderId and isActive status
+      return { folderId, isActive: response.data.isActive };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
     }
   }
 );
@@ -52,7 +58,7 @@ const folderSlice = createSlice({
   name: 'folder',
   initialState: {
     selectedFolder: null,
-    folderData: null,  // Ensure folderData is initialized as null
+    folderData: null, // Ensure folderData is initialized as null
     loading: false,
     error: null,
   },
