@@ -115,7 +115,7 @@ const AiAssistantChat = () => {
 
         setIsFetched(true);
       } catch {
-        showError('Failed to fetch dashboard stats.');
+        console.log('Failed to fetch dashboard stats.');
       }
     };
 
@@ -131,7 +131,7 @@ const AiAssistantChat = () => {
   // Show error if no folders available in the selected workspace
   useEffect(() => {
     if (activeWorkspace?.folders?.length === 0) {
-      showError('No folders available in the selected workspace.');
+      console.log('No folders available in the selected workspace.');
     }
   }, [activeWorkspace]);
 

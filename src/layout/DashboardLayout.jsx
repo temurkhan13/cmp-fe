@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // import useLocation
 import PropTypes from 'prop-types';
 import 'boxicons/css/boxicons.min.css';
 import '../../scss/modules/dashboard/dashboardLayout.scss';
@@ -18,35 +18,32 @@ import { IoSettingsSharp } from 'react-icons/io5';
 import { GiArtificialHive } from 'react-icons/gi';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
+
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation(); // Use location to get current path
   const [isOpen, setIsOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('user')); // Parse the user from localStorage
-        const userId = user ? user.id : null; // Extract user ID
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userId = user ? user.id : null;
 
         if (userId) {
-          await dispatch(getUser(userId)); // Dispatch action to get user data
+          await dispatch(getUser(userId));
         }
       } catch (error) {
         console.error('Error fetching user data', error);
       }
     };
-    fetchUserData(); // Call the async function inside useEffect
-  }, []); // Empty dependency array to run only once
+    fetchUserData();
+  }, [dispatch]);
 
   const Menu = [
-    {
-      path: '/dashboard',
-      name: 'Dashboard',
-      Icon: <MdDashboard />,
-    },
+    { path: '/dashboard', name: 'Dashboard', Icon: <MdDashboard /> },
     {
       path: '/dashboard/AiAssistant',
       name: 'Ai Assistant',
@@ -72,16 +69,8 @@ const DashboardLayout = ({ children }) => {
       name: 'Help Center',
       Icon: <AiFillQuestionCircle />,
     },
-    {
-      path: '/dashboard/feedback',
-      name: 'Feedback',
-      Icon: <RiFeedbackFill />,
-    },
-    {
-      path: '/dashboard/Trash',
-      name: 'Trash',
-      Icon: <FaTrash />,
-    },
+    { path: '/dashboard/feedback', name: 'Feedback', Icon: <RiFeedbackFill /> },
+    { path: '/dashboard/Trash', name: 'Trash', Icon: <FaTrash /> },
     {
       path: '/dashboard/settings',
       name: 'Settings',
@@ -100,6 +89,7 @@ const DashboardLayout = ({ children }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const handlePlanRoute = () => {
     navigate('/choose-plan');
   };
@@ -117,27 +107,12 @@ const DashboardLayout = ({ children }) => {
                 <img
                   src={Sidebarlogo}
                   alt="logo"
-                  style={{
-                    borderRadius: '10px',
-                  }}
+                  style={{ borderRadius: '10px' }}
                 />
               </div>
-
               <div className="logo_text">
-                <p
-                  style={{
-                    fontSize: '20px',
-                    color: 'black',
-                  }}
-                >
-                  ChangeAI
-                </p>
-                <p
-                  style={{
-                    fontSize: '10px',
-                    color: 'gray',
-                  }}
-                >
+                <p style={{ fontSize: '20px', color: 'black' }}>ChangeAI</p>
+                <p style={{ fontSize: '10px', color: 'gray' }}>
                   By InnovationsWorks
                 </p>
               </div>
@@ -155,11 +130,10 @@ const DashboardLayout = ({ children }) => {
             <Link
               to={path}
               key={index}
-              style={{
-                textDecoration: 'none',
-              }}
+              style={{ textDecoration: 'none' }}
+              className={location.pathname === path ? 'active-link' : ''}
             >
-              <li>
+              <li className="link_namee">
                 <a>
                   <i style={{ color: 'gray' }}>{Icon}</i>
                   <span className="link_name">{name}</span>
@@ -173,7 +147,6 @@ const DashboardLayout = ({ children }) => {
         <div className="upgrade-plan">
           <button
             className="upgrade-button"
-            // onClick={openModal}
             onClick={handlePlanRoute}
             style={{
               padding: isOpen ? '1.5rem 3rem' : '1rem',
@@ -206,6 +179,17 @@ const DashboardLayout = ({ children }) => {
 
       <section className="home-section">{children}</section>
       <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
+
+      <style>{`
+        .navlist .active-link {
+          background-color: #f0f0f0; /* Active link background color */
+          color: #00316f;
+          font-weight: bold;
+        }
+        .navlist .active-link .link_namee {
+          background-color: #f0f0f0; /* Active link text color */
+        }
+      `}</style>
     </>
   );
 };

@@ -54,7 +54,7 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
         resetForm();
         onFolderUpdate(); // Notify the parent component to refresh folder data
       } catch (error) {
-        showError('Failed to add Project.');
+        console.log('Failed to add Project.');
       }
     },
     [addFolder, activeWorkspace?.id, onFolderUpdate]
@@ -76,12 +76,12 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
               Projects
             </p>
           </div>
-          <div className="center-buttons">
+          <div>
             <button
               className="assiss-btn"
               onClick={() => setIsNewFolderModalOpen(true)}
             >
-              New Project <AiOutlinePlus className="icon" />
+              New Project <AiOutlinePlus />
             </button>
           </div>
         </div>

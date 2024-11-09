@@ -26,6 +26,30 @@ export const fetchFolderData = createAsyncThunk(
 );
 
 // Thunk to toggle folder activation status
+// export const toggleFolderActivation = createAsyncThunk(
+//   'folder/toggleFolderActivation',
+//   async ({ workspaceId, folderId, isActive }, { rejectWithValue }) => {
+//     try {
+//       const token = localStorage.getItem('token');
+//       const response = await axios.patch(
+//         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
+//         { isActive },
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             'Content-Type': 'application/json',
+//           },
+//         }
+//       );
+//       console.log("Response ",response.data)
+//       return { folderId, isActive: response.data.isActive }; // Return folderId and isActive status
+//     } catch (error) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   }
+// );
+
+
 export const toggleFolderActivation = createAsyncThunk(
   'folder/toggleFolderActivation',
   async ({ workspaceId, folderId, isActive }, { rejectWithValue }) => {
@@ -41,7 +65,18 @@ export const toggleFolderActivation = createAsyncThunk(
           },
         }
       );
-      return { folderId, isActive: response.data.isActive }; // Return folderId and isActive status
+
+      console.log("Response:", response.data);
+
+      // Extract the `isReportGenerated` values from assessments.report list
+      const reports = response.data.assessments.flatMap(assessment =>
+        assessment.report.map(report => ({
+          isReportGenerated: report.isReportGenerated,
+          ReportTitle: report.ReportTitle,
+        }))
+      );
+
+      return { folderId, reports, response }; // Return the folderId and reports array
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

@@ -103,15 +103,20 @@ const WordReportTemplate = ({ content, title }) => {
     <div>
       <CoverPageContainer>
         <div className="header">
-          <img src={Sidebarlogo} alt="Logo" className="logo" />
+          <img
+            style={{ width: '100%', height: '100vh' }}
+            src={Sidebarlogo}
+            alt="Logo"
+            className="logo"
+          />
         </div>
-        <h1>{title}</h1>
+        {/* <h1>{title}</h1>
         <div className="footer">
           <p>1234 Street Name</p>
           <p>City, State, ZIP</p>
           <p>(123) 456-7890</p>
           <p>www.yourwebsite.com</p>
-        </div>
+        </div> */}
       </CoverPageContainer>
       {pages.map((pageContent, index) => (
         <ContentPageContainer
@@ -120,7 +125,7 @@ const WordReportTemplate = ({ content, title }) => {
         />
       ))}
       <EndingPageContainer>
-        <h1>Ending Page</h1>
+        <h1>Ending Pagee</h1>
       </EndingPageContainer>
     </div>
   );

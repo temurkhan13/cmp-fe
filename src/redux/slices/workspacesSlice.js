@@ -11,7 +11,7 @@ export const updateWorkspaceStatus = createAsyncThunk(
       const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${config.apiURL}/workspace/${workspaceId}`,
-        { isActive },
+       { isActive },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -19,9 +19,10 @@ export const updateWorkspaceStatus = createAsyncThunk(
           },
         }
       );
+      console.log("RESPONSEE", response.data)
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue("ERROR", error.response.data);
     }
   }
 );

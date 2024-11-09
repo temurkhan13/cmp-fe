@@ -187,7 +187,7 @@ const AiAssistant = () => {
               }}
             >
               Create Assistant
-              <AiOutlinePlus className="icon" size={18} />
+              <AiOutlinePlus size={18} />
             </button>
           </div>
         </div>
