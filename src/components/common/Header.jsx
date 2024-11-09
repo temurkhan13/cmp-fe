@@ -14,11 +14,12 @@ import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
 import { Questionnaire } from '../../modules/assessment';
 import { useLocation } from 'react-router-dom';
+import { SiteMapNameField } from '../../modules/sitemap/components/SiteMapNameField';
 // import UserProfilePic from '../../assets/chat/user.png';
 
 const searchUser = ['John', 'abigale', 'mosa'];
 
-const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
+const Header = ({ activeWorkspace, workspaces, siteMapId,showInputField=false }) => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
@@ -71,6 +72,14 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
         <Components.Feature.Button className="secondry">
           {activeWorkspace?.workspaceName}
         </Components.Feature.Button>
+       {
+        showInputField ?
+       
+
+        <SiteMapNameField />
+        
+       : null
+       }
         {(siteMapId && location.pathname === '/sitemap/new') ||
         location.pathname === `/sitemap/${siteMapId}` ? (
           <div>

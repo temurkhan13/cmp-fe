@@ -15,6 +15,8 @@ import chatReducer from '../slices/chatSlice';
 import trashReducer from '../slices/trashSlice';
 import folderReducer from '../slices/folderSlice';
 import editorReducer from '../reducers/editorReducer';
+import siteMapReducer from '../slices/sitemapSlice';
+
 
 import { workspaceApi } from '../api/workspaceApi';
 import persistReducer from 'redux-persist/es/persistReducer';
@@ -91,6 +93,7 @@ export const appReducer = combineReducers({
   trash: trashReducer,
   folder: folderReducer,
   editor: editorReducer,
+  siteMap:siteMapReducer,
   // Add additional reducers here if needed
   [workspaceApi.reducerPath]: workspaceApi.reducer, // API reducer for workspaces
 });

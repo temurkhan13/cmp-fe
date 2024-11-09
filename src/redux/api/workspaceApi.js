@@ -517,6 +517,19 @@ export const workspaceApi = createApi({
       }),
       // invalidatesTags: ['Workspace'],
     }),
+
+    // Site Map APIs
+    updateSiteMapame: builder.mutation({
+      query: ({sitemapName,userId,siteMapId}) => ({
+        url: `dpb/sitemap/${siteMapId}`,
+        method: 'PATHC',
+        body: {
+          sitemapName,
+          userId
+        },
+      }),
+      // invalidatesTags: ['Workspace'],
+    }),
   }),
 });
 
@@ -570,4 +583,6 @@ export const {
   useLikeChatMessageMutation,
   useDislikeChatMessageMutation,
   useAddFeedbackMutation,
+  useUpdateSiteMapameMutation
+
 } = workspaceApi;

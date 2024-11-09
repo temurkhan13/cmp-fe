@@ -42,6 +42,8 @@ const Node = ({ data }) => {
   useEffect(() => {
     setNodeData(data.nodeData);
   }, [data.nodeData]);
+
+  console.log("YOOO")
   return (
     <div
       className="node"
@@ -97,10 +99,11 @@ const Node = ({ data }) => {
                   outline: 'none',
                   borderRadius: '6px',
                   padding: '5px',
-                  background: 'white',
+                  background: 'black',
                   color: 'white',
                 }}
-                onBlur={() => {
+                onBlur={(event) => {
+                  alert(event?.target?.value)
                   if (data.label.length !== 0) {
                     setHideLabelInput(true);
                   }

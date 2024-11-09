@@ -23,8 +23,9 @@ import Loading from './Loading';
 import Edge from './Edge';
 import config from '../../config/config';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import { setSiteMapName } from '../../redux/slices/sitemapSlice';
 const nodeTypes = {
   custom: Node,
 };
@@ -61,7 +62,7 @@ const SitemapLayoutFlow = ({ id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const userData = localStorage.getItem('user');
   const authToken = localStorage.getItem('token');
-
+  const dispatch = useDispatch()
   const selectedWorkspace = useSelector(selectWorkspace);
 
   // Navigate to a route so that i  can refetch on reload
@@ -128,6 +129,8 @@ const SitemapLayoutFlow = ({ id }) => {
   );
 
   const updateNodeLabelById = (id, newLabel) => {
+
+    console.log(id,newLabel,"123" )
     setNodes((prev) => [
       ...prev.map((node) => {
         if (node.id === id) {
@@ -223,7 +226,8 @@ const SitemapLayoutFlow = ({ id }) => {
   const getSitemap = async () => {
     if (!id) return;
     const res = await getData(`${config.apiURL}/dpb/sitemap/${id}`);
-
+    dispatch(setSiteMapName(res?.name || ''))
+    console.log(res,"222222226")
     if (res) {
       let siteMapId = res.id;
 
@@ -355,6 +359,7 @@ const SitemapLayoutFlow = ({ id }) => {
         : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
 
     if (stage === 'Playbook Introduction' && res) {
+      dispatch(setSiteMapName(res?.name || ''))
       await linkWorkSpaceAndSiteMap(res?.id);
     }
     setIsLoading(false);

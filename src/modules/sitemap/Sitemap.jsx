@@ -6,7 +6,7 @@ function Sitemap() {
   let param = useParams();
   return (
     <div className="assessmentChat">
-      <Components.Common.Header siteMapId={param?.id} />
+      <Components.Common.Header siteMapId={param?.id} showInputField/>
       <div style={{ height: '90vh', width: '100%' }}>
         <ReactFlowProvider>
           <Components.Sitemap.SitemapLayoutFlow id={param?.id} />
