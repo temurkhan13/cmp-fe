@@ -17,6 +17,7 @@ import {
   FaImages,
   FaUserCircle,
 } from 'react-icons/fa';
+import { RiNewspaperLine } from 'react-icons/ri';
 
 const tasks = [
   { name: 'Assessment Progress', progress: 3 },
@@ -291,7 +292,7 @@ const Assessments = ({ handleAssessmentSelect }) => {
             }`}
             onClick={() => handleIconClick('question')}
           >
-            <FaRegQuestionCircle className="icon" />
+            <RiNewspaperLine className="icon" />
             <span className="tooltip">Assessments</span>
           </span>
           {/* <span
@@ -301,13 +302,13 @@ const Assessments = ({ handleAssessmentSelect }) => {
             <PiClockCounterClockwiseBold className="icon" />
             <span className="tooltip">Version History</span>
           </span> */}
-          <span
+          {/* <span
             className={`iconButton ${activeIcon === 'gallery' ? 'active' : ''}`}
             onClick={() => handleIconClick('gallery')}
           >
             <FaImages className="icon" />
             <span className="tooltip">Images</span>
-          </span>
+          </span> */}
           {/* <span
             className={`iconButton ${activeIcon === 'message' ? 'active' : ''}`}
             onClick={() => handleIconClick('message')}
@@ -346,7 +347,7 @@ const Assessments = ({ handleAssessmentSelect }) => {
           onClose={() => setActiveIcon(null)}
         />
       )} */}
-      {activeIcon === 'gallery' && (
+      {/* {activeIcon === 'gallery' && (
         <SideBarModal
           title="Images"
           bodyContent={
@@ -358,7 +359,7 @@ const Assessments = ({ handleAssessmentSelect }) => {
           }
           onClose={() => setActiveIcon(null)}
         />
-      )}
+      )} */}
       {/* {activeIcon === 'message' && (
         <SideBarModal
           title="Comments"

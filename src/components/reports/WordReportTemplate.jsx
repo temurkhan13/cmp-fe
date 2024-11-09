@@ -1,7 +1,9 @@
-import React from 'react';
 import { marked } from 'marked';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Sidebarlogo from '@assets/dashboard/sidebarLogo.png';
+// Import your cover photo here. Replace the path with the actual path to your cover photo.
+import CoverPhoto from '../../assets/common/coverPhoto.svg';
 
 const Page = styled.div`
   width: 21cm;
@@ -26,7 +28,6 @@ const CoverPageContainer = styled(Page)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: yellowgreen;
   background-color: aliceblue;
   position: relative;
   height: 100vh;
@@ -39,14 +40,13 @@ const CoverPageContainer = styled(Page)`
   }
 
   .logo {
-    max-width: 9.375rem; /* 150px in rem */
+    max-width: 9.375rem;
     height: auto;
   }
 
-  h1 {
-    font-size: 2.25rem; /* 36px in rem */
-    text-align: center;
-    margin: 0;
+  .cover-photo {
+    width: 100%;
+    height: auto;
   }
 
   .footer {
@@ -58,20 +58,28 @@ const CoverPageContainer = styled(Page)`
   }
 `;
 
-const ContentPageContainer = styled(Page)`
-  font-size: 16px;
-  white-space: pre-wrap; /* Preserve white space formatting */
+const FormatPageContainer = styled(Page)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    max-width: 80%;
+    text-align: center;
+  }
 `;
 
-const EndingPageContainer = styled(Page)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  h1 {
-    font-size: 36px;
-  }
+const ContentPageContainer = styled(Page)`
+  font-size: 16px;
+  white-space: pre-wrap;
 `;
 
 const splitContentIntoPages = (htmlContent) => {
@@ -81,7 +89,6 @@ const splitContentIntoPages = (htmlContent) => {
 
   lines.forEach((line) => {
     if (currentPage.length + line.length > 1800) {
-      // Approximate character limit per page
       pages.push(currentPage);
       currentPage = '';
     }
@@ -95,7 +102,7 @@ const splitContentIntoPages = (htmlContent) => {
   return pages;
 };
 
-const WordReportTemplate = ({ content, title }) => {
+const WordReportTemplate = ({ content }) => {
   const htmlContent = marked(content);
   const pages = splitContentIntoPages(htmlContent);
 
@@ -110,25 +117,38 @@ const WordReportTemplate = ({ content, title }) => {
             className="logo"
           />
         </div>
-        {/* <h1>{title}</h1>
-        <div className="footer">
+        {/* Displaying the cover photo */}
+        <img src={CoverPhoto} alt="Cover" className="cover-photo" />
+        {/* <div className="footer">
           <p>1234 Street Name</p>
           <p>City, State, ZIP</p>
           <p>(123) 456-7890</p>
           <p>www.yourwebsite.com</p>
         </div> */}
       </CoverPageContainer>
+
+      {/* <FormatPageContainer>
+        <h2>Document Format</h2>
+        <p>
+          This document follows a structured format with clear sections and
+          proper pagination to ensure readability and compliance with standard
+          documentation practices.
+        </p>
+      </FormatPageContainer> */}
+
       {pages.map((pageContent, index) => (
         <ContentPageContainer
           key={index}
           dangerouslySetInnerHTML={{ __html: pageContent }}
         />
       ))}
-      <EndingPageContainer>
-        <h1>Ending Pagee</h1>
-      </EndingPageContainer>
     </div>
   );
+};
+
+WordReportTemplate.propTypes = {
+  content: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default WordReportTemplate;
