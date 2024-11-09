@@ -107,7 +107,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
             textAlign: 'center',
           }}
         >
-          Select a Report Template
+          Select a Report
         </div>
 
         {selectedFolder &&
