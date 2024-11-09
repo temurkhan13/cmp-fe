@@ -38,8 +38,10 @@ const MyAssessmentComp = () => {
   const [error, setError] = useState(null);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
+  const [assessmentData, setAssessmentData] = useState(false);
 
   const activeWorkspace = useMemo(() => {
+    console.log('The response is ', folderData);
     return (
       selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
       selectedWorkspace?.folders?.[0]
@@ -55,13 +57,15 @@ const MyAssessmentComp = () => {
 
       setCurrentFolder(folder);
       dispatch(setSelectedFolder(folder));
-      dispatch(
+      const assessmentData = await dispatch(
         toggleFolderActivation({
           workspaceId,
           folderId: folder.id,
           isActive: true,
         })
       );
+      console.log('CURRENT FOLDER', assessmentData);
+      setAssessmentData(assessmentData);
 
       try {
         await dispatch(
@@ -177,18 +181,20 @@ const MyAssessmentComp = () => {
         <div className="section">
           <div className="workspace-header"></div>
           <div className="grid">
-            {folderData &&
-              folderData[0]?.assessments?.map((item) => (
-                <DashboardCard
-                  key={item.id}
-                  data={{ ...item, type: 'chat' }}
-                  onRemove={() => handleRemoveChat()}
-                  onClick={() => {
-                    dispatch(setCurrentChatId(item.id));
-                    navigate(`/assessment/chat/${item.id}`);
-                  }}
-                />
-              ))}
+            {assessmentData &&
+              assessmentData.payload.response.data.assessments
+                .filter((item) => item.report[0].isReportGenerated)
+                .map((item) => (
+                  <DashboardCard
+                    key={item._id}
+                    data={{ ...item, type: 'chat' }}
+                    onRemove={() => handleRemoveChat()}
+                    onClick={() => {
+                      dispatch(setCurrentChatId(item._id));
+                      navigate(`/assessment/chat/${item._id}`);
+                    }}
+                  />
+                ))}
           </div>
         </div>
       </div>

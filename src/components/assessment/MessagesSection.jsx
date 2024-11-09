@@ -847,6 +847,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       {showModal && (
         <AssessmentModal
           title={'something'}
+          setShowModal={setShowModal}
           content={
             <Editor
               title={'test'}

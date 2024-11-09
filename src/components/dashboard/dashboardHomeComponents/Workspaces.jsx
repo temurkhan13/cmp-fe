@@ -61,11 +61,9 @@ const Workspaces = ({
   const handleNewWorkspaceSubmit = async (e) => {
     e.preventDefault();
     if (newWorkspaceName.trim().length < 3) {
-      showError('Workspace name must be at least 3 characters long.');
       return;
     }
     if (newWorkspaceDescription.trim() === '') {
-      showError('Workspace description cannot be empty.');
       return;
     }
 
@@ -83,7 +81,7 @@ const Workspaces = ({
       // Show success message
       showSuccess('Workspace created successfully!');
     } catch (error) {
-      showError('Failed to add workspace.');
+      console.log('Failed to add workspace.');
     }
   };
 
@@ -340,7 +338,7 @@ const ModalSections = ({
 
   const handleSaveRename = async () => {
     if (inputValue.trim().length < 3) {
-      showError('Please enter at least 3 characters.');
+      console.log('Please enter at least 3 characters.');
       return;
     }
     try {
@@ -351,7 +349,7 @@ const ModalSections = ({
       setIsRenaming(false);
       showSuccess('Workspace renamed successfully!'); // Show success message
     } catch (error) {
-      showError('Failed to rename workspace.');
+      console.log('Failed to rename workspace.');
     }
   };
 
@@ -365,7 +363,7 @@ const ModalSections = ({
       onWorkspaceUpdated();
       showSuccess('Workspace moved to trash successfully!'); // Show success message
     } catch (error) {
-      showError('Error moving workspace to trash.');
+      console.log('Error moving workspace to trash.');
     }
   };
 

@@ -8,12 +8,22 @@ import { RxCross2 } from 'react-icons/rx';
 import { MdModeEdit } from 'react-icons/md';
 import { IoSync } from 'react-icons/io5';
 
-const AssessmentModal = ({ title, content, onDownload, onClose }) => {
+const AssessmentModal = ({
+  title,
+  content,
+  onDownload,
+  onClose,
+  setShowModal,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModall = () => setShowModal(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    console.log(isModalOpen);
+  };
 
   const handleRegenerate = () => {
     setIsLoading(true);
@@ -47,7 +57,7 @@ const AssessmentModal = ({ title, content, onDownload, onClose }) => {
         </div>
         <div style={{ position: 'relative' }}>
           <h2 className="titlee">{title}</h2>
-          <button className="closeButton" onClick={onClose}>
+          <button className="closeButton" onClick={closeModall}>
             <RxCross2 style={{ fontSize: '2rem' }} />
           </button>
           <div className="content">{content}</div>

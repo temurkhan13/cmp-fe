@@ -38,6 +38,7 @@ const DashboardCard = ({ data = {}, onRemove, onClick }) => {
 
   // Track mounting status to avoid setting state on an unmounted component
   useEffect(() => {
+    console.log('DATAAAAAAAAA:', data);
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
@@ -66,7 +67,11 @@ const DashboardCard = ({ data = {}, onRemove, onClick }) => {
   );
 
   const displayName =
-    data.name || data.title || data.chatTitle || 'Unknown Item';
+    data.name ||
+    data.title ||
+    data.chatTitle ||
+    data.report[0].ReportTitle ||
+    'Unknown Item';
   const createdAt = data.createdAt
     ? new Date(data.createdAt).toLocaleDateString()
     : 'N/A';
