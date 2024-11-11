@@ -18,6 +18,7 @@ import { IoSettingsSharp } from 'react-icons/io5';
 import { GiArtificialHive } from 'react-icons/gi';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
+import { FaFolderTree } from 'react-icons/fa6';
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -56,6 +57,11 @@ const DashboardLayout = ({ children }) => {
     },
     {
       path: '/sitemap/list',
+      name: 'Sitemap',
+      Icon: <FaFolderTree />,
+    },
+    {
+      path: '/digital-playbook/list',
       name: 'Digital Playbook',
       Icon: <BsFilePlayFill />,
     },

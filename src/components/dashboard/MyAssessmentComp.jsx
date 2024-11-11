@@ -32,13 +32,12 @@ const MyAssessmentComp = () => {
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
   const selectedFolder = useSelector(selectSelectedFolder);
-
   const { managerData } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentFolder, setCurrentFolder] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
-  const [assessmentData, setAssessmentData] = useState(false);
+  const [assessmentData, setAssessmentData] = useState(null);
 
   const activeWorkspace = useMemo(() => {
     console.log('The response is ', folderData);
@@ -48,35 +47,38 @@ const MyAssessmentComp = () => {
     );
   }, [selectedWorkspace]);
 
-  const handleFolderSelection = useCallback(
-    async (folder, workspaceId = selectedWorkspace?.id) => {
-      if (!workspaceId) {
-        setError('No workspace ID available.');
-        return;
-      }
+  const handleFolderSelection = async (folder = activeWorkspace) => {
+    if (!folder || !selectedWorkspace?.id) {
+      setError('No folder or workspace ID available.');
+      return;
+    }
 
-      setCurrentFolder(folder);
-      dispatch(setSelectedFolder(folder));
-      const assessmentData = await dispatch(
-        toggleFolderActivation({
-          workspaceId,
-          folderId: folder.id,
-          isActive: true,
-        })
-      );
-      console.log('CURRENT FOLDER', assessmentData);
-      setAssessmentData(assessmentData);
+    const workspaceId = selectedWorkspace.id;
 
-      try {
-        await dispatch(
-          fetchFolderData({ workspaceId, folderId: folder.id })
-        ).unwrap();
-      } catch {
-        setError('Failed to fetch folder data.');
-      }
-    },
-    [dispatch, selectedWorkspace]
-  );
+    setCurrentFolder(folder);
+    dispatch(setSelectedFolder(folder));
+    const assessmentData = await dispatch(
+      toggleFolderActivation({
+        workspaceId,
+        folderId: folder.id,
+        isActive: true,
+      })
+    );
+    console.log('CURRENT FOLDER', assessmentData);
+    setAssessmentData(assessmentData);
+
+    try {
+      await dispatch(
+        fetchFolderData({ workspaceId, folderId: folder.id })
+      ).unwrap();
+    } catch {
+      setError('Failed to fetch folder data.');
+    }
+  };
+
+  useEffect(() => {
+    if (activeWorkspace) handleFolderSelection();
+  }, [activeWorkspace, selectedWorkspace, dispatch]);
 
   const handleWorkspaceChange = useCallback(
     (workspace) => {
@@ -89,9 +91,9 @@ const MyAssessmentComp = () => {
       const firstFolder =
         workspace.folders.find((folder) => folder.isActive) ||
         workspace.folders[0];
-      handleFolderSelection(firstFolder, workspace.id);
+      handleFolderSelection(firstFolder);
     },
-    [dispatch, handleFolderSelection]
+    [dispatch]
   );
 
   useEffect(() => {
@@ -187,7 +189,12 @@ const MyAssessmentComp = () => {
                 .map((item) => (
                   <DashboardCard
                     key={item._id}
-                    data={{ ...item, type: 'chat' }}
+                    data={{
+                      ...item,
+                      type: 'assessment',
+                      folderData: folderData,
+                      idd: item._id,
+                    }}
                     onRemove={() => handleRemoveChat()}
                     onClick={() => {
                       dispatch(setCurrentChatId(item._id));
@@ -201,20 +208,21 @@ const MyAssessmentComp = () => {
 
       {/* Component Styles */}
       <style>{`
-            .selected-workspace-name{
-    position:absolute;
-      top:2rem;
-      left:4rem;
-    p{
-    font-size:1.5rem;
-    font-weight:600;
-    span{
-    padding:1rem;
-    background-color:#f5f5f5;
-    border-radius:1rem;
-    border:1px solid gray;
-    }
-    }
+        .selected-workspace-name {
+          position: absolute;
+          top: 2rem;
+          left: 4rem;
+          p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            span {
+              padding: 1rem;
+              background-color: #f5f5f5;
+              border-radius: 1rem;
+              border: 1px solid gray;
+            }
+          }
+        }
         .grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -223,31 +231,25 @@ const MyAssessmentComp = () => {
           align-items: start;
           padding: 15px;
         }
-
         .section {
           margin-top: 2rem;
         }
-
         .userName, .fileName {
           font-size: 1.125rem;
           font-weight: bold;
         }
-
         .chatContent {
           font-size: 1.2rem;
           margin: 0.5rem 0;
         }
-
         .footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
         }
-
         .fileDetails {
           margin-bottom: 3rem;
         }
-        
         .folderName {
           color: #0066ff;
           font-size: 1.1rem;

@@ -78,7 +78,7 @@ function List() {
                 flexDirection: 'column',
               }}
             >
-              <section className="generate" style={{ marginTop: '2rem' }}>
+              {/* <section className="generate" style={{ marginTop: '2rem' }}>
                 <div className="container">
                   <div
                     // className="left-buttons"
@@ -111,7 +111,8 @@ function List() {
                     </div>
                   </div>
                 </div>
-              </section>
+              </section> */}
+
               {/* <div>
                 <span
                   style={{
@@ -123,90 +124,7 @@ function List() {
                   Recent files
                 </span>
               </div> */}
-              {loading ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    flexWrap: 'wrap',
-                    width: '100%',
-                    margin: '16px 0',
-                  }}
-                >
-                  <Loading />
-                </div>
-              ) : (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    flexWrap: 'wrap',
-                    width: '100%',
-                    margin: '16px 3rem',
-                  }}
-                >
-                  {recentModifiedSiteMap
-                    ?.slice(0, 4)
-                    ?.map(({ _id, name, updatedAt }) => {
-                      return (
-                        <div
-                          key={`${_id}-recent`}
-                          style={{
-                            width: '100%',
-                            maxWidth: '350px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '1rem',
-                            backgroundColor: '#f9f9f9',
-                            border: '1px solid #ddd',
-                            padding: '2rem',
-                            borderRadius: '1rem',
-                            margin: '0 1rem 1rem 0',
-                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => {
-                            navigate(`/sitemap/${_id}`);
-                          }}
-                        >
-                          {/* <img src={SitemapImg} height="120px" width="268px" /> */}
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '1rem',
-                            }}
-                          >
-                            <FaFolderTree size={18} />
-                            <span
-                              style={{
-                                fontSize: '1.5rem',
-                                fontWeight: '500',
-                              }}
-                            >
-                              {name}
-                            </span>
-                          </div>
 
-                          {updatedAt ? (
-                            <span
-                              style={{
-                                fontSize: '1.2rem',
-                                color: 'rgba(10, 10, 10, 0.46)',
-                              }}
-                            >
-                              Modifies {timeAgo(updatedAt)}
-                            </span>
-                          ) : null}
-                        </div>
-                      );
-                    })}
-                </div>
-              )}
               {/* <div
                 style={{
                   margin: '16px 0',
@@ -237,8 +155,7 @@ function List() {
                   </a>
                 </div>
               </div> */}
-
-              {/* <section className="generate" style={{ marginTop: '2rem' }}>
+              <section className="generate" style={{ marginTop: '2rem' }}>
                 <div className="container">
                   <div
                     // className="left-buttons"
@@ -275,7 +192,7 @@ function List() {
                     </a>
                   </div>
                 </div>
-              </section> */}
+              </section>
 
               {/* <div
                 style={{
@@ -351,7 +268,81 @@ function List() {
                   width: '100%',
                   margin: '16px 0',
                 }}
-              ></div>
+              >
+                {loading ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      width: '100%',
+                      margin: '1rem 0',
+                    }}
+                  >
+                    <Loading />
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      flexWrap: 'wrap',
+                      width: '100%',
+                      margin: '1rem 3rem',
+                    }}
+                  >
+                    {/* {sitemaps.map(({ _id, name, updatedAt }) => {
+                      return (
+                        <div
+                          key={`${_id}-files`}
+                          style={{
+                            width: '100%',
+                            maxWidth: '400px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1rem',
+                            backgroundColor: '#f9f9f9',
+                            border: '1px solid #ddd',
+                            padding: '2rem',
+                            borderRadius: '1rem',
+                            margin: '0 1rem 1rem 0',
+                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => {
+                            navigate(`/sitemap/${_id}`);
+                          }}
+                        >
+                          {/* <img src={SitemapImg} height="120px" width="268px" /> */}
+                    {/* <span
+                            style={{
+                              fontSize: '16px',
+                              fontWeight: '500',
+                            }}
+                          >
+                            {name}
+                          </span>
+                          {updatedAt ? (
+                            <span
+                              style={{
+                                fontSize: '14px',
+                                color: 'rgba(10, 10, 10, 0.46)',
+                              }}
+                            >
+                              Modifies {timeAgo(updatedAt)}
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    })}  */}
+                    <NoDataAvailable message="No Digital play book available" />
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <NoData />

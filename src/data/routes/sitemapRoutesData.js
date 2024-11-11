@@ -15,6 +15,12 @@ const sitemapRoutesData = [
     path: '/sitemap/:id',
     element: Module.Sitemap.Sitemap,
   },
+  {
+    title: 'Digital Playbook',
+    path: '/digital-playbook/list',
+    element: Module.Dashboard.DigitalPlaybook,
+  },
+  
 ];
 
 export default sitemapRoutesData;
