@@ -47,7 +47,7 @@ const SectionGrid = ({ title, items, itemType, onRemove }) => {
       <div className="container-heading">
         <div className="left-buttons">
           <p className="assistant-heading">
-            {itemType === 'assessments' ? (
+            {itemType === 'assessment' ? (
               <RiNewspaperLine />
             ) : itemType === 'chats' ? (
               <IoIosChatboxes />
@@ -190,10 +190,17 @@ const DashboardHomeComp = () => {
   }, [selectedWorkspace, currentFolder]);
 
   const handleRemoveItem = useCallback((itemId, itemType) => {
-    setCurrentFolder((prevFolder) => ({
-      ...prevFolder,
-      [itemType]: prevFolder[itemType].filter((item) => item.id !== itemId),
-    }));
+    setCurrentFolder((prevFolder) => {
+      // Check if the itemType exists in prevFolder and is an array before filtering
+      if (Array.isArray(prevFolder[itemType])) {
+        return {
+          ...prevFolder,
+          [itemType]: prevFolder[itemType].filter((item) => item.id !== itemId),
+        };
+      }
+      // If itemType doesn't exist or is not an array, return prevFolder unmodified
+      return prevFolder;
+    });
   }, []);
 
   const handleDataUpdated = useCallback(() => {
@@ -232,8 +239,8 @@ const DashboardHomeComp = () => {
             <SectionGrid
               title="AI Assistant"
               items={folderData[0].chats}
-              itemType="chats"
-              onRemove={(id) => handleRemoveItem(id, 'chats')}
+              itemType="chat"
+              onRemove={(id) => handleRemoveItem(id, 'chat')}
             />
           ) : (
             <NoDataMessage title="AI Assistant" icon={<IoIosChatboxes />} />
@@ -243,8 +250,8 @@ const DashboardHomeComp = () => {
             <SectionGrid
               title="Assessments"
               items={folderData[0].assessments}
-              itemType="assessments"
-              onRemove={(id) => handleRemoveItem(id, 'assessments')}
+              itemType="assessment"
+              onRemove={(id) => handleRemoveItem(id, 'assessment')}
             />
           ) : (
             <NoDataMessage title="Assessments" icon={<RiNewspaperLine />} />

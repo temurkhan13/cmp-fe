@@ -22,14 +22,14 @@ const ItemTypeEnum = Object.freeze({
 // Function to map type for displaying correct icon
 const getEntityType = (type) => {
   const typeMapping = {
-    chats: 'chat',
+    chats: 'chats',
     assessments: 'assessment',
     sitemaps: 'sitemap',
   };
   return typeMapping[type] || type;
 };
 
-const DashboardCard = ({ data = {}, onRemove, onClick }) => {
+const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [moveToTrash, { isLoading }] = useMoveToTrashMutation();
   const [showNotification, setShowNotification] = useState(false);
@@ -38,7 +38,8 @@ const DashboardCard = ({ data = {}, onRemove, onClick }) => {
 
   // Track mounting status to avoid setting state on an unmounted component
   useEffect(() => {
-    console.log('DATAAAAAAAAA:', data);
+    console.log('DATA:', data);
+    console.log('FOLDER DATA:', folderData);
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
@@ -51,11 +52,11 @@ const DashboardCard = ({ data = {}, onRemove, onClick }) => {
       setIsMenuOpen(false);
       try {
         const entityType = getEntityType(data.type);
-        await moveToTrash({ entityType, id: data.id }).unwrap();
-        if (mountedRef.current) onRemove(data.id);
+        await moveToTrash({ entityType: data.type, id: data.id }).unwrap();
+        onRemove(data.id); // Ensure UI updates instantly
       } catch (error) {
         console.error('Error moving item to trash:', error);
-        if (mountedRef.current) setShowNotification(true);
+        setShowNotification(true);
       }
     },
     [moveToTrash, data.id, data.type, onRemove]
@@ -70,7 +71,7 @@ const DashboardCard = ({ data = {}, onRemove, onClick }) => {
     data.name ||
     data.title ||
     data.chatTitle ||
-    data.report[0].ReportTitle ||
+    (data.report && data.report[0] ? data.report[0].ReportTitle : '') ||
     'Unknown Item';
   const createdAt = data.createdAt
     ? new Date(data.createdAt).toLocaleDateString()
@@ -147,6 +148,12 @@ DashboardCard.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
     title: PropTypes.string,
+    chatTitle: PropTypes.string,
+    report: PropTypes.arrayOf(
+      PropTypes.shape({
+        ReportTitle: PropTypes.string,
+      })
+    ),
     type: PropTypes.oneOf(Object.values(ItemTypeEnum)).isRequired,
     createdAt: PropTypes.string,
   }).isRequired,

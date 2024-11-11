@@ -77,6 +77,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [reaction, setReaction] = useState('');
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
@@ -626,9 +627,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                             </a>
                           </div>
                         )}
-                        <div>
-                          <LuPencil />
-                        </div>
                       </div>
                     </div>
                   ) : (
@@ -655,6 +653,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                           onClick={() => handleLikeClick(message)}
                         >
                           <FaThumbsUp
+                            onClick={() => setReaction('like')}
                             style={
                               message?.reactions?.some(
                                 (react) =>
@@ -662,7 +661,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                                     JSON.parse(localStorage.getItem('user'))
                                       .id && react.type == 'like'
                               )
-                                ? { color: 'blue' }
+                                ? { color: '#C3E11D' }
+                                : reaction == 'like'
+                                ? { color: '#C3E11D' }
                                 : {}
                             }
                           />
@@ -674,6 +675,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                           onClick={() => handleDislikeMessage(message)}
                         >
                           <FaThumbsDown
+                            onClick={() => setReaction('dislike')}
                             style={
                               message?.reactions?.some(
                                 (react) =>
@@ -681,7 +683,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                                     JSON.parse(localStorage.getItem('user'))
                                       .id && react.type == 'dislike'
                               )
-                                ? { color: 'blue' }
+                                ? { color: '#C3E11D' }
+                                : reaction === 'dislike'
+                                ? { color: '#C3E11D' }
                                 : {}
                             }
                           />
@@ -709,7 +713,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                                   bookmark.userId ===
                                     JSON.parse(localStorage.getItem('user')).id
                               )
-                                ? { color: 'blue' }
+                                ? { color: '#C3E11D' }
                                 : {}
                             }
                           />
@@ -819,30 +823,31 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                   }
                 }}
                 onInput={(e) => {
-                  e.target.style.height = 'auto'; // Reset height
-                  e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height
+                  // e.target.style.height = 'auto'; // Reset height
+                  // e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height
                 }}
                 style={{
                   resize: 'none',
                   overflowY: 'auto',
-                  height: 'auto',
+                  height: '40px',
                   maxHeight: '150px', // Set maximum height before scroll
                   width: '100%', // Full width of the container
                   border: 'none',
                   borderRadius: '10px',
-                  padding: '8px 12px',
+                  padding: '13px 12px 8px 12px',
                   fontSize: '14px',
                   fontFamily: 'Arial, sans-serif',
                   boxSizing: 'border-box',
                   outline: 'none',
                 }}
-                rows={1} // Initial row
+                rows={0} // Initial row
               />
               <div className="icons" style={{ display: 'flex' }}>
-                <label htmlFor="file-input">
-                  <IoAttach className="send-icon " />
-                </label>
-                <IoSend onClick={handleSendMessage} className="send-icon " />
+                <IoSend
+                  color="C3E11D"
+                  onClick={handleSendMessage}
+                  className="send-icon "
+                />
               </div>
             </div>
           </div>
