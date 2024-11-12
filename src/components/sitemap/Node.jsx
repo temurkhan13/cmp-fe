@@ -9,8 +9,14 @@ const Node = ({ data }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
   const [hideLabelInput, setHideLabelInput] = useState(data.label.length !== 0);
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState("none")
   const inputRef = useRef();
-
+  const [nodeProperty,setNodeProperty] = useState({
+    heading:'',
+    isEditing:false,
+    description: '',
+    id:uuidv4()
+  })
   const [
     draggedIndex,
     draggedOverIndex,
@@ -27,6 +33,7 @@ const Node = ({ data }) => {
     setNodeData(updatedArray);
   };
 
+  console.log(nodeData , "30000000")
   const addNodeChild = (
     heading = '',
     description = '',
@@ -43,7 +50,7 @@ const Node = ({ data }) => {
     setNodeData(data.nodeData);
   }, [data.nodeData]);
 
-  console.log("YOOO")
+  console.log("YOOO",mode)
   return (
     <div
       className="node"
@@ -150,7 +157,6 @@ const Node = ({ data }) => {
                 draggable
                 onMouseEnter={(e) => {
                   e.stopPropagation();
-                  console.log('Clicked');
                 }}
                 onDragStart={(e) => {
                   console.log(e);
@@ -178,6 +184,7 @@ const Node = ({ data }) => {
                   updateNodeDataWithPropertyName={
                     updateNodeDataWithPropertyName
                   }
+                  mode={mode}
                 ></NodeItem>
               </li>
             ))}
@@ -200,7 +207,9 @@ const Node = ({ data }) => {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                addNodeChild();
+                setMode("add")
+                // alert("hey")
+                // addNodeChild();
               }}
             >
               <BiPlus size={20}></BiPlus>
