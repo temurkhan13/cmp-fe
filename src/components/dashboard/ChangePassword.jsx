@@ -41,8 +41,9 @@ const ChangePassword = ({ onChangePassword }) => {
       {/* <h2>Change Password</h2> */}
 
       <div className="input-group">
-        <label className="field-label">Old Password</label>
+        <label className="field-label-">Old Password</label>
         <input
+          className="reset-password-input"
           type={showCurrentPassword ? 'text' : 'password'}
           name="currentPassword"
           placeholder="Enter current password"
@@ -64,6 +65,7 @@ const ChangePassword = ({ onChangePassword }) => {
         <div className="input-group">
           <label className="field-label">New Password</label>
           <input
+            className="reset-password-input"
             type={showNewPassword ? 'text' : 'password'}
             name="newPassword"
             placeholder="Enter new password"
@@ -82,6 +84,7 @@ const ChangePassword = ({ onChangePassword }) => {
         <div className="input-group">
           <label className="field-label">Confirm New Password</label>
           <input
+            className="reset-password-input"
             type={showConfirmPassword ? 'text' : 'password'}
             name="confirmPassword"
             placeholder="Enter confirm password"
@@ -125,13 +128,18 @@ const ChangePassword = ({ onChangePassword }) => {
           display: flex;
           gap: 2rem;
         }
-        input {
+        .reset-password-input {
           width: 100%;
           padding: 1rem;
           border: 0.1rem solid #ddd;
           border-radius: 1rem;
           outline: none;
+          text-align: left;
         }
+          .reset-password-input::placeholder {
+          font-size: 1.5rem;
+          text-align: left;
+          }
         .field-label {
           font-size: 1.4rem;
         }
