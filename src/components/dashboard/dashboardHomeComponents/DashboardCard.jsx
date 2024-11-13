@@ -102,6 +102,25 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
             <RiNewspaperLine size={20} color="grey" />
           )}
         </div>
+
+        {data.status === 'completed' ? (
+          <div
+            style={{ backgroundColor: '#C3E11D', color: 'black' }}
+            className="card-badge"
+          >
+            Completed
+          </div>
+        ) : data.status === 'in-progress' ? (
+          <div style={{ backgroundColor: 'orange' }} className="card-badge">
+            In Progress
+          </div>
+        ) : data.status === 'pending' ? (
+          <div style={{ backgroundColor: 'red' }} className="card-badge">
+            Pending
+          </div>
+        ) : (
+          ''
+        )}
         <div className="info">
           <div>
             <h3>{truncateText(displayName, 20)}</h3>

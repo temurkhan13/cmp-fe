@@ -15,9 +15,12 @@ async function loadPdfMake() {
 
 const Editor = ({ placeholder, height, data, title }) => {
   const editor = useRef(null);
-  const [content, setContent] = useState(data);
+  const [content, setContent] = useState(data.content);
 
-  const markdownData = data;
+  console.log('CONTENT DATAA', data);
+  console.log('DATAA CONTENT', content);
+  const markdownData = data.content;
+  console.log('DATAA CONTENT', markdownData);
 
   const downloadPdf = () => {
     const editorContent = editor.current.value;
@@ -43,7 +46,7 @@ const Editor = ({ placeholder, height, data, title }) => {
 
   // Generate HTML for TrioPage
   const reportHtml = ReactDOMServer.renderToStaticMarkup(
-    <WordReportTemplate title={title} content={markdownData} />
+    <WordReportTemplate title={title} content={content} />
   );
 
   const htmlToDocx = (html) => {};
@@ -60,9 +63,9 @@ const Editor = ({ placeholder, height, data, title }) => {
     }
   };
 
-  useEffect(() => {
-    setContent(reportHtml);
-  }, [reportHtml]);
+  // useEffect(() => {
+  //   setContent(reportHtml);
+  // }, [reportHtml]);
 
   const config = useMemo(
     () => ({
@@ -111,7 +114,7 @@ const Editor = ({ placeholder, height, data, title }) => {
           exec: (editor) => {
             const content = editor.getEditorValue();
             console.log(content);
-            downloadDocx(content);
+            downloadDocx(reportHtml);
             //  const blob = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
             // const docxContent = HTMLDocx.asBlob(content);
             // const link = document.createElement('a');
@@ -134,7 +137,7 @@ const Editor = ({ placeholder, height, data, title }) => {
       {' '}
       <JoditEditor
         ref={editor}
-        value={content}
+        value={reportHtml}
         config={config}
         tabIndex={1}
         onBlur={(newContent) => setContent(newContent)}

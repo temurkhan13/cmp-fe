@@ -3,18 +3,27 @@ import axios from 'axios';
 import config from '../config/config';
 import { addContent } from '../redux/reducers/editorReducer';
 
-const useAssessmentReport = ({ workspaceId, folderId, assessmentId }) => {
+const useAssessmentReport = ({ workspaceId, folderId, assessmentId, allAssessmentData }) => {
   const [error, setError] = useState(null);
   const [isReportGenerated, setIsReportGenerated] = useState(false);
   const [report, setReport] = useState(null);
+  const [assessmentData, setAssessmentData] = useState(allAssessmentData);
+  const [singleAssessmenChats, setSingleAssessmenChats] = useState([]);
 
-  const AssessmentReport = async (assessmentName, subReportId) => {
+  const AssessmentReport = async (answer, subReportId) => {
     try {
       const token = localStorage.getItem('token');
+      console.log("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",  `${config.apiURL}/workspace-assessment/${assessmentId}/answer`);
+      console.log("responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", assessmentData);
+
+      // Select `questionId` based on whether `assessmentData` is populated
+      const questionId = assessmentData.qa[assessmentData.qa.length - 1]._id;
+
       const response = await axios.patch(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment/${assessmentId}/subReport/${subReportId}`,
+        `${config.apiURL}/workspace-assessment/${assessmentId}/answer`,
         {
-          content: assessmentName,
+          questionId,
+          answer: answer,
         },
         {
           headers: {
@@ -23,15 +32,20 @@ const useAssessmentReport = ({ workspaceId, folderId, assessmentId }) => {
         }
       );
 
-      console.log('Assessment hook response:', response.data);
-      const question = response.data.question;
-      if (response.data.isReportGenerated) {
-        setIsReportGenerated(true); // set the report generated flag to true
-        addContent(response.data.question.content);
-        setReport(response.data.question.content); // set the report data to the response data
-      }
-      console.log('Extracted question:', question);
+      setAssessmentData(response.data.data);
+      setSingleAssessmenChats(response.data.data);
 
+      console.log('Assessment hook response:', response.data.data);
+      const question = response.data.data.qa[response.data.data.qa.length - 1].question;
+      console.log('RESPONSSEEEEEE:', question);
+
+      if (response.data.data?.report?.isGenerated) {
+        setIsReportGenerated(true); // set the report generated flag to true
+        setReport(response.data); // set the report data to the response data
+      }
+      addContent(response.data.data.qa[response.data.data.qa.length - 1].question);
+
+      console.log('Extracted question:', question);
       setError(null);
       return question;
     } catch (error) {
@@ -40,7 +54,7 @@ const useAssessmentReport = ({ workspaceId, folderId, assessmentId }) => {
     }
   };
 
-  return { error, AssessmentReport, isReportGenerated, report };
+  return { error, AssessmentReport, isReportGenerated, report, setAssessmentData,singleAssessmenChats };
 };
 
 export default useAssessmentReport;

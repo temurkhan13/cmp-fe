@@ -8,20 +8,18 @@ const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
   const GenerateSingleReport = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment/${assessmentId}/reports`,{},
+      const response = await axios.get(
+        `${config.apiURL}/workspace-assessment/${assessmentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      console.log(response, 'response')
-      setError(null);
-      return response;
+      console.log('LAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAAAAAAAAAAAAAA:',response)
+      return response.data.report;
     } catch (error) {
-      setError(error.response?.data?.message || error.message);
+      console.log(error.response?.data?.message || error.message);
     }
   };
 
