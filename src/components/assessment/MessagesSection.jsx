@@ -17,7 +17,7 @@ import AiPic from '../../assets/dashboard/sidebarLogo.png';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import TonePopup from '../../components/common/TonePopup';
 import { ScaleLoader } from 'react-spinners';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
 // ASk-Ai
@@ -54,11 +54,11 @@ import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
 import Editor from './AssessmentComponent/Editor.jsx';
+import useAssessment from '../../hooks/useAssessment.js';
 
 const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const location = useLocation();
-  const { Questions } = location.state || {};
-
+  const navigate = useNavigate();
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
   const [chat, setChat] = useState([]);
@@ -67,7 +67,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [reportTitle, setReportTitle] = useState('');
   const [SubReportId, setSubReportId] = useState('');
   const [fileUrl, setFileUrl] = useState('');
-  const [assessmentId, setAssessmentId] = useState('');
+  const [assessmentId, setAssessmentId] = useState();
   const [selectedText, setSelectedText] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
@@ -78,26 +78,66 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [showInputField, setShowInputField] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reaction, setReaction] = useState('');
+  const [allAssessmentData, setAllAssessmentData] = useState([]);
+  const [reportsData, setReportsData] = useState([]);
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
   const [showReportButton, setShowReportButton] = useState(false);
   const currentWorkspace = useSelector(selectWorkspace);
+  const { id } = useParams();
 
   const selectedAssessmentTitle = useSelector(
     (state) => state.workspaces.currentSelectedTitle
   );
 
-  console.log(
-    selectedAssessmentTitle,
-    'selectedAssessmentTitle',
-    selectedAssessment
-  );
-  console.log(currentWorkspace, 'currentWorkspace............');
   const [folderId, setFolderId] = useState('');
 
   // const folderId = useSelector((state) => state.workspaces.currentFolderId);
   const folder = useSelector(selectSelectedFolder);
+
+  const { getAssessment } = useAssessment(workspaceId, folderId);
+
+  useEffect(() => {
+    setAssessmentId(id);
+    if (id) {
+      const getAssessmentAsync = async () => {
+        const singleAssessment = await getAssessment(id);
+
+        if (singleAssessment.report && singleAssessment.report.isGenerated) {
+          setShowReportButton(true);
+        }
+
+        setAssessmentData(singleAssessment);
+        const initialMessage =
+          singleAssessment?.qa[singleAssessment?.qa.length - 1]?.question;
+        const filteredFolders = selectedWorkspace.folders.filter(
+          (item) => item._id === folderId
+        );
+
+        handleAssessmentSelect(filteredFolders[0]?.assessments[0]);
+        setAssessmentId(id);
+        setSubReportId(singleAssessment?.report?.id || id);
+        setChat((prevChat) => [
+          ...prevChat,
+          { role: 'ai', content: initialMessage },
+        ]);
+
+        setShowInputField(true);
+        setChat(singleAssessment.qa);
+      };
+      getAssessmentAsync();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (assessmentId) {
+      const cleanPathname = location.pathname.replace(/\/+$/, ''); // Remove any trailing slashes
+      if (!cleanPathname.includes(assessmentId)) {
+        navigate(`${cleanPathname}/${assessmentId}`, { replace: true });
+      }
+    }
+  }, [assessmentId, location.pathname, navigate]);
 
   useEffect(() => {
     if (folder) {
@@ -111,10 +151,17 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     report: startFinalReport,
     isReportGenerated: isStartReportGenerated,
   } = usestartAssessment();
-  const { AssessmentReport, isReportGenerated, report } = useAssessmentReport({
+  const {
+    AssessmentReport,
+    isReportGenerated,
+    report,
+    setAssessmentData,
+    singleAssessmenChats,
+  } = useAssessmentReport({
     workspaceId: currentWorkspace.id,
     folderId: folder?.id || folderId,
     assessmentId,
+    allAssessmentData: allAssessmentData,
   });
   const { GenerateSingleReport } = useGenerateSingleReport({
     workspaceId: currentWorkspace.id,
@@ -232,10 +279,19 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
     // if (!text && !file) return;
     if (firstPrompt) {
-      setChat((prevChat) => [
-        ...prevChat,
-        { role: 'user', content: firstPrompt || null },
-      ]);
+      // setChat((prevChat) => [
+      //   ...prevChat,
+      //   { role: 'user', answer: firstPrompt || null, status: 'answered' },
+      // ]);
+      const updatedChat = [...chat];
+      updatedChat[updatedChat.length - 1] = {
+        ...updatedChat[updatedChat.length - 1],
+        answer: firstPrompt,
+        status: 'answered',
+      };
+
+      // Update the chat state with the modified array
+      setChat(updatedChat);
     } else {
       setChat((prevChat) => [
         ...prevChat,
@@ -252,10 +308,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     try {
       const response = await AssessmentReport(firstPrompt, SubReportId);
       if (response) {
-        // set AI chat
         setChat((prevChat) => [
           ...prevChat,
-          { role: 'ai', content: response.content },
+          { role: 'ai', question: response, status: 'pending' },
         ]);
       }
       setFirstPrompt('');
@@ -271,7 +326,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
   const handleInspireClick = async () => {
     setLoading(true);
-    const inspiredText = await handleInspire(chat[chat.length - 1].content);
+    console.log('LASR -> ', chat[chat.length - 1]);
+    const inspiredText = await handleInspire(chat[chat.length - 1].question);
     setFirstPrompt(inspiredText);
     setLoading(false);
   };
@@ -427,16 +483,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
-      if (
-        filteredFolders.length > 0 &&
-        filteredFolders[0].assessments.length > 0 &&
-        filteredFolders[0].assessments[0].report.length > 0
-      ) {
-        // setAssessmentId(filteredFolders[0].assessments[0]._id);
-        // setSubReportId(
-        //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
-        // );
-      }
     }
   }, [generateSingleReport, selectedWorkspace]);
 
@@ -445,35 +491,27 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleStartAssessment = async (assessmentName) => {
-    console.log('Start');
     try {
       setAssessmentLoading(true);
-      const initialResponse = await StartAssessment(
-        '',
-        assessmentName,
-        Questions
-      );
+      const initialResponse = await StartAssessment(assessmentName, folderId);
+      setAssessmentId(initialResponse.id);
       refetch();
+      setAssessmentData(initialResponse);
 
-      console.log(initialResponse, 'initialMessage');
       const initialMessage =
-        initialResponse?.report[0]?.subReport[0]?.questionAnswer[0]?.question
-          .content;
+        initialResponse?.qa[initialResponse?.qa.length - 1]?.question;
+      console.log('initialMessage', initialMessage);
+
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
       );
 
       handleAssessmentSelect(filteredFolders[0]?.assessments[0]);
-      // setAssessmentId(filteredFolders[0].assessments[0]._id);
-      setAssessmentId(initialResponse._id);
-      setSubReportId(initialResponse.report[0]?.subReport[0]._id);
-      // setSubReportId(
-      //   filteredFolders[0].assessments[0].report[0].subReport[0]._id
-      // );
-
+      setAssessmentId(initialResponse.id);
+      setSubReportId(initialResponse?.report?.id || initialResponse?.id);
       setChat((prevChat) => [
         ...prevChat,
-        { role: 'ai', content: initialMessage },
+        { role: 'ai', question: initialMessage },
       ]);
 
       setShowInputField(true);
@@ -485,11 +523,14 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSingleReport = async () => {
-    setShowModal(true);
     setLoading(true);
-    const data = await GenerateSingleReport();
-    const fullUrl = `${data.data.report.finalReportURL}`;
-    window.open(fullUrl, '_blank');
+
+    const reportsData = await GenerateSingleReport();
+    setReportsData(reportsData);
+    console.log('REPORT DATAAAAAAAAAAAAAAAAAAAAAAAAAA', reportsData);
+    setShowModal(true);
+    // const fullUrl = `${data.data.report.url}`;
+    // window.open(fullUrl, '_blank');
     setLoading(false);
     refetch();
     setGenerateSingleReport(false);
@@ -542,7 +583,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const handleClose = () => {
     setShowModal(false); // Set to false to hide the modal
   };
-  console.log('show modal -> ', showModal);
+  console.log('CHAT', chat);
 
   return (
     <div className="chat-message-wrapper">
@@ -571,30 +612,90 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 onClose={handleClosePopup}
               />
             )}
-
-            {chat.map((item, index, message) => (
+            {chat.map((item, index) => (
               <div
                 key={index}
                 ref={index === chat.length - 1 ? messagesEndRef : null}
               >
-                <div
-                  className={
-                    item.role === 'user'
-                      ? 'chat-container-assisstant right'
-                      : 'chat-container-assisstant left'
-                  }
-                >
-                  {item.role === 'user' ? (
-                    <div
-                      className="card user-card"
-                      style={{
-                        display: 'flex',
-                        // alignItems: 'flex-end',
-                        justifyContent: 'flex-end',
-                        // float: 'right',
-                      }}
-                    >
-                      <div>
+                {/* Display the Question on the left */}
+                <div className="chat-container-assisstant left">
+                  <div className="card assistant-card">
+                    <div className="header">
+                      <img src={AiPic} alt="avatar" className="avatar" />
+                    </div>
+                    <div className="msg">
+                      <ReactMarkdown>{item.question}</ReactMarkdown>
+                    </div>
+                    <div className="message-action-icons">
+                      <div
+                        className="message-icon-wrapper"
+                        title="Copy"
+                        onClick={() => handleCopyMessage(item.answer)}
+                      >
+                        <FaCopy style={{ cursor: 'pointer' }} />
+                        <span className="tooltip-assessment">Copy</span>
+                      </div>
+                      <div
+                        className="message-icon-wrapper"
+                        title="Like"
+                        onClick={() => handleLikeClick(item)}
+                      >
+                        <FaThumbsUp
+                          style={
+                            item.reactions?.some(
+                              (react) =>
+                                react.user ===
+                                  JSON.parse(localStorage.getItem('user')).id &&
+                                react.type === 'like'
+                            )
+                              ? { color: '#C3E11D' }
+                              : {}
+                          }
+                        />
+                        <span className="tooltip-assessment">Like</span>
+                      </div>
+                      <div
+                        className="message-icon-wrapper"
+                        title="Dislike"
+                        onClick={() => handleDislikeMessage(item)}
+                      >
+                        <FaThumbsDown
+                          style={
+                            item.reactions?.some(
+                              (react) =>
+                                react.user ===
+                                  JSON.parse(localStorage.getItem('user')).id &&
+                                react.type === 'dislike'
+                            )
+                              ? { color: '#C3E11D' }
+                              : {}
+                          }
+                        />
+                        <span className="tooltip-assessment">Dislike</span>
+                      </div>
+                      <div className="message-icon-wrapper" title="Bookmark">
+                        <FaBookmark
+                          onClick={() => handleAddBookmark(item)}
+                          style={
+                            chat.bookmarks?.some(
+                              (bookmark) =>
+                                bookmark.messageId === item._id &&
+                                bookmark.userId ===
+                                  JSON.parse(localStorage.getItem('user')).id
+                            )
+                              ? { color: '#C3E11D' }
+                              : {}
+                          }
+                        />
+                        <span className="tooltip-assessment">Bookmark</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {item.status === 'answered' && (
+                  <div className="chat-container-assisstant right">
+                    <div className="card user-card">
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
                         {photoPath ? (
                           <img
                             src={photoPath}
@@ -607,122 +708,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                             {getInitials()}
                           </div>
                         )}
-                        {/* <img src={UserPic} alt="avatar" /> */}
-                      </div>
-                      <div>
-                        {/* <p className="Heading">You</p> */}
-                        {item.content && (
-                          <div className="msg">
-                            <ReactMarkdown>{item.content}</ReactMarkdown>
-                          </div>
-                        )}
-                        {item.file && (
-                          <div className="file-preview">
-                            <a
-                              href={item.file}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {item.fileName}
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="card">
-                      <div className="header">
-                        <img src={AiPic} alt="avatar" className="avatar" />
-                        {/* <p className="heading">ChangeAI</p> */}
                       </div>
                       <div className="msg">
-                        <ReactMarkdown>{item.content}</ReactMarkdown>
-                      </div>
-                      <div className="message-action-icons">
-                        <div
-                          className="message-icon-wrapper"
-                          title="Copy"
-                          onClick={() => handleCopyMessage(message.text)}
-                        >
-                          <FaCopy style={{ cursor: 'pointer' }} />
-                          <span className="tooltip-assessment">Copy</span>
-                        </div>
-                        <div
-                          className="message-icon-wrapper"
-                          title="Like"
-                          onClick={() => handleLikeClick(message)}
-                        >
-                          <FaThumbsUp
-                            onClick={() => setReaction('like')}
-                            style={
-                              message?.reactions?.some(
-                                (react) =>
-                                  react.user ==
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id && react.type == 'like'
-                              )
-                                ? { color: '#C3E11D' }
-                                : reaction == 'like'
-                                ? { color: '#C3E11D' }
-                                : {}
-                            }
-                          />
-                          <span className="tooltip-assessment">Like</span>
-                        </div>
-                        <div
-                          className="message-icon-wrapper"
-                          title="Dislike"
-                          onClick={() => handleDislikeMessage(message)}
-                        >
-                          <FaThumbsDown
-                            onClick={() => setReaction('dislike')}
-                            style={
-                              message?.reactions?.some(
-                                (react) =>
-                                  react.user ==
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id && react.type == 'dislike'
-                              )
-                                ? { color: '#C3E11D' }
-                                : reaction === 'dislike'
-                                ? { color: '#C3E11D' }
-                                : {}
-                            }
-                          />
-                          <span className="tooltip-assessment">Dislike</span>
-                        </div>
-                        {/*<div className="message-icon-wrapper" title="Comment">*/}
-                        {/*  <FaCommentAlt*/}
-                        {/*    data-message-id={message._id}*/}
-                        {/*    onClick={handleCommentClick}*/}
-                        {/*    style={{ cursor: 'pointer' }}*/}
-                        {/*  />*/}
-                        {/*  <span className="tooltip-assessment">Comment</span>*/}
-                        {/*</div>*/}
-                        {/*<div className="message-icon-wrapper" title="Regenerate">*/}
-                        {/*  <FaSync />*/}
-                        {/*  <span className="tooltip-assessment">Regenerate</span>*/}
-                        {/*</div>*/}
-                        <div className="message-icon-wrapper" title="Bookmark">
-                          <FaBookmark
-                            onClick={() => handleAddBookmark(message)}
-                            style={
-                              chat.bookmarks?.some(
-                                (bookmark) =>
-                                  bookmark.messageId === message._id &&
-                                  bookmark.userId ===
-                                    JSON.parse(localStorage.getItem('user')).id
-                              )
-                                ? { color: '#C3E11D' }
-                                : {}
-                            }
-                          />
-                          <span className="tooltip-assessment">Bookmark</span>
-                        </div>
+                        <ReactMarkdown>{item.answer}</ReactMarkdown>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -860,7 +852,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           content={
             <Editor
               title={'test'}
-              data={report ? report : startFinalReport}
+              data={reportsData}
               placeholder="Type your text here..."
               height="100vw"
             />

@@ -26,30 +26,6 @@ export const fetchFolderData = createAsyncThunk(
 );
 
 // Thunk to toggle folder activation status
-// export const toggleFolderActivation = createAsyncThunk(
-//   'folder/toggleFolderActivation',
-//   async ({ workspaceId, folderId, isActive }, { rejectWithValue }) => {
-//     try {
-//       const token = localStorage.getItem('token');
-//       const response = await axios.patch(
-//         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
-//         { isActive },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             'Content-Type': 'application/json',
-//           },
-//         }
-//       );
-//       console.log("Response ",response.data)
-//       return { folderId, isActive: response.data.isActive }; // Return folderId and isActive status
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
-
-
 export const toggleFolderActivation = createAsyncThunk(
   'folder/toggleFolderActivation',
   async ({ workspaceId, folderId, isActive }, { rejectWithValue }) => {
@@ -89,11 +65,39 @@ export const toggleFolderActivation = createAsyncThunk(
   }
 );
 
+// Thunk to fetch assessments by folderId
+export const fetchWorkspaceAssessments = createAsyncThunk(
+  'folder/fetchWorkspaceAssessments',
+  async ({ folderId }, { rejectWithValue }) => {
+    try {
+      if (!folderId) {
+        throw new Error("Folder ID is required.");
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `${config.apiURL}/workspace-assessment?folderId=${folderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log("ASSESSMENT RESPONSE:",response.data)
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response ? error.response.data : error.message);
+    }
+  }
+);
+
 const folderSlice = createSlice({
   name: 'folder',
   initialState: {
     selectedFolder: null,
-    folderData: null, // Ensure folderData is initialized as null
+    folderData: null,
+    assessments: null, // New state to store assessments data
     loading: false,
     error: null,
   },
@@ -103,7 +107,8 @@ const folderSlice = createSlice({
     },
     resetFolderState: (state) => {
       state.selectedFolder = null;
-      state.folderData = null; // Explicitly reset folderData when switching workspaces
+      state.folderData = null;
+      state.assessments = null; // Reset assessments when switching workspaces
     },
   },
   extraReducers: (builder) => {
@@ -133,6 +138,19 @@ const folderSlice = createSlice({
       .addCase(toggleFolderActivation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // Handle fetching workspace assessments
+      .addCase(fetchWorkspaceAssessments.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWorkspaceAssessments.fulfilled, (state, action) => {
+        state.loading = false;
+        state.assessments = action.payload; // Store fetched assessments data
+      })
+      .addCase(fetchWorkspaceAssessments.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -144,5 +162,8 @@ export const selectSelectedFolder = (state) => state.folder.selectedFolder;
 
 // Selector to get folder data
 export const selectFolderData = (state) => state.folder.folderData;
+
+// Selector to get assessments data
+// export const selectAssessments = (state) => state.folder.assessments;
 
 export default folderSlice.reducer;

@@ -23,14 +23,17 @@ import {
   selectSelectedFolder,
   setSelectedFolder,
   toggleFolderActivation,
+  fetchWorkspaceAssessments,
 } from '../../redux/slices/folderSlice';
 import { RiNewspaperLine } from 'react-icons/ri';
+import { select } from 'jodit/esm/plugins/select/select';
 
 const MyAssessmentComp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
+  // const selectAssessmentsData = useSelector(selectAssessments);
   const selectedFolder = useSelector(selectSelectedFolder);
   const { managerData } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +43,7 @@ const MyAssessmentComp = () => {
   const [assessmentData, setAssessmentData] = useState(null);
 
   const activeWorkspace = useMemo(() => {
-    console.log('The response is ', folderData);
+    console.log('The response is ', assessmentData);
     return (
       selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
       selectedWorkspace?.folders?.[0]
@@ -58,10 +61,13 @@ const MyAssessmentComp = () => {
     setCurrentFolder(folder);
     dispatch(setSelectedFolder(folder));
     const assessmentData = await dispatch(
-      toggleFolderActivation({
-        workspaceId,
+      // toggleFolderActivation({
+      //   workspaceId,
+      //   folderId: folder.id,
+      //   isActive: true,
+      // })
+      fetchWorkspaceAssessments({
         folderId: folder.id,
-        isActive: true,
       })
     );
     console.log('CURRENT FOLDER', assessmentData);
@@ -184,24 +190,22 @@ const MyAssessmentComp = () => {
           <div className="workspace-header"></div>
           <div className="grid">
             {assessmentData &&
-              assessmentData.payload.response.data.assessments
-                .filter((item) => item.report[0].isReportGenerated)
-                .map((item) => (
-                  <DashboardCard
-                    key={item._id}
-                    data={{
-                      ...item,
-                      type: 'assessment',
-                      folderData: folderData,
-                      idd: item._id,
-                    }}
-                    onRemove={() => handleRemoveChat()}
-                    onClick={() => {
-                      dispatch(setCurrentChatId(item._id));
-                      navigate(`/assessment/chat/${item._id}`);
-                    }}
-                  />
-                ))}
+              assessmentData.payload.results.map((item) => (
+                <DashboardCard
+                  key={item.id}
+                  data={{
+                    ...item,
+                    type: 'assessment',
+                    folderData: folderData,
+                    idd: item.id,
+                  }}
+                  onRemove={() => handleRemoveChat()}
+                  onClick={() => {
+                    dispatch(setCurrentChatId(item.id));
+                    navigate(`/assessment/chat/${item.id}`);
+                  }}
+                />
+              ))}
           </div>
         </div>
       </div>

@@ -20,21 +20,31 @@ const useAssessment = ({ workspaceId, folderId }) => {
         }
       );
 
-      console.log("Assessment hook response:", response.data);
       const question = response.data.report[0]?.subReport[0]?.questionAnswer[0]?.question;
-      console.log("Extracted question:", question);
 
       setError(null);
       return question;
     } catch (error) {
-      console.error("Error in Assessment:", error); // log the full error
       setError(error.response?.data?.message || error.message); // more detailed error handling
     }
   };
 
+  const getAssessment = async (id) => {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(
+      `${config.apiURL}/workspace-assessment/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
 
 
-  return { error, Assessment };
+
+  return { error, Assessment, getAssessment };
 };
 
 export default useAssessment;

@@ -14,6 +14,7 @@ import { CiEdit } from 'react-icons/ci';
 const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
+  console.log('LAAAAAAAAAAAAAAAAAAAAA', handleAssessmentSelect);
 
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId

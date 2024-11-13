@@ -111,11 +111,10 @@ const useStartAssessment = () => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
 
-  const StartAssessment = async (message, assessmentName, Questions) => {
+  const StartAssessment = async (name, folderId) => {
     try {
-      console.log('assessmentName', assessmentName);
-      console.log('Questions', Questions);
-      console.log('businessInfo', businessInfo);
+      console.log('assessmentName', name);
+      console.log('Questions', folderId);
 
       const businessInfoData = {
         companyName: businessInfo.companyName,
@@ -128,17 +127,15 @@ const useStartAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      console.log(folderId, 'folderID..............');
       const response = await axios.post(
-        `${config.apiURL}/workspace/${currentWorkspace.id}/folder/${
-          folderId?._id || folderId?.id
-        }/assessment/`,
+        `${config.apiURL}/workspace-assessment/`,
         {
           // message: message || '',
           // history: [],
           // generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
           // businessInfo: businessInfoData,
-          assessmentName: assessmentName,
+          folderId,
+          name
         },
         {
           headers: {
@@ -146,22 +143,20 @@ const useStartAssessment = () => {
           },
         }
       );
-      if (response.data && response.data.isReportGenerated) {
+      
+      // if (response.data || response.data.data.report.isGenerated) {
+      //   setIsReportGenerated(true);
+      //   setReport(response.data.data.report.isGenerated);
+      //   return response.data.data;
+      // }
+      console.log(response.data.data);
+      
+      if (response.data.data?.report?.isGenerated) {
         setIsReportGenerated(true);
-        setReport(response.data.report[0].finalReport);
-        return response.data;
-      }
-      console.log('hook response: A:', response.data);
-      console.log('hook response: B', response.data.report[0]);
-      console.log(
-        'hook response: C',
-        response.data.report[0].subReport[0].questionAnswer
-      );
-      console.log(
-        'hook response:',
-        response.data.report[0].subReport[0].questionAnswer[0].question
-      );
-      return response.data;
+        setReport(response.data.data);
+        return response.data.data;
+    }
+      return response.data.data;
     } catch (error) {
       console.log('assessment error', error.message);
       setError(error.message);
