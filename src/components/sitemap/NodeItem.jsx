@@ -5,12 +5,11 @@ import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { HexColorPicker } from 'react-colorful';
 import useOutsideClick from '../../hooks/useOutsideClick';
 
-function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild,mode = 'none' }) {
+function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
   const { id, heading, description, color, isEditing } = nodeData ?? {};
   const [showContextMenu, setShowContextMenu] = useState(false);
   const contextMenuRef = useRef();
 
-  console.log(mode, "13333")
   const close = useCallback(() => setShowContextMenu(false), []);
   useOutsideClick(close);
   return (
@@ -42,25 +41,25 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild,mode 
           cursor: 'pointer',
         }}
       >
-        {mode==='add' ? (
+        {isEditing ? (
           <BiCheckCircle
             color="green"
             size={15}
             onClick={() =>
-              updateNodeDataWithPropertyName(id, 'isEditing', false)
+              updateNodeDataWithPropertyName(id, 'isEditing', false , 'onClick')
             }
           ></BiCheckCircle>
         ) : (
           <BiEdit
             color="rgba(0, 102, 255, 1)"
             size={15}
-            onClick={() =>console.log("hey")
-              // updateNodeDataWithPropertyName(id, 'isEditing', true)
+            onClick={() =>
+              updateNodeDataWithPropertyName(id, 'isEditing', true, 'onChange')
             }
           ></BiEdit>
         )}
       </div>
-      {mode==='none' ? (
+      {!isEditing ? (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span
             style={{

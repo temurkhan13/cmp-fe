@@ -63,6 +63,7 @@ const SitemapLayoutFlow = ({ id }) => {
   const userData = localStorage.getItem('user');
   const authToken = localStorage.getItem('token');
   const dispatch = useDispatch()
+
   const selectedWorkspace = useSelector(selectWorkspace);
 
   // Navigate to a route so that i  can refetch on reload
@@ -129,8 +130,6 @@ const SitemapLayoutFlow = ({ id }) => {
   );
 
   const updateNodeLabelById = (id, newLabel) => {
-
-    console.log(id,newLabel,"123" )
     setNodes((prev) => [
       ...prev.map((node) => {
         if (node.id === id) {
@@ -226,10 +225,11 @@ const SitemapLayoutFlow = ({ id }) => {
   const getSitemap = async () => {
     if (!id) return;
     const res = await getData(`${config.apiURL}/dpb/sitemap/${id}`);
-    dispatch(setSiteMapName(res?.name || ''))
-    console.log(res,"222222226")
+
     if (res) {
       let siteMapId = res.id;
+      console.log(res, "222222229")
+      dispatch(setSiteMapName(res?.name || ''))
 
       res.stages.forEach((stage) => {
         if (stage.stage === 'Playbook Introduction') {
@@ -359,7 +359,6 @@ const SitemapLayoutFlow = ({ id }) => {
         : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
 
     if (stage === 'Playbook Introduction' && res) {
-      dispatch(setSiteMapName(res?.name || ''))
       await linkWorkSpaceAndSiteMap(res?.id);
     }
     setIsLoading(false);
@@ -507,6 +506,7 @@ const SitemapLayoutFlow = ({ id }) => {
       fitView
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
+      key="id"
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
       // defaultzoom={0.2} // Default initial zoom level

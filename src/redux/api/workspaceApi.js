@@ -521,15 +521,24 @@ export const workspaceApi = createApi({
     // Site Map APIs
     updateSiteMapame: builder.mutation({
       query: ({sitemapName,userId,siteMapId}) => ({
-        url: `dpb/sitemap/${siteMapId}`,
-        method: 'PATHC',
+        url: `dpb/sitemap/simple-update/${siteMapId}`,
+        method: 'PATCH',
         body: {
-          sitemapName,
+          name:sitemapName,
           userId
         },
       }),
-      // invalidatesTags: ['Workspace'],
+    
     }),
+    updateSiteMapField: builder.mutation({
+    query: ({ stages, siteMapId }) => ({
+      url: `dpb/update/sitemap/${siteMapId}`,
+      method: 'PATCH',
+      body: {
+        stages,
+      },
+    }),
+  }),
   }),
 });
 
@@ -583,6 +592,7 @@ export const {
   useLikeChatMessageMutation,
   useDislikeChatMessageMutation,
   useAddFeedbackMutation,
-  useUpdateSiteMapameMutation
+  useUpdateSiteMapameMutation,
+  useUpdateSiteMapFieldMutation
 
 } = workspaceApi;

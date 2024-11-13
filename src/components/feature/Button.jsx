@@ -6,6 +6,8 @@ const Button = (props) => {
       onClick={props.onClick}
       className={`btn--${props.className}`}
       type={props.type}
+      disabled={props?.disabled || false}
+      
     >
       {props.icon && <img src={props.icon} alt="icon" />}
       {props.children}

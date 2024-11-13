@@ -5,18 +5,15 @@ import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
 import { useReorder } from '../../hooks/useReorder';
 import './node.scss';
-const Node = ({ data }) => {
+import { useUpdateSiteMapFieldMutation } from '../../redux/api/workspaceApi';
+const Node = ({ data,api }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
   const [hideLabelInput, setHideLabelInput] = useState(data.label.length !== 0);
   const [isLoading, setIsLoading] = useState(false);
-  const [mode, setMode] = useState("none")
   const inputRef = useRef();
-  const [nodeProperty,setNodeProperty] = useState({
-    heading:'',
-    isEditing:false,
-    description: '',
-    id:uuidv4()
-  })
+  const [updateSiteMapField] = useUpdateSiteMapFieldMutation()
+  console.log(data, api)
+
   const [
     draggedIndex,
     draggedOverIndex,
@@ -26,14 +23,34 @@ const Node = ({ data }) => {
     handleDragedEnd,
   ] = useReorder();
 
-  const updateNodeDataWithPropertyName = (id, property, newValue) => {
+  const updateNodeDataWithPropertyName = async(
+    id,
+    property,
+    newValue,
+    type = 'onChange'
+  ) => {
     const updatedArray = nodeData.map((item) =>
       item.id === id ? { ...item, [property]: newValue } : item
     );
     setNodeData(updatedArray);
+    if (type === 'onClick') {
+      const item = updatedArray.find((item) => item.id === id);
+      if (item) {
+        const payload = {
+          _id: data?.id, 
+          nodeData: updatedArray?.map((item)=>({
+            heading:item?.heading,
+            description: item?.description
+          }))
+        }
+        // debugger
+       await updateSiteMapField({siteMapId: data?.siteMapId ,stages: [payload] }).unwrap()
+        alert(JSON.stringify(item));
+      }
+    }
   };
 
-  console.log(nodeData , "30000000")
+
   const addNodeChild = (
     heading = '',
     description = '',
@@ -50,7 +67,6 @@ const Node = ({ data }) => {
     setNodeData(data.nodeData);
   }, [data.nodeData]);
 
-  console.log("YOOO",mode)
   return (
     <div
       className="node"
@@ -106,11 +122,10 @@ const Node = ({ data }) => {
                   outline: 'none',
                   borderRadius: '6px',
                   padding: '5px',
-                  background: 'black',
+                  background: 'white',
                   color: 'white',
                 }}
-                onBlur={(event) => {
-                  alert(event?.target?.value)
+                onBlur={() => {
                   if (data.label.length !== 0) {
                     setHideLabelInput(true);
                   }
@@ -184,7 +199,6 @@ const Node = ({ data }) => {
                   updateNodeDataWithPropertyName={
                     updateNodeDataWithPropertyName
                   }
-                  mode={mode}
                 ></NodeItem>
               </li>
             ))}
@@ -207,9 +221,7 @@ const Node = ({ data }) => {
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                setMode("add")
-                // alert("hey")
-                // addNodeChild();
+                addNodeChild();
               }}
             >
               <BiPlus size={20}></BiPlus>
