@@ -187,7 +187,7 @@ function List() {
                       href="http://139.59.4.99:3500/"
                       target="_blank"
                     >
-                      Create Wireframe
+                      Create Digital Playbook
                       <BiPlus />
                     </a>
                   </div>

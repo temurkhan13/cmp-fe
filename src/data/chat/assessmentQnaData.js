@@ -3,8 +3,9 @@ const assessmentQnaData = [
   'Change Approach/Strategy',
   'Change Impact Assessment',
   'Stakeholder Assessment/Map',
-  'ADKAR Assessment',
   'Training Needs Assessment',
+  'Transition to Sustain',
+  'ADKAR Assessment',
   'What’s Changing and What is Not - Summary',
   'Training Plan',
   'Communications Plan',
@@ -20,9 +21,8 @@ const assessmentQnaData = [
   'User Feedback Survey',
   'Training Feedback Survey',
   'Post Go Live Feedback Survey',
-  'Benefits',
   'Change KPIs/User Adoption Statistics',
-  'Transition to Sustain',
+  'Benefits',
 ];
 
 export default assessmentQnaData;

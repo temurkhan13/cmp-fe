@@ -10,11 +10,17 @@ import {
 } from '../../../redux/slices/workspacesSlice';
 import assessmentQnaData from '../../../data/chat/assessmentQnaData';
 import { CiEdit } from 'react-icons/ci';
+import useAssessment from '../../../hooks/useAssessment';
+import { useParams } from 'react-router-dom';
+import { get } from 'jodit/esm/core/helpers';
+import { fetchWorkspaceAssessments } from '../../../redux/slices/folderSlice';
+import { selectCurrentFolder } from '../../../redux/selectors/selectors';
 
-const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
+const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
+  const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-  console.log('LAAAAAAAAAAAAAAAAAAAAA', handleAssessmentSelect);
+  console.log('LAAAAAAAAAAAAAAAAAAAAA', folderID);
 
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
@@ -25,10 +31,38 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
   const [selectedFolder, setSelectedFolder] = useState({});
   const [selectedReport, setSelectedReport] = useState();
   const [mergeReports, setMergeRepoorts] = useState([]);
+  const [workspaceID, setWorkspaceId] = useState(workspaceId);
+  const [assessmentData, setAssessmentData] = useState([]);
+  const currentFolder = useSelector(selectCurrentFolder);
+  const [assessmentsData, setAssessmentsData] = useState([]);
   const viewReport = (report) => {
     setSelectedReport(report);
     setIsModalOpen(true);
   };
+  const { getAssessment } = useAssessment(workspaceId, folderId);
+  useEffect(() => {
+    const getAssessments = async () => {
+      const assessmentDATA = await dispatch(
+        // toggleFolderActivation({
+        //   workspaceId,
+        //   folderId: folder.id,
+        //   isActive: true,
+        // })
+        fetchWorkspaceAssessments({
+          folderId: folderID,
+        })
+      );
+      setAssessmentsData(assessmentDATA?.payload?.results);
+      console.log('DTATAA', assessmentsData);
+
+      // console.log('DTATAA', currentFolder);
+      const singleAssessment = await getAssessment(id);
+      setAssessmentData(singleAssessment);
+      console.log('GET ASSESSMENTttt', singleAssessment);
+    };
+    getAssessments();
+  }, [workspaceId, folderId]);
+  console.log('GET ASSESSMENTTTTTTTTT', assessmentData);
   useEffect(() => {
     if (workspaceId && folderId) {
       const filteredFolders = selectedWorkspace.folders.filter(
@@ -185,8 +219,20 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
                     <span
                       className={`task-progress hover-show`}
                       style={{
-                        color: taskColors.text,
-                        backgroundColor: taskColors.background,
+                        color:
+                          assessmentsData &&
+                          assessmentsData.find(
+                            (data) => data.name === assessment
+                          )
+                            ? 'black'
+                            : taskColors.text,
+                        backgroundColor:
+                          assessmentsData &&
+                          assessmentsData.find(
+                            (data) => data.name === assessment
+                          )
+                            ? '#C3E11D'
+                            : taskColors.background,
                         borderRadius: '1rem',
                         paddingLeft: '0.8rem',
                         paddingRight: '0.8rem',
@@ -196,7 +242,16 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect }) => {
                         right: '0',
                       }}
                     >
-                      Not Started yet
+                      {/* {assessmentData.name === assessment
+                        ? assessmentData.status
+                        : 'Pending'} */}
+
+                      {assessmentsData &&
+                      assessmentsData?.find((data) => data.name === assessment)
+                        ? assessmentsData?.find(
+                            (data) => data.name === assessment
+                          ).status
+                        : 'Pending'}
                     </span>
                   </div>
                 </div>

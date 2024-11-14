@@ -1,6 +1,6 @@
+// Folder.js
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { FaFolderTree } from 'react-icons/fa6';
 import { useState, useCallback } from 'react';
 import Modal from '../../common/Modal';
 import FileStructure from '../../dashboard/FileStructure';
@@ -16,7 +16,6 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showNotification, setShowNotification] = useState(false);
 
-  // Validation schema for new folder creation
   const validationSchema = Yup.object({
     projectName: Yup.string()
       .required('Project Name is required')
@@ -52,18 +51,14 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
         }).unwrap();
         setIsNewFolderModalOpen(false);
         resetForm();
-        onFolderUpdate(); // Notify the parent component to refresh folder data
+        onFolderUpdate(); // Trigger parent update
       } catch (error) {
-        console.log('Failed to add Project.');
+        setErrorMessage('Failed to add Project.');
+        setShowNotification(true);
       }
     },
     [addFolder, activeWorkspace?.id, onFolderUpdate]
   );
-
-  const showError = useCallback((message) => {
-    setErrorMessage(message);
-    setShowNotification(true);
-  }, []);
 
   return (
     <div className="dashboard">
@@ -71,7 +66,6 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
         <div className="container-heading">
           <div className="left-buttons">
             <p className="assistant-heading">
-              {/*<FaFolderTree />*/}
               <BiSolidFolderOpen size={30} />
               Projects
             </p>
@@ -87,7 +81,6 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
         </div>
       </section>
 
-      {/* Show the FileStructure based on the selected workspace */}
       {activeWorkspace && activeWorkspace.folders?.length > 0 ? (
         <FileStructure
           workspace={activeWorkspace}

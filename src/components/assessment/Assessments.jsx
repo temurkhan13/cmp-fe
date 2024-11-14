@@ -276,7 +276,7 @@ const Comment = {
   ],
 };
 
-const Assessments = ({ handleAssessmentSelect }) => {
+const Assessments = ({ handleAssessmentSelect, folderID }) => {
   const [activeIcon, setActiveIcon] = useState('question');
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
@@ -334,6 +334,7 @@ const Assessments = ({ handleAssessmentSelect }) => {
           bodyContent={
             <AssessmentTasks
               tasks={tasks}
+              folderID={folderID}
               handleAssessmentSelect={handleAssessmentSelect}
             />
           }
