@@ -114,7 +114,7 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
             className="improve-response"
             onClick={handleOpenImproveResponseModal}
           >
-            Improve Response
+            Survey Info
           </span>
 
           {/* <span

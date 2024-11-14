@@ -105,7 +105,7 @@ function List() {
                           navigate('/sitemap/new');
                         }}
                       >
-                        Create Template
+                        Create Sitemap
                         <BiPlus />
                       </button>
                     </div>

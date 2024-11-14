@@ -58,9 +58,11 @@ const Chat = () => {
   };
 
   const [currentFolder, setCurrentFolder] = useState(null);
+  const [folderID, setFolderID] = useState(null);
 
   // Memoize Active Workspace
   const activeWorkspace = useMemo(() => {
+    setCurrentFolder(selectWorkspace?.folders);
     return (
       selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
       selectedWorkspace?.folders?.[0]
@@ -83,6 +85,10 @@ const Chat = () => {
           isActive: true,
         })
       );
+
+      console.log('FOLDDERRRRRRRRRRRRR', folder.id);
+
+      setFolderID(folder.id);
 
       try {
         await dispatch(
@@ -183,7 +189,10 @@ const Chat = () => {
           selectedAssessment={selectedAssessment}
         />
 
-        <Assessments handleAssessmentSelect={handleAssessmentSelect} />
+        <Assessments
+          folderID={folderID}
+          handleAssessmentSelect={handleAssessmentSelect}
+        />
       </section>
     </div>
   );

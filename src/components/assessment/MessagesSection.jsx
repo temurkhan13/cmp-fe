@@ -103,6 +103,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     if (id) {
       const getAssessmentAsync = async () => {
         const singleAssessment = await getAssessment(id);
+        console.log('GET ASSESSMENT', singleAssessment);
 
         if (singleAssessment.report && singleAssessment.report.isGenerated) {
           setShowReportButton(true);
@@ -529,8 +530,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     setReportsData(reportsData);
     console.log('REPORT DATAAAAAAAAAAAAAAAAAAAAAAAAAA', reportsData);
     setShowModal(true);
-    // const fullUrl = `${data.data.report.url}`;
-    // window.open(fullUrl, '_blank');
+    const fullUrl = `${reportsData.data.report.url}`;
+    window.open(fullUrl, '_blank');
+    const link = document.createElement('a');
+    link.href = fullUrl;
+    link.download = 'report.pdf'; // You can specify the filename
+    link.click();
     setLoading(false);
     refetch();
     setGenerateSingleReport(false);
@@ -764,23 +769,25 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       )}
       {showInputField && (
         <>
-          <button
-            onClick={handleSingleReport}
-            style={{
-              backgroundColor: 'rgba(195, 225, 29, 1)',
-              padding: '1rem',
-              borderRadius: '10px',
-              border: 'none',
-              outline: 'none',
-              fontSize: '1.5rem',
-              fontWeight: '500',
-              display: showReportButton ? 'flex' : 'none',
-              marginBottom: '1rem',
-            }}
-          >
-            Generate a Single Report
-          </button>
-
+          <div style={{ position: 'relative', width: '70%' }}>
+            <button
+              onClick={handleSingleReport}
+              style={{
+                backgroundColor: 'rgba(195, 225, 29, 1)',
+                padding: '1rem',
+                borderRadius: '10px',
+                border: 'none',
+                outline: 'none',
+                fontSize: '1.5rem',
+                fontWeight: '500',
+                display: showReportButton ? 'flex' : 'none',
+                marginBottom: '1rem',
+                margin: '0 0 1rem auto',
+              }}
+            >
+              View Report
+            </button>
+          </div>
           <div className="Message_container">
             <div className="input-container">
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -821,12 +828,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 style={{
                   resize: 'none',
                   overflowY: 'auto',
-                  height: '40px',
+                  height: 'auto',
                   maxHeight: '150px', // Set maximum height before scroll
                   width: '100%', // Full width of the container
                   border: 'none',
                   borderRadius: '10px',
-                  padding: '13px 12px 8px 12px',
+                  padding: '14px 12px 0px 12px',
                   fontSize: '14px',
                   fontFamily: 'Arial, sans-serif',
                   boxSizing: 'border-box',
