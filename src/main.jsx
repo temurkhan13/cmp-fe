@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ScaleLoader } from 'react-spinners';
-import ComingSoon from './components/common/ComingSoon.jsx';
 
 const Loading = () => (
   <ScaleLoader
@@ -20,13 +19,12 @@ const Loading = () => (
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Loading />}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <App />
         </PersistGate>
       </Provider>
-    </Suspense> */}
-    <ComingSoon />
+    </Suspense>
   </React.StrictMode>
 );
