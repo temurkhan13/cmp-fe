@@ -13,7 +13,9 @@ import SearchDropdown from '../CustomDropdown/SearchDropdown';
 import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
 import { Questionnaire } from '../../modules/assessment';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 // import UserProfilePic from '../../assets/chat/user.png';
 
 const searchUser = ['John', 'abigale', 'mosa'];
@@ -21,6 +23,7 @@ const searchUser = ['John', 'abigale', 'mosa'];
 const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [activeWorkspaceName, SetActiveWorkspaceName] = useState([]);
   const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
     useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -29,6 +32,9 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
+  const selectedWorkspace = useSelector(selectWorkspace);
+  // SetActiveWorkspaceName(selectedWorkspace);
+  console.log(selectedWorkspace.workspaceName, '177777');
 
   const closeActiveIcon = () => setActiveIcon(null);
 
@@ -64,12 +70,14 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
     }`.toUpperCase();
   };
 
+  console.log('ACTIVE_WORKSPACE', activeWorkspace);
+
   return (
     <div className="topbar">
       <div>
         <Components.Feature.HeaderDropDown />
         <Components.Feature.Button className="secondry">
-          {activeWorkspace?.workspaceName}
+          {selectedWorkspace?.workspaceName}
         </Components.Feature.Button>
         {(siteMapId && location.pathname === '/sitemap/new') ||
         location.pathname === `/sitemap/${siteMapId}` ? (
