@@ -39,7 +39,7 @@ const NewChat = () => {
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentAssessment);
-  console.log(currentFolder,'currentFolder')
+  console.log(currentFolder, 'currentFolder');
   // const selectedFolder = useSelector((state) =>
   //   selectFolderById(state, currentFolder._id)
   // );
