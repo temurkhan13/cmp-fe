@@ -517,6 +517,20 @@ export const workspaceApi = createApi({
       }),
       // invalidatesTags: ['Workspace'],
     }),
+    editReport: builder.mutation({
+      query: ({assessmentId, title, content}) => ({
+        url: `workspace-assessment/${assessmentId}/report`,
+        method: 'PATCH',
+        body: {title: title, content: content},
+      }),
+    }),
+    downloadReport: builder.mutation({
+      query: ({ assessmentId }) => ({
+        url: `/workspace-assessment/${assessmentId}/report/download`,
+        method: 'GET',
+        responseHandler: (response) => response.blob(), // Process as Blob
+      }),
+    }),
   }),
 });
 
@@ -570,4 +584,6 @@ export const {
   useLikeChatMessageMutation,
   useDislikeChatMessageMutation,
   useAddFeedbackMutation,
+  useEditReportMutation,
+  useDownloadReportMutation,
 } = workspaceApi;

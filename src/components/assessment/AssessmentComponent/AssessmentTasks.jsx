@@ -11,12 +11,13 @@ import {
 import assessmentQnaData from '../../../data/chat/assessmentQnaData';
 import { CiEdit } from 'react-icons/ci';
 import useAssessment from '../../../hooks/useAssessment';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { get } from 'jodit/esm/core/helpers';
 import { fetchWorkspaceAssessments } from '../../../redux/slices/folderSlice';
 import { selectCurrentFolder } from '../../../redux/selectors/selectors';
 
 const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -35,30 +36,32 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
   const [assessmentData, setAssessmentData] = useState([]);
   const currentFolder = useSelector(selectCurrentFolder);
   const [assessmentsData, setAssessmentsData] = useState([]);
+  const { getAssessment } = useAssessment(workspaceId, folderId);
+
   const viewReport = (report) => {
     setSelectedReport(report);
     setIsModalOpen(true);
   };
-  const { getAssessment } = useAssessment(workspaceId, folderId);
+
   useEffect(() => {
     const getAssessments = async () => {
-      const assessmentDATA = await dispatch(
-        // toggleFolderActivation({
-        //   workspaceId,
-        //   folderId: folder.id,
-        //   isActive: true,
-        // })
-        fetchWorkspaceAssessments({
-          folderId: folderID,
-        })
-      );
-      setAssessmentsData(assessmentDATA?.payload?.results);
-      console.log('DTATAA', assessmentsData);
+      try {
+        const assessmentDATA = await dispatch(
+          fetchWorkspaceAssessments({
+            folderId: folderID,
+          })
+        );
+        const fetchedData = assessmentDATA?.payload?.results || [];
+        setAssessmentsData(fetchedData);
+        console.log('DTATAA', assessmentsData);
 
-      // console.log('DTATAA', currentFolder);
-      const singleAssessment = await getAssessment(id);
-      setAssessmentData(singleAssessment);
-      console.log('GET ASSESSMENTttt', singleAssessment);
+        // console.log('DTATAA', currentFolder);
+        const singleAssessment = await getAssessment(id);
+        setAssessmentData(singleAssessment);
+        console.log('GET ASSESSMENTttt', singleAssessment);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getAssessments();
   }, [workspaceId, folderId]);
@@ -247,11 +250,11 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                         : 'Pending'} */}
 
                       {assessmentsData &&
-                      assessmentsData?.find((data) => data.name === assessment)
+                      assessmentsData?.find((data) => data?.name === assessment)
                         ? assessmentsData?.find(
-                            (data) => data.name === assessment
+                            (data) => data?.name === assessment
                           ).status
-                        : 'Pending'}
+                        : 'pending'}
                     </span>
                   </div>
                 </div>
