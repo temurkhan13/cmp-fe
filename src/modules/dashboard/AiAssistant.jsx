@@ -195,9 +195,9 @@ const AiAssistant = () => {
 
       <div className="section">
         <div className="workspace-header"></div>
-        <div className="grid">
-          {folderData?.[0]?.chats.length > 0 ? (
-            folderData?.[0]?.chats?.map((item) => (
+        {folderData?.[0]?.chats.length > 0 ? (
+          <div className="grid">
+            {folderData?.[0]?.chats?.map((item) => (
               <DashboardCard
                 key={item.id}
                 data={{ ...item, type: 'chats' }}
@@ -207,11 +207,20 @@ const AiAssistant = () => {
                   navigate(`/assistant/chat/${item.id}`);
                 }}
               />
-            ))
-          ) : (
+            ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '300px',
+              margin: '0 auto',
+            }}
+          >
             <NoData message="No Data Available" />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <style>{`
