@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
 import {
   BaseEdge,
@@ -39,5 +39,13 @@ function Edge({ id, sourceX, sourceY, targetX, targetY }) {
     </>
   );
 }
+
+Edge.propTypes = {
+  id: PropTypes.string.isRequired,
+  sourceX: PropTypes.number.isRequired,
+  sourceY: PropTypes.number.isRequired,
+  targetX: PropTypes.number.isRequired,
+  targetY: PropTypes.number.isRequired,
+};
 
 export default Edge;

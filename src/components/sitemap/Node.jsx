@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import PropTypes from 'prop-types';
 import { Handle, Position } from '@xyflow/react';
 import { BiPlus, BiPlusCircle } from 'react-icons/bi';
 import NodeItem from './NodeItem';
@@ -268,4 +270,25 @@ const Node = ({ data }) => {
   );
 };
 
+Node.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    nodeData: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        heading: PropTypes.string,
+        description: PropTypes.string,
+        color: PropTypes.string,
+        isEditing: PropTypes.bool,
+      })
+    ).isRequired,
+    isRoot: PropTypes.bool,
+    updateNodeLabelById: PropTypes.func.isRequired,
+    onAddChild: PropTypes.func,
+    fetchNodeData: PropTypes.func,
+    siteMapId: PropTypes.string,
+    showGenerateAIButton: PropTypes.bool,
+  }).isRequired,
+};
 export default Node;
