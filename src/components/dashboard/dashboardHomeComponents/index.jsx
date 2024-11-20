@@ -4,7 +4,6 @@ import CountingCards from './CountingCards';
 import Folder from './Folder';
 import Account from './Account';
 import NotificationBar from '../../common/NotificationBar.jsx';
-import { ImTree } from 'react-icons/im';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDashboardStats,
@@ -27,6 +26,8 @@ import { RiNewspaperLine } from 'react-icons/ri';
 import { GiWireframeGlobe } from 'react-icons/gi';
 import { IoIosChatboxes } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import { BsFilePlayFill } from 'react-icons/bs';
+
 import './styles/DashboardHome.css';
 
 const SectionGrid = ({ title, items, itemType, onRemove }) => {
@@ -270,13 +271,13 @@ const DashboardHomeComp = () => {
 
           {folderData?.[0]?.wireframes?.length > 0 ? (
             <SectionGrid
-              title="Wireframes"
+              title="Digital PlayBook"
               items={folderData[0].wireframes}
               itemType="wireframes"
-              onRemove={(id) => handleRemoveItem(id, 'wireframes')}
+              onRemove={(id) => handleRemoveItem(id, 'Digital PlayBook')}
             />
           ) : (
-            <NoDataMessage title="Wireframes" icon={<ImTree />} />
+            <NoDataMessage title="Digital PlayBook" icon={<BsFilePlayFill />} />
           )}
         </div>
       </section>

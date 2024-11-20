@@ -88,8 +88,8 @@ const SitemapLayoutFlow = ({ id }) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
     g.setGraph({ rankdir: options.direction });
 
-    edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-    nodes.forEach((node) =>
+    edges.map((edge) => g.setEdge(edge.source, edge.target));
+    nodes.map((node) =>
       g.setNode(node.id, {
         ...node,
         width: node.measured?.width ?? 0,
@@ -151,7 +151,7 @@ const SitemapLayoutFlow = ({ id }) => {
     nodeData = [],
     nodeKey = uuidv4(),
     siteMapId = '',
-    showGenerateAIButton = false
+    showGenerateAIButton = true
   ) => {
     const newNodeId = nodeKey;
     const position = { x: parentPosition.x + 0, y: parentPosition.y + 200 };
@@ -227,7 +227,7 @@ const SitemapLayoutFlow = ({ id }) => {
     if (res) {
       let siteMapId = res.id;
 
-      res.stages.forEach((stage) => {
+      res.stages.map((stage) => {
         if (stage.stage === 'Playbook Introduction') {
           addChildNode(
             'root',
@@ -247,7 +247,7 @@ const SitemapLayoutFlow = ({ id }) => {
           );
 
           let parentId = stage._id;
-          stage.nodes.forEach((node) => {
+          stage.nodes.map((node) => {
             addChildNode(
               parentId,
               { x: 0, y: 0 },
@@ -255,7 +255,7 @@ const SitemapLayoutFlow = ({ id }) => {
               [],
               node._id,
               siteMapId,
-              false
+              true
             );
           });
         }
@@ -286,7 +286,7 @@ const SitemapLayoutFlow = ({ id }) => {
             }),
           ]);
 
-          stage.nodes.forEach((node) => {
+          stage.nodes.map((node) => {
             addChildNode(
               stage._id,
               { x: 0, y: 0 },
@@ -336,10 +336,10 @@ const SitemapLayoutFlow = ({ id }) => {
     sitemapId = ''
   ) => {
     const parsedUserData = userData ? JSON.parse(userData) : null;
-    if (prompt === '') {
-      alert('Please enter a message');
-      return;
-    }
+    // if (prompt === '') {
+    //   alert('Please enter a message');
+    //   return;
+    // }
     setIsLoading(true);
     setPromptVisible(false);
     const payload = {
@@ -362,10 +362,10 @@ const SitemapLayoutFlow = ({ id }) => {
     let siteMapId = res.id;
     navigate({ pathname: `/sitemap/${res?.id}` }, { replace: true });
 
-    res.stages.forEach((stage) => {
+    res.stages.map((stage) => {
       addChildNode(
         'root',
-        { x: 1200, y: 0 },
+        { x: 1100, y: 0 },
         stage.stage,
         stage.nodeData.map(({ heading, description }) => {
           return {
@@ -377,11 +377,12 @@ const SitemapLayoutFlow = ({ id }) => {
           };
         }),
         res.stages[0]._id,
-        siteMapId
+        siteMapId,
+        console.log('SITEMAP:', stage)
       );
 
       let parentId = stage._id;
-      stage.nodes.forEach((node, index) => {
+      stage.nodes.map((node, index) => {
         addChildNode(
           parentId,
           { x: (index + 1) * 400, y: 700 },
@@ -393,7 +394,7 @@ const SitemapLayoutFlow = ({ id }) => {
         );
       });
     });
-    // onLayout('LR');
+    onLayout('LR');
     setLayouted(true);
   };
 
@@ -403,10 +404,10 @@ const SitemapLayoutFlow = ({ id }) => {
     nodeData = [],
     sitemapId = ''
   ) => {
-    if (prompt === '') {
-      alert('Please enter a message');
-      return;
-    }
+    // if (prompt === '') {
+    //   alert('Please enter a message');
+    //   return;
+    // }
     setIsLoading(true);
     const parsedUserData = userData ? JSON.parse(userData) : null;
 
@@ -427,7 +428,7 @@ const SitemapLayoutFlow = ({ id }) => {
     setLayouted(false);
     let siteMapId = res.id;
 
-    res.stages.forEach((stage) => {
+    res.stages.map((stage) => {
       if (stage.stage !== stageLabel) {
         return;
       }
@@ -458,7 +459,7 @@ const SitemapLayoutFlow = ({ id }) => {
         }),
       ]);
 
-      stage.nodes.forEach((node) => {
+      stage.nodes.map((node) => {
         addChildNode(
           nodeId,
           { x: 0, y: 0 },
