@@ -200,7 +200,7 @@ const Editor = ({
           },
         },
         {
-          name: 'download',
+          name: 'Download',
           tooltip: 'Download Report',
           exec: () => {
             handleReportDownload();
@@ -216,7 +216,7 @@ const Editor = ({
   );
 
   return (
-    <div>
+    <div style={{ width: '870px' }}>
       <JoditEditor
         ref={editor}
         value={htmlContent} // Render HTML in the editor

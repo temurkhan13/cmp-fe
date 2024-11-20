@@ -4,6 +4,7 @@ import { HiDotsHorizontal } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaFolderTree } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
+import NoData from '../../components/common/NoDataAvailable';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import {
@@ -188,25 +189,38 @@ const MyAssessmentComp = () => {
 
         <div className="section">
           <div className="workspace-header"></div>
-          <div className="grid">
-            {assessmentData &&
-              assessmentData.payload.results.map((item) => (
-                <DashboardCard
-                  key={item.id}
-                  data={{
-                    ...item,
-                    type: 'assessment',
-                    folderData: folderData,
-                    idd: item.id,
-                  }}
-                  onRemove={() => handleRemoveChat()}
-                  onClick={() => {
-                    dispatch(setCurrentChatId(item.id));
-                    navigate(`/assessment/chat/${item.id}`);
-                  }}
-                />
-              ))}
-          </div>
+          {assessmentData &&
+            (assessmentData.payload.results.length > 0 ? (
+              <div className="grid">
+                {assessmentData.payload.results.map((item) => (
+                  <DashboardCard
+                    key={item.id}
+                    data={{
+                      ...item,
+                      type: 'assessment',
+                      folderData: folderData,
+                      idd: item.id,
+                    }}
+                    onRemove={() => handleRemoveChat()}
+                    onClick={() => {
+                      dispatch(setCurrentChatId(item.id));
+                      navigate(`/assessment/chat/${item.id}`);
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width: '300px',
+                  margin: '0 auto',
+                }}
+              >
+                <NoData message="No Data Available" />
+              </div>
+            ))}
         </div>
       </div>
 
