@@ -4,6 +4,15 @@ import JoditEditor from 'jodit-react';
 import WordReportTemplate from '../../reports/WordReportTemplate';
 import ReactDOMServer from 'react-dom/server';
 import htmlToPdfmake from 'html-to-pdfmake';
+import axios from 'axios';
+import coverPhoto from '@assets/common/coverPhoto.png';
+import { PDFDocument } from 'pdf-lib';
+import {
+  useEditReportMutation,
+  useDownloadReportMutation,
+} from '../../../redux/api/workspaceApi';
+import { marked } from 'marked'; // Markdown to HTML converter
+import TurndownService from 'turndown'; // HTML to Markdown converter
 
 async function loadPdfMake() {
   const pdfMake = (await import('pdfmake/build/pdfmake')).default;
@@ -13,17 +22,55 @@ async function loadPdfMake() {
   return pdfMake;
 }
 
-const Editor = ({ placeholder, height, data, title }) => {
+const Editor = ({
+  placeholder,
+  height,
+  data,
+  title,
+  assesmentId,
+  asssessment,
+}) => {
   const editor = useRef(null);
-  const [content, setContent] = useState(data.content);
+  const [content, setContent] = useState(data?.content || ''); // Ensure default fallback
+  const [assessmentID, setAssessmentID] = useState(assesmentId);
+  const [editReport] = useEditReportMutation();
+  const [downloadReport] = useDownloadReportMutation();
 
-  console.log('CONTENT DATAA', data);
-  console.log('DATAA CONTENT', content);
-  const markdownData = data.content;
-  console.log('DATAA CONTENT', markdownData);
+  // Convert Markdown to HTML for editor display
+  const htmlContent = useMemo(
+    () => marked(content || data?.content),
+    [content]
+  );
+
+  useEffect(() => {
+    console.log('REPORRRTTTT IDDDDD', data);
+  });
+
+  const processTableContent = (html) => {
+    const container = document.createElement('div');
+    container.innerHTML = html;
+
+    // Iterate over tables and apply custom adjustments if needed
+    const tables = container.querySelectorAll('table');
+    tables.forEach((table) => {
+      // Ensure all table cells have styles for consistent rendering
+      const rows = table.querySelectorAll('tr');
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll('td, th');
+        cells.forEach((cell) => {
+          // Set a default style for table cells
+          cell.style.border = '1px solid black';
+          cell.style.padding = '5px';
+          cell.style.textAlign = 'left';
+        });
+      });
+    });
+
+    return container.innerHTML;
+  };
 
   const downloadPdf = () => {
-    const editorContent = editor.current.value;
+    const editorContent = editor.current?.value || '';
 
     const updatedContent = editorContent.replace(
       /<img src="([^"]+)"[^>]*>/g,
@@ -44,51 +91,87 @@ const Editor = ({ placeholder, height, data, title }) => {
     });
   };
 
-  // Generate HTML for TrioPage
+  const handleContentUpdate = async (newContent) => {
+    try {
+      // Convert HTML back to Markdown using Turndown
+      const turndownService = new TurndownService();
+      const markdownContent = turndownService.turndown(newContent);
+
+      // Call the mutation API with Markdown content
+      const response = await editReport({
+        assessmentId: assessmentID,
+        title,
+        content: markdownContent,
+      }).unwrap();
+
+      console.log('Full API response:', response);
+
+      // Update the editor content with Markdown
+      setContent(response?.content); // Ensure safe fallback
+    } catch (error) {
+      console.error('Error updating the report:', error);
+    }
+  };
+
+  const handleReportDownload = async () => {
+    try {
+      console.log('Assessment ID:', assessmentID);
+
+      // Fetch the PDF as a Blob
+      const pdfBlob = await downloadReport({
+        assessmentId: assessmentID,
+      }).unwrap();
+
+      // Create a URL for the Blob
+      const url = window.URL.createObjectURL(pdfBlob);
+
+      // Create an anchor element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `report-${assessmentID}.pdf`); // Set the filename
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      console.log('Download successful');
+    } catch (error) {
+      console.error('Error downloading the report:', error);
+      alert('An unexpected error occurred. Please try again.');
+    }
+  };
+
   const reportHtml = ReactDOMServer.renderToStaticMarkup(
     <WordReportTemplate title={title} content={content} />
   );
 
-  const htmlToDocx = (html) => {};
-
   const downloadDocx = async (content) => {
     try {
-      const doc = htmlToDocx(content);
-
-      // Convert the DOCX document to a Blob
-      const blob = await Packer.toBlob(doc);
-      saveAs(blob, 'document.docx');
+      const doc = htmlToPdfmake(content); // Convert to a document
+      const blob = new Blob([doc], {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'document.docx';
+      link.click();
     } catch (error) {
       console.error('Error generating DOCX file:', error);
     }
   };
 
-  // useEffect(() => {
-  //   setContent(reportHtml);
-  // }, [reportHtml]);
-
   const config = useMemo(
     () => ({
       readonly: false,
       placeholder: placeholder || 'Start typing...',
-      height: height || '100%', // Set the height here
+      height: '90vh', // Set the height here
       showCharsCounter: false,
       showWordsCounter: false,
       showXPathInStatusbar: false,
       toolbarButtonSize: 'large',
       toolbarAdaptive: true,
-      extraPlugins: ['export-docs'],
-      export: {
-        fileProxy: '/export-to-pdf', // Ensure this endpoint is correctly set up on your server
-        download: true, // Enable download directly from the editor
-      },
-      aiAssistant: {
-        aiTranslateToFrenchPrompt: '',
-
-        aiAssistantCallback(propmt, htmlFragment) {
-          return Promise.resolve('AI Assistant is not configured');
-        },
-      },
       buttons: [
         'bold',
         'italic',
@@ -109,18 +192,18 @@ const Editor = ({ placeholder, height, data, title }) => {
         'table',
         '|',
         {
-          name: 'export',
-          iconURL: 'http://localhost:5173/src/assets/common/icon.svg',
-          exec: (editor) => {
-            const content = editor.getEditorValue();
-            console.log(content);
-            downloadDocx(reportHtml);
-            //  const blob = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-            // const docxContent = HTMLDocx.asBlob(content);
-            // const link = document.createElement('a');
-            // link.href = URL.createObjectURL(docxContent);
-            // link.download = 'document.docx';
-            // link.click();
+          name: 'save',
+          tooltip: 'Save Content',
+          exec: () => {
+            const currentContent = editor.current?.getEditorValue() || '';
+            handleContentUpdate(currentContent);
+          },
+        },
+        {
+          name: 'download',
+          tooltip: 'Download Report',
+          exec: () => {
+            handleReportDownload();
           },
         },
         'fullsize',
@@ -134,14 +217,12 @@ const Editor = ({ placeholder, height, data, title }) => {
 
   return (
     <div>
-      {' '}
       <JoditEditor
         ref={editor}
-        value={reportHtml}
+        value={htmlContent} // Render HTML in the editor
         config={config}
         tabIndex={1}
-        onBlur={(newContent) => setContent(newContent)}
-        onChange={() => {}}
+        onBlur={(newContent) => handleContentUpdate(newContent)}
       />
     </div>
   );
