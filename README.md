@@ -94,3 +94,4 @@ For now see [System Flow](#change-ai-system-flow)
 - [ ] Write detailed user guides
 - [ ] Create tutorial videos
 - [ ] Update API documentation
+- [ ] Use good git commits
