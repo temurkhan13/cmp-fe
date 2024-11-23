@@ -6,7 +6,9 @@ const Account = () => {
       <div className="table">
         <section>
           <h1>Account information</h1>
-          {/* <h3 style={{color: 'blue', cursor: 'pointer'}}>Change payment details</h3> */}
+          <h3 style={{ color: 'blue', cursor: 'pointer' }}>
+            Change payment details
+          </h3>
         </section>
         <div
           style={{
@@ -76,7 +78,18 @@ const Account = () => {
         <h3 style={{ fontSize: '20px', color: 'grey', margin: '40px 0' }}>
           Free
         </h3>
-        {/* <button style={{padding: '10px 15px', borderRadius: '10px', border: 'none', backgroundColor: '#C3E11D', margin: '30px 0 0 0'}}>Upgrade Plan</button> */}
+        <button
+          style={{
+            padding: '10px 15px',
+            borderRadius: '10px',
+            border: 'none',
+            backgroundColor: '#C3E11D',
+            margin: '30px 0 0 0',
+            fontWeight: '600',
+          }}
+        >
+          Upgrade Plan
+        </button>
       </div>
       <style>
         {`

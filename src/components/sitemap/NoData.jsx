@@ -1,7 +1,6 @@
-import React from 'react';
 import { BiFolder } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { BiPlus, BiPlusCircle } from 'react-icons/bi';
+import { BiPlus } from 'react-icons/bi';
 
 function NoData() {
   let navigate = useNavigate();
