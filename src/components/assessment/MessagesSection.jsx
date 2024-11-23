@@ -77,9 +77,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [reaction, setReaction] = useState('');
   const [allAssessmentData, setAllAssessmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
+  const [reactions, setReactions] = useState('');
+  const [copy, setCopy] = useState('');
+  const [bookmark, setBookmark] = useState('');
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
@@ -386,7 +388,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     messageElements.forEach((element) => {
       const contentElement = element.querySelector('.msg');
       if (contentElement && contentElement.contains(selection.anchorNode)) {
-        const messageRole = element.querySelector('.Heading').textContent;
+        const messageRole = element.querySelector('.Heading').textContent || '';
         if (messageRole === 'ChangeAI' || messageRole === 'You') {
           isValidSelection = true;
         }
@@ -530,12 +532,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     setReportsData(reportsData);
     console.log('REPORT DATAAAAAAAAAAAAAAAAAAAAAAAAAA', reportsData);
     setShowModal(true);
-    const fullUrl = `${reportsData.data.report.url}`;
-    window.open(fullUrl, '_blank');
-    const link = document.createElement('a');
-    link.href = fullUrl;
-    link.download = 'report.pdf'; // You can specify the filename
-    link.click();
+    // const fullUrl = `${reportsData.data.report.url}`;
+    // window.open(fullUrl, '_blank');
+    // const link = document.createElement('a');
+    // link.href = fullUrl;
+    // link.download = 'report.pdf'; // You can specify the filename
+    // link.click();
     setLoading(false);
     refetch();
     setGenerateSingleReport(false);
@@ -637,24 +639,25 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                         title="Copy"
                         onClick={() => handleCopyMessage(item.answer)}
                       >
-                        <FaCopy style={{ cursor: 'pointer' }} />
+                        <FaCopy
+                          onClick={() => setCopy('copy')}
+                          style={{
+                            cursor: 'pointer',
+                            color: copy === 'copy' ? '#C3E11D' : '',
+                          }}
+                        />
                         <span className="tooltip-assessment">Copy</span>
                       </div>
                       <div
                         className="message-icon-wrapper"
                         title="Like"
-                        onClick={() => handleLikeClick(item)}
+                        onClick={() => setReactions('like')}
                       >
                         <FaThumbsUp
                           style={
-                            item.reactions?.some(
-                              (react) =>
-                                react.user ===
-                                  JSON.parse(localStorage.getItem('user')).id &&
-                                react.type === 'like'
-                            )
+                            reactions === 'like'
                               ? { color: '#C3E11D' }
-                              : {}
+                              : { color: '' }
                           }
                         />
                         <span className="tooltip-assessment">Like</span>
@@ -662,34 +665,20 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                       <div
                         className="message-icon-wrapper"
                         title="Dislike"
-                        onClick={() => handleDislikeMessage(item)}
+                        onClick={() => setReactions('disLike')}
                       >
                         <FaThumbsDown
                           style={
-                            item.reactions?.some(
-                              (react) =>
-                                react.user ===
-                                  JSON.parse(localStorage.getItem('user')).id &&
-                                react.type === 'dislike'
-                            )
-                              ? { color: '#C3E11D' }
-                              : {}
+                            reactions === 'disLike' ? { color: '#C3E11D' } : {}
                           }
                         />
                         <span className="tooltip-assessment">Dislike</span>
                       </div>
                       <div className="message-icon-wrapper" title="Bookmark">
                         <FaBookmark
-                          onClick={() => handleAddBookmark(item)}
+                          onClick={() => setBookmark('bookmark')}
                           style={
-                            chat.bookmarks?.some(
-                              (bookmark) =>
-                                bookmark.messageId === item._id &&
-                                bookmark.userId ===
-                                  JSON.parse(localStorage.getItem('user')).id
-                            )
-                              ? { color: '#C3E11D' }
-                              : {}
+                            bookmark === 'bookmark' ? { color: '#C3E11D' } : {}
                           }
                         />
                         <span className="tooltip-assessment">Bookmark</span>
@@ -860,6 +849,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
             <Editor
               title={'test'}
               data={reportsData}
+              assesmentId={assessmentId}
               placeholder="Type your text here..."
               height="100vw"
             />
