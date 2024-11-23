@@ -41,10 +41,10 @@ const DEFAULT_NODE = [
       id: 'root',
       label: 'Add Title',
       nodeData: [],
-      onAddChild: () => {},
+      onAddChild: () => { },
       isRoot: true,
-      updateNodeLabelById: () => {},
-      fetchNodeData: () => {},
+      updateNodeLabelById: () => { },
+      fetchNodeData: () => { },
       siteMapId: '',
       showGenerateAIButton: false,
     },
@@ -180,9 +180,9 @@ const SitemapLayoutFlow = ({ id }) => {
     setEdges((eds) => [
       ...eds,
       {
-        id: `e${parentId}-${newNodeId}`,
+        id: `${parentId}-${nodeKey}`,
         source: parentId,
-        target: newNodeId,
+        target: nodeKey,
         type: 'custom-edge',
       },
     ]);
@@ -247,7 +247,22 @@ const SitemapLayoutFlow = ({ id }) => {
           );
 
           let parentId = stage._id;
-          stage.nodes.map((node) => {
+          res.stages.forEach((stage) => {
+            if (stage.stage === 'Playbook Introduction') return;
+            addChildNode(
+              parentId,
+              { x: 0, y: 0 },
+              stage.stage,
+              [],
+              stage._id,
+              siteMapId,
+              true
+            );
+          });
+
+          stage.nodes.forEach((node) => {
+            let ifStage = res?.stages?.find((stage) => stage.stage === node.heading);
+            if (ifStage) return;
             addChildNode(
               parentId,
               { x: 0, y: 0 },
@@ -309,10 +324,10 @@ const SitemapLayoutFlow = ({ id }) => {
     }
   };
 
-  console.log('nodesj -> ', nodes);
+  // console.log('nodesj -> ', nodes);
 
   const linkWorkSpaceAndSiteMap = async (sitemapId) => {
-    const folderId = selectedWorkspace.folders.find(
+    const folderId = selectedWorkspace?.folders?.find(
       (folder) => folder?.isActive
     );
     await fetch(
@@ -378,7 +393,6 @@ const SitemapLayoutFlow = ({ id }) => {
         }),
         res.stages[0]._id,
         siteMapId,
-        console.log('SITEMAP:', stage)
       );
 
       let parentId = stage._id;
@@ -505,7 +519,7 @@ const SitemapLayoutFlow = ({ id }) => {
       edgeTypes={edgeTypes}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
-      // defaultzoom={0.2} // Default initial zoom level
+    // defaultzoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
         <button
