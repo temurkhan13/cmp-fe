@@ -17,39 +17,21 @@ import { FaHistory } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
 import { SideBarModal } from '../../components/common';
 import VersionHistory from '../assisstent/assistantModal/VersionHistory';
-// import Media from '../assisstent/assisstentChat/SideBarModal/Media';
 import Comments from '../assisstent/assistantModal/Comments';
 import Loading from './Loading';
 import Edge from './Edge';
 import config from '../../config/config';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+
 const nodeTypes = {
   custom: Node,
 };
 const edgeTypes = {
   'custom-edge': Edge,
 };
-
-const DEFAULT_NODE = [
-  {
-    id: 'root',
-    type: 'custom',
-    position: { x: 0, y: 0 },
-    data: {
-      id: 'root',
-      label: 'Add Title',
-      nodeData: [],
-      onAddChild: () => { },
-      isRoot: true,
-      updateNodeLabelById: () => { },
-      fetchNodeData: () => { },
-      siteMapId: '',
-      showGenerateAIButton: false,
-    },
-  },
-];
 
 const SitemapLayoutFlow = ({ id }) => {
   const { fitView } = useReactFlow();
@@ -59,19 +41,21 @@ const SitemapLayoutFlow = ({ id }) => {
   const [prompt, setPrompt] = useState('');
   const [isPromptVisible, setPromptVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
+    useState(false);
+  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+  const [shouldGetSitemap, setShouldGetSitemap] = useState(false);
+
   const userData = localStorage.getItem('user');
   const authToken = localStorage.getItem('token');
 
   const selectedWorkspace = useSelector(selectWorkspace);
-
-  // Navigate to a route so that i  can refetch on reload
   const navigate = useNavigate();
 
   const closeModal = () => {
     setIsVersionHistoryModalOpen(false);
     setIsCommentsModalOpen(false);
   };
-
   const onConnect = useCallback(
     (connection) => {
       const edge = { ...connection, type: 'custom-edge' };
@@ -80,20 +64,16 @@ const SitemapLayoutFlow = ({ id }) => {
     [setEdges]
   );
 
-  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
-    useState(false);
-  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
-
   const getLayoutedElements = (nodes, edges, options) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
     g.setGraph({ rankdir: options.direction });
 
-    edges.map((edge) => g.setEdge(edge.source, edge.target));
-    nodes.map((node) =>
+    edges.forEach((edge) => g.setEdge(edge.source, edge.target));
+    nodes.forEach((node) =>
       g.setNode(node.id, {
         ...node,
-        width: node.measured?.width ?? 0,
-        height: node.measured?.height ?? 0,
+        width: node.measured?.width ?? 200, // Provide a default width if not measured
+        height: node.measured?.height ?? 100, // Provide a default height if not measured
       })
     );
 
@@ -102,17 +82,17 @@ const SitemapLayoutFlow = ({ id }) => {
     return {
       nodes: nodes.map((node) => {
         const position = g.node(node.id);
-        // We are shifting the dagre node position (anchor=center center) to the top left
-        // so it matches the React Flow node anchor point (top left).
-        const x = position.x - (node.measured?.width ?? 0) / 2;
-        const y = position.y - (node.measured?.height ?? 0) / 2;
+        const width = node.measured?.width ?? 200;
+        const height = node.measured?.height ?? 100;
+
+        const x = position.x - width / 2;
+        const y = position.y - height / 2;
 
         return { ...node, position: { x, y } };
       }),
       edges,
     };
   };
-
   const onLayout = useCallback(
     (direction) => {
       const layouted = getLayoutedElements(nodes, edges, { direction });
@@ -123,11 +103,22 @@ const SitemapLayoutFlow = ({ id }) => {
       window.requestAnimationFrame(() => {
         fitView();
       });
-    },
-    [nodes, edges]
-  );
 
-  const updateNodeLabelById = (id, newLabel) => {
+      setTimeout(() => {
+        window.requestAnimationFrame(() => {
+          fitView();
+        });
+      }, 100);
+    },
+    [nodes, edges, fitView]
+  );
+  const updateNodeLabelById = async (
+    sitemapId,
+    stageId,
+    type,
+    id,
+    newLabel
+  ) => {
     setNodes((prev) => [
       ...prev.map((node) => {
         if (node.id === id) {
@@ -142,6 +133,13 @@ const SitemapLayoutFlow = ({ id }) => {
         return node;
       }),
     ]);
+
+    await updateNodeOrNodeData(sitemapId, stageId, type, id, {
+      heading: newLabel,
+    });
+  };
+  const updateNodeById = async (sitemapId, stageId, type, id, data) => {
+    await updateNodeOrNodeData(sitemapId, stageId, type, id, data);
   };
 
   const addChildNode = (
@@ -151,6 +149,7 @@ const SitemapLayoutFlow = ({ id }) => {
     nodeData = [],
     nodeKey = uuidv4(),
     siteMapId = '',
+    stageId = '',
     showGenerateAIButton = true
   ) => {
     const newNodeId = nodeKey;
@@ -164,15 +163,28 @@ const SitemapLayoutFlow = ({ id }) => {
         id: newNodeId,
         label,
         nodeData,
-        onAddChild: () =>
-          addChildNode(newNodeId, {
-            x: position.x + 0,
-            y: position.y + 200,
-          }),
+        onAddChild: () => {
+          addChildNode(
+            newNodeId,
+            {
+              x: position.x + 0,
+              y: position.y + 200,
+            },
+            '',
+            [],
+            uuidv4(),
+            '',
+            '',
+            false
+          );
+          setLayouted(false);
+        },
         isRoot: parentId === 'root' ? true : false,
         updateNodeLabelById: updateNodeLabelById,
+        updateNodeById: updateNodeById,
         fetchNodeData: onPatch,
         siteMapId,
+        stageId,
         showGenerateAIButton,
       },
     };
@@ -187,7 +199,6 @@ const SitemapLayoutFlow = ({ id }) => {
       },
     ]);
   };
-
   async function postData(url = '', data = {}) {
     const response = await fetch(url, {
       method: 'POST',
@@ -198,7 +209,6 @@ const SitemapLayoutFlow = ({ id }) => {
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
-
   async function patchData(url = '', data = {}) {
     const response = await fetch(url, {
       method: 'PATCH',
@@ -209,7 +219,6 @@ const SitemapLayoutFlow = ({ id }) => {
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
-
   async function getData(url = '') {
     const response = await fetch(url, {
       method: 'GET',
@@ -219,7 +228,19 @@ const SitemapLayoutFlow = ({ id }) => {
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
-
+  async function updateNodeOrNodeData(sitemapId, stageId, type, typeId, data) {
+    const response = await fetch(
+      `${config.apiURL}/dpb/${sitemapId}/stage/${stageId}/${type}/${typeId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    return response.json();
+  }
   const getSitemap = async () => {
     if (!id) return;
     const res = await getData(`${config.apiURL}/dpb/sitemap/${id}`);
@@ -233,17 +254,19 @@ const SitemapLayoutFlow = ({ id }) => {
             'root',
             { x: 0, y: 0 },
             stage.stage,
-            stage.nodeData.map(({ heading, description }) => {
+            stage.nodeData.map(({ heading, description, color }) => {
               return {
                 id: uuidv4(),
                 heading,
                 description,
                 isEditing: false,
-                color: '#0000000c',
+                color,
               };
             }),
             stage._id,
-            siteMapId
+            siteMapId,
+            stage._id,
+            false
           );
 
           let parentId = stage._id;
@@ -256,12 +279,15 @@ const SitemapLayoutFlow = ({ id }) => {
               [],
               stage._id,
               siteMapId,
+              parentId,
               true
             );
           });
 
           stage.nodes.forEach((node) => {
-            let ifStage = res?.stages?.find((stage) => stage.stage === node.heading);
+            let ifStage = res?.stages?.find(
+              (stage) => stage.stage === node.heading
+            );
             if (ifStage) return;
             addChildNode(
               parentId,
@@ -270,21 +296,24 @@ const SitemapLayoutFlow = ({ id }) => {
               [],
               node._id,
               siteMapId,
+              parentId,
               true
             );
           });
         }
 
         if (stage.stage !== 'Playbook Introduction') {
-          let nodeDataTemp = stage.nodeData.map(({ heading, description }) => {
-            return {
-              id: uuidv4(),
-              heading,
-              description,
-              isEditing: false,
-              color: '#0000000c',
-            };
-          });
+          let nodeDataTemp = stage.nodeData.map(
+            ({ heading, description, color }) => {
+              return {
+                id: uuidv4(),
+                heading,
+                description,
+                isEditing: false,
+                color,
+              };
+            }
+          );
 
           setNodes((nds) => [
             ...nds.map((node) => {
@@ -306,26 +335,26 @@ const SitemapLayoutFlow = ({ id }) => {
               stage._id,
               { x: 0, y: 0 },
               node.heading,
-              node.nodeData.map(({ heading, description }) => {
+              node.nodeData.map(({ heading, description, color }) => {
                 return {
                   id: uuidv4(),
                   heading,
                   description,
                   isEditing: false,
-                  color: '#0000000c',
+                  color,
                 };
               }),
               node._id,
-              siteMapId
+              siteMapId,
+              stage._id
             );
           });
         }
       });
+
+      setLayouted(false);
     }
   };
-
-  // console.log('nodesj -> ', nodes);
-
   const linkWorkSpaceAndSiteMap = async (sitemapId) => {
     const folderId = selectedWorkspace?.folders?.find(
       (folder) => folder?.isActive
@@ -351,17 +380,13 @@ const SitemapLayoutFlow = ({ id }) => {
     sitemapId = ''
   ) => {
     const parsedUserData = userData ? JSON.parse(userData) : null;
-    // if (prompt === '') {
-    //   alert('Please enter a message');
-    //   return;
-    // }
+
     setIsLoading(true);
     setPromptVisible(false);
     const payload = {
       user_id: parsedUserData?.id,
       message: prompt,
-      sitemapName: stage,
-      // request: stage === 'Playbook Introduction' ? 'POST' : 'PATCH',
+      sitemapName: 'Untitled Sitemap',
     };
 
     let res =
@@ -375,6 +400,8 @@ const SitemapLayoutFlow = ({ id }) => {
     setIsLoading(false);
     setPromptVisible(false);
     let siteMapId = res.id;
+
+    setShouldGetSitemap(true);
     navigate({ pathname: `/sitemap/${res?.id}` }, { replace: true });
 
     res.stages.map((stage) => {
@@ -382,17 +409,18 @@ const SitemapLayoutFlow = ({ id }) => {
         'root',
         { x: 1100, y: 0 },
         stage.stage,
-        stage.nodeData.map(({ heading, description }) => {
+        stage.nodeData.map(({ heading, description, color }) => {
           return {
             id: uuidv4(),
             heading,
             description,
             isEditing: false,
-            color: '#0000000c',
+            color,
           };
         }),
         res.stages[0]._id,
         siteMapId,
+        stage._id
       );
 
       let parentId = stage._id;
@@ -404,24 +432,19 @@ const SitemapLayoutFlow = ({ id }) => {
           [],
           uuidv4(),
           siteMapId,
+          parentId,
           true
         );
       });
     });
-    onLayout('LR');
     setLayouted(true);
   };
-
   const onPatch = async (
     stageLabel = 'Playbook Introduction',
     nodeId = '',
     nodeData = [],
     sitemapId = ''
   ) => {
-    // if (prompt === '') {
-    //   alert('Please enter a message');
-    //   return;
-    // }
     setIsLoading(true);
     const parsedUserData = userData ? JSON.parse(userData) : null;
 
@@ -447,15 +470,17 @@ const SitemapLayoutFlow = ({ id }) => {
         return;
       }
 
-      let nodeDataTemp = stage.nodeData.map(({ heading, description }) => {
-        return {
-          id: uuidv4(),
-          heading,
-          description,
-          isEditing: false,
-          color: '#0000000c',
-        };
-      });
+      let nodeDataTemp = stage.nodeData.map(
+        ({ heading, description, color }) => {
+          return {
+            id: uuidv4(),
+            heading,
+            description,
+            isEditing: false,
+            color,
+          };
+        }
+      );
 
       setNodes((nds) => [
         ...nds.map((node) => {
@@ -478,32 +503,40 @@ const SitemapLayoutFlow = ({ id }) => {
           nodeId,
           { x: 0, y: 0 },
           node.heading,
-          node.nodeData.map(({ heading, description }) => {
+          node.nodeData.map(({ heading, description, color }) => {
             return {
               id: uuidv4(),
               heading,
               description,
               isEditing: false,
-              color: '#0000000c',
+              color,
             };
           }),
           uuidv4(),
-          siteMapId
+          siteMapId,
+          stage._id
         );
       });
     });
   };
 
   useEffect(() => {
-    if (!layouted) {
-      setTimeout(() => {
+    if (nodes.length > 0 && !layouted) {
+      const timeoutId = setTimeout(() => {
         onLayout('TB');
-      }, 1000);
-      setLayouted(true);
+        setLayouted(true);
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [layouted, onLayout, nodes, edges]);
+  }, [nodes, layouted, onLayout, fitView]);
 
   useEffect(() => {
+    if (shouldGetSitemap) {
+      setShouldGetSitemap(false);
+      return;
+    }
+
     getSitemap();
   }, [id]);
 
@@ -519,7 +552,7 @@ const SitemapLayoutFlow = ({ id }) => {
       edgeTypes={edgeTypes}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
-    // defaultzoom={0.2} // Default initial zoom level
+      // defaultzoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
         <button
@@ -591,7 +624,7 @@ const SitemapLayoutFlow = ({ id }) => {
                       padding: '10px',
                       border: '1px solid rgba(10, 10, 10, 0.1)',
                     }}
-                    placeholder="Message ChangeAI to generate a sitemap"
+                    placeholder="Provide details about the change management process, including key phases such as discovery, design, deploy, adopt, and Run. Highlight objectives, steps, stakeholders, and any important tools or outcomes involved."
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={(e) =>
                       e.key === 'Enter' && onInit('Playbook Introduction')
@@ -712,10 +745,13 @@ const SitemapLayoutFlow = ({ id }) => {
           </div>
         </Panel>
       ) : null}
-      {/* <Background /> */}
       <Controls />
     </ReactFlow>
   );
+};
+
+SitemapLayoutFlow.propTypes = {
+  id: PropTypes.string.isRequired,
 };
 
 export default SitemapLayoutFlow;

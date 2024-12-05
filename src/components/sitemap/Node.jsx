@@ -11,6 +11,7 @@ const Node = ({ data }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
   const [hideLabelInput, setHideLabelInput] = useState(data.label.length !== 0);
   const [isLoading, setIsLoading] = useState(false);
+  const [localLabel, setLocalLabel] = useState(data.label);
   const inputRef = useRef();
 
   const [
@@ -22,11 +23,23 @@ const Node = ({ data }) => {
     handleDragedEnd,
   ] = useReorder();
 
-  const updateNodeDataWithPropertyName = (id, property, newValue) => {
+  const updateNodeDataWithPropertyName = async (id, property, newValue) => {
     const updatedArray = nodeData.map((item) =>
       item.id === id ? { ...item, [property]: newValue } : item
     );
     setNodeData(updatedArray);
+
+    if (property === 'isEditing' && !newValue) {
+      const updateType =
+        data.label === 'Playbook Introduction' ? 'nodeData' : 'nodes';
+      await data.updateNodeById(
+        data.siteMapId,
+        data.stageId,
+        updateType,
+        data.id,
+        updatedArray
+      );
+    }
   };
 
   const addNodeChild = (
@@ -41,9 +54,28 @@ const Node = ({ data }) => {
     ]);
   };
 
+  const handleHeadingChangeBlur = async () => {
+    if (
+      localLabel !== data.label &&
+      !['Discovery', 'Adopt', 'Deploy', 'Design', 'Run'].includes(data.label)
+    ) {
+      await data.updateNodeLabelById(
+        data.siteMapId,
+        data.stageId,
+        'nodes',
+        data.id,
+        localLabel
+      );
+    }
+    if (localLabel.length !== 0) {
+      setHideLabelInput(true);
+    }
+  };
+
   useEffect(() => {
     setNodeData(data.nodeData);
   }, [data.nodeData]);
+
   return (
     <div
       className="node"
@@ -99,18 +131,12 @@ const Node = ({ data }) => {
                   outline: 'none',
                   borderRadius: '6px',
                   padding: '5px',
-                  background: 'white',
+                  background: 'black',
                   color: 'white',
                 }}
-                onBlur={() => {
-                  if (data.label.length !== 0) {
-                    setHideLabelInput(true);
-                  }
-                }}
-                value={data.label}
-                onChange={(e) => {
-                  data.updateNodeLabelById(data.id, e.target.value);
-                }}
+                value={localLabel}
+                onChange={(e) => setLocalLabel(e.target.value)}
+                onBlur={handleHeadingChangeBlur}
                 placeholder="Add page title here"
               ></input>
             ) : (
@@ -124,7 +150,11 @@ const Node = ({ data }) => {
                 }}
                 onClick={() => {
                   setHideLabelInput(false);
-                  inputRef.current.focus();
+                  setTimeout(() => {
+                    if (inputRef.current) {
+                      inputRef.current.focus();
+                    }
+                  }, 0);
                 }}
               >
                 {data.label}
@@ -250,22 +280,9 @@ const Node = ({ data }) => {
             </BiPlusCircle>
           </div>
 
-          {/* </div> */}
           <Handle type="source" position={Position.Bottom} style={{}} />
         </div>
       </div>
-      {/* <div>
-          <button
-            style={{ marginTop: 20 }}
-            onClick={e => {
-              e.stopPropagation();
-              console.log('Add Item');
-              setItems(prev => [...prev, 'Item']);
-            }}
-          >
-            Add Item
-          </button>
-        </div> */}
     </div>
   );
 };
@@ -285,8 +302,10 @@ Node.propTypes = {
     ).isRequired,
     isRoot: PropTypes.bool,
     updateNodeLabelById: PropTypes.func.isRequired,
+    updateNodeById: PropTypes.func.isRequired,
     onAddChild: PropTypes.func,
     fetchNodeData: PropTypes.func,
+    stageId: PropTypes.string,
     siteMapId: PropTypes.string,
     showGenerateAIButton: PropTypes.bool,
   }).isRequired,

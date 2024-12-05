@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { SitemapImg } from '../../assets/dashboard';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
 import Loading from './Loading';
@@ -8,14 +7,11 @@ import config from '../../config/config.js';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
-import { BsFilePlayFill } from 'react-icons/bs';
 import { FaFolderTree } from 'react-icons/fa6';
-import NoDataAvailable from '../common/NoDataAvailable.jsx';
 
 function List() {
   let navigate = useNavigate();
   const [sitemaps, setSitemaps] = useState([]);
-  const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
   const selectedWorkspace = useSelector(selectWorkspace);
   console.log(selectedWorkspace, '177777');
