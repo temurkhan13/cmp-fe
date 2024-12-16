@@ -264,7 +264,7 @@ const Node = ({ data }) => {
                 Generate with AI
               </button>
             )}
-            <BiPlusCircle
+            {/* <BiPlusCircle
               style={{
                 cursor: 'pointer',
                 padding: '10px',
@@ -277,7 +277,7 @@ const Node = ({ data }) => {
               color="rgba(0, 102, 255, 1)"
             >
               Add Child
-            </BiPlusCircle>
+            </BiPlusCircle> */}
           </div>
 
           <Handle type="source" position={Position.Bottom} style={{}} />

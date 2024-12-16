@@ -386,7 +386,7 @@ const SitemapLayoutFlow = ({ id }) => {
     const payload = {
       user_id: parsedUserData?.id,
       message: prompt,
-      sitemapName: 'Untitled Sitemap',
+      sitemapName: stage,
     };
 
     let res =
@@ -514,7 +514,8 @@ const SitemapLayoutFlow = ({ id }) => {
           }),
           uuidv4(),
           siteMapId,
-          stage._id
+          stage._id,
+          false
         );
       });
     });
