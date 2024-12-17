@@ -147,11 +147,7 @@ const MyAssessmentComp = () => {
   return (
     <div className="">
       <div className="section">
-        <div className="selected-workspace-name">
-          <p>
-            Workspace <span>{selectedWorkspace?.workspaceName}</span>
-          </p>
-        </div>
+        <div className="selected-workspace-name"></div>
         <div className="center-buttons">
           <Folder
             activeWorkspace={selectedWorkspace}
@@ -269,6 +265,36 @@ const MyAssessmentComp = () => {
           font-size: 1.1rem;
           margin-left: 0.5rem;
         }
+          .dropdown-menuu {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 100%;
+  margin-top: 5px;
+  right: 0rem;
+  top: 2rem;
+}
+
+.dropdown-itemm {
+  padding: 8px 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-weight: normal;
+  text-align: center;
+  font-size: 10px;
+  color: black
+}
+
+.dropdown-itemm:hover {
+  background-color: #f5f5f5;
+}
+
+.icon-container {
+  position: relative; /* Required for dropdown positioning */
+}
       `}</style>
     </div>
   );

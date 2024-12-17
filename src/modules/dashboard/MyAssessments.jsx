@@ -1,5 +1,5 @@
 import DashboardLayout from '@layout/DashboardLayout';
-import Header from '../../components/dashboard/Header';
+import Header from '../../components/common/Header';
 import MyAssessmentComp from '../../components/dashboard/MyAssessmentComp';
 
 const MyAssessments = () => {

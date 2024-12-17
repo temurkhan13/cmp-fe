@@ -4,7 +4,7 @@ import DashboardLayout from '../../layout/DashboardLayout';
 function ListSiteMap() {
   return (
     <DashboardLayout>
-      <Components.Common.Header />
+      <Components.Dashboard.Header />
       <Components.Sitemap.SitemapList />
     </DashboardLayout>
   );
