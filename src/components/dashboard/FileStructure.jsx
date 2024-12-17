@@ -14,6 +14,7 @@ import NotificationBar from '../common/NotificationBar';
 import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import './styles/FileStructure.css';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const navigate = useNavigate();
@@ -83,15 +84,23 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
           <div
             key={folder.id}
             className="file"
-            onClick={() => openModal(folder)}
+            // onClick={() => openModal(folder)}
           >
             <span className="icon">
+              <BsThreeDotsVertical
+                size={18}
+                style={{ position: 'absolute', top: '0', right: '0' }}
+              />
               <BiSolidFolderOpen
                 style={
                   folderId?.id === folder.id
                     ? { color: 'black', fontSize: '5rem' }
                     : { color: 'grey', fontSize: '5rem' }
                 }
+                onClick={() => {
+                  dispatch(setSelectedReduxFolder(folder));
+                  onFolderSelect(folder);
+                }}
               />
             </span>
             <p>{truncateText(folder.folderName, 10)}</p>

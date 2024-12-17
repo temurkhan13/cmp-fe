@@ -42,7 +42,6 @@ const SignIn = () => {
         navigate('/dashboard');
       }
     } catch (err) {
-      console.error('Login failed:', err);
       setApiError('Login failed due to an unexpected error.');
     }
   };
@@ -60,9 +59,7 @@ const SignIn = () => {
 
       try {
         await dispatch(googleLogin({ accessToken, navigate, refreshToken }));
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+      } catch (error) {}
     }
   };
 

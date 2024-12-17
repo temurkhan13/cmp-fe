@@ -18,7 +18,6 @@ function List() {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
   const selectedWorkspace = useSelector(selectWorkspace);
-  console.log(selectedWorkspace, '177777');
 
   async function getData(
     workSpaceId,

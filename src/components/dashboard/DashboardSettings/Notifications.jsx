@@ -31,7 +31,6 @@ const Notifications = ({ initialSettings }) => {
   const handleSaveChanges = () => {
     setIsSaving(true);
     setTimeout(() => {
-      console.log('Saved Settings:', settings);
       setIsSaving(false);
     }, 1000);
   };

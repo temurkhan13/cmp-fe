@@ -1,8 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { IoPeople } from 'react-icons/io5';
-import { HiDotsHorizontal } from 'react-icons/hi';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { FaFolderTree } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import NoData from '../../components/common/NoDataAvailable';
 import { useNavigate } from 'react-router-dom';
@@ -44,7 +41,6 @@ const MyAssessmentComp = () => {
   const [assessmentData, setAssessmentData] = useState(null);
 
   const activeWorkspace = useMemo(() => {
-    console.log('The response is ', assessmentData);
     return (
       selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
       selectedWorkspace?.folders?.[0]
@@ -171,7 +167,7 @@ const MyAssessmentComp = () => {
                 <RiNewspaperLine size={30} /> Assessments
               </p>
             </div>
-            <div className="center-buttons">
+            <div className="">
               <button
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 className="assiss-btn"
@@ -181,7 +177,7 @@ const MyAssessmentComp = () => {
                 }}
               >
                 Start Assessment
-                <AiOutlinePlus className="icon" />
+                <AiOutlinePlus />
               </button>
             </div>
           </div>

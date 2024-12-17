@@ -368,7 +368,6 @@ const chatReducer = (state = initialChatState, action) => {
       });
 
     default:
-      console.log(action.type);
       return state;
   }
 };

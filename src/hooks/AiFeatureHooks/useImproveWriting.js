@@ -9,11 +9,9 @@ const useImproveWriting = () => {
       const response = await apiClient.post('/chat/imporve-writing', {
         message: inputText,
       });
-      console.log('setWriting -> ', response.data.message);
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log(error.message);
       setError(error.message);
     }
   };

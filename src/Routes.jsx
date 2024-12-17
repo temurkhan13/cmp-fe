@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthLayout, PlainsLayout } from './layout';

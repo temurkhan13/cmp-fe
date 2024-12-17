@@ -10,7 +10,6 @@ const useChangeTone = () => {
     try {
       const token = localStorage.getItem('token');
 
-      console.log('Change Tone text: ' + selectedText);
       const response = await axios.post(
         `${config.apiURL}/chat/change-tone`,
         {
@@ -26,7 +25,6 @@ const useChangeTone = () => {
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log('check', error.message);
       setError(error.message);
     }
   };

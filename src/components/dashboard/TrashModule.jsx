@@ -30,9 +30,7 @@ const TrashModule = () => {
   }, [dispatch]);
 
   // Log the state after it updates
-  useEffect(() => {
-    console.log('Updated trash state:', trashState);
-  }, [trashState]);
+  useEffect(() => {}, [trashState]);
 
   return (
     <div className="trash-container">
@@ -90,11 +88,13 @@ const TrashModule = () => {
         .trash-container {
           display: flex;
           flex-direction: column;
+          margin-top:2rem;
           text-align: center;
-        }
-        .heading {
-          position: absolute;
-          top: 4rem;
+          }
+          .heading {
+            position: absolute;
+            // top: 4rem;
+            margin-bottom:2rem;
           left: 1.25rem;
           font-size: 3rem;
           font-weight: bold;
@@ -103,7 +103,7 @@ const TrashModule = () => {
         .tabs {
           display: flex;
           position: absolute;
-          top: 9rem;
+          top: 12rem;
           left: 3rem;
           gap: 1.5rem;
         }
@@ -126,7 +126,7 @@ const TrashModule = () => {
           border-bottom: 3px solid black;
         }
         .content {
-          margin-top: 7.5rem;
+          margin-top: 9rem;
           display: flex;
           flex-direction: column;
         }

@@ -173,12 +173,7 @@ const DeleteModal = ({ paymentDetails, onClose }) => (
         <button className="cancel-button" onClick={onClose}>
           Cancel
         </button>
-        <button
-          className="delete-button"
-          onClick={() => console.log('Card Deleted')}
-        >
-          Delete Permanently
-        </button>
+        <button className="delete-button">Delete Permanently</button>
       </div>
     </div>
 

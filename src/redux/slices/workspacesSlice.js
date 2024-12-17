@@ -11,7 +11,7 @@ export const updateWorkspaceStatus = createAsyncThunk(
       const token = localStorage.getItem('token');
       const response = await axios.patch(
         `${config.apiURL}/workspace/${workspaceId}`,
-       { isActive },
+        { isActive },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -19,10 +19,9 @@ export const updateWorkspaceStatus = createAsyncThunk(
           },
         }
       );
-      console.log("RESPONSEE", response.data)
       return response.data;
     } catch (error) {
-      return rejectWithValue("ERROR", error.response.data);
+      return rejectWithValue('ERROR', error.response.data);
     }
   }
 );
@@ -102,9 +101,11 @@ const workspacesSlice = createSlice({
         state.dashboardStats = payload;
         // Set the first workspace as default
         if (payload.workspaces && payload.workspaces.length > 0) {
-        const activeWorkspace = payload.workspaces.find(workspace => workspace.isActive) || (payload.results && payload.results[0]);
-          state.selectedWorkspace =activeWorkspace;
-          state.currentWorkspaceId =activeWorkspace?.id;
+          const activeWorkspace =
+            payload.workspaces.find((workspace) => workspace.isActive) ||
+            (payload.results && payload.results[0]);
+          state.selectedWorkspace = activeWorkspace;
+          state.currentWorkspaceId = activeWorkspace?.id;
         }
       })
       .addCase(fetchDashboardStats.rejected, (state, { payload }) => {
@@ -129,19 +130,23 @@ const workspacesSlice = createSlice({
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
         // Find the active workspace or fall back to the first one if none are active
-        const activeWorkspace = payload.results.find(workspace => workspace.isActive) || payload.results[0];
+        const activeWorkspace =
+          payload.results.find((workspace) => workspace.isActive) ||
+          payload.results[0];
         // Set the workspaces and default selection
-        if(activeWorkspace) {
+        if (activeWorkspace) {
           state.workspaces = payload.results;
           state.selectedWorkspace = activeWorkspace;
           state.currentWorkspaceId = activeWorkspace?.id;
-          const activeFolder =  activeWorkspace?.folders?.find(folder => folder.isActive) || (activeWorkspace.folders && activeWorkspace.folders[0])
-          if(activeFolder) {
+          const activeFolder =
+            activeWorkspace?.folders?.find((folder) => folder.isActive) ||
+            (activeWorkspace.folders && activeWorkspace.folders[0]);
+          if (activeFolder) {
             state.selectedFolder = activeFolder;
-            state.currentFolderId = activeFolder?.id
+            state.currentFolderId = activeFolder?.id;
           }
         }
-        }
+      }
     );
   },
 });

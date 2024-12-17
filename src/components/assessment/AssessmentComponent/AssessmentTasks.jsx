@@ -21,7 +21,6 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-  console.log('LAAAAAAAAAAAAAAAAAAAAA', folderID);
 
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
@@ -53,19 +52,13 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
         );
         const fetchedData = assessmentDATA?.payload?.results || [];
         setAssessmentsData(fetchedData);
-        console.log('DTATAA', assessmentsData);
 
-        // console.log('DTATAA', currentFolder);
         const singleAssessment = await getAssessment(id);
         setAssessmentData(singleAssessment);
-        console.log('GET ASSESSMENTttt', singleAssessment);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getAssessments();
   }, [workspaceId, folderId]);
-  console.log('GET ASSESSMENTTTTTTTTT', assessmentData);
   useEffect(() => {
     if (workspaceId && folderId) {
       const filteredFolders = selectedWorkspace.folders.filter(
@@ -78,7 +71,6 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
           const matchingAssessment = filteredFolders[0].assessments.find(
             (assessment) =>
               assessment.report[0].subReport.some((report) => {
-                console.log(assessment.report);
                 if (report.ReportTitle === title) {
                   return assessment.report[0];
                 }
@@ -101,15 +93,12 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
         filteredFolders[0].assessments.length > 0 &&
         filteredFolders[0].assessments[0].report.length > 0
       ) {
-        console.log(filteredFolders[0].assessments);
         setAssessmentId(filteredFolders[0].assessments[0]._id);
         setSelectedFolder(filteredFolders[0]);
       }
     }
   }, [workspaceId, folderId]);
-  const handleDownload = (format) => {
-    console.log(`Download ${format} clicked`);
-  };
+  const handleDownload = (format) => {};
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -126,7 +115,6 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
   };
 
   const generateAllReports = () => {
-    console.log('Generating all reports');
     // Logic to generate all reports goes here
   };
 

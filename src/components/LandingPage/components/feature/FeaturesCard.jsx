@@ -1,14 +1,12 @@
-import { IoIosArrowRoundForward } from 'react-icons/io';
-const FeaturesCard = (props) => {
+import PropTypes from 'prop-types';
+
+const FeaturesCard = ({ img, title, desc }) => {
   return (
     <div className="featurecard">
-      <img className="image" src={props.img} alt="" />
+      <img className="image" src={img} alt="" />
       <div className="featurecontent">
-        <h2 className="title">{props.title}</h2>
-        <p className="description">{props.desc}</p>
-        {/*<button className="learn-more">*/}
-        {/*  Learn more <IoIosArrowRoundForward size={20} />*/}
-        {/*</button>*/}
+        <h2 className="title">{title}</h2>
+        <p className="description">{desc}</p>
       </div>
       <style>
         {`
@@ -24,7 +22,8 @@ const FeaturesCard = (props) => {
   padding: 4rem;
   border:none;
   gap:1rem;
-  box-shadow: 0px 0px 1px black;
+  box-shadow: 0px 1px 10px 0px #bfbfbf40;
+
 }
 
 .featurecard:hover {
@@ -83,4 +82,9 @@ const FeaturesCard = (props) => {
   );
 };
 
+FeaturesCard.propTypes = {
+  img: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  desc: PropTypes.string.isRequired,
+};
 export default FeaturesCard;

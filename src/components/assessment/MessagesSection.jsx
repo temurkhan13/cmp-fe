@@ -105,7 +105,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     if (id) {
       const getAssessmentAsync = async () => {
         const singleAssessment = await getAssessment(id);
-        console.log('GET ASSESSMENT', singleAssessment);
 
         if (singleAssessment.report && singleAssessment.report.isGenerated) {
           setShowReportButton(true);
@@ -277,9 +276,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSendMessage = async () => {
-    console.log('Text:', text);
-    console.log('Uploaded File:', file);
-
     // if (!text && !file) return;
     if (firstPrompt) {
       // setChat((prevChat) => [
@@ -320,8 +316,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       setFile(null);
       document.getElementById('file-input').value = '';
       setText('');
-    } catch (error) {
-      console.log(error.message);
     } finally {
       setLoading(false);
     }
@@ -329,7 +323,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
   const handleInspireClick = async () => {
     setLoading(true);
-    console.log('LASR -> ', chat[chat.length - 1]);
     const inspiredText = await handleInspire(chat[chat.length - 1].question);
     setFirstPrompt(inspiredText);
     setLoading(false);
@@ -353,8 +346,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         const responseSummary = await summarize(selectedText);
         applyFixedText(responseSummary);
       }
-    } catch (error) {
-      console.error('Asi AI', error);
     } finally {
       setLoading(false);
     }
@@ -417,12 +408,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     // if (selectedText && tone) {
     setLoading(true);
     try {
-      console.log('HandleToen -> ', tone);
-      console.log('HandleToen selectedText -> ', selectedText);
       const response = await ChangeToneFun(selectedText, tone);
       applyFixedText(response);
-    } catch (error) {
-      console.error('Error occurred while changing tone:', error);
     } finally {
       setLoading(false);
     }
@@ -431,7 +418,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
   // handle Response length
   const handleResponseLengthChange = async (value) => {
-    console.log('response length', value);
     setResponseLength(length);
 
     // if (value) {
@@ -454,8 +440,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         applyFixedText(responseComp);
         //
       }
-    } catch (error) {
-      console.error('Error occurred while changing tone:', error);
     } finally {
       setLoading(false);
     }
@@ -475,10 +459,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         setFinalReport(filteredFolders[0].assessments[0].report[0].finalReport);
         setReportTitle(filteredFolders[0].assessments[0].report[0].ReportTitle);
         setFileUrl(filteredFolders[0].assessments[0].report[0].finalReportURL);
-        console.log(
-          filteredFolders[0].assessments[0].report[0],
-          'generateSingleReport'
-        );
+
         setGenerateSingleReport(false);
       }
     }
@@ -503,7 +484,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
       const initialMessage =
         initialResponse?.qa[initialResponse?.qa.length - 1]?.question;
-      console.log('initialMessage', initialMessage);
 
       const filteredFolders = selectedWorkspace.folders.filter(
         (item) => item._id === folderId
@@ -518,8 +498,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       ]);
 
       setShowInputField(true);
-    } catch (error) {
-      console.error('Start Assessment Error', error);
     } finally {
       setAssessmentLoading(false);
     }
@@ -530,7 +508,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
     const reportsData = await GenerateSingleReport();
     setReportsData(reportsData);
-    console.log('REPORT DATAAAAAAAAAAAAAAAAAAAAAAAAAA', reportsData);
     setShowModal(true);
     // const fullUrl = `${reportsData.data.report.url}`;
     // window.open(fullUrl, '_blank');
@@ -555,7 +532,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   }, [chat]);
 
   const handleLikeClick = async (message) => {
-    console.log(message, 'message');
     await likeChatMessage({
       workspaceId,
       folderId: folderId._id || folderId.id,
@@ -566,14 +542,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleDislikeMessage = async (message) => {
-    console.log(message, 'message');
-    console.log(JSON.parse(localStorage.getItem('user')).id);
-    console.log(
-      message?.reactions?.some(
-        (react) => react.user == JSON.parse(localStorage.getItem('user')).id
-      ),
-      'message'
-    );
     await dislikeChatMessage({
       workspaceId,
       folderId: folderId._id || folderId.id,
@@ -590,7 +558,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const handleClose = () => {
     setShowModal(false); // Set to false to hide the modal
   };
-  console.log('CHAT', chat);
 
   return (
     <div className="chat-message-wrapper">

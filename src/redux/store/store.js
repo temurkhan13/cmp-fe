@@ -23,13 +23,11 @@ import persistStore from 'redux-persist/es/persistStore';
 // Custom middleware to trigger loading bar actions for RTK Query requests
 const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
   if (action.type.endsWith('/pending')) {
-    console.log('Loading started'); // Add this line
     store.dispatch(showLoading());
   } else if (
     action.type.endsWith('/fulfilled') ||
     action.type.endsWith('/rejected')
   ) {
-    console.log('Loading finished'); // Add this line
     store.dispatch(hideLoading());
   }
   return next(action);

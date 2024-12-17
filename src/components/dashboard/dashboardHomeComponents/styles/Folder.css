@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: auto;
 }
 
 .generate {
@@ -54,8 +55,7 @@
 }
 
 .modal-content-project {
-  background-color: white;
-  padding: 20px;
+  padding: 1rem;
   border-radius: 8px;
   width: 500px;
 }
@@ -89,10 +89,16 @@
   font-weight: 500;
   text-align: center;
 }
-
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
 .error-message {
+  position: absolute;
   color: red;
-  font-size: 1.2rem;
+  margin-top: 2px;
 }
 
 .error-border {

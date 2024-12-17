@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
   const activeWorkspaceName = activeWorkspace || 'No Active Workspace';
@@ -79,10 +79,10 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
   );
 };
 
-// CountingCards.propTypes = {
-//   activeWorkspace: PropTypes.string.isRequired,
-//   totalWorkspaces: PropTypes.number.isRequired,
-//   totalProjects: PropTypes.number.isRequired,
-// };
+CountingCards.propTypes = {
+  activeWorkspace: PropTypes.string.isRequired,
+  totalWorkspaces: PropTypes.number.isRequired,
+  totalProjects: PropTypes.number.isRequired,
+};
 
 export default CountingCards;

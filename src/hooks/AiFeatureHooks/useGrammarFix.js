@@ -9,11 +9,9 @@ const useGrammarFix = () => {
       const response = await apiClient.post('/chat/grammar-fix', {
         message: inputText,
       });
-      console.log('fix grammar -> ', response.data.message);
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log('check', error.message);
       setError(error.message);
     }
   };

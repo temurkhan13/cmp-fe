@@ -1,6 +1,7 @@
 # change_management_plateform
 
 ChangeManagementPlateform - JavaScript client for change_management_plateform
+
 # 🚀 Get started here
 
 This template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.
@@ -26,7 +27,7 @@ Update or add new data in \"Body\" in the POST request. Typically, Body data is 
     \"name\": \"Add your name in the body\"
 }
 
- ```
+```
 
 #### **Step 4: Update the variable**
 
@@ -42,7 +43,6 @@ Tests help you confirm that your API is working as expected. You can write test 
 
 - Use folders to group related requests and organize the collection.
 - Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.
-    
 
 ## 💡Related templates
 
@@ -115,13 +115,13 @@ then install it via:
 
 The library also works in the browser environment via npm and [browserify](http://browserify.org/). After following
 the above steps with Node.js and installing browserify with `npm install -g browserify`,
-perform the following (assuming *main.js* is your entry file):
+perform the following (assuming _main.js_ is your entry file):
 
 ```shell
 browserify main.js > bundle.js
 ```
 
-Then include *bundle.js* in the HTML pages.
+Then include _bundle.js_ in the HTML pages.
 
 ### Webpack Configuration
 
@@ -134,10 +134,10 @@ module: {
   rules: [
     {
       parser: {
-        amd: false
-      }
-    }
-  ]
+        amd: false,
+      },
+    },
+  ];
 }
 ```
 
@@ -148,65 +148,57 @@ Please follow the [installation](#installation) instruction and execute the foll
 ```javascript
 var ChangeManagementPlateform = require('change_management_plateform');
 
-
-var api = new ChangeManagementPlateform.AIAssessmentApi()
+var api = new ChangeManagementPlateform.AIAssessmentApi();
 var opts = {
-  'body': {key: null} // {Object} 
+  body: { key: null }, // {Object}
 };
-var callback = function(error, data, response) {
+var callback = function (error, data, response) {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 };
 api.apiAssessmentInspirePost(opts, callback);
-
 ```
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to _http://localhost:3000_
 
-Class | Method | HTTP request | Description
------------- | ------------- | ------------- | -------------
-*ChangeManagementPlateform.AIAssessmentApi* | [**apiAssessmentInspirePost**](docs/AIAssessmentApi.md#apiAssessmentInspirePost) | **POST** /api/assessment/inspire | Inspire Me
-*ChangeManagementPlateform.AIAssessmentApi* | [**apiAssessmentPost**](docs/AIAssessmentApi.md#apiAssessmentPost) | **POST** /api/assessment/ | Assessment
-*ChangeManagementPlateform.AIAssessmentApi* | [**assessmentPatch**](docs/AIAssessmentApi.md#assessmentPatch) | **PATCH** /assessment/ | Update Assessment
-*ChangeManagementPlateform.AIAssessmentApi* | [**surveyPatch**](docs/AIAssessmentApi.md#surveyPatch) | **PATCH** /survey/ | Update Survey
-*ChangeManagementPlateform.AIAssessmentApi* | [**surveyPost**](docs/AIAssessmentApi.md#surveyPost) | **POST** /survey/ | Survey
-*ChangeManagementPlateform.AIAssistantApi* | [**chatAutoPost**](docs/AIAssistantApi.md#chatAutoPost) | **POST** /chat/auto | Auto Text
-*ChangeManagementPlateform.AIAssistantApi* | [**chatChangeTonePost**](docs/AIAssistantApi.md#chatChangeTonePost) | **POST** /chat/change-tone | Change Tone
-*ChangeManagementPlateform.AIAssistantApi* | [**chatComprehensivePost**](docs/AIAssistantApi.md#chatComprehensivePost) | **POST** /chat/comprehensive | Comprehensive Text
-*ChangeManagementPlateform.AIAssistantApi* | [**chatExplainPost**](docs/AIAssistantApi.md#chatExplainPost) | **POST** /chat/explain | Explain
-*ChangeManagementPlateform.AIAssistantApi* | [**chatGrammarFixPost**](docs/AIAssistantApi.md#chatGrammarFixPost) | **POST** /chat/grammar-fix | Fix Grammar
-*ChangeManagementPlateform.AIAssistantApi* | [**chatImporveWritingPost**](docs/AIAssistantApi.md#chatImporveWritingPost) | **POST** /chat/imporve-writing | Improve Writing
-*ChangeManagementPlateform.AIAssistantApi* | [**chatLanguageSimplifyPost**](docs/AIAssistantApi.md#chatLanguageSimplifyPost) | **POST** /chat/language-simplify | Language Simplify
-*ChangeManagementPlateform.AIAssistantApi* | [**chatLongTextPost**](docs/AIAssistantApi.md#chatLongTextPost) | **POST** /chat/long-text | Text Longer
-*ChangeManagementPlateform.AIAssistantApi* | [**chatPost**](docs/AIAssistantApi.md#chatPost) | **POST** /chat/ | Chat
-*ChangeManagementPlateform.AIAssistantApi* | [**chatShortTextPost**](docs/AIAssistantApi.md#chatShortTextPost) | **POST** /chat/short-text | Text Shorter
-*ChangeManagementPlateform.AIAssistantApi* | [**chatSummarizePost**](docs/AIAssistantApi.md#chatSummarizePost) | **POST** /chat/summarize | Summarize
-*ChangeManagementPlateform.AIAssistantApi* | [**chatTranslatePost**](docs/AIAssistantApi.md#chatTranslatePost) | **POST** /chat/translate | Translate
-*ChangeManagementPlateform.AuthApi* | [**apiAuthForgotPasswordPost**](docs/AuthApi.md#apiAuthForgotPasswordPost) | **POST** /api/auth/forgot/password | Forget Password
-*ChangeManagementPlateform.AuthApi* | [**apiAuthPost**](docs/AuthApi.md#apiAuthPost) | **POST** /api/auth/ | Register
-*ChangeManagementPlateform.AuthApi* | [**apiAuthResetPasswordPost**](docs/AuthApi.md#apiAuthResetPasswordPost) | **POST** /api/auth/reset/password | Reset Password
-*ChangeManagementPlateform.AuthApi* | [**apiAuthUsers647f32504743d3582c8b278aGet**](docs/AuthApi.md#apiAuthUsers647f32504743d3582c8b278aGet) | **GET** /api/auth/users/647f32504743d3582c8b278a | Get User
-*ChangeManagementPlateform.AuthApi* | [**apiAuthVerificationPost**](docs/AuthApi.md#apiAuthVerificationPost) | **POST** /api/auth/verification | Verify Email
-*ChangeManagementPlateform.AuthApi* | [**authGet**](docs/AuthApi.md#authGet) | **GET** /auth/ | Get All Users
-*ChangeManagementPlateform.AuthApi* | [**authLoginPost**](docs/AuthApi.md#authLoginPost) | **POST** /auth/login | Login
-*ChangeManagementPlateform.AuthApi* | [**authUsers647f32504743d3582c8b278aDelete**](docs/AuthApi.md#authUsers647f32504743d3582c8b278aDelete) | **DELETE** /auth/users/647f32504743d3582c8b278a | Delete User
-*ChangeManagementPlateform.AuthApi* | [**authUsers647f32504743d3582c8b278aPut**](docs/AuthApi.md#authUsers647f32504743d3582c8b278aPut) | **PUT** /auth/users/647f32504743d3582c8b278a | Update User
-
+| Class                                       | Method                                                                                                 | HTTP request                                     | Description        |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------ |
+| _ChangeManagementPlateform.AIAssessmentApi_ | [**apiAssessmentInspirePost**](docs/AIAssessmentApi.md#apiAssessmentInspirePost)                       | **POST** /api/assessment/inspire                 | Inspire Me         |
+| _ChangeManagementPlateform.AIAssessmentApi_ | [**apiAssessmentPost**](docs/AIAssessmentApi.md#apiAssessmentPost)                                     | **POST** /api/assessment/                        | Assessment         |
+| _ChangeManagementPlateform.AIAssessmentApi_ | [**assessmentPatch**](docs/AIAssessmentApi.md#assessmentPatch)                                         | **PATCH** /assessment/                           | Update Assessment  |
+| _ChangeManagementPlateform.AIAssessmentApi_ | [**surveyPatch**](docs/AIAssessmentApi.md#surveyPatch)                                                 | **PATCH** /survey/                               | Update Survey      |
+| _ChangeManagementPlateform.AIAssessmentApi_ | [**surveyPost**](docs/AIAssessmentApi.md#surveyPost)                                                   | **POST** /survey/                                | Survey             |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatAutoPost**](docs/AIAssistantApi.md#chatAutoPost)                                                | **POST** /chat/auto                              | Auto Text          |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatChangeTonePost**](docs/AIAssistantApi.md#chatChangeTonePost)                                    | **POST** /chat/change-tone                       | Change Tone        |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatComprehensivePost**](docs/AIAssistantApi.md#chatComprehensivePost)                              | **POST** /chat/comprehensive                     | Comprehensive Text |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatExplainPost**](docs/AIAssistantApi.md#chatExplainPost)                                          | **POST** /chat/explain                           | Explain            |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatGrammarFixPost**](docs/AIAssistantApi.md#chatGrammarFixPost)                                    | **POST** /chat/grammar-fix                       | Fix Grammar        |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatImporveWritingPost**](docs/AIAssistantApi.md#chatImporveWritingPost)                            | **POST** /chat/imporve-writing                   | Improve Writing    |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatLanguageSimplifyPost**](docs/AIAssistantApi.md#chatLanguageSimplifyPost)                        | **POST** /chat/language-simplify                 | Language Simplify  |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatLongTextPost**](docs/AIAssistantApi.md#chatLongTextPost)                                        | **POST** /chat/long-text                         | Text Longer        |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatPost**](docs/AIAssistantApi.md#chatPost)                                                        | **POST** /chat/                                  | Chat               |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatShortTextPost**](docs/AIAssistantApi.md#chatShortTextPost)                                      | **POST** /chat/short-text                        | Text Shorter       |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatSummarizePost**](docs/AIAssistantApi.md#chatSummarizePost)                                      | **POST** /chat/summarize                         | Summarize          |
+| _ChangeManagementPlateform.AIAssistantApi_  | [**chatTranslatePost**](docs/AIAssistantApi.md#chatTranslatePost)                                      | **POST** /chat/translate                         | Translate          |
+| _ChangeManagementPlateform.AuthApi_         | [**apiAuthForgotPasswordPost**](docs/AuthApi.md#apiAuthForgotPasswordPost)                             | **POST** /api/auth/forgot/password               | Forget Password    |
+| _ChangeManagementPlateform.AuthApi_         | [**apiAuthPost**](docs/AuthApi.md#apiAuthPost)                                                         | **POST** /api/auth/                              | Register           |
+| _ChangeManagementPlateform.AuthApi_         | [**apiAuthResetPasswordPost**](docs/AuthApi.md#apiAuthResetPasswordPost)                               | **POST** /api/auth/reset/password                | Reset Password     |
+| _ChangeManagementPlateform.AuthApi_         | [**apiAuthUsers647f32504743d3582c8b278aGet**](docs/AuthApi.md#apiAuthUsers647f32504743d3582c8b278aGet) | **GET** /api/auth/users/647f32504743d3582c8b278a | Get User           |
+| _ChangeManagementPlateform.AuthApi_         | [**apiAuthVerificationPost**](docs/AuthApi.md#apiAuthVerificationPost)                                 | **POST** /api/auth/verification                  | Verify Email       |
+| _ChangeManagementPlateform.AuthApi_         | [**authGet**](docs/AuthApi.md#authGet)                                                                 | **GET** /auth/                                   | Get All Users      |
+| _ChangeManagementPlateform.AuthApi_         | [**authLoginPost**](docs/AuthApi.md#authLoginPost)                                                     | **POST** /auth/login                             | Login              |
+| _ChangeManagementPlateform.AuthApi_         | [**authUsers647f32504743d3582c8b278aDelete**](docs/AuthApi.md#authUsers647f32504743d3582c8b278aDelete) | **DELETE** /auth/users/647f32504743d3582c8b278a  | Delete User        |
+| _ChangeManagementPlateform.AuthApi_         | [**authUsers647f32504743d3582c8b278aPut**](docs/AuthApi.md#authUsers647f32504743d3582c8b278aPut)       | **PUT** /auth/users/647f32504743d3582c8b278a     | Update User        |
 
 ## Documentation for Models
 
-
-
 ## Documentation for Authorization
 
-
 Authentication schemes defined for the API:
+
 ### bearerAuth
 
 - **Type**: Bearer authentication
-

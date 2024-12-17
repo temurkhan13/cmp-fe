@@ -116,7 +116,6 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
               height: '100px',
             }}
             onKeyDown={(e) => {
-              console.log(e.key);
               e.key === 'Enter' &&
                 updateNodeDataWithPropertyName(id, 'isEditing', false);
             }}

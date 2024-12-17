@@ -9,11 +9,9 @@ const useLonger = () => {
       const response = await apiClient.post('/chat/long-text', {
         message: inputText,
       });
-      console.log('long test ', response.data.message);
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log(error.message);
       setError(error.message);
     }
   };

@@ -86,24 +86,18 @@ const DashboardHomeComp = () => {
   const [activeWorkspace, setActiveWorkspace] = useState(null);
 
   useEffect(() => {
-    console.log('helooooooooooooooooo');
     const fetchStats = async () => {
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        console.log(dashboardStats, 'dashboardStatas');
         const activeWorkspace =
           dashboardStats.workspaces.find((workspace) => workspace.isActive) ||
           dashboardStats.workspaces[0];
-        console.log(activeWorkspace, 'activeWorksapce');
         // if (!selectedWorkspace || selectedWorkspace.id !== activeWorkspace.id) {
-        console.log('changing workspace');
         dispatch(setSelectedWorkspace(activeWorkspace));
         setActiveWorkspace(activeWorkspace);
         handleWorkspaceChange(activeWorkspace);
         // }
-      } catch {
-        console.log('failed to fetch dashboard stats.');
-      }
+      } catch {}
     };
     fetchStats();
   }, [dispatch]);
@@ -135,9 +129,7 @@ const DashboardHomeComp = () => {
               folderId: folder.id,
             })
           ).unwrap();
-        } catch {
-          console.log('Failed to fetch folder data.');
-        }
+        } catch {}
       }
     },
     [dispatch, selectedWorkspace]
@@ -168,7 +160,6 @@ const DashboardHomeComp = () => {
       const activeWorkspace =
         dashboardStats.workspaces.find((workspace) => workspace.isActive) ||
         dashboardStats.workspaces[0];
-      console.log(activeWorkspace, 'activeWorksapce');
       setActiveWorkspace(activeWorkspace);
       if (!selectedWorkspace || selectedWorkspace.id !== activeWorkspace.id) {
         dispatch(setSelectedWorkspace(activeWorkspace));
@@ -208,8 +199,6 @@ const DashboardHomeComp = () => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
 
-  console.log(activeWorkspace, 'activeeeeeee');
-
   return (
     <div className="dashboard">
       <CountingCards
@@ -218,7 +207,7 @@ const DashboardHomeComp = () => {
         totalProjects={dashboardStats?.totalProjects}
       />
 
-      <Account />
+      {/* <Account /> */}
 
       <Workspaces
         activeWorkspace={activeWorkspace}

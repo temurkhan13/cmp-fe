@@ -104,8 +104,6 @@ export const workspaceApi = createApi({
           });
         }
 
-        console.log(folderId, '..............');
-
         // Use the actual chatId or handle for a new chat
         return {
           url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message`,
@@ -136,7 +134,6 @@ export const workspaceApi = createApi({
             { workspaceId, folderId, chatId: newChat ? tempId : chatId },
             (draft) => {
               // Create an empty message array if it's a new chat
-              console.log('is working1');
               if (!draft.generalMessages) {
                 draft.generalMessages = [];
               }
@@ -166,7 +163,6 @@ export const workspaceApi = createApi({
                   const folder = draftWorkspace.folders.find(
                     (folder) => folder._id === folderId
                   );
-                  console.log('is working');
                   if (folder) {
                     folder.chats.push({
                       _id: data.chatId, // Use the new chatId from the server
@@ -518,10 +514,10 @@ export const workspaceApi = createApi({
       // invalidatesTags: ['Workspace'],
     }),
     editReport: builder.mutation({
-      query: ({assessmentId, title, content}) => ({
+      query: ({ assessmentId, title, content }) => ({
         url: `workspace-assessment/${assessmentId}/report`,
         method: 'PATCH',
-        body: {title: title, content: content},
+        body: { title: title, content: content },
       }),
     }),
     downloadReport: builder.mutation({

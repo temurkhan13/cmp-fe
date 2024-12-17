@@ -36,6 +36,7 @@ const tasks = [
   { name: "What's changing and what is not summary", progress: 50 },
   { name: 'Champions survey', progress: 100 },
 ];
+
 const versions = [
   {
     date: 'Today at 14:13 AM',
@@ -58,6 +59,7 @@ const versions = [
     users: [{ name: 'Imran' }, { name: 'Sherrimac Gyver' }],
   },
 ];
+
 const images = [
   'https://picsum.photos/id/0/5000/3333',
   'https://picsum.photos/id/7/4728/3168',
@@ -80,6 +82,7 @@ const images = [
   'https://picsum.photos/id/27/3264/1836',
   'https://picsum.photos/id/29/4000/2670',
 ];
+
 const documents = [
   {
     name: 'file_name_123',
@@ -127,6 +130,7 @@ const documents = [
     size: '2,345 KB',
   },
 ];
+
 const links = [
   {
     name: 'www.figma.com',
@@ -149,6 +153,7 @@ const links = [
     url: 'https://www.figma.com/design/NFE9opL7eqFHBJ...',
   },
 ];
+
 const data = [
   {
     date: 'Today',
@@ -195,6 +200,7 @@ const data = [
     ],
   },
 ];
+
 const Comment = {
   id: 1,
   time: 'Today',

@@ -42,10 +42,6 @@ const Editor = ({
     [content]
   );
 
-  useEffect(() => {
-    console.log('REPORRRTTTT IDDDDD', data);
-  });
-
   const processTableContent = (html) => {
     const container = document.createElement('div');
     container.innerHTML = html;
@@ -104,19 +100,13 @@ const Editor = ({
         content: markdownContent,
       }).unwrap();
 
-      console.log('Full API response:', response);
-
       // Update the editor content with Markdown
       setContent(response?.content); // Ensure safe fallback
-    } catch (error) {
-      console.error('Error updating the report:', error);
-    }
+    } catch (error) {}
   };
 
   const handleReportDownload = async () => {
     try {
-      console.log('Assessment ID:', assessmentID);
-
       // Fetch the PDF as a Blob
       const pdfBlob = await downloadReport({
         assessmentId: assessmentID,
@@ -135,12 +125,7 @@ const Editor = ({
       // Clean up
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      console.log('Download successful');
-    } catch (error) {
-      console.error('Error downloading the report:', error);
-      alert('An unexpected error occurred. Please try again.');
-    }
+    } catch (error) {}
   };
 
   const reportHtml = ReactDOMServer.renderToStaticMarkup(
@@ -157,9 +142,7 @@ const Editor = ({
       link.href = URL.createObjectURL(blob);
       link.download = 'document.docx';
       link.click();
-    } catch (error) {
-      console.error('Error generating DOCX file:', error);
-    }
+    } catch (error) {}
   };
 
   const config = useMemo(

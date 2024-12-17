@@ -33,7 +33,6 @@ const verification = () => {
         navigate('/log-in');
       })
       .catch((error) => {
-        console.error('Forget password failed:', error);
         setError('Something went wrong, please try again.');
       });
   };

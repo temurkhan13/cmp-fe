@@ -16,11 +16,10 @@
 }
 
 .file {
-  cursor: pointer;
   margin: 0.5rem;
   font-size: 1.3rem;
   text-align: center;
-  padding: 0.5rem;
+  padding: 1rem;
   transition: background-color 0.3s;
 }
 
@@ -32,6 +31,8 @@
 .icon {
   display: block;
   margin: auto;
+  cursor: pointer;
+  position: relative;
 }
 
 .fs-modal {

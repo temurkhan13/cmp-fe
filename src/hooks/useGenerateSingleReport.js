@@ -1,5 +1,5 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState } from 'react';
+import axios from 'axios';
 import config from '../config/config';
 
 const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
@@ -16,17 +16,11 @@ const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
           },
         }
       );
-      console.log('LAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAAAAAAAAAAAAAA:',response)
       return response.data.report;
-    } catch (error) {
-      console.log(error.response?.data?.message || error.message);
-    }
+    } catch (error) {}
   };
-
-
 
   return { error, GenerateSingleReport };
 };
 
 export default useGenerateSingleReport;
-

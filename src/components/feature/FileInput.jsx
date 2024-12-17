@@ -25,7 +25,6 @@ const FileInput = () => {
   // Function to handle file upload
   const handleUpload = () => {
     // You can implement file upload logic here, such as using FormData or sending the file to an API endpoint
-    console.log('Uploading file:', file);
   };
 
   return (

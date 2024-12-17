@@ -41,10 +41,10 @@ const DEFAULT_NODE = [
       id: 'root',
       label: 'Add Title',
       nodeData: [],
-      onAddChild: () => { },
+      onAddChild: () => {},
       isRoot: true,
-      updateNodeLabelById: () => { },
-      fetchNodeData: () => { },
+      updateNodeLabelById: () => {},
+      fetchNodeData: () => {},
       siteMapId: '',
       showGenerateAIButton: false,
     },
@@ -261,7 +261,9 @@ const SitemapLayoutFlow = ({ id }) => {
           });
 
           stage.nodes.forEach((node) => {
-            let ifStage = res?.stages?.find((stage) => stage.stage === node.heading);
+            let ifStage = res?.stages?.find(
+              (stage) => stage.stage === node.heading
+            );
             if (ifStage) return;
             addChildNode(
               parentId,
@@ -323,8 +325,6 @@ const SitemapLayoutFlow = ({ id }) => {
       });
     }
   };
-
-  // console.log('nodesj -> ', nodes);
 
   const linkWorkSpaceAndSiteMap = async (sitemapId) => {
     const folderId = selectedWorkspace?.folders?.find(
@@ -392,7 +392,7 @@ const SitemapLayoutFlow = ({ id }) => {
           };
         }),
         res.stages[0]._id,
-        siteMapId,
+        siteMapId
       );
 
       let parentId = stage._id;
@@ -519,7 +519,7 @@ const SitemapLayoutFlow = ({ id }) => {
       edgeTypes={edgeTypes}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
-    // defaultzoom={0.2} // Default initial zoom level
+      // defaultzoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
         <button

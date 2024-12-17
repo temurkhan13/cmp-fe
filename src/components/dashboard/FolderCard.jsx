@@ -52,7 +52,6 @@ const FolderCard = ({ folder }) => {
         downloadFolderAsZip(folder);
         break;
       default:
-        console.log(action);
         setShowDropdown(false);
         break;
     }

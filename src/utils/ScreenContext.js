@@ -1,18 +1,17 @@
 // ScreenContext.js
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext } from 'react';
 
 const ScreenContext = createContext();
 
 export const ScreenProvider = ({ children }) => {
-  const [currentScreen, setCurrentScreen] = useState("");
+  const [currentScreen, setCurrentScreen] = useState('');
   const [sharedUsers, setSharedUsers] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
 
   const shareUser = (identifier) => {
     // Implement the logic to share the user
-    console.log(`Sharing with ${identifier} on screen ${currentScreen}`);
     // Update shared users state if needed
-    setSharedUsers([...sharedUsers, { name: identifier, role: "view" }]);
+    setSharedUsers([...sharedUsers, { name: identifier, role: 'view' }]);
   };
 
   return (

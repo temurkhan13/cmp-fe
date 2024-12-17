@@ -1,5 +1,4 @@
 import React from 'react';
-import Module from '../../modules/index.js';
 
 const assessmentRoutesData = [
   {

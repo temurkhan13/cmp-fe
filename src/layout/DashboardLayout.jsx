@@ -36,9 +36,7 @@ const DashboardLayout = ({ children }) => {
         if (userId) {
           await dispatch(getUser(userId));
         }
-      } catch (error) {
-        console.error('Error fetching user data', error);
-      }
+      } catch (error) {}
     };
     fetchUserData();
   }, [dispatch]);
@@ -156,7 +154,7 @@ const DashboardLayout = ({ children }) => {
             onClick={handlePlanRoute}
             style={{
               padding: isOpen ? '1.5rem 3rem' : '1rem',
-              marginRight: isOpen ? '2rem' : '3rem',
+              marginRight: isOpen ? '2.5rem' : '3rem',
               width: '100%',
               backgroundColor: '#f0f0f0',
               color: '#00316f',

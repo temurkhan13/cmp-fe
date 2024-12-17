@@ -9,11 +9,9 @@ const useSummarize = () => {
       const response = await apiClient.post('/chat/summarize', {
         message: inputText,
       });
-      console.log('Summary -> ', response.data.message);
       setError(null);
       return response.data.message;
     } catch (error) {
-      console.log(error.message);
       setError(error.message);
     }
   };

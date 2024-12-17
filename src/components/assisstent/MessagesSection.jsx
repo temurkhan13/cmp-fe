@@ -134,7 +134,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         // Set profile photo, fallback to default if no photo is found
         setUserProfilePhoto(userPhoto ? userPhoto : UserPic);
       } catch (error) {
-        console.error('Failed to fetch user photo from localStorage', error);
         setUserProfilePhoto(UserPic); // Fallback to default image in case of error
       }
     };
@@ -153,7 +152,6 @@ const MessagesSection = ({ setCurrentChat }) => {
       setCurrentChat(chat);
     }
   }, [chat]);
-  // console.log(chat);
 
   // const [chat, setChat] = useState(
   //   currentChat ? currentChat.generalMessages : []
@@ -184,7 +182,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   const { shortText } = useShorter();
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
-  console.debug(selectedTone, responseLength, askAi, chatWithdoc);
   const { handleInspire } = useInspire();
   const [firstPrompt, setFirstPrompt] = useState('');
 
@@ -198,15 +195,6 @@ const MessagesSection = ({ setCurrentChat }) => {
       // setChat([]);
       return;
     }
-    if (currentChat) {
-      // console.log(currentChat);
-      // setChat(currentChat.generalMessages || []);
-      // console.log('chat Messages: ' + currentChat.generalMessages);
-      // console.log('chat: ' + chat);
-    }
-    // if(chatId === null){
-    //   setChat([]);
-    // }
   }, [currentChat, chatId]);
 
   const handleFileChange = (e) => {
@@ -235,11 +223,10 @@ const MessagesSection = ({ setCurrentChat }) => {
   //     message: text,
   //     files: file,
   //   }).unwrap();
-  //.then((response) => console.log('text: ', response));
+  //.then((response);
 
   // setChatContent('');
   //   } catch (error) {
-  //     console.error('Failed to add chat:', error);
   //   }
   // };
 
@@ -249,7 +236,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   // const applyFixedText = useCallback(
   //   (newText) => {
   //     const updatedChat = chat.map((message) => {
-  //       // console.log(message);
   //       if (message.text) {
   //         return {
   //           ...message,
@@ -258,7 +244,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   //       }
   //       return message;
   //     });
-  //     console.log('chatttt :' + chat);
   //    // setChat(updatedChat);
   //    //  dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
   //
@@ -282,7 +267,6 @@ const MessagesSection = ({ setCurrentChat }) => {
       });
 
       try {
-        console.log(updatedMessages, 'updatedMessages', chat);
         // Optionally dispatch an action or make an API call to update the message
         // await Promise.all(
         //   updatedMessages
@@ -306,7 +290,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         // Refetch the chat to get the latest data from the server
         await refetch();
       } catch (error) {
-        console.error('Failed to update message:', error);
         // Handle error (e.g., show an error message to the user)
       }
 
@@ -351,7 +334,6 @@ const MessagesSection = ({ setCurrentChat }) => {
       setSelectedText(selectedText);
       setPopupVisible(!!selectedText); // Show popup if there's a valid selection
       if (selectedMessageId) {
-        // console.log(`Selected Message ID: ${selectedMessageId}`);
         setMessageId(selectedMessageId);
         // You can now use `selectedMessageId` as needed
       }
@@ -380,7 +362,6 @@ const MessagesSection = ({ setCurrentChat }) => {
           refetch();
         }
       } catch (error) {
-        console.error('Asi AI', error);
       } finally {
         setLoading(false);
       }
@@ -397,7 +378,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         applyFixedText(response);
       }
     } catch (error) {
-      console.error('Error occurred while changing tone:', error);
     } finally {
       setLoading(false);
     }
@@ -422,7 +402,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         applyFixedText(response);
       }
     } catch (error) {
-      console.error('Error occurred while changing tone:', error);
     } finally {
       setLoading(false);
     }
@@ -483,7 +462,6 @@ const MessagesSection = ({ setCurrentChat }) => {
 
     setLoading(true); // Show spinner
     try {
-      console.log(folderId, 'folderrrr is here');
       // Simulate sending message
       const data = await addMessage({
         workspaceId: workspaceId,
@@ -506,14 +484,11 @@ const MessagesSection = ({ setCurrentChat }) => {
               dispatch(setCurrentChatId(response.payload.data[0]._id));
             }
           })
-          .catch((error) => {
-            console.error(error, 'error');
-          });
+          .catch((error) => {});
       }
       // refetch();
       setText(''); // Clear input field after message sent
     } catch (error) {
-      console.error('Failed to send message:', error);
     } finally {
       setLoading(false); // Hide spinner after response
     }
@@ -542,7 +517,6 @@ const MessagesSection = ({ setCurrentChat }) => {
       const lastChat = chat.generalMessages.filter(
         (message) => message.from == 'user'
       );
-      console.log(lastChat, 'lastchat');
       const lastMessage = lastChat?.[lastChat.length - 1]?.text;
 
       if (lastMessage) {
@@ -550,16 +524,11 @@ const MessagesSection = ({ setCurrentChat }) => {
         const inspiredText = await handleInspire(lastMessage);
 
         setFirstPrompt(inspiredText);
-        console.log(inspiredText, 'inspiredText');
         setText(inspiredText);
         handleSendMessage();
       } else {
-        console.warn(
-          'No general messages found or no text available in the last message.'
-        );
       }
     } catch (error) {
-      console.error('An error occurred in handleInspireClick:', error);
     } finally {
       setLoading(false);
     }
@@ -576,7 +545,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   }, [chat]);
 
   const handleLikeClick = async (message) => {
-    console.log(message, 'message');
     await likeChatMessage({
       workspaceId,
       folderId: folderId._id || folderId.id,
@@ -587,14 +555,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleDislikeMessage = async (message) => {
-    console.log(message, 'message');
-    console.log(JSON.parse(localStorage.getItem('user')).id);
-    console.log(
-      message?.reactions?.some(
-        (react) => react.user == JSON.parse(localStorage.getItem('user')).id
-      ),
-      'message'
-    );
     await dislikeChatMessage({
       workspaceId,
       folderId: folderId._id || folderId.id,

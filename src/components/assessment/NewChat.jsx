@@ -39,7 +39,6 @@ const NewChat = () => {
   const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
   const currentChat = useSelector(selectCurrentAssessment);
-  console.log(currentFolder, 'currentFolder');
   // const selectedFolder = useSelector((state) =>
   //   selectFolderById(state, currentFolder._id)
   // );
@@ -75,8 +74,6 @@ const NewChat = () => {
   const folderId = useSelector(selectCurrentFolder);
 
   const handleChatSelect = (chatId) => {
-    console.log('FolderId', folderId);
-    console.log('dispatch ChatId' + chatId);
     const currentUrl = window.location.pathname;
     const newUrl = currentUrl.replace(
       /\/assessment\/chat\/[^/]+$/,
@@ -106,10 +103,6 @@ const NewChat = () => {
       // TODO: Implement lazy loading for chat history
     }
   };
-
-  useEffect(() => {
-    console.log('', currentFolder, currentChat, currentWorkspace);
-  }, [currentFolder, currentChat, currentWorkspace, chats]);
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
@@ -227,10 +220,7 @@ const NewChat = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  {
-                    //console.log("Assessments: ",chat.report)
-                    chat.report[0].ReportTitle
-                  }
+                  {chat.report[0].ReportTitle}
                 </Components.Feature.Text>
                 {hoveredChatIndex === index && (
                   <BsThreeDots

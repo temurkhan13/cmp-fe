@@ -52,7 +52,7 @@ const Modal = ({ title, isOpen, onClose, children }) => {
           border-radius: 1rem;
           position: relative;
           // max-width: 90vw;
-          max-height:95vh;
+          max-height:98vh;
           // z-index: 10002; 
 
         }
@@ -82,6 +82,7 @@ const Modal = ({ title, isOpen, onClose, children }) => {
           align-items: center;
           flex-direction: column;
           gap: 1rem;
+          overflow-y: auto;
         }
       `}</style>
     </div>

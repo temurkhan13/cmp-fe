@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 // import PropTypes from 'prop-types';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { BsWindowStack } from 'react-icons/bs';
+import {
+  BsThreeDots,
+  BsThreeDotsVertical,
+  BsWindowStack,
+} from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
@@ -80,9 +84,7 @@ const Workspaces = ({
 
       // Show success message
       showSuccess('Workspace created successfully!');
-    } catch (error) {
-      console.log('Failed to add workspace.');
-    }
+    } catch (error) {}
   };
 
   const handleWorkspaceSwitch = (workspace) => {
@@ -121,11 +123,9 @@ const Workspaces = ({
       <div className="icons">
         {workspaces?.map((workspace, index) => (
           <div key={index} className="icon-container">
+            <BsThreeDotsVertical size={18} className="three-dots-vertical" />
             <BsWindowStack
-              onClick={() => {
-                setSelectedWorkspace(workspace);
-                setIsModalOpen(true);
-              }}
+              onClick={() => handleWorkspaceSwitch(workspace)}
               style={
                 activeWorkspace?.id === workspace.id
                   ? { color: 'black' }
@@ -249,11 +249,27 @@ const Workspaces = ({
         }
         .icon-container {
           display: flex;
+          position: relative;
           flex-direction: column;
           align-items: center;
           padding: 0.5rem 1rem;
-          border-radius: 0.5rem;
-        }
+          border-radius: 1rem;
+          padding:1.5rem;
+          }
+        .icon-container:hover {
+         background-color: #f5f5f5;
+          }
+
+          .three-dots-vertical {
+            position: absolute;
+            top: 0.5rem;
+            right: 0;
+            opacity: 0; 
+            transition: opacity 0.2s ease-in-out;
+            }
+            .icon-container:hover .three-dots-vertical {
+            opacity: 1; 
+            }
         .collection-icon {
           cursor: pointer;
           transition: all 0.2s linear;
@@ -319,6 +335,7 @@ const Workspaces = ({
           border-radius: 1rem;
           background-color: #c3e11d;
         }
+          .
       `}</style>
     </div>
   );
@@ -338,7 +355,6 @@ const ModalSections = ({
 
   const handleSaveRename = async () => {
     if (inputValue.trim().length < 3) {
-      console.log('Please enter at least 3 characters.');
       return;
     }
     try {
@@ -348,9 +364,7 @@ const ModalSections = ({
       }).unwrap();
       setIsRenaming(false);
       showSuccess('Workspace renamed successfully!'); // Show success message
-    } catch (error) {
-      console.log('Failed to rename workspace.');
-    }
+    } catch (error) {}
   };
 
   const handleMoveToTrash = async () => {
@@ -362,9 +376,7 @@ const ModalSections = ({
       setIsModalOpen(false);
       onWorkspaceUpdated();
       showSuccess('Workspace moved to trash successfully!'); // Show success message
-    } catch (error) {
-      console.log('Error moving workspace to trash.');
-    }
+    } catch (error) {}
   };
 
   return (
