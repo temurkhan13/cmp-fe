@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { BiCheckCircle, BiCopy, BiEdit } from 'react-icons/bi';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
@@ -270,6 +271,23 @@ const ContextMenu = ({
       </div>
     </div>
   );
+};
+
+ContextMenu.propTypes = {
+  nodeData: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    heading: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+    isEditing: PropTypes.bool.isRequired,
+  }).isRequired,
+  updateNodeDataWithPropertyName: PropTypes.func.isRequired,
+  addNodeChild: PropTypes.func.isRequired,
+};
+NodeItem.propTypes = {
+  nodeData: PropTypes.object.isRequired,
+  updateNodeDataWithPropertyName: PropTypes.func.isRequired,
+  addNodeChild: PropTypes.func.isRequired,
 };
 
 export default NodeItem;

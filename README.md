@@ -19,7 +19,7 @@ For now see [System Flow](#change-ai-system-flow)
 
 ## Techonologies
 
-### Frontend Web
+### Front-end Web
 - ReactJS
 - Fully redux based UI state management
 - css

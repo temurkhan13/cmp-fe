@@ -7,34 +7,49 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { MdDelete } from 'react-icons/md';
+import { useMemo } from 'react';
 
 import './edge.scss';
 
 function Edge({ id, sourceX, sourceY, targetX, targetY }) {
-  const { setEdges } = useReactFlow();
+  const { setEdges, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
   });
+
+  const { isRootOrChildEdge } = useMemo(() => {
+    const nodes = getNodes();
+    const rootNode = nodes.find((node) => node.data.isRoot);
+
+    return {
+      isRootOrChildEdge:
+        rootNode &&
+        (id.startsWith(`${rootNode.id}-`) || id.endsWith(`-${rootNode.id}`)),
+    };
+  }, [getNodes, id]);
+
   return (
     <>
       <BaseEdge id={id} path={edgePath} />
       <EdgeLabelRenderer className="edge-renderer">
-        <MdDelete
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            pointerEvents: 'all',
-            cursor: 'pointer',
-          }}
-          size={20}
-          className="nodrag nopan delete"
-          onClick={() => {
-            setEdges((es) => es.filter((e) => e.id !== id));
-          }}
-        ></MdDelete>
+        {!isRootOrChildEdge && (
+          <MdDelete
+            style={{
+              position: 'absolute',
+              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+              pointerEvents: 'all',
+              cursor: 'pointer',
+            }}
+            size={20}
+            className="nodrag nopan delete"
+            onClick={() => {
+              setEdges((es) => es.filter((e) => e.id !== id));
+            }}
+          />
+        )}
       </EdgeLabelRenderer>
     </>
   );
