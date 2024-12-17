@@ -67,9 +67,7 @@ const AiAssistantChat = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {
-        console.log('Failed to fetch folder data.');
-      }
+      } catch {}
     },
     [dispatch, activeWorkspace]
   );
@@ -114,9 +112,7 @@ const AiAssistantChat = () => {
         }
 
         setIsFetched(true);
-      } catch {
-        console.log('Failed to fetch dashboard stats.');
-      }
+      } catch {}
     };
 
     initializeWorkspaceAndFolder();
@@ -131,7 +127,6 @@ const AiAssistantChat = () => {
   // Show error if no folders available in the selected workspace
   useEffect(() => {
     if (activeWorkspace?.folders?.length === 0) {
-      console.log('No folders available in the selected workspace.');
     }
   }, [activeWorkspace]);
 

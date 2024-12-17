@@ -59,9 +59,7 @@ const useStartAssessment = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {
-        console.log('Failed to fetch folder data.');
-      }
+      } catch {}
     },
     [dispatch, currentWorkspace]
   );
@@ -113,9 +111,6 @@ const useStartAssessment = () => {
 
   const StartAssessment = async (name, folderId) => {
     try {
-      console.log('assessmentName', name);
-      console.log('Questions', folderId);
-
       const businessInfoData = {
         companyName: businessInfo.companyName,
         companySize: businessInfo.companySize,
@@ -135,7 +130,7 @@ const useStartAssessment = () => {
           // generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
           // businessInfo: businessInfoData,
           folderId,
-          name
+          name,
         },
         {
           headers: {
@@ -143,22 +138,20 @@ const useStartAssessment = () => {
           },
         }
       );
-      
+
       // if (response.data || response.data.data.report.isGenerated) {
       //   setIsReportGenerated(true);
       //   setReport(response.data.data.report.isGenerated);
       //   return response.data.data;
       // }
-      console.log(response.data.data);
-      
+
       if (response.data.data?.report?.isGenerated) {
         setIsReportGenerated(true);
         setReport(response.data.data);
         return response.data.data;
-    }
+      }
       return response.data.data;
     } catch (error) {
-      console.log('assessment error', error.message);
       setError(error.message);
     }
   };

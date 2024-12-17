@@ -20,7 +20,6 @@ const sitemapRoutesData = [
     path: '/digital-playbook/list',
     element: Module.Dashboard.DigitalPlaybook,
   },
-  
 ];
 
 export default sitemapRoutesData;

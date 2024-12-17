@@ -12,7 +12,7 @@ import InpireMeIcon from '../../assets/inspireBtn.svg';
 import { useAddProjectSurveyMutation } from '../../redux/api/workspaceApi';
 import { useSelector } from 'react-redux';
 
-const Questionnaire = ({handleCloseImproveResponseModal}) => {
+const Questionnaire = ({ handleCloseImproveResponseModal }) => {
   const [AddProjectSurvey] = useAddProjectSurveyMutation();
   const [activeStep, setActiveStep] = useState(1);
   const [answers, setAnswers] = useState({});
@@ -23,14 +23,13 @@ const Questionnaire = ({handleCloseImproveResponseModal}) => {
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
-  const folderId = useSelector((state) => state.workspaces.currentFolderId); 
+  const folderId = useSelector((state) => state.workspaces.currentFolderId);
   const logAnswers = () => {
-
     const questionsArray = data.questionnaire.Questions.map((question) => {
       const answer = answers[`question-${question.id}`] || 'No answer provided';
       return {
         question: question.question,
-        answer: answer
+        answer: answer,
       };
     });
     // Now questionsArray will be an array of objects
@@ -38,11 +37,8 @@ const Questionnaire = ({handleCloseImproveResponseModal}) => {
   };
 
   const handleSubmit = async () => {
-    console.log('Survey: ', Questions);
-    console.log(workspaceId, folderId, 'workspaceId, folderId')
-    await AddProjectSurvey( { workspaceId, folderId,survey: Questions })
-    handleCloseImproveResponseModal(false)
-
+    await AddProjectSurvey({ workspaceId, folderId, survey: Questions });
+    handleCloseImproveResponseModal(false);
   };
 
   const nextStep = () => {
@@ -79,8 +75,9 @@ const Questionnaire = ({handleCloseImproveResponseModal}) => {
     const currentQuestionKey = `question-${
       data.questionnaire.Questions[activeStep - 1].id
     }`;
-    console.log(Questions, 'currentQuestionKey')
-    const inspiredText = await handleInspire(data.questionnaire.Questions[activeStep - 1].question);
+    const inspiredText = await handleInspire(
+      data.questionnaire.Questions[activeStep - 1].question
+    );
     setAnswers({
       ...answers,
       [currentQuestionKey]: inspiredText,
@@ -207,10 +204,7 @@ const Questionnaire = ({handleCloseImproveResponseModal}) => {
                   Previous
                 </button>
               )}
-              <button
-                className={styles.ButtonStyleNext}
-                onClick={nextStep}
-              >
+              <button className={styles.ButtonStyleNext} onClick={nextStep}>
                 Next <MdKeyboardArrowRight />
               </button>
               <button
@@ -256,5 +250,5 @@ const Questionnaire = ({handleCloseImproveResponseModal}) => {
 };
 Questionnaire.propTypes = {
   handleCloseImproveResponseModal: PropTypes.func.isRequired,
-}
+};
 export default Questionnaire;

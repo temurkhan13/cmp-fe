@@ -10,11 +10,9 @@ const useExplain = () => {
       const response = await apiClient.post('/chat/explain', {
         message: inputText,
       });
-      console.log('Explain', response.data.message);
       setExplainText(response.data.message);
       setError(null);
     } catch (error) {
-      console.log('check', error.message);
       setError(error.message);
       setExplainText('');
     }

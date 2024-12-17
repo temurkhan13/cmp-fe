@@ -34,9 +34,7 @@ let opts = {
 };
 apiInstance.chatAutoPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -77,9 +75,7 @@ let opts = {
 };
 apiInstance.chatChangeTonePost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -120,9 +116,7 @@ let opts = {
 };
 apiInstance.chatComprehensivePost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -163,9 +157,7 @@ let opts = {
 };
 apiInstance.chatExplainPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -206,9 +198,7 @@ let opts = {
 };
 apiInstance.chatGrammarFixPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -249,9 +239,7 @@ let opts = {
 };
 apiInstance.chatImporveWritingPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -292,9 +280,7 @@ let opts = {
 };
 apiInstance.chatLanguageSimplifyPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -335,9 +321,7 @@ let opts = {
 };
 apiInstance.chatLongTextPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -378,9 +362,7 @@ let opts = {
 };
 apiInstance.chatPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -421,9 +403,7 @@ let opts = {
 };
 apiInstance.chatShortTextPost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -464,9 +444,7 @@ let opts = {
 };
 apiInstance.chatSummarizePost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```
@@ -507,9 +485,7 @@ let opts = {
 };
 apiInstance.chatTranslatePost(opts, (error, data, response) => {
   if (error) {
-    console.error(error);
   } else {
-    console.log('API called successfully.');
   }
 });
 ```

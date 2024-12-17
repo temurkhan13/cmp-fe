@@ -56,9 +56,7 @@ const TrashWorkspaceTab = ({ workspaces }) => {
     try {
       await dispatch(restoreFromTrash({ type: 'workspace', id }));
       dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
-    } catch (error) {
-      console.error('Error restoring workspace:', error);
-    }
+    } catch (error) {}
   };
 
   const handleDeletePermanently = async (id) => {
@@ -67,13 +65,10 @@ const TrashWorkspaceTab = ({ workspaces }) => {
         deleteFromTrashAsync({ type: 'workspace', id })
       );
       if (deleteFromTrashAsync.rejected.match(resultAction)) {
-        console.error('Failed to delete item:', resultAction.error.message);
       } else {
         dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
       }
-    } catch (error) {
-      console.error('Error dispatching deleteFromTrashAsync:', error);
-    }
+    } catch (error) {}
   };
 
   const handleClickOutside = (event) => {

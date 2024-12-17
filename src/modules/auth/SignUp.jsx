@@ -30,12 +30,9 @@ const SignUp = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     // setIsLoading(true);
     try {
-      console.log(values);
       await dispatch(register({ registrationData: values }));
       //navigate('/dashboard');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
 
     setSubmitting(false);
   };

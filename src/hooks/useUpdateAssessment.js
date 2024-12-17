@@ -10,10 +10,6 @@ const useUpdateAssessment = () => {
 
   const UpdateAssessment = async (message, assessmentName, Questions) => {
     try {
-      console.log('assessmentName', assessmentName);
-      console.log('Questions', Questions);
-      console.log('businessInfo', businessInfo);
-
       const businessInfoData = {
         companyName: businessInfo.companyName,
         companySize: businessInfo.companySize,
@@ -42,7 +38,6 @@ const useUpdateAssessment = () => {
       );
       return response.data.message;
     } catch (error) {
-      console.log('assessment error', error.message);
       setError(error.message);
     }
   };

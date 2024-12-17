@@ -75,8 +75,6 @@ const Chat = () => {
     async (folder, workspaceId = activeWorkspace?.id) => {
       if (!workspaceId) return;
 
-      console.log(folder, '/.//////////////');
-
       dispatch(setSelectedFolder(folder));
       dispatch(
         toggleFolderActivation({
@@ -86,17 +84,13 @@ const Chat = () => {
         })
       );
 
-      console.log('FOLDDERRRRRRRRRRRRR', folder.id);
-
       setFolderID(folder.id);
 
       try {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {
-        console.log('Failed to fetch folder data.');
-      }
+      } catch {}
     },
     [dispatch, activeWorkspace]
   );
@@ -108,8 +102,6 @@ const Chat = () => {
         updateWorkspaceStatus({ workspaceId: workspace.id, isActive: true })
       );
       dispatch(resetFolderState());
-
-      console.log(workspace, 'workspace');
 
       if (workspace?.folders?.length > 0) {
         const firstFolder =
@@ -130,7 +122,6 @@ const Chat = () => {
         const initialWorkspace =
           dashboardStats.workspaces.find((ws) => ws.isActive) ||
           dashboardStats.workspaces[0];
-        console.log(initialWorkspace, 'initial workspace');
         if (
           !selectedWorkspace ||
           selectedWorkspace.id !== initialWorkspace.id
@@ -172,8 +163,6 @@ const Chat = () => {
   const handleDataUpdated = useCallback(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
-
-  console.log(currentFolder, 'cirrent folder data', folderData);
 
   return (
     <div className="assessmentChat">

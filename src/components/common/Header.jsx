@@ -28,13 +28,11 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
     useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const location = useLocation();
-  console.log(location, '27');
   const handleIconClick = (icon) => {
     setActiveIcon(activeIcon === icon ? null : icon);
   };
   const selectedWorkspace = useSelector(selectWorkspace);
   // SetActiveWorkspaceName(selectedWorkspace);
-  console.log(selectedWorkspace.workspaceName, '177777');
 
   const closeActiveIcon = () => setActiveIcon(null);
 
@@ -69,8 +67,6 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
       user.lastName?.[0] || ''
     }`.toUpperCase();
   };
-
-  console.log('ACTIVE_WORKSPACE', activeWorkspace);
 
   return (
     <div className="topbar">

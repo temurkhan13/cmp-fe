@@ -33,7 +33,6 @@ const VerifyEmail = () => {
           initialValues={initialValues}
           validateOnMount
           onSubmit={(values, { resetForm }) => {
-            console.log(values);
             resetForm();
           }}
         >
@@ -47,12 +46,10 @@ const VerifyEmail = () => {
                 handleVerification={async (value) => {
                   try {
                     const response = await dispatch(verify(value)).unwrap();
-                    console.log(response.success);
                     //  if (response.success) {
                     navigate('/choose-plan');
                     //  }
                   } catch (error) {
-                    console.error('Verification failed:', error);
                     // Handle error appropriately (e.g., show an error message to the user)
                   }
                 }}

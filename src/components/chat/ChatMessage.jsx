@@ -41,8 +41,6 @@
 //   };
 
 //   const handleSendMessage = () => {
-//     console.log("Text:", text);
-//     console.log("Uploaded File:", file);
 //     setFile([]);
 //     setText("");
 //   };
@@ -50,23 +48,16 @@
 //   // popup change Tone
 //   const HandleAskAi = (value) => {
 //     setAskAI(value);
-//     console.log("selected ASi ai value", value);
-//     console.log("HandleASk Ai");
 //   };
 
 //   const handleTextSelect = () => {
 //     const selection = window.getSelection();
-//     console.log("secletion", selection);
 //     const selectedText = selection.toString().trim();
-//     console.log("selectedText", selectedText);
 //     setSelectedText(selectedText);
 //     setPopupVisible(!!selectedText);
 //   };
 
 //   const handleToneChange = async (tone) => {
-//     console.log("selectedTone", tone);
-//     console.log("selectedText", selectedText);
-//     console.log("selectedresponseLength", responseLength);
 
 //     setSelectedTone(tone);
 
@@ -79,7 +70,6 @@
 
 //       const data = await response.json();
 //       if (!data) {
-//         console.error("Empty JSON response received");
 //         return;
 //       }
 //       const newText = data.text;
@@ -94,7 +84,6 @@
 //   };
 
 //   const handleResponseLengthChange = (ResponseSelectedValue) => {
-//     console.log("response length", ResponseSelectedValue);
 //     setResponseLength(length);
 //   };
 

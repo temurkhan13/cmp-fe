@@ -30,10 +30,8 @@ export const signinWithGoogle = async () => {
     //
     //     // The signed-in user info
     //     const user = result.user;
-    //     console.log('User signed in: ', user);
     //     return user;
   } catch (error) {
-    console.error('Error during sign in: ', error);
     //     return null;
   }
 };

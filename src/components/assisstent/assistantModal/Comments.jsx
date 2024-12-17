@@ -187,7 +187,6 @@ const Comments = ({ comments }) => {
                         </Dropdown.Item>
                         <Dropdown.Item
                           onClick={() => {
-                            console.log(comment, 'commentcomment');
                             handleDeleteComment(comment._id, false);
                           }}
                         >

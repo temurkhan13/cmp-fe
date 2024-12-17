@@ -17,7 +17,7 @@ const initialState = {
 
 export const getChatsAsync = createAsyncThunk(
   `/workspace/user/chatsAll?workspaceId`,
-  async ({workspaceId, folderId}, thunkAPI) => {
+  async ({ workspaceId, folderId }, thunkAPI) => {
     try {
       // Save tokens in localStorage
       const token = localStorage.getItem('token');
@@ -137,7 +137,6 @@ const workspaceSlice = createSlice({
       const folder = findFolderById(workspace, state.selectedFolderId);
       const chat = findChatById(folder, state.selectedChatId);
       if (chat) {
-        console.log('slice message: ', action.payload);
         chat.generalMessages.push(action.payload);
       }
     },

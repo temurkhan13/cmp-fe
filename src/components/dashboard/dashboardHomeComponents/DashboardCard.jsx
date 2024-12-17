@@ -38,8 +38,6 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
 
   // Track mounting status to avoid setting state on an unmounted component
   useEffect(() => {
-    console.log('DATA:', data);
-    console.log('FOLDER DATA:', folderData);
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
@@ -55,7 +53,6 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
         await moveToTrash({ entityType: data.type, id: data.id }).unwrap();
         onRemove(data.id); // Ensure UI updates instantly
       } catch (error) {
-        console.error('Error moving item to trash:', error);
         setShowNotification(true);
       }
     },

@@ -7,7 +7,7 @@ const initialState = {
     workspaces: [],
     folders: [],
     chats: [],
-    assessments: []
+    assessments: [],
   },
   isLoading: false,
   error: null,
@@ -19,15 +19,19 @@ export const fetchTrashItemsAsync = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${config.apiURL}/workspace/user/trash`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('API Response:', response.data); // Log API response
+      const response = await axios.get(
+        `${config.apiURL}/workspace/user/trash`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || 'Failed to fetch trash items');
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to fetch trash items'
+      );
     }
   }
 );
@@ -39,14 +43,20 @@ export const restoreFromTrashAsync = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       const url = `${config.apiURL}/workspace/${type}/${id}/restoreFromTrash`;
-      const response = await axios.patch(url, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.patch(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || 'Failed to restore item from trash');
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to restore item from trash'
+      );
     }
   }
 );
@@ -65,7 +75,9 @@ export const deleteFromTrashAsync = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || 'Failed to delete item from trash');
+      return thunkAPI.rejectWithValue(
+        error.response?.data || 'Failed to delete item from trash'
+      );
     }
   }
 );
@@ -76,7 +88,12 @@ const trashSlice = createSlice({
   initialState,
   reducers: {
     resetTrashState: (state) => {
-      state.trashItems = { workspaces: [], folders: [], chats: [], assessments: [] };
+      state.trashItems = {
+        workspaces: [],
+        folders: [],
+        chats: [],
+        assessments: [],
+      };
       state.isLoading = false;
       state.error = null;
     },
@@ -89,7 +106,6 @@ const trashSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchTrashItemsAsync.fulfilled, (state, action) => {
-        console.log(action,'action')
         state.trashItems = action.payload;
         state.isLoading = false;
         state.error = null;

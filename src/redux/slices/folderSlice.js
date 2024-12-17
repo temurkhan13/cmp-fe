@@ -7,7 +7,6 @@ export const fetchFolderData = createAsyncThunk(
   'folder/fetchFolderData',
   async ({ workspaceId, folderId }, { rejectWithValue }) => {
     try {
-      console.log(folderId, 'folderId');
       const token = localStorage.getItem('token');
       const response = await axios.get(
         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
@@ -46,11 +45,9 @@ export const toggleFolderActivation = createAsyncThunk(
         }
       );
 
-      console.log("Response:", response.data);
-
       // Extract the `isReportGenerated` values from assessments.report list
-      const reports = response.data.assessments.flatMap(assessment =>
-        assessment.report.map(report => ({
+      const reports = response.data.assessments.flatMap((assessment) =>
+        assessment.report.map((report) => ({
           isReportGenerated: report.isReportGenerated,
           ReportTitle: report.ReportTitle,
         }))
@@ -71,7 +68,7 @@ export const fetchWorkspaceAssessments = createAsyncThunk(
   async ({ folderId }, { rejectWithValue }) => {
     try {
       if (!folderId) {
-        throw new Error("Folder ID is required.");
+        throw new Error('Folder ID is required.');
       }
 
       const token = localStorage.getItem('token');
@@ -84,10 +81,11 @@ export const fetchWorkspaceAssessments = createAsyncThunk(
           },
         }
       );
-      console.log("ASSESSMENT RESPONSE:",response.data)
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response ? error.response.data : error.message);
+      return rejectWithValue(
+        error.response ? error.response.data : error.message
+      );
     }
   }
 );

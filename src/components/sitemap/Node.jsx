@@ -149,10 +149,8 @@ const Node = ({ data }) => {
                 draggable
                 onMouseEnter={(e) => {
                   e.stopPropagation();
-                  console.log('Clicked');
                 }}
                 onDragStart={(e) => {
-                  console.log(e);
                   e.stopPropagation();
                   handleDragStart(index);
                 }}
@@ -259,7 +257,6 @@ const Node = ({ data }) => {
             style={{ marginTop: 20 }}
             onClick={e => {
               e.stopPropagation();
-              console.log('Add Item');
               setItems(prev => [...prev, 'Item']);
             }}
           >

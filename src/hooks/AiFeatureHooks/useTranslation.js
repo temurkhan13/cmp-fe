@@ -11,11 +11,9 @@ const useTranslation = () => {
         message: inputText,
         language: language,
       });
-      console.log('translation', response.data.message);
       setTranslationText(response.data.message);
       setError(null);
     } catch (error) {
-      console.log('check', error.message);
       setError(error.message);
       setTranslationText('');
     }

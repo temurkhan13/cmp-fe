@@ -30,11 +30,9 @@ const EmailVerificationHandler = () => {
     setResendCode(true);
     dispatch(resendVerification())
       .then((response) => {
-        console.log(response, 'responseresponse');
         setResendCode(false);
       })
       .catch((error) => {
-        console.error('Resend Verification failed:', error);
         setResendCode(false);
       });
   };
@@ -55,12 +53,11 @@ const EmailVerificationHandler = () => {
         'All fields are required and must be at least 1 character long.'
       );
       return;
-
     }
     dispatch(verify({ code }))
       .then((response) => {
-        if(response.error && response.error.message){
-          setError('Something is wrong, please try again.')
+        if (response.error && response.error.message) {
+          setError('Something is wrong, please try again.');
           return;
         }
 
@@ -76,15 +73,12 @@ const EmailVerificationHandler = () => {
           },
         };
         localStorage.setItem('user', JSON.stringify(parsedData));
-        setVerificationData(true); 
+        setVerificationData(true);
         setShowVerificationModal(false);
         window.location.reload();
         navigate('/dashboard');
       })
-      .catch((error) => {
-        console.error('Verification failed:', error);
-      });
-
+      .catch((error) => {});
   };
 
   const handleCodeChange = (index, value) => {
@@ -161,7 +155,6 @@ const EmailVerificationHandler = () => {
     }
   }, []);
 
-
   return (
     <>
       {verificationData === false && (
@@ -178,7 +171,7 @@ const EmailVerificationHandler = () => {
         isOpen={showVerificationModal}
         onClose={() => {
           setVerificationCode(['', '', '', '', '', '']);
-          setError('')
+          setError('');
           setShowVerificationModal(!showVerificationModal);
         }}
       >
@@ -238,7 +231,6 @@ const EmailVerificationHandler = () => {
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); 
     z-index: 1000;
     font-size: 11px;
-    text-align: center;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -259,7 +251,6 @@ const EmailVerificationHandler = () => {
   input {
     width: 5rem;
     height: 5rem;
-    text-align: center;
     font-size: 3rem;
     border: 0.0625rem solid lightgray;
     border-radius: 0.5rem;

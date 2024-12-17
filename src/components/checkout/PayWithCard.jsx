@@ -30,7 +30,6 @@ const PayWithCard = () => {
             data.validation.validationAuth.validationPayWithCard
           }
           onSubmit={(values, { resetForm }) => {
-            console.log(values);
             resetForm();
           }}
         >

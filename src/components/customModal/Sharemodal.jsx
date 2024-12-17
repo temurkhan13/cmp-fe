@@ -94,7 +94,6 @@ const ShareModal = ({ members, onClose }) => {
 
   const handleApplyChanges = () => {
     // Implement the action to handle changes to the users' dropdown
-    console.log('Changes applied:', userRoles);
     // Example: dispatch(updateChatUsers(selectedChatId, userRoles)); // Replace with actual action
   };
 

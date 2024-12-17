@@ -12,9 +12,5 @@ const outputFilePath = path.resolve(__dirname, 'cmpOpenAi.yaml');
 postmanToOpenApi(postmanCollectionPath, outputFilePath, {
   defaultTag: 'General',
 })
-  .then((result) => {
-    console.log(`OpenAPI spec written to ${outputFilePath}`);
-  })
-  .catch((err) => {
-    console.error('Error converting Postman collection to OpenAPI spec:', err);
-  });
+  .then((result) => {})
+  .catch((err) => {});

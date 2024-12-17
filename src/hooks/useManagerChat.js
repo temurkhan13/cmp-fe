@@ -46,12 +46,10 @@
 
 //     try {
 //       const response = await apiClient.post("/getRecentChat");
-//       console.log("Response data: ", response.data);
 //       setError(null);
 //       setData(response.data);
 //       return response.data;
 //     } catch (error) {
-//       console.log(error.message);
 //       setError(error.message);
 //     }
 //   };
@@ -105,49 +103,48 @@
 
 // export default useManagerChat;
 
-import { useState,useEffect } from "react";
-import apiClient from "@api/axios";
+import { useState, useEffect } from 'react';
+import apiClient from '@api/axios';
 
-import MockAdapter from "axios-mock-adapter";
+import MockAdapter from 'axios-mock-adapter';
 
 // Mock API setup
 const mock = new MockAdapter(apiClient, { delayResponse: 500 });
 // Sample data for mocking
 const chatMetadata = {
-  _id: "chatId1",
+  _id: 'chatId1',
   version: 1,
   comments: [
     {
-      commentId: "commentId1",
-      userId: "userId2",
-      content: "Nice message!",
-      timestamp: "2024-07-12T12:37:00Z",
+      commentId: 'commentId1',
+      userId: 'userId2',
+      content: 'Nice message!',
+      timestamp: '2024-07-12T12:37:00Z',
       replies: [
         {
-          replyId: "replyId1",
-          userId: "userId3",
-          content: "I agree!",
-          timestamp: "2024-07-12T12:38:00Z"
-        }
-      ]
-    }
+          replyId: 'replyId1',
+          userId: 'userId3',
+          content: 'I agree!',
+          timestamp: '2024-07-12T12:38:00Z',
+        },
+      ],
+    },
   ],
   bookmarks: [
     {
-      bookmarkId: "bookmarkId1",
-      userId: "userId4",
-      timestamp: "2024-07-12T12:40:00Z"
-    }
+      bookmarkId: 'bookmarkId1',
+      userId: 'userId4',
+      timestamp: '2024-07-12T12:40:00Z',
+    },
   ],
   media: [
     {
-      mediaId: "mediaId1",
-      url: "http://example.com/media.jpg",
-      timestamp: "2024-07-12T12:41:00Z"
-    }
-  ]
+      mediaId: 'mediaId1',
+      url: 'http://example.com/media.jpg',
+      timestamp: '2024-07-12T12:41:00Z',
+    },
+  ],
 };
-
 
 // Mock POST request for adding a comment
 mock.onPost('/chat/chatId1/comments').reply((config) => {
@@ -158,13 +155,11 @@ mock.onPost('/chat/chatId1/comments').reply((config) => {
 });
 
 // Mock PUT request for updating chat version
-mock.onPut(/\/chat\/\w+\/version/).reply(config => {
+mock.onPut(/\/chat\/\w+\/version/).reply((config) => {
   const { version } = JSON.parse(config.data);
   chatMetadata.version = version;
   return [200, chatMetadata];
 });
-
-
 
 const useManagerChat = () => {
   const [error, setError] = useState(null);
@@ -175,11 +170,10 @@ const useManagerChat = () => {
   // Fetch initial data from the server
   const fetchInitialData = async () => {
     try {
-      const response = await apiClient.get("/initialData"); // Adjust endpoint as per your API
+      const response = await apiClient.get('/initialData'); // Adjust endpoint as per your API
       setData(response.data); // Update state with server data
       setError(null);
     } catch (error) {
-      console.error('Error fetching initial chat data:', error);
       setError(error.message);
     }
   };
@@ -187,11 +181,13 @@ const useManagerChat = () => {
   // Function to move a chat to a different folder
   const moveChatToFolder = async (chatId, targetFolderId) => {
     try {
-      const response = await apiClient.post("/moveChatToFolder", { chatId, targetFolderId });
+      const response = await apiClient.post('/moveChatToFolder', {
+        chatId,
+        targetFolderId,
+      });
       setData(response.data); // Update state with updated server data
       setError(null);
     } catch (error) {
-      console.error('Error moving chat to folder:', error);
       setError(error.message);
     }
   };
@@ -199,11 +195,12 @@ const useManagerChat = () => {
   // Function to rename a folder
   const renameFolder = async (folderId, newName) => {
     try {
-      const response = await apiClient.put(`/folders/${folderId}`, { name: newName });
+      const response = await apiClient.put(`/folders/${folderId}`, {
+        name: newName,
+      });
       setData(response.data); // Update state with updated server data
       setError(null);
     } catch (error) {
-      console.error('Error renaming folder:', error);
       setError(error.message);
     }
   };
@@ -212,12 +209,11 @@ const useManagerChat = () => {
   const deleteFolder = async (folderId) => {
     try {
       await apiClient.delete(`/folders/${folderId}`);
-      setData(prevData => ({
-        folders: prevData.folders.filter(folder => folder.id !== folderId)
+      setData((prevData) => ({
+        folders: prevData.folders.filter((folder) => folder.id !== folderId),
       }));
       setError(null);
     } catch (error) {
-      console.error('Error deleting folder:', error);
       setError(error.message);
     }
   };
@@ -225,7 +221,9 @@ const useManagerChat = () => {
   // Function to download a folder as a ZIP file
   const downloadFolderAsZip = async (folderId) => {
     try {
-      const response = await apiClient.get(`/folders/${folderId}/downloadZip`, { responseType: 'blob' });
+      const response = await apiClient.get(`/folders/${folderId}/downloadZip`, {
+        responseType: 'blob',
+      });
       const blob = new Blob([response.data], { type: 'application/zip' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -235,15 +233,15 @@ const useManagerChat = () => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading folder as ZIP:', error);
-    }
+    } catch (error) {}
   };
 
   // Function to download a chat as a PDF (example)
   const downloadChatAsPdf = async (chatId) => {
     try {
-      const response = await apiClient.get(`/chats/${chatId}/downloadPdf`, { responseType: 'blob' });
+      const response = await apiClient.get(`/chats/${chatId}/downloadPdf`, {
+        responseType: 'blob',
+      });
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -253,49 +251,48 @@ const useManagerChat = () => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading chat as PDF:', error);
-    }
+    } catch (error) {}
   };
 
-  
   useEffect(() => {
     if (useMockData2) {
       //fetchInitialData(); //Real Api Data Call
       toggleMockData();
-    }
-    else {
+    } else {
       // Set mock data synchronously
       const mockData = {
         folders: [
           {
             id: 1,
-            name: "Project Discussions",
+            name: 'Project Discussions',
             chats: [
               {
                 id: 1,
-                title: "Chat with Alice",
-                content: "Hi Alice, how are you doing today? I wanted to discuss our project..."
+                title: 'Chat with Alice',
+                content:
+                  'Hi Alice, how are you doing today? I wanted to discuss our project...',
               },
               {
                 id: 2,
-                title: "Meeting Notes",
-                content: "Today's meeting covered the upcoming release schedule, new feature implementations..."
-              }
-            ]
+                title: 'Meeting Notes',
+                content:
+                  "Today's meeting covered the upcoming release schedule, new feature implementations...",
+              },
+            ],
           },
           {
             id: 2,
-            name: "Support Tickets",
+            name: 'Support Tickets',
             chats: [
               {
                 id: 3,
-                title: "Support Ticket #12345",
-                content: "The user reported an issue with the login functionality. Steps to reproduce..."
-              }
-            ]
-          }
-        ]
+                title: 'Support Ticket #12345',
+                content:
+                  'The user reported an issue with the login functionality. Steps to reproduce...',
+              },
+            ],
+          },
+        ],
       };
       setData(mockData);
     }
@@ -310,12 +307,11 @@ const useManagerChat = () => {
   //   }
   // };
 
-
   const toggleMockData = () => {
     // Toggle useMockData state
-   // setUseMockData(prev => !prev);
-   setUseMockData2(prev => !prev);
-  
+    // setUseMockData(prev => !prev);
+    setUseMockData2((prev) => !prev);
+
     // Update managerData state based on useMockData
     if (useMockData2) {
       // Set mock data synchronously
@@ -323,41 +319,51 @@ const useManagerChat = () => {
         folders: [
           {
             id: 1,
-            name: "Project 2 Discussions",
+            name: 'Project 2 Discussions',
             chats: [
               {
                 id: 1,
-                title: "Chat 2 with Alice",
-                content: "Hi Alice, how are you doing today? I wanted to discuss our project..."
+                title: 'Chat 2 with Alice',
+                content:
+                  'Hi Alice, how are you doing today? I wanted to discuss our project...',
               },
               {
                 id: 2,
-                title: "Meeting Notes",
-                content: "Today's meeting covered the upcoming release schedule, new feature implementations..."
-              }
-            ]
+                title: 'Meeting Notes',
+                content:
+                  "Today's meeting covered the upcoming release schedule, new feature implementations...",
+              },
+            ],
           },
           {
             id: 2,
-            name: "Support Tickets",
+            name: 'Support Tickets',
             chats: [
               {
                 id: 3,
-                title: "Support Ticket #12345",
-                content: "The user reported an issue with the login functionality. Steps to reproduce..."
-              }
-            ]
-          }
-        ]
+                title: 'Support Ticket #12345',
+                content:
+                  'The user reported an issue with the login functionality. Steps to reproduce...',
+              },
+            ],
+          },
+        ],
       };
       setData(mockData); // Update managerData immediately with mock data
     }
   };
-  
 
   // Return state and functions for use in components
-  return { managerData, error, toggleMockData, moveChatToFolder, renameFolder, deleteFolder, downloadFolderAsZip, downloadChatAsPdf };
+  return {
+    managerData,
+    error,
+    toggleMockData,
+    moveChatToFolder,
+    renameFolder,
+    deleteFolder,
+    downloadFolderAsZip,
+    downloadChatAsPdf,
+  };
 };
 
 export default useManagerChat;
-

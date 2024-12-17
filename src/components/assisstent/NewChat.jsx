@@ -65,15 +65,12 @@ const NewChat = () => {
         .then((response) => {
           dispatch(setChats(response.payload.data));
         })
-        .catch((error) => {
-          console.error(error, 'error');
-        });
+        .catch((error) => {});
     }
   }, [currentWorkspace, currentFolder, dispatch, selectedFolder]);
 
   useEffect(() => {
     // if(myChats?.length > 0){
-    console.log('myChat', myChats);
     setShowableChats(myChats);
     // }
   }, [myChats]);
@@ -129,9 +126,7 @@ const NewChat = () => {
         .then((response) => {
           dispatch(setChats(response.payload.data));
         })
-        .catch((error) => {
-          console.error('Error fetching chats for the selected folder:', error);
-        });
+        .catch((error) => {});
     }
   };
 

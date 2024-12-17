@@ -66,9 +66,7 @@ const AiAssistant = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {
-        console.log('Failed to fetch folder data.');
-      }
+      } catch {}
     },
     [dispatch, selectedWorkspace]
   );

@@ -17,10 +17,8 @@
 //       // Retrieve the token from the location state
 
 //   const token = location.state?.token;
-//   console.log("Retrieved token:", token); // Debug log
 //   if (token) {
 //     setToken(token);
-//     console.log("Token set in localStorage"); // Debug log
 //   } else {
 //     setError('Token not found');
 //     setLoading(false);
@@ -40,11 +38,9 @@
 //           "Content-Type": "multipart/form-data",
 //         },
 //       });
-//       console.log("chatWithApi response", response.data.message);
 //       setError(null);
 //       return response.data.message;
 //     } catch (error) {
-//       // console.error("Error in chatWithApi", error.message);
 //       setError(error.message);
 //     }
 //   };

@@ -32,9 +32,7 @@ const FolderCard = ({ folder }) => {
       await dispatch(restoreFromTrash({ type: 'folder', id: folder._id }));
       dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
       setShowDropdown(false);
-    } catch (error) {
-      console.error('Error restoring workspace:', error);
-    }
+    } catch (error) {}
   };
 
   const handleDeleteClick = () => {
@@ -50,13 +48,10 @@ const FolderCard = ({ folder }) => {
       );
       dispatch(fetchTrashItemsAsync());
       if (deleteFromTrashAsync.rejected.match(resultAction)) {
-        console.error('Failed to delete item:', resultAction.error.message);
       } else {
         dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
       }
-    } catch (error) {
-      console.error('Error dispatching deleteFromTrashAsync:', error);
-    }
+    } catch (error) {}
   };
 
   const handleCancelDelete = () => setShowDeleteModal(false);
