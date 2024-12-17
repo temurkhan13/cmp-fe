@@ -2,6 +2,7 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { MdOutlineError } from 'react-icons/md';
 import PlanAndBillingmodal from '../../components/dashboard/PlanAndBillingmodal';
 import { useState } from 'react';
+import Components from '..';
 
 const PlanAndBilling = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -103,6 +104,7 @@ const PlanAndBilling = () => {
 
   return (
     <div className="billing-page">
+      <Components.Dashboard.Header />
       <h2>Plan & Billing</h2>
       <div className="plan-information">
         <div className="info">

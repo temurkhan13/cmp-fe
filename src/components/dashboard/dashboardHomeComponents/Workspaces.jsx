@@ -33,6 +33,7 @@ const Workspaces = ({
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const modalRef = useRef(null);
+  const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
 
   const dispatch = useDispatch();
   const [addWorkspace] = useAddWorkspaceMutation();
@@ -96,6 +97,21 @@ const Workspaces = ({
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
+  const handleMoveToTrash = async () => {
+    try {
+      await moveToTrash({
+        entityType: 'workspace',
+        id: activeWorkspace.id,
+      }).unwrap();
+      setOpenDropdown(false);
+      onWorkspaceUpdated();
+      showSuccess('Workspace moved to trash successfully!'); // Show success message
+    } catch (error) {}
+  };
+  const toggleDropdown = (index) => {
+    setOpenDropdown((prevIndex) => (prevIndex === index ? null : index));
+  };
+
   return (
     <div className="collection">
       {/*<div className="workspace-header">*/}
@@ -123,7 +139,26 @@ const Workspaces = ({
       <div className="icons">
         {workspaces?.map((workspace, index) => (
           <div key={index} className="icon-container">
-            <BsThreeDotsVertical size={18} className="three-dots-vertical" />
+            <BsThreeDotsVertical
+              style={{ cursor: 'pointer' }}
+              size={18}
+              className="three-dots-vertical"
+              onClick={() => toggleDropdown(index)}
+            />
+            {openDropdown === index && (
+              <div className="dropdown-menuu">
+                <div
+                  className="dropdown-itemm deletee"
+                  // onClick={() => {
+                  //   handleDeleteWorkspace(workspace.id);
+                  //   setOpenDropdown(null); // Close dropdown after delete
+                  // }}
+                  onClick={handleMoveToTrash}
+                >
+                  Delete
+                </div>
+              </div>
+            )}
             <BsWindowStack
               onClick={() => handleWorkspaceSwitch(workspace)}
               style={
@@ -335,6 +370,36 @@ const Workspaces = ({
           border-radius: 1rem;
           background-color: #c3e11d;
         }
+          .dropdown-menuu {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 100%;
+  margin-top: 5px;
+  right: 0rem;
+  top: 2rem;
+}
+
+.dropdown-itemm {
+  padding: 8px 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-weight: normal;
+  text-align: center;
+  font-size: 10px;
+  color: black
+}
+
+.dropdown-itemm:hover {
+  background-color: #f5f5f5;
+}
+
+.icon-container {
+  position: relative; /* Required for dropdown positioning */
+}
           .
       `}</style>
     </div>

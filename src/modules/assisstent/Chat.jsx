@@ -138,11 +138,6 @@ const AiAssistantChat = () => {
 
   return (
     <div className="assessmentChat">
-      <Components.Common.Header
-        activeWorkspace={activeWorkspace}
-        workspaces={allWorkspaces}
-      />
-
       <section>
         <NewChat />
         <MessagesSection setCurrentChat={setCurrentChat} />

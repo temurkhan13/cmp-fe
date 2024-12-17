@@ -3,7 +3,7 @@ import Components from '../../components';
 const DigitalPlaybook = () => {
   return (
     <DashboardLayout>
-      <Components.Common.Header />
+      <Components.Dashboard.Header />
       <Components.Sitemap.PlaybookList />
     </DashboardLayout>
   );

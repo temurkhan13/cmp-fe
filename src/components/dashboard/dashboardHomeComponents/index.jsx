@@ -104,7 +104,8 @@ const DashboardHomeComp = () => {
 
   const handleFolderSelection = useCallback(
     async (folder, workspaceId = null) => {
-      const activeWorkspaceId = workspaceId || activeWorkspace?.id;
+      const activeWorkspaceId =
+        workspaceId || activeWorkspace?.id || selectedWorkspace.id;
       if (!activeWorkspaceId) {
         setError('No workspace ID available.');
         setShowNotification(true);
@@ -201,6 +202,11 @@ const DashboardHomeComp = () => {
 
   return (
     <div className="dashboard">
+      <div className="selected-workspace-name">
+        <p>
+          Workspace <span>{selectedWorkspace?.workspaceName}</span>
+        </p>
+      </div>
       <CountingCards
         activeWorkspace={activeWorkspace?.workspaceName}
         totalWorkspaces={dashboardStats?.totalWorkspaces}
@@ -278,6 +284,24 @@ const DashboardHomeComp = () => {
           onClose={() => setShowNotification(false)}
         />
       )}
+      <style>
+        {`
+        .selected-workspace-name{
+      position:absolute;
+      top:2rem;
+      left:4rem;
+    p{
+    font-size:1.5rem;
+    font-weight:600;
+    span{
+    padding:1rem;
+    background-color:#f5f5f5;
+    border-radius:1rem;
+    border:1px solid gray;
+    }
+    }
+      }`}
+      </style>
     </div>
   );
 };

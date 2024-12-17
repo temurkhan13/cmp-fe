@@ -26,6 +26,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const [moveToTrash] = useMoveToTrashMutation();
   const { refetch } = useGetWorkspacesQuery(workspace.id);
   const folderId = useSelector(selectSelectedFolder);
+  const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
 
   const modalRef = useRef(null);
 
@@ -39,20 +40,35 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
     setSelectedFolder(null);
   }, []);
 
-  const handleProceedMoveToTrash = useCallback(async () => {
+  // const handleProceedMoveToTrash = useCallback(async () => {
+  //   try {
+  //     await moveToTrash({
+  //       entityType: 'folder',
+  //       id: selectedFolder.id,
+  //     }).unwrap();
+  //     refetch();
+  //     onFolderUpdate();
+  //   } catch {
+  //     setError('Error moving to trash');
+  //   }
+  //   closeModal();
+  //   setIsTrashModalOpen(false);
+  // }, [moveToTrash, selectedFolder, refetch, onFolderUpdate, closeModal]);
+
+  const handleProceedMoveToTrash = async () => {
+    console.log('IDDD', folderId);
     try {
       await moveToTrash({
         entityType: 'folder',
-        id: selectedFolder.id,
+        id: folderId.id,
       }).unwrap();
       refetch();
       onFolderUpdate();
+      setIsModalOpen(false);
     } catch {
       setError('Error moving to trash');
     }
-    closeModal();
-    setIsTrashModalOpen(false);
-  }, [moveToTrash, selectedFolder, refetch, onFolderUpdate, closeModal]);
+  };
 
   const handleOpenFolder = useCallback(() => {
     dispatch(setSelectedReduxFolder(selectedFolder));
@@ -61,6 +77,10 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   }, [dispatch, onFolderSelect, selectedFolder, closeModal]);
 
   const handleCloseError = useCallback(() => setError(null), []);
+
+  const toggleDropdown = (index) => {
+    setOpenDropdown((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   return (
     <section className="folders-files">
@@ -90,7 +110,22 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
               <BsThreeDotsVertical
                 size={18}
                 style={{ position: 'absolute', top: '0', right: '0' }}
+                onClick={() => toggleDropdown(folder)}
               />
+              {openDropdown === folder && (
+                <div className="dropdown-menuu">
+                  <div
+                    className="dropdown-itemm deletee"
+                    // onClick={() => {
+                    //   handleDeleteWorkspace(workspace.id);
+                    //   setOpenDropdown(null); // Close dropdown after delete
+                    // }}
+                    onClick={handleProceedMoveToTrash}
+                  >
+                    Delete
+                  </div>
+                </div>
+              )}
               <BiSolidFolderOpen
                 style={
                   folderId?.id === folder.id
