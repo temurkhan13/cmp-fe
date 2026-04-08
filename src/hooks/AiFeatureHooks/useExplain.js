@@ -8,6 +8,7 @@ const useExplain = () => {
   const Explain = async (inputText) => {
     try {
       const response = await apiClient.post('/chat/explain', {
+        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
         message: inputText,
       });
       setExplainText(response.data.message);

@@ -8,6 +8,7 @@ const useTranslation = () => {
   const Translation = async (inputText, language) => {
     try {
       const response = await apiClient.post('/chat/translate', {
+        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
         message: inputText,
         language: language,
       });

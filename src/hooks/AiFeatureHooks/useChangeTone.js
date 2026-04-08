@@ -13,6 +13,7 @@ const useChangeTone = () => {
       const response = await axios.post(
         `${config.apiURL}/chat/change-tone`,
         {
+          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
           message: { selectedText },
           tone: tone,
         },

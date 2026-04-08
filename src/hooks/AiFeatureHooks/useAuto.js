@@ -12,6 +12,7 @@ const useAuto = () => {
       const response = await axios.post(
         config.apiURL + '/chat/auto/',
         {
+          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
           message: inputText,
         },
         {

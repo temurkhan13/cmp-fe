@@ -11,6 +11,7 @@ const useAssessment = ({ workspaceId, folderId }) => {
       const response = await axios.post(
         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment`,
         {
+          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
           assessmentName,
         },
         {
