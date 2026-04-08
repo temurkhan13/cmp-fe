@@ -66,6 +66,8 @@ const useChat = () => {
     try {
       // FormData append
       const formData = new FormData();
+      const userId = JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '';
+      formData.append('user_id', userId);
       formData.append('message', inputText);
 
       if (file) {

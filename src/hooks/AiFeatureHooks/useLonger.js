@@ -7,6 +7,7 @@ const useLonger = () => {
   const LongText = async (inputText) => {
     try {
       const response = await apiClient.post('/chat/long-text', {
+        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
         message: inputText,
       });
       setError(null);

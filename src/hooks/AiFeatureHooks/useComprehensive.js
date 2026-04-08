@@ -7,6 +7,7 @@ const useComprehensive = () => {
   const comprehensiveWriting = async (inputText) => {
     try {
       const response = await apiClient.post('/chat/comprehensive', {
+        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
         message: inputText,
       });
       setError(null);

@@ -7,6 +7,7 @@ const useShorter = () => {
   const shortText = async (inputText) => {
     try {
       const response = await apiClient.post('/chat/short-text', {
+        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
         message: inputText,
       });
       setError(null);

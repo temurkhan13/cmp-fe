@@ -12,6 +12,7 @@ const useInspire = () => {
       const response = await axios.post(
         `${config.apiURL}/chat/inspire-me`,
         {
+          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
           message: text,
         },
         {
