@@ -1,5 +1,4 @@
-// const baseURL = 'http://localhost:3000';
-const baseURL = 'https://be.changeai.ai';
+const baseURL = import.meta.env.VITE_API_URL || 'https://cmp-backend-830s.onrender.com';
 
 const config = {
   baseURL,
