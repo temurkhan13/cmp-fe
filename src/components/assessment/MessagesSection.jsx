@@ -111,8 +111,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         }
 
         setAssessmentData(singleAssessment);
-        const initialMessage =
-          singleAssessment?.qa[singleAssessment?.qa.length - 1]?.question;
         const filteredFolders = (selectedWorkspace?.folders || []).filter(
           (item) => (item._id || item.id) === folderId
         );
@@ -120,13 +118,16 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         handleAssessmentSelect(filteredFolders[0]?.assessments[0]);
         setAssessmentId(id);
         setSubReportId(singleAssessment?.report?.id || id);
-        setChat((prevChat) => [
-          ...prevChat,
-          { role: 'ai', content: initialMessage },
-        ]);
+
+        // If report exists but no Q&A, show report as a chat message
+        if (singleAssessment.qa && singleAssessment.qa.length > 0) {
+          setChat(singleAssessment.qa);
+        } else if (singleAssessment.report?.content) {
+          setChat([{ question: singleAssessment.report.content, status: 'report' }]);
+          setShowReportButton(true);
+        }
 
         setShowInputField(true);
-        setChat(singleAssessment.qa);
       };
       getAssessmentAsync();
     }
