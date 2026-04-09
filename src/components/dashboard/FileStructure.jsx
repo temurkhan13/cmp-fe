@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BiSolidFolderOpen } from 'react-icons/bi';
@@ -15,6 +15,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import './styles/FileStructure.css';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import useOutsideClick from '../../hooks/useOutsideClick';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const navigate = useNavigate();
@@ -27,6 +28,19 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const { refetch } = useGetWorkspacesQuery(workspace.id);
   const folderId = useSelector(selectSelectedFolder);
   const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on click outside
+  useOutsideClick(dropdownRef, () => setOpenDropdown(null));
+
+  // Close dropdown on Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setOpenDropdown(null);
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
 
   const modalRef = useRef(null);
 
@@ -113,7 +127,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
                 onClick={() => toggleDropdown(folder)}
               />
               {openDropdown === folder && (
-                <div className="dropdown-menuu">
+                <div className="dropdown-menuu" ref={dropdownRef}>
                   <div
                     className="dropdown-itemm deletee"
                     // onClick={() => {
