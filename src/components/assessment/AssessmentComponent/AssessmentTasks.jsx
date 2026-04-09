@@ -199,7 +199,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
               );
             })}
           </div>
-        ) : selectedFolder && Object.keys(selectedFolder).length === 0 ? (
+        ) : (
           <div className="task-list">
             {assessmentQnaData.map((assessment, index) => {
               const taskColors = getColor(false);
@@ -251,57 +251,6 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                 </div>
               );
             })}
-          </div>
-        ) : (
-          <div className="task-list">
-            {selectedFolder &&
-              selectedFolder.assessments &&
-              selectedFolder.assessments.map((assessment, index) => {
-                if (assessment.report.length === 0) return null;
-
-                const currentReport = assessment.report[0];
-
-                const taskColors = getColor(currentReport.finalReportURL);
-                return (
-                  <div className="task-item" key={index}>
-                    <div className="task-info">
-                      <span className="task-name">
-                        {currentReport.ReportTitle}
-                      </span>
-                      {!currentReport.finalReportURL && (
-                        <span
-                          className={`task-progress ${
-                            !currentReport.finalReportURL ? 'hover-show' : ''
-                          }`}
-                          style={{
-                            color: taskColors.text,
-                            backgroundColor: taskColors.background,
-                            borderRadius: '1rem',
-                            paddingLeft: '0.8rem',
-                            paddingRight: '0.8rem',
-                            fontSize: '1.2rem',
-                            fontWeight: '500',
-                          }}
-                        >
-                          {currentReport.finalReportURL
-                            ? 'Completed'
-                            : `Not Completed yet`}
-                        </span>
-                      )}
-                    </div>
-                    {currentReport.finalReportURL && (
-                      <>
-                        <button
-                          className="complete-button"
-                          onClick={() => viewReport(currentReport)}
-                        >
-                          <CiEdit />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
           </div>
         )}
         <style>{`
