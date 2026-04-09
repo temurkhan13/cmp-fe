@@ -45,15 +45,16 @@ export const toggleFolderActivation = createAsyncThunk(
         }
       );
 
-      // Extract the `isReportGenerated` values from assessments.report list
-      const reports = response.data.assessments.flatMap((assessment) =>
-        assessment.report.map((report) => ({
+      // Extract the `isReportGenerated` values from assessments.report list if available
+      const assessments = response.data.assessments || [];
+      const reports = assessments.flatMap((assessment) =>
+        (assessment.report || []).map((report) => ({
           isReportGenerated: report.isReportGenerated,
           ReportTitle: report.ReportTitle,
         }))
       );
 
-      return { folderId, reports, response }; // Return the folderId and reports array
+      return { folderId, isActive, reports, response };
     } catch (error) {
       return rejectWithValue(
         error.response ? error.response.data : error.message
