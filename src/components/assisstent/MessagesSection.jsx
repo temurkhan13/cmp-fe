@@ -725,6 +725,20 @@ const MessagesSection = ({ setCurrentChat }) => {
                               <ReactMarkdown>{message.text}</ReactMarkdown>
                             </div>
                           )}
+                          {message.comments && message.comments.length > 0 && (
+                            <div style={{ marginTop: '0.5rem', borderTop: '1px solid #eee', paddingTop: '0.5rem' }}>
+                              {message.comments.map((c, ci) => (
+                                <div key={ci} style={{
+                                  display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                  padding: '0.3rem 0', fontSize: '0.85rem', color: '#666',
+                                }}>
+                                  <FaCommentAlt style={{ fontSize: '0.65rem', color: '#aaa' }} />
+                                  <span style={{ fontWeight: 600, color: '#555' }}>{c.userName || 'You'}:</span>
+                                  <span>{c.text}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         <div className="message-action-icons">
                           <div
@@ -814,23 +828,6 @@ const MessagesSection = ({ setCurrentChat }) => {
                       </div>
                     )}
                   </div>
-                  {message.comments && message.comments.length > 0 && (
-                    <div style={{ marginLeft: '4rem', marginTop: '0.25rem', marginBottom: '0.5rem' }}>
-                      {message.comments.map((c, ci) => (
-                        <div key={ci} style={{
-                          display: 'flex', alignItems: 'flex-start', gap: '0.5rem',
-                          padding: '0.4rem 0.75rem', marginBottom: '0.2rem',
-                          background: '#f5f5f5', borderRadius: '0.5rem', fontSize: '0.85rem',
-                        }}>
-                          <FaUser style={{ marginTop: '0.2rem', fontSize: '0.7rem', color: '#888' }} />
-                          <div>
-                            <span style={{ fontWeight: 600, fontSize: '0.8rem', color: '#555' }}>{c.userName || 'You'}</span>
-                            <span style={{ marginLeft: '0.4rem', color: '#666' }}>{c.text}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
           </div>
