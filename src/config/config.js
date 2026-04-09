@@ -1,4 +1,4 @@
-const baseURL = import.meta.env.VITE_API_URL || 'https://cmp-backend-v2.onrender.com';
+const baseURL = import.meta.env.VITE_API_URL || 'https://cmp-backend-830s.onrender.com';
 
 const config = {
   baseURL,
