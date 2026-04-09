@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { IoArrowBack } from 'react-icons/io5';
 import Components from '../../components';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import {
@@ -26,6 +27,7 @@ import {
 
 const AiAssistantChat = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { chatId } = useParams();
   const userId =
     useSelector((state) => state.auth.user?.id) ||
@@ -138,6 +140,17 @@ const AiAssistantChat = () => {
 
   return (
     <div className="assessmentChat">
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '0.75rem',
+        padding: '0.5rem 1rem', borderBottom: '1px solid #eee', background: '#fff',
+      }}>
+        <IoArrowBack
+          size={20}
+          style={{ cursor: 'pointer', color: '#555' }}
+          onClick={() => navigate(-1)}
+        />
+        <span style={{ fontSize: '0.9rem', color: '#555' }}>Back</span>
+      </div>
       <section>
         <NewChat />
         <MessagesSection setCurrentChat={setCurrentChat} />
