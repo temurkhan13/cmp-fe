@@ -698,7 +698,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 onClick={() =>
                   handleStartAssessment(
                     selectedAssessmentTitle?.ReportTitle ||
-                      selectedAssessmentTitle
+                      selectedAssessmentTitle ||
+                      'Change Vision/Case for Change'
                   )
                 }
                 style={{
