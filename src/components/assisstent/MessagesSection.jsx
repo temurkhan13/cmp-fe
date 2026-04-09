@@ -322,32 +322,32 @@ const MessagesSection = ({ setCurrentChat }) => {
     }
   };
 
-  const HandleAskAi = useCallback(
-    async (value) => {
-      try {
-        setLoading(true);
-        setAskAI(value);
+  const HandleAskAi = async (value) => {
+    console.log('[HandleAskAi] called with:', value, 'selectedText:', selectedText?.substring(0, 50));
+    try {
+      setLoading(true);
+      setAskAI(value);
 
-        let response;
-        if (value === 'Fix Spelling & Grammar') {
-          response = await fixGrammar(selectedText);
-        } else if (value === 'Improve Writing') {
-          response = await improveWriting(selectedText);
-        } else if (value === 'Summarize') {
-          response = await summarize(selectedText);
-        }
-
-        if (response) {
-          await applyFixedText(response);
-          refetch();
-        }
-      } catch (error) {
-      } finally {
-        setLoading(false);
+      let response;
+      if (value === 'Fix Spelling & Grammar') {
+        response = await fixGrammar(selectedText);
+      } else if (value === 'Improve Writing') {
+        response = await improveWriting(selectedText);
+      } else if (value === 'Summarize') {
+        response = await summarize(selectedText);
       }
-    },
-    [fixGrammar, improveWriting, summarize, selectedText]
-  );
+
+      console.log('[HandleAskAi] response:', response?.substring(0, 100));
+      if (response) {
+        await applyFixedText(response);
+        refetch();
+      }
+    } catch (error) {
+      console.error('[HandleAskAi] error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
@@ -364,6 +364,7 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleResponseLengthChange = async (value) => {
+    console.log('[ResponseLength] called with:', value, 'selectedText:', selectedText?.substring(0, 50));
     setResponseLength(value);
     setLoading(true);
     try {
@@ -378,10 +379,12 @@ const MessagesSection = ({ setCurrentChat }) => {
         response = await comprehensiveWriting(selectedText);
       }
 
+      console.log('[ResponseLength] response:', response?.substring(0, 100));
       if (response) {
-        applyFixedText(response);
+        await applyFixedText(response);
       }
     } catch (error) {
+      console.error('[ResponseLength] error:', error);
     } finally {
       setLoading(false);
     }
