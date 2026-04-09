@@ -45,6 +45,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
   useEffect(() => {
     const getAssessments = async () => {
       try {
+        if (!folderID) return;
         const assessmentDATA = await dispatch(
           fetchWorkspaceAssessments({
             folderId: folderID,
@@ -53,8 +54,10 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
         const fetchedData = assessmentDATA?.payload?.results || [];
         setAssessmentsData(fetchedData);
 
-        const singleAssessment = await getAssessment(id);
-        setAssessmentData(singleAssessment);
+        if (id) {
+          const singleAssessment = await getAssessment(id);
+          setAssessmentData(singleAssessment);
+        }
       } catch (error) {}
     };
     getAssessments();
