@@ -1,15 +1,25 @@
 import { useState } from 'react';
-import apiClient from '../../api/axios';
+import axios from 'axios';
+import config from '../../config/config';
 
 const useShorter = () => {
   const [error, setError] = useState(null);
 
   const shortText = async (inputText) => {
     try {
-      const response = await apiClient.post('/chat/short-text', {
-        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
-        message: inputText,
-      });
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${config.apiURL}/chat/short-text`,
+        {
+          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+          message: inputText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setError(null);
       return response.data.message;
     } catch (error) {
