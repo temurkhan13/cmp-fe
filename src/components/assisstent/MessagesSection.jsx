@@ -256,46 +256,26 @@ const MessagesSection = ({ setCurrentChat }) => {
 
   const applyFixedText = useCallback(
     async (newText) => {
-      const updatedMessages = chat.generalMessages.map((message) => {
-        if (message.text && message.text.includes(selectedText)) {
-          return {
-            ...message,
-            text: message.text.replace(selectedText, newText),
-          };
-        }
-        return message;
-      });
-
       try {
-        // Optionally dispatch an action or make an API call to update the message
-        // await Promise.all(
-        //   updatedMessages
-        //     .filter((msg) => msg.text !== updatedMessages.text)
-        //     .map((message) =>
-        //       updateMessage({
-        //         workspaceId,
-        //         folderId,
-        //         chatId,
-        //         messageId: message._id,
-        //         text: message.text,
-        //       })
-        //     )
-        // );
-        await updateChat({
-          workspaceId,
-          folderId: folderId.id || folderId._id,
-          chatId,
-          chat: { ...chat, generalMessages: updatedMessages },
-        });
+        // Update the specific message by ID via PUT endpoint
+        if (messageId) {
+          await updateMessage({
+            workspaceId,
+            folderId: folderId?._id || folderId?.id,
+            chatId,
+            messageId,
+            message: { text: newText },
+          });
+        }
         // Refetch the chat to get the latest data from the server
         await refetch();
       } catch (error) {
-        // Handle error (e.g., show an error message to the user)
+        console.error('Failed to update message:', error);
       }
 
       setPopupVisible(false);
     },
-    [chat, selectedText, updateMessage, workspaceId, folderId, chatId]
+    [messageId, updateMessage, workspaceId, folderId, chatId, refetch]
   );
 
   useEffect(() => {
