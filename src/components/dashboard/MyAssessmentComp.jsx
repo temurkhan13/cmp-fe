@@ -64,7 +64,7 @@ const MyAssessmentComp = () => {
       //   isActive: true,
       // })
       fetchWorkspaceAssessments({
-        folderId: folder.id,
+        folderId: folder.id || folder._id,
       })
     );
     console.log('CURRENT FOLDER', assessmentData);

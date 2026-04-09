@@ -113,8 +113,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         setAssessmentData(singleAssessment);
         const initialMessage =
           singleAssessment?.qa[singleAssessment?.qa.length - 1]?.question;
-        const filteredFolders = selectedWorkspace.folders.filter(
-          (item) => item._id === folderId
+        const filteredFolders = (selectedWorkspace?.folders || []).filter(
+          (item) => (item._id || item.id) === folderId
         );
 
         handleAssessmentSelect(filteredFolders[0]?.assessments[0]);
@@ -448,7 +448,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
   useEffect(() => {
     if (generateSingleReport && selectedWorkspace) {
-      const filteredFolders = selectedWorkspace.folders.filter(
+      const filteredFolders = (selectedWorkspace?.folders || []).filter(
         (item) => item._id === folderId
       );
       if (
@@ -464,7 +464,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       }
     }
     if (selectedWorkspace) {
-      const filteredFolders = selectedWorkspace.folders.filter(
+      const filteredFolders = (selectedWorkspace?.folders || []).filter(
         (item) => item._id === folderId
       );
     }
@@ -485,7 +485,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       const initialMessage =
         initialResponse?.qa[initialResponse?.qa.length - 1]?.question;
 
-      const filteredFolders = selectedWorkspace.folders.filter(
+      const filteredFolders = (selectedWorkspace?.folders || []).filter(
         (item) => item._id === folderId
       );
 
