@@ -252,6 +252,7 @@ const EmailVerificationHandler = () => {
     width: 5rem;
     height: 5rem;
     font-size: 3rem;
+    text-align: center;
     border: 0.0625rem solid lightgray;
     border-radius: 0.5rem;
     outline: none;
