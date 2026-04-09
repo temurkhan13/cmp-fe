@@ -819,6 +819,23 @@ const MessagesSection = ({ setCurrentChat }) => {
                         </div>
                       </div>
                     )}
+                    {message.comments && message.comments.length > 0 && (
+                      <div style={{ marginLeft: '4rem', marginTop: '0.5rem' }}>
+                        {message.comments.map((c, ci) => (
+                          <div key={ci} style={{
+                            display: 'flex', alignItems: 'flex-start', gap: '0.5rem',
+                            padding: '0.5rem 0.75rem', marginBottom: '0.25rem',
+                            background: '#f5f5f5', borderRadius: '0.5rem', fontSize: '0.85rem',
+                          }}>
+                            <FaUser style={{ marginTop: '0.2rem', fontSize: '0.75rem', color: '#666' }} />
+                            <div>
+                              <span style={{ fontWeight: 600, color: '#333' }}>{c.userName || 'You'}</span>
+                              <span style={{ marginLeft: '0.5rem', color: '#555' }}>{c.text}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
