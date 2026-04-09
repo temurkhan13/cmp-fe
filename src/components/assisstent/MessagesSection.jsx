@@ -279,7 +279,10 @@ const MessagesSection = ({ setCurrentChat }) => {
   );
 
   useEffect(() => {
-    const handleMouseUp = () => {
+    const handleMouseUp = (e) => {
+      // Don't close popup when clicking inside TonePopup
+      const popup = document.querySelector('.PopupBox');
+      if (popup && popup.contains(e.target)) return;
       handleTextSelect();
     };
 
@@ -315,7 +318,6 @@ const MessagesSection = ({ setCurrentChat }) => {
       setPopupVisible(!!selectedText); // Show popup if there's a valid selection
       if (selectedMessageId) {
         setMessageId(selectedMessageId);
-        // You can now use `selectedMessageId` as needed
       }
     } else {
       setPopupVisible(false); // Hide popup if selection is invalid
