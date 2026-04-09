@@ -141,11 +141,12 @@ const MessagesSection = ({ setCurrentChat }) => {
     getUserProfilePhoto();
   }, []);
 
+  const resolvedFolderId = folderId?._id || folderId?.id;
   const { data: chat, refetch } = useGetChatQuery({
     workspaceId,
-    folderId: folderId?._id || folderId?.id,
+    folderId: resolvedFolderId,
     chatId,
-  });
+  }, { skip: !workspaceId || !resolvedFolderId || !chatId });
 
   useEffect(() => {
     if (chat && chat?._id) {
@@ -962,7 +963,7 @@ const MessagesSection = ({ setCurrentChat }) => {
             refetch();
           }}
           workspaceId={workspaceId}
-          folderId={folderId._id || folderId.id}
+          folderId={resolvedFolderId}
           chatId={chatId}
           messageId={messageId}
         />
