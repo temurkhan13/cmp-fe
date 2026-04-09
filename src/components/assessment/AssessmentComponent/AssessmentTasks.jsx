@@ -60,12 +60,12 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
     getAssessments();
   }, [workspaceId, folderId]);
   useEffect(() => {
-    if (workspaceId && folderId) {
+    if (workspaceId && folderId && selectedWorkspace?.folders) {
       const filteredFolders = selectedWorkspace.folders.filter(
-        (item) => item._id === folderId
+        (item) => (item._id || item.id) === folderId
       );
 
-      if (filteredFolders[0].assessments.length > 0) {
+      if (filteredFolders.length > 0 && filteredFolders[0].assessments?.length > 0) {
         const mergedData = assessmentQnaData.map((title) => {
           // Check if there is a matching report title in the selectedFolder.assessments array
           const matchingAssessment = filteredFolders[0].assessments.find(
