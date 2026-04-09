@@ -54,6 +54,14 @@ apiClient.interceptors.request.use(
   }
 );
 
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('[apiClient] FAILED:', error.config?.method?.toUpperCase(), error.config?.url, error.response?.status, error.message);
+    return Promise.reject(error);
+  }
+);
+
 export const setToken = (token) => {
   localStorage.setItem('token', token);
 };
