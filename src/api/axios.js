@@ -42,12 +42,13 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(
-  (config) => {
+  (reqConfig) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      reqConfig.headers['Authorization'] = `Bearer ${token}`;
     }
-    return config;
+    console.log('[apiClient] REQUEST:', reqConfig.method?.toUpperCase(), reqConfig.baseURL + reqConfig.url);
+    return reqConfig;
   },
   (error) => {
     return Promise.reject(error);
