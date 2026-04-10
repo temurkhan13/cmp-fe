@@ -218,13 +218,17 @@ const SitemapLayoutFlow = ({ id }) => {
       },
     ]);
   };
+  function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
   async function postData(url = '', data = {}) {
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(data),
     });
     return response.json();
@@ -232,10 +236,7 @@ const SitemapLayoutFlow = ({ id }) => {
   async function patchData(url = '', data = {}) {
     const response = await fetch(url, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(data),
     });
     return response.json();
@@ -243,10 +244,7 @@ const SitemapLayoutFlow = ({ id }) => {
   async function getData(url = '') {
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.json();
   }
@@ -255,10 +253,7 @@ const SitemapLayoutFlow = ({ id }) => {
       `${config.apiURL}/dpb/${sitemapId}/stage/${stageId}/${type}/${typeId}`,
       {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(data),
       }
     );
