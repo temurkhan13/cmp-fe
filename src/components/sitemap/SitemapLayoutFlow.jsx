@@ -84,16 +84,28 @@ const SitemapLayoutFlow = ({ id }) => {
   );
 
   const estimateNodeSize = (node) => {
+    // Use measured dimensions if available (after React Flow renders)
+    if (node.measured?.width && node.measured?.height) {
+      return { width: node.measured.width + 20, height: node.measured.height + 20 };
+    }
+    // Estimate based on content — node width is 250px (from Node.jsx)
+    const nodeWidth = 280;
     const itemCount = node.data?.nodeData?.length || 0;
-    const width = node.measured?.width ?? 280;
-    // Estimate height: header (40) + each item (~80px) + padding
-    const height = node.measured?.height ?? Math.max(120, 60 + itemCount * 80);
-    return { width, height };
+    // Each item: heading (~20px) + description (~40-60px) + padding (~15px) = ~80px
+    // Header: 40px, "Add" button: 50px, padding: 30px
+    const estimatedHeight = Math.max(200, 120 + itemCount * 100);
+    return { width: nodeWidth, height: estimatedHeight };
   };
 
   const getLayoutedElements = (nodes, edges, options) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-    g.setGraph({ rankdir: options.direction, nodesep: 50, ranksep: 80 });
+    g.setGraph({
+      rankdir: options.direction,
+      nodesep: 80,   // horizontal spacing between nodes
+      ranksep: 120,  // vertical spacing between ranks (parent-child)
+      marginx: 40,
+      marginy: 40,
+    });
 
     edges.forEach((edge) => g.setEdge(edge.source, edge.target));
     nodes.forEach((node) => {
@@ -546,10 +558,15 @@ const SitemapLayoutFlow = ({ id }) => {
 
   useEffect(() => {
     if (nodes.length > 0 && !layouted) {
+      // Wait for React Flow to measure node dimensions before layouting
       const timeoutId = setTimeout(() => {
         onLayout('TB');
         setLayouted(true);
-      }, 100);
+        // Re-layout again after measured dimensions are available
+        setTimeout(() => {
+          onLayout('TB');
+        }, 500);
+      }, 300);
 
       return () => clearTimeout(timeoutId);
     }
