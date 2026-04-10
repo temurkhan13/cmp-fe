@@ -9,7 +9,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import Node from './Node';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Dagre from '@dagrejs/dagre';
 import { v4 as uuidv4 } from 'uuid';
 import assets from '../../assets';
@@ -135,24 +135,26 @@ const SitemapLayoutFlow = ({ id }) => {
       edges,
     };
   };
+  const nodesRef = useRef(nodes);
+  const edgesRef = useRef(edges);
+  useEffect(() => { nodesRef.current = nodes; }, [nodes]);
+  useEffect(() => { edgesRef.current = edges; }, [edges]);
+
   const onLayout = useCallback(
     (direction) => {
-      const layouted = getLayoutedElements(nodes, edges, { direction });
+      const currentNodes = nodesRef.current;
+      const currentEdges = edgesRef.current;
+      if (!currentNodes.length) return;
+
+      const layouted = getLayoutedElements(currentNodes, currentEdges, { direction });
 
       setNodes([...layouted.nodes]);
       setEdges([...layouted.edges]);
 
-      window.requestAnimationFrame(() => {
-        fitView();
-      });
-
-      setTimeout(() => {
-        window.requestAnimationFrame(() => {
-          fitView();
-        });
-      }, 100);
+      window.requestAnimationFrame(() => fitView());
+      setTimeout(() => window.requestAnimationFrame(() => fitView()), 200);
     },
-    [nodes, edges, fitView]
+    [fitView]
   );
   const updateNodeLabelById = async (
     sitemapId,
