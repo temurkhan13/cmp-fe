@@ -100,6 +100,19 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
 
   const { getAssessment } = useAssessment(workspaceId, folderId);
 
+  // When user clicks a different assessment type from sidebar, reset state
+  useEffect(() => {
+    if (selectedAssessment && typeof selectedAssessment === 'string') {
+      // A new assessment type was selected from the sidebar — reset to show Start Assessment
+      setChat([]);
+      setAssessmentId(undefined);
+      setShowInputField(false);
+      setShowReportButton(false);
+      setSubReportId('');
+      setFirstPrompt('');
+    }
+  }, [selectedAssessment]);
+
   useEffect(() => {
     setAssessmentId(id);
     if (id) {

@@ -45,14 +45,10 @@ const Chat = () => {
 
   const handleAssessmentSelect = (assessment) => {
     if (assessment) {
-      dispatch(
-        setCurrentSelectedTitle(
-          assessment ||
-            assessment.ReportTitle ||
-            assessment.report[0].subReport[0].ReportTitle ||
-            assessment.report[0].ReportTitle
-        )
-      );
+      const title = typeof assessment === 'string'
+        ? assessment
+        : assessment.ReportTitle || assessment.name || assessment.report?.[0]?.subReport?.[0]?.ReportTitle || assessment.report?.[0]?.ReportTitle || assessment;
+      dispatch(setCurrentSelectedTitle(title));
     }
     setSelectedAssessment(assessment);
   };
