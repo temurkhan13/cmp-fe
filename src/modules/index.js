@@ -3,6 +3,7 @@ import * as Assessment from './assessment';
 import * as Assisstant from './assisstent';
 import * as Dashboard from './dashboard';
 import * as Sitemap from './sitemap';
+import * as Playbook from './playbook';
 
 const Module = {
   Auth,
@@ -10,5 +11,6 @@ const Module = {
   Assisstant,
   Dashboard,
   Sitemap,
+  Playbook,
 };
 export default Module;

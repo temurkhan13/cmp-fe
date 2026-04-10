@@ -5,6 +5,7 @@ import * as Assistant from './assisstent';
 import * as Assessment from './assessment';
 import * as Dashboard from './dashboard';
 import * as Sitemap from './sitemap';
+import * as Playbook from './playbook';
 import * as Reports from './reports';
 import * as CheckOut from './checkout';
 
@@ -16,6 +17,7 @@ const Components = {
   Assessment,
   Dashboard,
   Sitemap,
+  Playbook,
   Reports,
   CheckOut,
 };
