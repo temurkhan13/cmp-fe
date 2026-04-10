@@ -394,6 +394,7 @@ const SitemapLayoutFlow = ({ id }) => {
     const folderId = selectedWorkspace?.folders?.find(
       (folder) => folder?.isActive
     );
+    if (!folderId?.id || !selectedWorkspace?.id || !sitemapId) return;
     await fetch(
       `${config.apiURL}/workspace/${selectedWorkspace.id}/folder/${folderId.id}/sitemap`,
       {
@@ -401,10 +402,7 @@ const SitemapLayoutFlow = ({ id }) => {
         body: JSON.stringify({
           sitemapId: sitemapId,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
+        headers: getAuthHeaders(),
       }
     );
   };
@@ -434,10 +432,16 @@ const SitemapLayoutFlow = ({ id }) => {
     }
     setIsLoading(false);
     setPromptVisible(false);
+
+    if (!res || !res.id || !res.stages) {
+      console.error('Sitemap creation failed — invalid response:', res);
+      return;
+    }
+
     let siteMapId = res.id;
 
     setShouldGetSitemap(true);
-    navigate({ pathname: `/sitemap/${res?.id}` }, { replace: true });
+    navigate({ pathname: `/sitemap/${siteMapId}` }, { replace: true });
 
     res.stages.map((stage) => {
       addChildNode(
