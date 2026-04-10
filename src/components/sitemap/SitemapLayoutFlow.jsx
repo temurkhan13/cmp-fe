@@ -136,10 +136,12 @@ const SitemapLayoutFlow = ({ id }) => {
     };
   };
   const onLayout = (direction) => {
+    console.log('[Layout] clicked, nodes:', nodes.length, 'edges:', edges.length);
     if (!nodes.length) return;
-    const layouted = getLayoutedElements(nodes, edges, { direction });
-    setNodes([...layouted.nodes]);
-    setEdges([...layouted.edges]);
+    const result = getLayoutedElements(nodes, edges, { direction });
+    console.log('[Layout] repositioned', result.nodes.length, 'nodes');
+    setNodes([...result.nodes]);
+    setEdges([...result.edges]);
     window.requestAnimationFrame(() => fitView());
     setTimeout(() => window.requestAnimationFrame(() => fitView()), 200);
   };
@@ -558,19 +560,15 @@ const SitemapLayoutFlow = ({ id }) => {
 
   useEffect(() => {
     if (nodes.length > 0 && !layouted) {
-      // Wait for React Flow to measure node dimensions before layouting
       const timeoutId = setTimeout(() => {
         onLayout('TB');
         setLayouted(true);
-        // Re-layout again after measured dimensions are available
-        setTimeout(() => {
-          onLayout('TB');
-        }, 500);
+        setTimeout(() => onLayout('TB'), 500);
       }, 300);
-
       return () => clearTimeout(timeoutId);
     }
-  }, [nodes, layouted, onLayout, fitView]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodes.length, layouted]);
 
   useEffect(() => {
     if (shouldGetSitemap) {
