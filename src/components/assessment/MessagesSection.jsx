@@ -110,6 +110,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       setShowReportButton(false);
       setSubReportId('');
       setFirstPrompt('');
+      // Clear the assessment ID from URL so the id useEffect doesn't re-fetch
+      navigate('/assessment/chat', { replace: true });
     }
   }, [selectedAssessment]);
 
