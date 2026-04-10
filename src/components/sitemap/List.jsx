@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BiPlus } from 'react-icons/bi';
+import { BiPlus, BiEdit } from 'react-icons/bi';
 import Loading from './Loading';
 import NoData from './NoData';
 import config from '../../config/config.js';
@@ -13,8 +13,9 @@ function List() {
   let navigate = useNavigate();
   const [sitemaps, setSitemaps] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editName, setEditName] = useState('');
   const selectedWorkspace = useSelector(selectWorkspace);
-  console.log(selectedWorkspace, '177777');
 
   async function getData(
     workSpaceId,
@@ -31,6 +32,22 @@ function List() {
 
     return response.json(); // parses JSON response into native JavaScript objects
   }
+
+  const renameSitemap = async (id, newName) => {
+    const authToken = localStorage.getItem('token');
+    await fetch(`${config.apiURL}/dpb/sitemap/simple-update/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ name: newName }),
+    });
+    setSitemaps((prev) =>
+      prev.map((s) => (s._id === id ? { ...s, name: newName } : s))
+    );
+    setEditingId(null);
+  };
 
   const recentModifiedSiteMap = useMemo(() => {
     return sitemaps?.length > 0
@@ -158,10 +175,9 @@ function List() {
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        navigate(`/sitemap/${_id}`);
+                        if (editingId !== _id) navigate(`/sitemap/${_id}`);
                       }}
                     >
-                      {/* <img src={SitemapImg} height="120px" width="268px" /> */}
                       <div
                         style={{
                           display: 'flex',
@@ -170,14 +186,50 @@ function List() {
                         }}
                       >
                         <FaFolderTree size={18} />
-                        <span
-                          style={{
-                            fontSize: '1.5rem',
-                            fontWeight: '500',
-                          }}
-                        >
-                          {name}
-                        </span>
+                        {editingId === _id ? (
+                          <input
+                            autoFocus
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            onBlur={() => renameSitemap(_id, editName)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') renameSitemap(_id, editName);
+                              if (e.key === 'Escape') setEditingId(null);
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                              fontSize: '1.5rem',
+                              fontWeight: '500',
+                              border: '1px solid #C3E11D',
+                              borderRadius: '6px',
+                              padding: '4px 8px',
+                              outline: 'none',
+                              width: '100%',
+                            }}
+                          />
+                        ) : (
+                          <>
+                            <span
+                              style={{
+                                fontSize: '1.5rem',
+                                fontWeight: '500',
+                                flex: 1,
+                              }}
+                            >
+                              {name}
+                            </span>
+                            <BiEdit
+                              size={16}
+                              style={{ opacity: 0.4 }}
+                              title="Rename"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingId(_id);
+                                setEditName(name);
+                              }}
+                            />
+                          </>
+                        )}
                       </div>
 
                       {updatedAt ? (
