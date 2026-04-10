@@ -83,26 +83,30 @@ const SitemapLayoutFlow = ({ id }) => {
     [setEdges]
   );
 
+  const estimateNodeSize = (node) => {
+    const itemCount = node.data?.nodeData?.length || 0;
+    const width = node.measured?.width ?? 280;
+    // Estimate height: header (40) + each item (~80px) + padding
+    const height = node.measured?.height ?? Math.max(120, 60 + itemCount * 80);
+    return { width, height };
+  };
+
   const getLayoutedElements = (nodes, edges, options) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-    g.setGraph({ rankdir: options.direction });
+    g.setGraph({ rankdir: options.direction, nodesep: 50, ranksep: 80 });
 
     edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-    nodes.forEach((node) =>
-      g.setNode(node.id, {
-        ...node,
-        width: node.measured?.width ?? 200, // Provide a default width if not measured
-        height: node.measured?.height ?? 100, // Provide a default height if not measured
-      })
-    );
+    nodes.forEach((node) => {
+      const { width, height } = estimateNodeSize(node);
+      g.setNode(node.id, { ...node, width, height });
+    });
 
     Dagre.layout(g);
 
     return {
       nodes: nodes.map((node) => {
         const position = g.node(node.id);
-        const width = node.measured?.width ?? 200;
-        const height = node.measured?.height ?? 100;
+        const { width, height } = estimateNodeSize(node);
 
         const x = position.x - width / 2;
         const y = position.y - height / 2;
