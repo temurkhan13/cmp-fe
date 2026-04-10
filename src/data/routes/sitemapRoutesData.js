@@ -20,6 +20,11 @@ const sitemapRoutesData = [
     path: '/digital-playbook/list',
     element: Module.Dashboard.DigitalPlaybook,
   },
+  {
+    title: 'Playbook Editor',
+    path: '/playbook/:id',
+    element: Module.Playbook.PlaybookEditorPage,
+  },
 ];
 
 export default sitemapRoutesData;

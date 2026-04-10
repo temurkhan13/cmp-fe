@@ -1,0 +1,283 @@
+.playbook-editor {
+  width: 100%;
+  min-height: 100vh;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.playbook-loading,
+.playbook-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+}
+
+/* ── Header ─────────────────────────────── */
+.playbook-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.playbook-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.playbook-back-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background: #f0f0f0;
+  }
+}
+
+.playbook-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.playbook-saving {
+  font-size: 0.85rem;
+  color: #888;
+  font-style: italic;
+}
+
+.playbook-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.playbook-export-wrap {
+  position: relative;
+}
+
+.playbook-export-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 200;
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 0.95rem;
+    cursor: pointer;
+    white-space: nowrap;
+    &:hover {
+      background: #f5f5f5;
+    }
+    &:not(:last-child) {
+      border-bottom: 1px solid #eee;
+    }
+  }
+}
+
+/* ── Content Area ───────────────────────── */
+.playbook-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+/* ── Cover ──────────────────────────────── */
+.playbook-cover {
+  background: linear-gradient(135deg, #00316f 0%, #0052b4 100%);
+  border-radius: 16px;
+  padding: 4rem 3rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  text-align: center;
+}
+
+.playbook-cover-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.playbook-cover-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  opacity: 0.8;
+}
+
+.playbook-cover-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+}
+
+.playbook-cover-workspace {
+  font-size: 1.1rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.playbook-cover-line {
+  width: 60px;
+  height: 3px;
+  background: #C3E11D;
+  margin: 1.5rem auto;
+  border-radius: 2px;
+}
+
+.playbook-cover-powered {
+  font-size: 0.85rem;
+  opacity: 0.5;
+  margin: 0;
+}
+
+/* ── Stage ──────────────────────────────── */
+.playbook-stage {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.playbook-stage-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.2rem 1.5rem;
+  background: #fafbfc;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: #f0f1f3;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+    flex: 1;
+  }
+}
+
+.playbook-stage-count {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.playbook-stage-body {
+  padding: 1.5rem;
+}
+
+/* ── Node ───────────────────────────────── */
+.playbook-node {
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  border-left: 3px solid #C3E11D;
+}
+
+.playbook-node-heading {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+/* ── NodeData Block ─────────────────────── */
+.playbook-nodedata {
+  margin-bottom: 1.2rem;
+}
+
+.playbook-nodedata-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+    margin: 0;
+  }
+}
+
+.playbook-inspire-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border: 1px solid #C3E11D;
+  border-radius: 6px;
+  background: #fafff0;
+  color: #5a6600;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #C3E11D;
+    color: #1a1a1a;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* ── Add Stage ──────────────────────────── */
+.playbook-add-stage {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #fff;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  margin-top: 1rem;
+
+  input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+
+    &:focus {
+      border-color: #C3E11D;
+    }
+  }
+}
