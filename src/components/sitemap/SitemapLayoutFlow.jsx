@@ -71,6 +71,13 @@ const SitemapLayoutFlow = ({ id }) => {
   const selectedWorkspace = useSelector(selectWorkspace);
   const navigate = useNavigate();
 
+  // Redirect invalid sitemap URLs to list page
+  useEffect(() => {
+    if (id === 'undefined' || id === 'null') {
+      navigate('/sitemap/list', { replace: true });
+    }
+  }, [id, navigate]);
+
   const closeModal = () => {
     setIsVersionHistoryModalOpen(false);
     setIsCommentsModalOpen(false);
