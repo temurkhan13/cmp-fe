@@ -139,8 +139,16 @@ const SitemapLayoutFlow = ({ id }) => {
     console.log('[Layout] clicked, nodes:', nodes.length, 'edges:', edges.length);
     if (!nodes.length) return;
     const result = getLayoutedElements(nodes, edges, { direction });
-    console.log('[Layout] repositioned', result.nodes.length, 'nodes');
-    setNodes([...result.nodes]);
+    // Force position update by creating new node objects with explicit position
+    const repositioned = result.nodes.map((node) => ({
+      ...node,
+      position: { ...node.position },
+      // Reset any dragged state so React Flow uses our position
+      positionAbsolute: undefined,
+      dragging: false,
+    }));
+    console.log('[Layout] repositioned', repositioned.length, 'nodes, sample pos:', repositioned[0]?.position);
+    setNodes(repositioned);
     setEdges([...result.edges]);
     window.requestAnimationFrame(() => fitView());
     setTimeout(() => window.requestAnimationFrame(() => fitView()), 200);
