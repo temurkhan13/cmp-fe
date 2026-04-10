@@ -276,7 +276,7 @@ const SitemapLayoutFlow = ({ id }) => {
     return response.json();
   }
   const getSitemap = async () => {
-    if (!id) return;
+    if (!id || id === 'undefined') return;
     const res = await getData(`${config.apiURL}/dpb/sitemap/${id}`);
 
     if (res) {
