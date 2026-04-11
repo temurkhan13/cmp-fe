@@ -2,20 +2,22 @@ import PropTypes from 'prop-types';
 import { FaUserCircle } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
 
-const AssessmentVersionHistory = ({ versions, onClose }) => {
+const AssessmentVersionHistory = ({ versions = [], onClose }) => {
   const closeModal = () => {
-    onClose();
+    if (onClose) onClose();
   };
+
+  const safeVersions = Array.isArray(versions) ? versions : [];
 
   return (
     <div className="version-history">
-      {versions.length === 0 ? (
-        <NoDataAvailable message="No data available" />
+      {safeVersions.length === 0 ? (
+        <NoDataAvailable message="No version history available" />
       ) : (
         <>
           <button className="current-version">Current Version</button>
           <div className="versions-container">
-            {versions.map((version, index) => (
+            {safeVersions.map((version, index) => (
               <div
                 key={index}
                 className={`version ${index >= 3 ? 'blurred' : ''}`}
@@ -25,12 +27,12 @@ const AssessmentVersionHistory = ({ versions, onClose }) => {
                   <button className="show-date-button">Upgrade</button>
                 )}
                 <div className="version-content">
-                  <p className="date">{version.date}</p>
+                  <p className="date">{version.date || 'N/A'}</p>
                   <div className="users">
-                    {version.users.map((user, i) => (
+                    {(version.users || []).map((user, i) => (
                       <div key={i} className="user">
                         <FaUserCircle className="icon" />
-                        <span className="user-name">{user.name}</span>
+                        <span className="user-name">{user.name || 'User'}</span>
                       </div>
                     ))}
                   </div>
@@ -183,18 +185,8 @@ const AssessmentVersionHistory = ({ versions, onClose }) => {
 };
 
 AssessmentVersionHistory.propTypes = {
-  versions: PropTypes.arrayOf(
-    PropTypes.shape({
-      date: PropTypes.string.isRequired,
-      time: PropTypes.string.isRequired,
-      users: PropTypes.arrayOf(
-        PropTypes.shape({
-          name: PropTypes.string.isRequired,
-        })
-      ).isRequired,
-    })
-  ).isRequired,
-  onClose: PropTypes.func.isRequired,
+  versions: PropTypes.array,
+  onClose: PropTypes.func,
 };
 
 export default AssessmentVersionHistory;
