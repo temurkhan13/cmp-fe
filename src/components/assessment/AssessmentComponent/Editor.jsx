@@ -11,6 +11,7 @@ import {
   useEditReportMutation,
   useDownloadReportMutation,
 } from '../../../redux/api/workspaceApi';
+import appConfig from '../../../config/config';
 import { marked } from 'marked'; // Markdown to HTML converter
 import TurndownService from 'turndown'; // HTML to Markdown converter
 
@@ -273,6 +274,35 @@ const Editor = ({
         </button>
         <button onClick={exportExcel} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
           Excel
+        </button>
+        <button onClick={() => {
+          if (window.confirm('Re-generate this report? Your edits will be replaced.')) {
+            handleReportDownload();
+          }
+        }} style={{ padding: '6px 14px', border: '1px solid #C3E11D', borderRadius: '6px', background: '#fafff0', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500 }}>
+          Re-generate
+        </button>
+        <button onClick={async () => {
+          try {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const res = await fetch(`${appConfig.apiURL}/dpb/sitemap`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+              body: JSON.stringify({
+                message: stripHtml(editor.current?.value || content || '').substring(0, 500),
+                sitemapName: title || 'Assessment Playbook',
+                userId: user.id || user._id,
+              }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              const id = data._id || data.id;
+              if (id) window.location.href = `/playbook/${id}`;
+            }
+          } catch (e) { console.error('Create playbook error:', e); }
+        }} style={{ padding: '6px 14px', border: '1px solid #00316f', borderRadius: '6px', background: '#f0f5ff', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, color: '#00316f' }}>
+          Create Playbook
         </button>
       </div>
       <JoditEditor
