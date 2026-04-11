@@ -70,17 +70,16 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
 
       if (filteredFolders.length > 0 && filteredFolders[0].assessments?.length > 0) {
         const mergedData = assessmentQnaData.map((title) => {
-          // Check if there is a matching report title in the selectedFolder.assessments array
           const matchingAssessment = filteredFolders[0].assessments.find(
             (assessment) =>
-              assessment.report[0].subReport.some((report) => {
+              assessment.report?.[0]?.subReport?.some((report) => {
                 if (report.ReportTitle === title) {
-                  return assessment.report[0];
+                  return true;
                 }
+                return false;
               })
           );
 
-          // If found, return the matching assessment object; otherwise, return the title
           if (matchingAssessment) {
             return matchingAssessment;
           } else {
@@ -93,8 +92,8 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
 
       if (
         filteredFolders.length > 0 &&
-        filteredFolders[0].assessments.length > 0 &&
-        filteredFolders[0].assessments[0].report.length > 0
+        filteredFolders[0].assessments?.length > 0 &&
+        filteredFolders[0].assessments[0]?.report?.length > 0
       ) {
         setAssessmentId(filteredFolders[0].assessments[0]._id);
         setSelectedFolder(filteredFolders[0]);
@@ -161,7 +160,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                       onClick={handleAssessmentSelect(assessment)}
                     >
                       {currentReport.ReportTitle
-                        ? currentReport.subReport[0].ReportTitle
+                        ? currentReport.subReport?.[0]?.ReportTitle || currentReport.ReportTitle
                         : assessment.ReportTitle}
                     </span>
                     {!currentReport.finalReportURL && (
