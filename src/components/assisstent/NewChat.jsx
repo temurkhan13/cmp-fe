@@ -38,6 +38,7 @@ const NewChat = () => {
 
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
+  const [searchQuery, setSearchQuery] = useState('');
   const chatContainerRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -245,8 +246,30 @@ const NewChat = () => {
       )}
       {!sidebarCollapsed && (
         <>
+          <div style={{ padding: '0 1rem', marginBottom: '0.5rem' }}>
+            <input
+              type="text"
+              placeholder="Search chats..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                fontSize: '1.2rem',
+                outline: 'none',
+              }}
+            />
+          </div>
           {Array.isArray(showableChats) &&
-            showableChats.map((chat, index) => (
+            showableChats
+            .filter((chat) => {
+              if (!searchQuery.trim()) return true;
+              const title = (chat.chatTitle || '').toLowerCase();
+              return title.includes(searchQuery.toLowerCase());
+            })
+            .map((chat, index) => (
               <section
                 key={chat._id}
                 onClick={() => handleChatSelect(chat._id)}

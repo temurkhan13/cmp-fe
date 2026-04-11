@@ -11,11 +11,14 @@ const useExplain = () => {
         user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
         message: inputText,
       });
-      setExplainText(response.data.message);
+      const result = response.data.message;
+      setExplainText(result);
       setError(null);
+      return result;
     } catch (error) {
       setError(error.message);
       setExplainText('');
+      return null;
     }
   };
 
