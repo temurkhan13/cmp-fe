@@ -248,6 +248,14 @@ const Workspaces = ({
           onClose={() => setShowNotification(false)}
         />
       )}
+      {showSuccessNotification && (
+        <NotificationBar
+          message={successMessage}
+          type="success"
+          duration={5000}
+          onClose={() => setShowSuccessNotification(false)}
+        />
+      )}
 
       <style>{`
         .collection-heading {
@@ -361,6 +369,14 @@ const Workspaces = ({
           border-radius: 1rem;
           padding: 1rem;
           font-size: 1.5rem;
+          box-sizing: border-box;
+          text-overflow: ellipsis;
+        }
+        .workspace-input::placeholder,
+        .workspace-description::placeholder {
+          white-space: nowrap;
+          overflow: visible;
+          font-size: 1.4rem;
         }
         .create-workspace-btn {
           border: none;

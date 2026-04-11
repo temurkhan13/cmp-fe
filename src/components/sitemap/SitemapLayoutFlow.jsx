@@ -64,6 +64,7 @@ const SitemapLayoutFlow = ({ id }) => {
     useState(false);
   const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
   const [shouldGetSitemap, setShouldGetSitemap] = useState(false);
+  const [convertingPlaybook, setConvertingPlaybook] = useState(false);
 
   const userData = localStorage.getItem('user');
   const authToken = localStorage.getItem('token');
@@ -614,8 +615,10 @@ const SitemapLayoutFlow = ({ id }) => {
           </button>
           {id && (
             <button
+              disabled={convertingPlaybook}
               onClick={async () => {
                 try {
+                  setConvertingPlaybook(true);
                   const authToken = localStorage.getItem('token');
                   const res = await fetch(`${config.apiURL}/dpb/convert/${id}`, {
                     method: 'POST',
@@ -634,19 +637,22 @@ const SitemapLayoutFlow = ({ id }) => {
                 } catch (err) {
                   console.error('Convert error:', err);
                   alert('Failed to convert: ' + err.message);
+                } finally {
+                  setConvertingPlaybook(false);
                 }
               }}
               style={{
-                background: '#C3E11D',
+                background: convertingPlaybook ? '#a8c016' : '#C3E11D',
                 padding: '10px 16px',
                 borderRadius: '8px',
                 fontSize: '14px',
                 fontWeight: 'bold',
                 border: 'none',
-                cursor: 'pointer',
+                cursor: convertingPlaybook ? 'wait' : 'pointer',
+                opacity: convertingPlaybook ? 0.7 : 1,
               }}
             >
-              Convert to Playbook
+              {convertingPlaybook ? 'Converting...' : 'Convert to Playbook'}
             </button>
           )}
         </div>

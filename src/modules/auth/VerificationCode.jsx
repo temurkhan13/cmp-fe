@@ -3,9 +3,9 @@ import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
 import data from '../../data';
 import { useNavigate } from 'react-router-dom';
-import { ResetforgetPasswordWithCode } from '../../redux/slices/authSlice.js';
+import { ResetforgetPasswordWithCode, forgetPasswordGetCode } from '../../redux/slices/authSlice.js';
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const verification = () => {
   const location = useLocation();
@@ -14,6 +14,29 @@ const verification = () => {
 
   const initialValues = { OTP: '', newPassword: '' };
   const [error, setError] = useState('');
+  const [countdown, setCountdown] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setCanResend(true);
+    }
+  }, [countdown]);
+
+  const handleResend = useCallback(() => {
+    const email = localStorage.getItem('forgetEmail');
+    if (!email) return;
+    setCanResend(false);
+    setCountdown(60);
+    setResendMessage('');
+    dispatch(forgetPasswordGetCode(email))
+      .then(() => setResendMessage('Code resent successfully!'))
+      .catch(() => setResendMessage('Failed to resend code.'));
+  }, [dispatch]);
 
   const handleSubmit = async (values) => {
     dispatch(
@@ -85,25 +108,43 @@ const verification = () => {
                   lineHeight: '24px',
                   letterSpacing: '0.24px',
                   color: 'rgba(10, 10, 10, 0.68)',
-                  cursor: 'pointer',
                   marginBottom: '1rem',
                 }}
-                onClick={() => navigate(-1)}
               >
-                Didn&apos;t receive a code?
-                <span
-                  style={{
-                    fontFamily: 'Poppins',
-                    fontWeight: '600',
-                    fontSize: '16px',
-                    lineHeight: '20px',
-                    letterSpacing: '0.12px',
-                    color: 'rgba(11, 20, 68, 1)',
-                  }}
-                >
-                  Resend
-                </span>
+                Didn&apos;t receive a code?{' '}
+                {canResend ? (
+                  <span
+                    style={{
+                      fontFamily: 'Poppins',
+                      fontWeight: '600',
+                      fontSize: '16px',
+                      lineHeight: '20px',
+                      letterSpacing: '0.12px',
+                      color: 'rgba(11, 20, 68, 1)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={handleResend}
+                  >
+                    Resend
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: 'Poppins',
+                      fontWeight: '500',
+                      fontSize: '14px',
+                      color: 'rgba(10, 10, 10, 0.4)',
+                    }}
+                  >
+                    Resend in {countdown}s
+                  </span>
+                )}
               </p>
+              {resendMessage && (
+                <p style={{ fontSize: '14px', color: resendMessage.includes('success') ? 'green' : 'red', marginBottom: '0.5rem' }}>
+                  {resendMessage}
+                </p>
+              )}
               <Components.Feature.Button className="primary" type="submit">
                 Reset Password
               </Components.Feature.Button>

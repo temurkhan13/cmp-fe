@@ -19,9 +19,8 @@ import NoDataAvailable from '../../common/NoDataAvailable';
 
 import {
   useRemoveCommentMutation,
-  // useAddReplyMutation,
-  // useUpdateReplyMutation,
-  // useRemoveReplyMutation,
+  useAddReplyMutation,
+  useUpdateCommentMutation,
 } from '../../../redux/api/workspaceApi';
 
 const Comments = ({ comments }) => {
@@ -31,7 +30,9 @@ const Comments = ({ comments }) => {
   );
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
   const chatId = useSelector((state) => state.workspaces.currentChatId);
-  const [removeComment] = useRemoveCommentMutation();
+  const [removeCommentMutation] = useRemoveCommentMutation();
+  const [addReplyMutation] = useAddReplyMutation();
+  const [updateCommentMutation] = useUpdateCommentMutation();
 
   const [selectedComment, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
@@ -71,10 +72,10 @@ const Comments = ({ comments }) => {
     setEditedCommentText(comment.text); // Set the text for the specific comment
   };
 
-  const handleSaveEdit = (commentId) => {
+  const handleSaveEdit = async (commentId) => {
     const updatedComment = editedCommentText;
-    dispatch(updateComment({ commentId, updatedComment }));
-    setEditingCommentId(null); // Stop editing
+    await updateCommentMutation({ workspaceId, folderId, chatId, commentId, text: updatedComment });
+    setEditingCommentId(null);
     setEditedCommentText('');
   };
 
@@ -93,8 +94,9 @@ const Comments = ({ comments }) => {
   };
 
   const handleAddReply = async (commentId) => {
-    const reply = editedReplyText;
-    await addReply(workspaceId, folderId, chatId, commentId, reply);
+    const text = editedReplyText;
+    if (!text.trim()) return;
+    await addReplyMutation({ workspaceId, folderId, chatId, commentId, text });
     setEditedReplyText('');
   };
 
@@ -102,7 +104,7 @@ const Comments = ({ comments }) => {
     if (isReply) {
       dispatch(removeReply({ commentId: parentCommentId, replyId: commentId }));
     } else {
-      await removeComment({ workspaceId, folderId, chatId, commentId });
+      await removeCommentMutation({ workspaceId, folderId, chatId, commentId });
     }
     setShowDropdown(false); // Close dropdown after deletion
     setSelectedComment(null);

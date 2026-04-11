@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import config from '../../config/config';
 
 const ChangePassword = ({ onChangePassword }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -10,6 +11,8 @@ const ChangePassword = ({ onChangePassword }) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,10 +32,41 @@ const ChangePassword = ({ onChangePassword }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
+    if (!validate()) return;
+
+    if (onChangePassword) {
       onChangePassword(currentPassword, newPassword);
+      return;
+    }
+
+    // Default behavior: call API directly
+    setLoading(true);
+    setSuccessMessage('');
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${config.apiURL}/auth/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      if (res.ok) {
+        setSuccessMessage('Password updated successfully!');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setErrors({ currentPassword: data.message || 'Failed to update password.' });
+      }
+    } catch {
+      setErrors({ currentPassword: 'Network error. Please try again.' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,9 +137,12 @@ const ChangePassword = ({ onChangePassword }) => {
         </div>
       </div>
 
-      <button type="submit" className="update-button">
-        Update Password
+      <button type="submit" className="update-button" disabled={loading}>
+        {loading ? 'Updating...' : 'Update Password'}
       </button>
+      {successMessage && (
+        <p style={{ color: 'green', fontSize: '1.3rem', marginTop: '0.5rem' }}>{successMessage}</p>
+      )}
 
       <style>{`
         .change-password {
@@ -173,7 +210,7 @@ const ChangePassword = ({ onChangePassword }) => {
 };
 
 ChangePassword.propTypes = {
-  onChangePassword: PropTypes.func.isRequired,
+  onChangePassword: PropTypes.func,
 };
 
 export default ChangePassword;

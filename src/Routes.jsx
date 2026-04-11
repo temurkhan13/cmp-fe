@@ -7,6 +7,8 @@ import Components from './components';
 import data from './data';
 import Layout from './components/LandingPage/services/Layout';
 import Loader from './components/common/Loader';
+import PrivacyPolicy from './components/LandingPage/components/PrivacyPolicy';
+import Terms from './components/LandingPage/components/Terms';
 
 const Routess = () => {
   return (
@@ -23,6 +25,8 @@ const Routess = () => {
                 </Suspense>
               }
             />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="terms" element={<Terms />} />
           </Route>
           <Route path="" element={<AuthLayout />}>
             {data.routes.authRoutesData.map((el) => (

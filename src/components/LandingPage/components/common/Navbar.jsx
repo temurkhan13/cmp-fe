@@ -101,7 +101,7 @@ const Navbar = () => {
           {/*  </a>*/}
           {/*</li>*/}
         </ul>
-        <div className="navbar-buttons">
+        <div className={isOpen ? 'navbar-buttons mobile-open' : 'navbar-buttons'}>
           <button
             className="btn"
             onClick={() => {
@@ -288,8 +288,26 @@ const Navbar = () => {
           }
 
           .navbar-buttons {
-            display: none; 
+            display: none;
+          }
 
+          .navbar-buttons.mobile-open {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 999;
+          }
+
+          .navbar-buttons.mobile-open .btn {
+            width: 100%;
+            text-align: center;
           }
         }
         `}

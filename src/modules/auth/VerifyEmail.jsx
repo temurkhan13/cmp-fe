@@ -2,19 +2,43 @@ import Components from '../../components';
 import { Formik, Form } from 'formik';
 import useVerifyEmail from '../../hooks/useVerifyEmail';
 import { useLocation } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
-import { verify } from '../../redux/slices/authSlice';
+import { verify, resendVerification } from '../../redux/slices/authSlice';
 
 const VerifyEmail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const location = useLocation();
-  const { email } = location.state;
+  const { email } = location.state || {};
   const initialValues = { number: '' };
+
+  const [countdown, setCountdown] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setCanResend(true);
+    }
+  }, [countdown]);
+
+  const handleResend = useCallback(() => {
+    if (!email) return;
+    setCanResend(false);
+    setCountdown(60);
+    setResendMessage('');
+    dispatch(resendVerification(email))
+      .then(() => setResendMessage('Code resent successfully!'))
+      .catch(() => setResendMessage('Failed to resend code.'));
+  }, [dispatch, email]);
   //const { verifyEmail, error } = useVerifyEmail();
 
   return (
@@ -74,19 +98,39 @@ const VerifyEmail = () => {
                 }}
               >
                 Didn&apos;t receive a code?{' '}
-                <span
-                  style={{
-                    fontFamily: 'Poppins',
-                    fontWeight: '600',
-                    fontSize: '16px',
-                    lineHeight: '20px',
-                    letterSpacing: '0.12px',
-                    color: 'rgba(11, 20, 68, 1)',
-                  }}
-                >
-                  Resend
-                </span>
+                {canResend ? (
+                  <span
+                    style={{
+                      fontFamily: 'Poppins',
+                      fontWeight: '600',
+                      fontSize: '16px',
+                      lineHeight: '20px',
+                      letterSpacing: '0.12px',
+                      color: 'rgba(11, 20, 68, 1)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={handleResend}
+                  >
+                    Resend
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: 'Poppins',
+                      fontWeight: '500',
+                      fontSize: '14px',
+                      color: 'rgba(10, 10, 10, 0.4)',
+                    }}
+                  >
+                    Resend in {countdown}s
+                  </span>
+                )}
               </p>
+              {resendMessage && (
+                <p style={{ fontSize: '14px', color: resendMessage.includes('success') ? 'green' : 'red', marginBottom: '0.5rem' }}>
+                  {resendMessage}
+                </p>
+              )}
             </Form>
           )}
         </Formik>

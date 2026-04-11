@@ -266,13 +266,15 @@ const Node = ({ data }) => {
               <button
                 style={{
                   width: '95%',
-                  background: '#C3E11B',
+                  background: isLoading ? '#a8c016' : '#C3E11B',
                   border: 'none',
                   padding: '5px',
                   borderRadius: '6px',
                   fontSize: '16px',
                   fontWeight: 'bold',
                   marginTop: '5px',
+                  cursor: isLoading ? 'wait' : 'pointer',
+                  opacity: isLoading ? 0.7 : 1,
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -288,7 +290,7 @@ const Node = ({ data }) => {
                 }}
                 disabled={isLoading}
               >
-                Generate with AI
+                {isLoading ? 'Generating...' : 'Generate with AI'}
               </button>
             )}
             {/* <BiPlusCircle
