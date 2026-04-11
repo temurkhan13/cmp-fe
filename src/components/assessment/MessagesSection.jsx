@@ -39,6 +39,7 @@ import useAssessmentReport from '../../hooks/useAssessmentReport';
 import useChat from '../../hooks/useChat';
 import { useSelector } from 'react-redux';
 import assessmentQnaData, { assessmentDescriptions, assessmentPhases } from '../../data/chat/assessmentQnaData';
+import appConfig from '../../config/config.js';
 import {
   useDislikeChatMessageMutation,
   useGetWorkspacesQuery,
