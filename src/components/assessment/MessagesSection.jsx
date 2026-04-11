@@ -859,15 +859,24 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 rows={0} // Initial row
               />
               <div className="icons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                  <IoAttach size={20} color="#888" title="Attach file" />
-                </label>
+                <IoAttach
+                  size={20}
+                  color="#888"
+                  title="Attach file"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => document.getElementById('file-input')?.click()}
+                />
                 <IoSend
                   color="C3E11D"
                   onClick={handleSendMessage}
                   className="send-icon"
                 />
               </div>
+              {file && file instanceof File && (
+                <div style={{ fontSize: '1.1rem', color: '#555', padding: '4px 8px', background: '#f5f5f5', borderRadius: '4px', marginTop: '4px' }}>
+                  {file.name}
+                </div>
+              )}
             </div>
           </div>
         </>
