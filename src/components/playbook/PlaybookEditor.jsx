@@ -140,14 +140,63 @@ function PlaybookEditor() {
     const pdfFonts = (await import('pdfmake/build/vfs_fonts')).default;
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-    const container = document.getElementById('playbook-content');
-    if (!container) return;
-    const html = container.innerHTML;
-    const content = htmlToPdfmake(html);
+    const content = [];
+
+    // Cover
+    content.push(
+      { text: 'DIGITAL PLAYBOOK', style: 'coverLabel', margin: [0, 80, 0, 10] },
+      { text: playbook?.name || 'Digital Playbook', style: 'coverTitle', margin: [0, 0, 0, 10] },
+      { text: selectedWorkspace?.workspaceName || '', style: 'coverWorkspace', margin: [0, 0, 0, 20] },
+      { canvas: [{ type: 'line', x1: 200, y1: 0, x2: 320, y2: 0, lineWidth: 3, lineColor: '#C3E11D' }], margin: [0, 0, 0, 10] },
+      { text: 'Powered by ChangeAI', style: 'coverPowered', margin: [0, 0, 0, 40] },
+      { text: '', pageBreak: 'after' }
+    );
+
+    // Stages
+    for (const stage of playbook?.stages || []) {
+      content.push({ text: stage.stage, style: 'stageHeading', margin: [0, 10, 0, 8] });
+
+      for (const nd of stage.nodeData || []) {
+        if (nd.heading) content.push({ text: nd.heading, style: 'sectionHeading', margin: [0, 6, 0, 4] });
+        if (nd.description) {
+          try {
+            const parsed = htmlToPdfmake(nd.description);
+            content.push(...(Array.isArray(parsed) ? parsed : [parsed]));
+          } catch {
+            content.push({ text: nd.description, margin: [0, 0, 0, 6] });
+          }
+        }
+      }
+
+      for (const node of stage.nodes || []) {
+        content.push({ text: node.heading, style: 'nodeHeading', margin: [0, 8, 0, 4] });
+        for (const nd of node.nodeData || []) {
+          if (nd.heading) content.push({ text: nd.heading, style: 'sectionHeading', margin: [0, 4, 0, 2] });
+          if (nd.description) {
+            try {
+              const parsed = htmlToPdfmake(nd.description);
+              content.push(...(Array.isArray(parsed) ? parsed : [parsed]));
+            } catch {
+              content.push({ text: nd.description, margin: [0, 0, 0, 4] });
+            }
+          }
+        }
+      }
+    }
+
     const docDef = {
       content,
       defaultStyle: { fontSize: 11 },
       pageMargins: [40, 60, 40, 60],
+      styles: {
+        coverLabel: { fontSize: 10, alignment: 'center', color: '#666', letterSpacing: 3 },
+        coverTitle: { fontSize: 24, bold: true, alignment: 'center', color: '#00316f' },
+        coverWorkspace: { fontSize: 13, alignment: 'center', color: '#888' },
+        coverPowered: { fontSize: 9, alignment: 'center', color: '#aaa' },
+        stageHeading: { fontSize: 18, bold: true, color: '#00316f' },
+        nodeHeading: { fontSize: 14, bold: true, color: '#333' },
+        sectionHeading: { fontSize: 12, bold: true, color: '#444' },
+      },
     };
     pdfMake.createPdf(docDef).download(`${playbook?.name || 'playbook'}.pdf`);
   };
