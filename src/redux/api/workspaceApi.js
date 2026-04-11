@@ -98,10 +98,13 @@ export const workspaceApi = createApi({
         const formData = new FormData();
         formData.append('text', message);
 
-        if (files && files.length > 0) {
-          files.forEach((file, index) => {
-            formData.append(`file${index}`, file);
-          });
+        // Handle both single file and array of files
+        if (files) {
+          if (files instanceof File) {
+            formData.append('pdfPath', files);
+          } else if (files.length > 0) {
+            formData.append('pdfPath', files[0]);
+          }
         }
 
         // Use the actual chatId or handle for a new chat
