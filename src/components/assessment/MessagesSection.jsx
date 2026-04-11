@@ -38,7 +38,7 @@ import useAssessmentReport from '../../hooks/useAssessmentReport';
 // chat upload pdf & text
 import useChat from '../../hooks/useChat';
 import { useSelector } from 'react-redux';
-import assessmentQnaData from '../../data/chat/assessmentQnaData';
+import assessmentQnaData, { assessmentDescriptions, assessmentPhases } from '../../data/chat/assessmentQnaData';
 import {
   useDislikeChatMessageMutation,
   useGetWorkspacesQuery,
@@ -707,9 +707,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
               </p>
 
               <p className="assessmentDefaultSubHeading">
-                Evaluate the key aspects of a change initiative: objectives,
-                benefits, risks, and success metrics.
+                {assessmentDescriptions[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle || 'Change Vision/Case for Change'] || 'Select an assessment to begin.'}
               </p>
+              {assessmentPhases[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle] && (
+                <span style={{ fontSize: '1.1rem', color: '#888', marginBottom: '1rem', display: 'inline-block', padding: '4px 12px', background: '#f0f0f0', borderRadius: '20px' }}>
+                  Phase: {assessmentPhases[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle]}
+                </span>
+              )}
               <button
                 onClick={() =>
                   handleStartAssessment(
@@ -738,6 +742,23 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
       {error && (
         <div className="error" style={{ color: 'red' }}>
           {error}
+        </div>
+      )}
+      {/* Progress indicator */}
+      {chat.length > 0 && showInputField && !showReportButton && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem 2rem', background: '#fafbfc', borderTop: '1px solid #eee' }}>
+          <div style={{ flex: 1, height: '6px', background: '#e5e7eb', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ width: `${Math.min((chat.filter(c => c.answer || c.status === 'answered').length / Math.max(chat.length, 1)) * 100, 95)}%`, height: '100%', background: '#C3E11D', borderRadius: '3px', transition: 'width 0.3s' }} />
+          </div>
+          <span style={{ fontSize: '1.1rem', color: '#666', whiteSpace: 'nowrap' }}>
+            Question {chat.filter(c => c.answer || c.status === 'answered').length + 1}
+          </span>
+        </div>
+      )}
+      {showReportButton && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem 2rem', background: '#fafbfc', borderTop: '1px solid #eee' }}>
+          <div style={{ flex: 1, height: '6px', background: '#C3E11D', borderRadius: '3px' }} />
+          <span style={{ fontSize: '1.1rem', color: '#28a745', fontWeight: 500 }}>Assessment Complete</span>
         </div>
       )}
       {showInputField && (
