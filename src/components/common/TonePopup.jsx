@@ -124,29 +124,6 @@ const TonePopup = ({
             onClick={handleClickInsideDropdown}
           >
             <button className="dropbtn">
-              🌐 Translate
-            </button>
-            <div className="dropdownContent">
-              {['English', 'Spanish', 'French', 'German', 'Arabic', 'Chinese', 'Japanese', 'Portuguese', 'Hindi', 'Urdu'].map((lang) => (
-                <a
-                  key={lang}
-                  href="#"
-                  onClick={() => {
-                    HandleAskAi(`Translate:${lang}`);
-                    handleOptionClick();
-                  }}
-                >
-                  {lang}
-                </a>
-              ))}
-            </div>
-          </div>
-          <div
-            className="dropdown"
-            ref={dropdownRef}
-            onClick={handleClickInsideDropdown}
-          >
-            <button className="dropbtn">
               <RxMagicWand /> Change Tone
             </button>
             <div className="dropdownContent">
