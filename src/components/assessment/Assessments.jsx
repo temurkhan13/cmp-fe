@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import SideBarModal from '../../components/common/SideBarModal';
 
@@ -17,36 +18,46 @@ import {
   FaImages,
 } from 'react-icons/fa';
 import { RiNewspaperLine } from 'react-icons/ri';
-import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 
 const Assessments = ({ handleAssessmentSelect, folderID }) => {
   const [activeIcon, setActiveIcon] = useState('question');
   const [versions, setVersions] = useState([]);
   const [comments, setComments] = useState([]);
-  const selectedWorkspace = useSelector(selectWorkspace);
+  const { id: assessmentId } = useParams();
 
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
   };
 
-  // Fetch assessment data for sidebar when a panel opens
+  // Fetch assessment data directly from API when version history is opened
   useEffect(() => {
-    if (activeIcon === 'clock' && folderID) {
-      // Build version history from completed assessments in this folder
-      const folder = (selectedWorkspace?.folders || []).find(
-        (f) => (f._id || f.id) === folderID
-      );
-      if (folder?.assessments?.length > 0) {
-        const versionList = folder.assessments
-          .filter((a) => a.status === 'completed' || a.report?.length > 0)
-          .map((a) => ({
-            date: a.updatedAt || a.updated_at || a.createdAt || a.created_at || 'N/A',
-            users: [{ name: a.name || 'Assessment' }],
-          }));
-        setVersions(versionList);
-      }
+    if (activeIcon === 'clock' && assessmentId) {
+      const token = localStorage.getItem('token');
+      fetch(`${appConfig.apiURL}/workspace-assessment/${assessmentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          const assessment = data?.data || data;
+          if (assessment?.qa?.length > 0) {
+            const versionList = assessment.qa
+              .filter((q) => q.status === 'answered' || q.answer)
+              .map((q) => ({
+                date: q.answered_at || q.answeredAt || q.created_at || q.createdAt || 'N/A',
+                users: [{ name: q.question?.substring(0, 50) + '...' || 'Question' }],
+              }));
+            setVersions(versionList);
+          }
+          if (assessment?.report) {
+            setVersions((prev) => [
+              { date: assessment.report.generated_at || assessment.report.generatedAt || 'Report generated', users: [{ name: 'Report: ' + (assessment.report.title || assessment.name || 'Final Report') }] },
+              ...prev,
+            ]);
+          }
+        })
+        .catch((e) => console.log('Version history fetch error:', e));
     }
-  }, [activeIcon, folderID, selectedWorkspace]);
+  }, [activeIcon, assessmentId]);
 
   return (
     <>
