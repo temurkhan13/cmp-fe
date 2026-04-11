@@ -451,16 +451,15 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleSendMessage = async () => {
-    if (!text.trim()) return; // Prevent empty messages
+    if (!text.trim() && !file) return; // Prevent empty messages (allow file-only)
 
     setLoading(true); // Show spinner
     try {
-      // Simulate sending message
       const data = await addMessage({
         workspaceId: workspaceId,
         folderId: folderId._id || folderId.id,
         chatId: chatId ? chatId : 'newChat',
-        message: text,
+        message: text || (file ? 'Please analyze this document' : ''),
         files: file,
       }).unwrap();
 
@@ -479,9 +478,11 @@ const MessagesSection = ({ setCurrentChat }) => {
           })
           .catch((error) => {});
       }
-      // refetch();
-      setText(''); // Clear input field after message sent
+      refetch();
+      setText('');
+      setFile(null);
     } catch (error) {
+      console.error('Send message error:', error);
     } finally {
       setLoading(false); // Hide spinner after response
     }
