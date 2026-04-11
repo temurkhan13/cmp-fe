@@ -330,22 +330,25 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const HandleAskAi = async (value) => {
+    const textToProcess = selectedText;
+    if (!textToProcess) return;
     try {
       setLoading(true);
       setAskAI(value);
+      setPopupVisible(false);
 
       let response;
       if (value === 'Fix Spelling & Grammar') {
-        response = await fixGrammar(selectedText);
+        response = await fixGrammar(textToProcess);
       } else if (value === 'Improve Writing') {
-        response = await improveWriting(selectedText);
+        response = await improveWriting(textToProcess);
       } else if (value === 'Summarize') {
-        response = await summarize(selectedText);
+        response = await summarize(textToProcess);
       } else if (value === 'Explain This') {
-        response = await Explain(selectedText);
+        response = await Explain(textToProcess);
       } else if (value.startsWith('Translate:')) {
         const language = value.replace('Translate:', '').trim();
-        response = await Translation(selectedText, language);
+        response = await Translation(textToProcess, language);
       }
 
       if (response) {
@@ -353,6 +356,7 @@ const MessagesSection = ({ setCurrentChat }) => {
         refetch();
       }
     } catch (error) {
+      console.error('HandleAskAi error:', error);
     } finally {
       setLoading(false);
     }
@@ -963,7 +967,10 @@ const MessagesSection = ({ setCurrentChat }) => {
             }}
             rows={1} // Initial row
           />
-          <div className="icons" style={{ display: 'flex' }}>
+          <div className="icons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              <IoAttach size={20} color="#888" title="Attach file" />
+            </label>
             <IoSend
               onClick={handleSendMessage}
               className="send-icon"

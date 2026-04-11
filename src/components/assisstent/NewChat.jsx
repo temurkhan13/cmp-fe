@@ -266,7 +266,7 @@ const NewChat = () => {
             showableChats
             .filter((chat) => {
               if (!searchQuery.trim()) return true;
-              const title = (chat.chatTitle || '').toLowerCase();
+              const title = (chat.chatTitle || chat.chat_title || chat.title || '').toLowerCase();
               return title.includes(searchQuery.toLowerCase());
             })
             .map((chat, index) => (
