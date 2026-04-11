@@ -117,7 +117,7 @@ const DashboardLayout = ({ children }) => {
               <div className="logo_text">
                 <p style={{ fontSize: '20px', color: 'black' }}>ChangeAI</p>
                 <p style={{ fontSize: '10px', color: 'gray' }}>
-                  By InnovationsWorks
+                  By InnovationWorks
                 </p>
               </div>
             </div>

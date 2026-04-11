@@ -34,7 +34,8 @@ const Header = () => {
     }`.toUpperCase();
   };
 
-  const [hasNotification] = useState(true);
+  const [notifications] = useState([]);
+  const hasNotification = notifications.length > 0;
   const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
     useState(false);
   const dispatch = useDispatch();
@@ -83,17 +84,18 @@ const Header = () => {
       {/*  <LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} />*/}
       {/*</div>*/}
       <div className="ProfileBar">
-        {/* <div className="bellWrapper" onClick={handleNotificationClick}>
+        <div className="bellWrapper" onClick={handleNotificationClick}>
           <CiBellOn className="BellIcon" />
           {hasNotification && <span className="notificationDot" />}
-        </div> */}
+        </div>
 
-        {/* {notificationOpen && (
+        {notificationOpen && (
           <NotificationDropdown
             isOpen={notificationOpen}
+            markAllAsRead={() => {}}
             onClose={closeDropdowns}
           />
-        )} */}
+        )}
 
         {photoPath ? (
           <img

@@ -236,6 +236,36 @@ const PersonalInfo = () => {
           <div className="success-message">{successMessage}</div>
         )}
       </form>
+
+      <hr style={{ margin: '2rem 0' }} />
+      <div className="danger-zone">
+        <h3 style={{ color: '#c00', fontSize: '1.8rem', marginBottom: '0.5rem' }}>Danger Zone</h3>
+        <p style={{ fontSize: '1.3rem', color: '#666', marginBottom: '1rem' }}>Once you delete your account, there is no going back. Please be certain.</p>
+        <button
+          type="button"
+          className="delete-account-button"
+          onClick={async () => {
+            if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
+            try {
+              const token = localStorage.getItem('token');
+              const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://twoconnectv1-backend.onrender.com/api/v1'}/auth/delete-account`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              if (res.ok) {
+                localStorage.clear();
+                window.location.href = '/login';
+              } else {
+                alert('Failed to delete account. Please try again.');
+              }
+            } catch {
+              alert('Failed to delete account. Please try again.');
+            }
+          }}
+        >
+          Delete Account
+        </button>
+      </div>
       <style>{`
         .personal-info {
           margin: 0 auto;
@@ -381,6 +411,29 @@ const PersonalInfo = () => {
 
         .save-button:hover {
           background-color: #A6C41B;
+        }
+
+        .danger-zone {
+          padding: 1.5rem;
+          border: 1px solid #fcc;
+          border-radius: 0.8rem;
+          background: #fff5f5;
+        }
+
+        .delete-account-button {
+          padding: 1rem 2rem;
+          background-color: #c00;
+          border: none;
+          color: white;
+          font-size: 1.4rem;
+          border-radius: 1rem;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background-color 0.3s ease;
+        }
+
+        .delete-account-button:hover {
+          background-color: #900;
         }
       `}</style>
     </div>

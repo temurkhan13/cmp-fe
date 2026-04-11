@@ -6,53 +6,7 @@ import AllNotifications from './AllNotifications';
 import UnreadNotifications from './UnreadNotifications';
 import RequestsNotifications from './RequestsNotifications';
 
-const notifications = [
-  {
-    avatar: '',
-    name: 'Jerald Huels',
-    message: 'Mentioned you',
-    team: 'Designs Ops',
-    subMessage: 'Imran Icon Change',
-    date: 'Aug 10',
-    hasButtons: false,
-  },
-  {
-    avatar: '',
-    name: 'Jerald Huels',
-    message: 'Invited you to the team',
-    team: 'Designs Ops',
-    subMessage: '',
-    date: 'Aug 10',
-    hasButtons: true,
-  },
-  {
-    avatar: '',
-    name: 'Imran',
-    message: 'Wants to edit',
-    team: 'Designs Ops',
-    subMessage: '',
-    date: 'Aug 10',
-    hasButtons: true,
-  },
-  {
-    avatar: '',
-    name: 'Imran',
-    message: 'Wants to edit',
-    team: 'Designs Ops',
-    subMessage: '',
-    date: 'Aug 10',
-    hasButtons: true,
-  },
-  {
-    avatar: '',
-    name: 'Imran',
-    message: 'Wants to edit',
-    team: 'Designs Ops',
-    subMessage: '',
-    date: 'Aug 10',
-    hasButtons: true,
-  },
-];
+const notifications = [];
 
 const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
   const [activeTab, setActiveTab] = useState('All');

@@ -28,15 +28,15 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-bottom-links">
             {bottomLinks.map((link, index) => (
-              <li key={index} href={link.href}>
-                {link.label}
+              <li key={index}>
+                <a href={link.href}>{link.label}</a>
               </li>
             ))}
           </div>
           <div className="footer-socials">
-            <SocialIcon icon={<FaFacebook />} />
-            <SocialIcon icon={<FaInstagram />} />
-            <SocialIcon icon={<FaTwitter />} />
+            <SocialIcon href="https://facebook.com" icon={<FaFacebook />} />
+            <SocialIcon href="https://instagram.com" icon={<FaInstagram />} />
+            <SocialIcon href="https://x.com" icon={<FaTwitter />} />
           </div>
         </div>
       </div>
@@ -163,57 +163,52 @@ const Footer = () => {
 };
 
 const SocialIcon = ({ href, icon }) => (
-  <a href={href} className="footer-icon">
+  <a href={href} target="_blank" rel="noopener noreferrer" className="footer-icon">
     {icon}
   </a>
 );
 
 const footerLinks = [
-  // {
-  //   title: 'Product',
-  //   links: [
-  //     { label: 'Login', href: '#' },
-  //     { label: 'Pricing', href: '#' },
-  //     { label: 'Copy AI Reviews', href: '#' },
-  //     { label: 'Free AI Tools', href: '#' },
-  //     { label: 'GPL licenses', href: '#' },
-  //   ],
-  // },
-  // {
-  //   title: 'Company',
-  //   links: [
-  //     { label: 'Blog', href: '#' },
-  //     { label: 'Careers', href: '#' },
-  //     { label: 'Community', href: '#' },
-  //     { label: 'Twitter', href: '#' },
-  //     { label: 'LinkedIn', href: '#' },
-  //     { label: 'Affiliate Program', href: '#' },
-  //   ],
-  // },
-  // {
-  //   title: 'Support',
-  //   links: [
-  //     { label: 'Weekly Demos', href: '#' },
-  //     { label: 'Report a Bug', href: '#' },
-  //     { label: 'Report an Outage', href: '#' },
-  //     { label: 'Privacy Policy', href: '#' },
-  //     { label: 'Terms & Conditions', href: '#' },
-  //   ],
-  // },
+  {
+    title: 'Product',
+    links: [
+      { label: 'Login', href: '/login' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'AI Assistant', href: '/login' },
+      { label: 'Assessments', href: '/login' },
+      { label: 'Digital Playbook', href: '/login' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About Us', href: '#' },
+      { label: 'Contact', href: '#contact' },
+      { label: 'Help Center', href: '/login' },
+    ],
+  },
+  {
+    title: 'Support',
+    links: [
+      { label: 'Help Center', href: '/login' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms & Conditions', href: '/terms' },
+    ],
+  },
   {
     title: 'Contact Us',
     links: [
-      { label: '+45 987 164 681', href: '#' },
-      { label: 'support@changeai.com', href: '#' },
+      { label: '+45 987 164 681', href: 'tel:+45987164681' },
+      { label: 'support@changeai.com', href: 'mailto:support@changeai.com' },
       { label: '12th Ave, Main St, LA', href: '#' },
     ],
   },
 ];
 
 const bottomLinks = [
-  { label: '© 2024 Change.ai Inc', href: '#' },
-  { label: 'Privacy Notice', href: '#' },
-  { label: 'Terms of Service', href: '#' },
+  { label: '© 2025 Change.ai Inc', href: '#' },
+  { label: 'Privacy Notice', href: '/privacy-policy' },
+  { label: 'Terms of Service', href: '/terms' },
 ];
 
 export default Footer;

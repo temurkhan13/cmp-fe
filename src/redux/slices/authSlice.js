@@ -205,11 +205,10 @@ export const forgetPasswordGetCodeAsync = createAsyncThunk(
 export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
   'auth/reset/password',
   async ({ email, OTP, newPassword }, thunkAPI) => {
-    // Destructure the first argument to ignore it
-    const token = localStorage.getItem('token');
+    // No auth token needed for password reset (user is not logged in)
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     };
 

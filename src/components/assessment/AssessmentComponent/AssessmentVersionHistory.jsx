@@ -1,10 +1,21 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaUserCircle } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
 
 const AssessmentVersionHistory = ({ versions = [], onClose }) => {
+  const [selectedVersion, setSelectedVersion] = useState(null);
+
   const closeModal = () => {
     if (onClose) onClose();
+  };
+
+  const handleRestore = () => {
+    if (selectedVersion !== null) {
+      alert(`Version from "${versions[selectedVersion]?.date || 'selected date'}" would be restored. This feature requires backend integration.`);
+    } else {
+      alert('Please select a version to restore.');
+    }
   };
 
   const safeVersions = Array.isArray(versions) ? versions : [];
@@ -20,7 +31,8 @@ const AssessmentVersionHistory = ({ versions = [], onClose }) => {
             {safeVersions.map((version, index) => (
               <div
                 key={index}
-                className={`version ${index >= 3 ? 'blurred' : ''}`}
+                className={`version ${index >= 3 ? 'blurred' : ''} ${selectedVersion === index ? 'selected' : ''}`}
+                onClick={() => index < 3 && setSelectedVersion(index)}
               >
                 {index >= 3 && <div className="Version-overlay"></div>}
                 {index >= 3 && (
@@ -45,7 +57,7 @@ const AssessmentVersionHistory = ({ versions = [], onClose }) => {
             <button className="cancel" onClick={closeModal}>
               Cancel
             </button>
-            <button className="restore-version">Restore Version</button>
+            <button className="restore-version" onClick={handleRestore}>Restore Version</button>
           </div>
         </>
       )}
@@ -94,6 +106,11 @@ const AssessmentVersionHistory = ({ versions = [], onClose }) => {
         .version:hover {
           border-radius: 0.8rem;
           background-color: #f1f1f1;
+        }
+        .version.selected {
+          border-radius: 0.8rem;
+          background-color: #e8f5e9;
+          border: 1px solid #C3E11D;
         }
         .version-content {
           filter: inherit;

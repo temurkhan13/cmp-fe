@@ -1,4 +1,4 @@
-import { HeroSection, Main, Features, Team, FAQs } from '../components/ui';
+import { HeroSection, Main, Features, Team, FAQs, Pricing } from '../components/ui';
 
 const Home = () => {
   return (
@@ -12,6 +12,7 @@ const Home = () => {
       <HeroSection />
       <Main />
       <Features />
+      <Pricing />
       <Team />
       <FAQs />
     </div>
