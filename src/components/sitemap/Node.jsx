@@ -54,6 +54,23 @@ const Node = ({ data }) => {
     ]);
   };
 
+  const deleteNodeItem = (itemId) => {
+    setNodeData((prev) => prev.filter((item) => item.id !== itemId));
+  };
+
+  const moveNodeItem = (itemId, direction) => {
+    setNodeData((prev) => {
+      const index = prev.findIndex((item) => item.id === itemId);
+      if (index < 0) return prev;
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= prev.length) return prev;
+      const updated = [...prev];
+      const [moved] = updated.splice(index, 1);
+      updated.splice(newIndex, 0, moved);
+      return updated;
+    });
+  };
+
   const handleHeadingChangeBlur = async () => {
     if (
       localLabel !== data.label &&
@@ -205,6 +222,9 @@ const Node = ({ data }) => {
                   updateNodeDataWithPropertyName={
                     updateNodeDataWithPropertyName
                   }
+                  onDelete={deleteNodeItem}
+                  onMoveUp={(id) => moveNodeItem(id, -1)}
+                  onMoveDown={(id) => moveNodeItem(id, 1)}
                 ></NodeItem>
               </li>
             ))}

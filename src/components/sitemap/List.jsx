@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus, BiEdit } from 'react-icons/bi';
+import { FiTrash2 } from 'react-icons/fi';
 import Loading from './Loading';
 import NoData from './NoData';
 import config from '../../config/config.js';
@@ -15,6 +16,7 @@ function List() {
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const selectedWorkspace = useSelector(selectWorkspace);
 
   async function getData(
@@ -47,6 +49,17 @@ function List() {
       prev.map((s) => (s._id === id ? { ...s, name: newName } : s))
     );
     setEditingId(null);
+  };
+
+  const deleteSitemap = async (id, e) => {
+    e.stopPropagation();
+    if (!window.confirm('Delete this sitemap? This cannot be undone.')) return;
+    const authToken = localStorage.getItem('token');
+    await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+    setSitemaps((prev) => prev.filter((s) => s._id !== id));
   };
 
   const recentModifiedSiteMap = useMemo(() => {
@@ -94,7 +107,24 @@ function List() {
             flexDirection: 'column',
           }}
         >
-          <section className="generate" style={{ marginTop: '2rem' }}>
+          <div style={{ padding: '0 1rem', marginBottom: '0.5rem', marginTop: '2rem' }}>
+            <input
+              type="text"
+              placeholder="Search sitemaps..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                maxWidth: '300px',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                fontSize: '1.2rem',
+                outline: 'none',
+              }}
+            />
+          </div>
+          <section className="generate" style={{ marginTop: '1rem' }}>
             <div className="container">
               <div
                 // className="left-buttons"
@@ -155,7 +185,10 @@ function List() {
               }}
             >
               {recentModifiedSiteMap
-                ?.slice(0, 4)
+                ?.filter(({ name }) => {
+                  if (!searchQuery.trim()) return true;
+                  return (name || '').toLowerCase().includes(searchQuery.toLowerCase());
+                })
                 ?.map(({ _id, name, updatedAt }) => {
                   return (
                     <div
@@ -227,6 +260,12 @@ function List() {
                                 setEditingId(_id);
                                 setEditName(name);
                               }}
+                            />
+                            <FiTrash2
+                              size={16}
+                              style={{ opacity: 0.4, color: '#c00' }}
+                              title="Delete"
+                              onClick={(e) => deleteSitemap(_id, e)}
                             />
                           </>
                         )}
