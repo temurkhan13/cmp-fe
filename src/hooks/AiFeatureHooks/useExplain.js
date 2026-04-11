@@ -1,28 +1,33 @@
 import { useState } from 'react';
-import apiClient from '../../api/axios';
+import axios from 'axios';
+import config from '../../config/config';
 
 const useExplain = () => {
-  const [explainText, setExplainText] = useState('');
   const [error, setError] = useState(null);
 
   const Explain = async (inputText) => {
     try {
-      const response = await apiClient.post('/chat/explain', {
-        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
-        message: inputText,
-      });
-      const result = response.data.message;
-      setExplainText(result);
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${config.apiURL}/chat/explain`,
+        {
+          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+          message: inputText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setError(null);
-      return result;
+      return response.data.message;
     } catch (error) {
       setError(error.message);
-      setExplainText('');
-      return null;
     }
   };
 
-  return { explainText, error, Explain };
+  return { error, Explain };
 };
 
 export default useExplain;
