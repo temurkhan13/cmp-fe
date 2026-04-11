@@ -46,12 +46,21 @@ const Node = ({ data }) => {
     heading = '',
     description = '',
     color = '#0000000c',
-    isEditing = false
+    isEditing = false,
+    afterId = null
   ) => {
-    setNodeData((prev) => [
-      ...prev,
-      { id: uuidv4(), heading, description, color, isEditing },
-    ]);
+    setNodeData((prev) => {
+      const newItem = { id: uuidv4(), heading, description, color, isEditing };
+      if (afterId) {
+        const index = prev.findIndex((item) => item.id === afterId);
+        if (index >= 0) {
+          const updated = [...prev];
+          updated.splice(index + 1, 0, newItem);
+          return updated;
+        }
+      }
+      return [...prev, newItem];
+    });
   };
 
   const deleteNodeItem = (itemId) => {

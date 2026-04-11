@@ -202,7 +202,7 @@ const ContextMenu = ({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            addNodeChild(heading, description, nodeColor || '#f0f0f0', false);
+            addNodeChild(heading, description, nodeColor || '#f0f0f0', false, id);
             if (onClose) onClose();
           }}
         >
