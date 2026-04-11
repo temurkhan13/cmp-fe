@@ -191,7 +191,7 @@ const MessagesSection = ({ setCurrentChat }) => {
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
   const { handleInspire } = useInspire();
-  const { Translation } = useTranslation();
+  // Translation removed — feature not needed
   const { Explain } = useExplain();
   const [firstPrompt, setFirstPrompt] = useState('');
 
@@ -351,9 +351,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         response = await summarize(textToProcess);
       } else if (value === 'Explain This') {
         response = await Explain(textToProcess);
-      } else if (value.startsWith('Translate:')) {
-        const language = value.replace('Translate:', '').trim();
-        response = await Translation(textToProcess, language);
       }
 
       if (response) {
