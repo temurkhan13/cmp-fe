@@ -292,21 +292,42 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSendMessage = async () => {
-    // Read file content on client side if file is attached
+    // Extract file content — upload to backend for parsing (PDF/DOCX need server-side processing)
     let fileText = '';
     if (file && file instanceof File) {
       try {
-        fileText = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.onerror = () => resolve('');
-          reader.readAsText(file);
-        });
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'txt' || ext === 'csv') {
+          // Plain text files — read on client
+          fileText = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = () => resolve('');
+            reader.readAsText(file);
+          });
+        } else {
+          // PDF/DOCX — send to backend for text extraction
+          const token = localStorage.getItem('token');
+          const formData = new FormData();
+          formData.append('pdfPath', file);
+          const extractRes = await fetch(
+            `${appConfig.apiURL}/workspace/extract-text`,
+            {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${token}` },
+              body: formData,
+            }
+          );
+          if (extractRes.ok) {
+            const extractData = await extractRes.json();
+            fileText = extractData.text || '';
+          }
+        }
         if (fileText.length > 30000) {
           fileText = fileText.substring(0, 30000) + '\n[...truncated...]';
         }
       } catch (e) {
-        console.error('File read error:', e);
+        console.error('File extraction error:', e);
       }
     }
 
