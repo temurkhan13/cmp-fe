@@ -70,8 +70,8 @@ import {
 } from '../../redux/slices/workspacesSlice';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire.js';
-import useTranslation from '../../hooks/AiFeatureHooks/useTranslation.js';
 import useExplain from '../../hooks/AiFeatureHooks/useExplain.js';
+import config from '../../config/config.js';
 
 const MessagesSection = ({ setCurrentChat }) => {
   const dispatch = useDispatch();
@@ -144,11 +144,16 @@ const MessagesSection = ({ setCurrentChat }) => {
   }, []);
 
   const resolvedFolderId = folderId?._id || folderId?.id;
-  const { data: chat, refetch } = useGetChatQuery({
+  const { data: chat, refetch: rawRefetch } = useGetChatQuery({
     workspaceId,
     folderId: resolvedFolderId,
     chatId,
   }, { skip: !workspaceId || !resolvedFolderId || !chatId });
+
+  // Safe refetch that doesn't throw when query is skipped
+  const refetch = () => {
+    try { if (chatId) rawRefetch(); } catch (e) { /* query not active */ }
+  };
 
   useEffect(() => {
     if (chat && chat?._id) {
@@ -451,23 +456,47 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleSendMessage = async () => {
-    if (!text.trim() && !file) return; // Prevent empty messages (allow file-only)
+    if (!text.trim() && !file) return;
 
-    setLoading(true); // Show spinner
+    setLoading(true);
     try {
-      const data = await addMessage({
-        workspaceId: workspaceId,
-        folderId: folderId._id || folderId.id,
-        chatId: chatId ? chatId : 'newChat',
-        message: text || (file ? 'Please analyze this document' : ''),
-        files: file,
-      }).unwrap();
+      const currentFolderId = folderId._id || folderId.id;
+      const currentChatId = chatId ? chatId : 'newChat';
+      const messageText = text || (file ? 'Please analyze this document' : '');
 
-      if (!chatId && data.success) {
+      let data;
+      if (file && file instanceof File) {
+        // Use direct fetch for file uploads — RTK Query FormData is unreliable
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('text', messageText);
+        formData.append('pdfPath', file);
+
+        const response = await fetch(
+          `${config.apiURL}/workspace/${workspaceId}/folder/${currentFolderId}/chat/${currentChatId}/message`,
+          {
+            method: 'PATCH',
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+          }
+        );
+        data = await response.json();
+      } else {
+        // No file — use RTK Query as normal
+        data = await addMessage({
+          workspaceId: workspaceId,
+          folderId: currentFolderId,
+          chatId: currentChatId,
+          message: messageText,
+          files: null,
+        }).unwrap();
+      }
+
+      if (!chatId && data?.success) {
         dispatch(
           getChatsAsync({
             workspaceId: currentWorkspace.id,
-            folderId: folderId._id || folderId.id,
+            folderId: currentFolderId,
           })
         )
           .then((response) => {
@@ -484,7 +513,7 @@ const MessagesSection = ({ setCurrentChat }) => {
     } catch (error) {
       console.error('Send message error:', error);
     } finally {
-      setLoading(false); // Hide spinner after response
+      setLoading(false);
     }
   };
 
