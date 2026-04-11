@@ -7,7 +7,8 @@ import { HexColorPicker } from 'react-colorful';
 import useOutsideClick from '../../hooks/useOutsideClick';
 
 function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown }) {
-  const { id, heading, description, color, isEditing } = nodeData ?? {};
+  const { id, heading, description, color: rawColor, isEditing } = nodeData ?? {};
+  const color = rawColor || '#f0f0f0';
   const [showContextMenu, setShowContextMenu] = useState(false);
   const contextMenuRef = useRef();
 
@@ -155,7 +156,7 @@ const ContextMenu = ({
 }) => {
   const { id, heading, description, color: nodeColor, isEditing } = nodeData;
 
-  const [color, setColor] = useState(nodeColor);
+  const [color, setColor] = useState(nodeColor || '#f0f0f0');
   const popover = useRef();
   const [isOpen, toggle] = useState(false);
   return (
