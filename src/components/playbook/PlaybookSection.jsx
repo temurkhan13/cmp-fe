@@ -1,32 +1,70 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
 import JoditEditor from 'jodit-react';
 import { BiChevronDown, BiChevronRight } from 'react-icons/bi';
+import { FiTrash2, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
 
-function PlaybookSection({ stage, playbookId, onUpdateNodeData, onInspire, onRefresh }) {
+function PlaybookSection({
+  stage,
+  playbookId,
+  stageIndex,
+  totalStages,
+  onUpdateNodeData,
+  onInspire,
+  onRefresh,
+  onDeleteStage,
+  onMoveStage,
+}) {
   const [collapsed, setCollapsed] = useState(false);
+  const stageId = stage.id || stage._id;
 
   return (
     <div className="playbook-stage">
-      <div
-        className="playbook-stage-header"
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        {collapsed ? <BiChevronRight size={22} /> : <BiChevronDown size={22} />}
-        <h2>{stage.stage}</h2>
-        <span className="playbook-stage-count">
-          {(stage.nodes?.length || 0) + (stage.nodeData?.length || 0)} sections
-        </span>
+      <div className="playbook-stage-header">
+        <div
+          className="playbook-stage-header-left"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {collapsed ? <BiChevronRight size={22} /> : <BiChevronDown size={22} />}
+          <h2>{stage.stage}</h2>
+          <span className="playbook-stage-count">
+            {(stage.nodes?.length || 0) + (stage.nodeData?.length || 0)} sections
+          </span>
+        </div>
+        <div className="playbook-stage-actions">
+          <button
+            className="playbook-stage-action-btn"
+            onClick={() => onMoveStage(stageIndex, -1)}
+            disabled={stageIndex === 0}
+            title="Move up"
+          >
+            <FiArrowUp size={14} />
+          </button>
+          <button
+            className="playbook-stage-action-btn"
+            onClick={() => onMoveStage(stageIndex, 1)}
+            disabled={stageIndex === totalStages - 1}
+            title="Move down"
+          >
+            <FiArrowDown size={14} />
+          </button>
+          <button
+            className="playbook-stage-action-btn delete"
+            onClick={() => onDeleteStage(stageId)}
+            title="Delete stage"
+          >
+            <FiTrash2 size={14} />
+          </button>
+        </div>
       </div>
 
       {!collapsed && (
         <div className="playbook-stage-body">
-          {/* Stage-level nodeData */}
           {(stage.nodeData || []).map((nd) => (
             <NodeDataBlock
               key={nd.id || nd._id}
               nodeData={nd}
-              stageId={stage.id || stage._id}
+              stageId={stageId}
               nodeId={null}
               playbookId={playbookId}
               onUpdate={onUpdateNodeData}
@@ -34,7 +72,6 @@ function PlaybookSection({ stage, playbookId, onUpdateNodeData, onInspire, onRef
             />
           ))}
 
-          {/* Nodes with their nodeData */}
           {(stage.nodes || []).map((node) => (
             <div key={node.id || node._id} className="playbook-node">
               <h3 className="playbook-node-heading">{node.heading}</h3>
@@ -42,7 +79,7 @@ function PlaybookSection({ stage, playbookId, onUpdateNodeData, onInspire, onRef
                 <NodeDataBlock
                   key={nd.id || nd._id}
                   nodeData={nd}
-                  stageId={stage.id || stage._id}
+                  stageId={stageId}
                   nodeId={node.id || node._id}
                   playbookId={playbookId}
                   onUpdate={onUpdateNodeData}
@@ -64,7 +101,7 @@ function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInsp
   const saveTimerRef = useRef(null);
 
   const nodeDataId = nodeData.id || nodeData._id;
-  const effectiveNodeId = nodeId || nodeDataId; // for stage-level nodeData, use its own id
+  const effectiveNodeId = nodeId || nodeDataId;
 
   const joditConfig = useMemo(
     () => ({
@@ -80,7 +117,8 @@ function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInsp
         'bold', 'italic', 'underline', '|',
         'ul', 'ol', '|',
         'font', 'fontsize', '|',
-        'image', 'table', '|',
+        'image', 'table', 'hr', '|',
+        'link', 'symbols', '|',
         'source',
       ],
     }),
@@ -90,7 +128,6 @@ function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInsp
   const handleBlur = useCallback(
     (newContent) => {
       setContent(newContent);
-      // Debounced save
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       saveTimerRef.current = setTimeout(() => {
         if (nodeId) {
@@ -112,7 +149,6 @@ function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInsp
       );
       if (generated) {
         setContent(generated);
-        // Also save to backend
         if (nodeId) {
           onUpdate(stageId, nodeId, nodeDataId, generated);
         }

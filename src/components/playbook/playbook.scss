@@ -167,29 +167,6 @@
   overflow: hidden;
 }
 
-.playbook-stage-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1.2rem 1.5rem;
-  background: #fafbfc;
-  border-bottom: 1px solid #e5e7eb;
-  cursor: pointer;
-  user-select: none;
-
-  &:hover {
-    background: #f0f1f3;
-  }
-
-  h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin: 0;
-    flex: 1;
-  }
-}
-
 .playbook-stage-count {
   font-size: 0.85rem;
   color: #888;
@@ -254,6 +231,156 @@
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+/* ── Branding Panel ─────────────────────── */
+.playbook-brand-btn {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.playbook-branding-panel {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-top: 1rem;
+
+  h3 {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+.branding-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  label {
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  input[type="color"] {
+    width: 40px;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}
+
+.branding-color-hex {
+  font-size: 0.85rem;
+  color: #888;
+  font-family: monospace;
+}
+
+.branding-logo-preview {
+  height: 40px;
+  max-width: 120px;
+  object-fit: contain;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.branding-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+
+  button:not(.assiss-btn) {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+  }
+}
+
+/* ── Cover Logo ─────────────────────────── */
+.playbook-cover-logo {
+  height: 50px;
+  max-width: 150px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+/* ── Stage Actions ──────────────────────── */
+.playbook-stage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  background: #fafbfc;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: #f0f1f3;
+  }
+}
+
+.playbook-stage-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+    flex: 1;
+  }
+}
+
+.playbook-stage-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.playbook-stage-action-btn {
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  color: #666;
+
+  &:hover {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &.delete {
+    color: #c00;
+    &:hover {
+      background: #fee;
+      color: #900;
+    }
   }
 }
 

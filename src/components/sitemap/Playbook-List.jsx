@@ -9,6 +9,39 @@ import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
 
+const PLAYBOOK_TEMPLATES = [
+  {
+    name: 'ERP Migration Playbook',
+    description: 'Complete change management playbook for ERP system migration covering Discovery, Design, Deploy, Adopt, and Run phases.',
+    icon: '🔄',
+  },
+  {
+    name: 'Digital Transformation Playbook',
+    description: 'Strategic playbook for organization-wide digital transformation with stakeholder analysis, communication planning, and adoption tracking.',
+    icon: '🚀',
+  },
+  {
+    name: 'Merger & Acquisition Integration',
+    description: 'Post-merger integration playbook covering culture alignment, systems consolidation, communication strategy, and change readiness.',
+    icon: '🤝',
+  },
+  {
+    name: 'Agile Transformation Playbook',
+    description: 'Guide for transitioning from waterfall to agile methodology including team coaching, process redesign, and tooling adoption.',
+    icon: '⚡',
+  },
+  {
+    name: 'Cloud Migration Playbook',
+    description: 'Change management framework for cloud infrastructure migration covering training, risk mitigation, and phased rollout.',
+    icon: '☁️',
+  },
+  {
+    name: 'Organizational Restructure',
+    description: 'Playbook for managing organizational restructuring with focus on employee communication, role transitions, and morale.',
+    icon: '🏗️',
+  },
+];
+
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
   return {
@@ -203,6 +236,44 @@ function PlaybookList() {
               gap: '1rem',
             }}
           >
+            {/* Template Selection */}
+            <p style={{ margin: 0, fontWeight: '600', fontSize: '1rem' }}>
+              Start from a template or create custom:
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '0.8rem',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {PLAYBOOK_TEMPLATES.map((tpl) => (
+                <button
+                  key={tpl.name}
+                  onClick={() => {
+                    setCreateName(tpl.name);
+                    setCreateMessage(tpl.description);
+                  }}
+                  style={{
+                    padding: '10px 14px',
+                    border: createName === tpl.name ? '2px solid #C3E11D' : '1px solid #ddd',
+                    borderRadius: '10px',
+                    background: createName === tpl.name ? '#fafff0' : '#f9f9f9',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  <span>{tpl.icon}</span>
+                  <span>{tpl.name}</span>
+                </button>
+              ))}
+            </div>
+
             <input
               autoFocus
               placeholder="Playbook name (e.g. Digital Transformation Playbook)"

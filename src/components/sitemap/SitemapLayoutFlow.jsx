@@ -599,19 +599,57 @@ const SitemapLayoutFlow = ({ id }) => {
       // defaultzoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
-        <button
-          onClick={() => onLayout('TB')}
-          style={{
-            background: 'white',
-            padding: '10px',
-            borderRadius: '8px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-          }}
-        >
-          Layout
-        </button>
-        {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => onLayout('TB')}
+            style={{
+              background: 'white',
+              padding: '10px',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+            }}
+          >
+            Layout
+          </button>
+          {id && (
+            <button
+              onClick={async () => {
+                try {
+                  const authToken = localStorage.getItem('token');
+                  const res = await fetch(`${config.apiURL}/dpb/convert/${id}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${authToken}`,
+                    },
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    const newId = data._id || data.id;
+                    if (newId) navigate(`/playbook/${newId}`);
+                  } else {
+                    alert('Failed to convert sitemap to playbook');
+                  }
+                } catch (err) {
+                  console.error('Convert error:', err);
+                  alert('Failed to convert: ' + err.message);
+                }
+              }}
+              style={{
+                background: '#C3E11D',
+                padding: '10px 16px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              Convert to Playbook
+            </button>
+          )}
+        </div>
       </Panel>
       {!id ? (
         <Panel position="top-right">
