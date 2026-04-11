@@ -45,6 +45,11 @@ const dashboardRoutesData = [
     path: '/dashboard/settings',
     element: Module.Dashboard.Settings,
   },
+  {
+    title: '',
+    path: '/dashboard/knowledge-base',
+    element: Module.Dashboard.KnowledgeBase,
+  },
 ];
 
 export default dashboardRoutesData;

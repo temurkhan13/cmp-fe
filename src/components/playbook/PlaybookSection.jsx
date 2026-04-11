@@ -114,13 +114,18 @@ function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInsp
       toolbarButtonSize: 'small',
       toolbarAdaptive: true,
       buttons: [
-        'bold', 'italic', 'underline', '|',
-        'ul', 'ol', '|',
-        'font', 'fontsize', '|',
+        'bold', 'italic', 'underline', 'strikethrough', '|',
+        'ul', 'ol', 'indent', 'outdent', '|',
+        'font', 'fontsize', 'brush', 'paragraph', '|',
         'image', 'table', 'hr', '|',
-        'link', 'symbols', '|',
-        'source',
+        'link', 'align', 'symbols', '|',
+        'undo', 'redo', '|',
+        'fullsize', 'source',
       ],
+      imageDefaultWidth: 300,
+      uploader: {
+        insertImageAsBase64URI: true,
+      },
     }),
     []
   );

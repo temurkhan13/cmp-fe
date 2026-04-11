@@ -7,3 +7,4 @@ export { default as MyAssessments } from './MyAssessments';
 export { default as PlanBilling } from './PlanBilling';
 export { default as Trash } from './Trash';
 export { default as Settings } from './Settings';
+export { default as KnowledgeBase } from './KnowledgeBase';

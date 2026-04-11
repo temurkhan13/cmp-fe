@@ -828,6 +828,30 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 </span>
               </div>
             )}
+            {chat.length <= 1 && (
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', padding: '0 8px', marginBottom: '8px' }}>
+                {['Help me get started', 'What should I consider?', 'Give me an example', 'Summarise best practices'].map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => setFirstPrompt(suggestion)}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '16px',
+                      border: '1px solid #ddd',
+                      background: 'white',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      color: '#333',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => { e.target.style.background = '#f5f5f5'; e.target.style.borderColor = '#C3E11D'; }}
+                    onMouseLeave={(e) => { e.target.style.background = 'white'; e.target.style.borderColor = '#ddd'; }}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="input-container">
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {!loading ? (

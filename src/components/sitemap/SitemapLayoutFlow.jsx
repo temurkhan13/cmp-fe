@@ -58,6 +58,8 @@ const SitemapLayoutFlow = ({ id }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [layouted, setLayouted] = useState(true);
   const [prompt, setPrompt] = useState('');
+  const [keywords, setKeywords] = useState([]);
+  const [keywordInput, setKeywordInput] = useState('');
   const [isPromptVisible, setPromptVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
@@ -420,9 +422,12 @@ const SitemapLayoutFlow = ({ id }) => {
 
     setIsLoading(true);
     setPromptVisible(false);
+    const fullPrompt = keywords.length > 0
+      ? `Keywords: ${keywords.join(', ')}.\n\n${prompt}`
+      : prompt;
     const payload = {
       user_id: parsedUserData?.id,
-      message: prompt,
+      message: fullPrompt,
       sitemapName: stage,
     };
 
@@ -702,17 +707,61 @@ const SitemapLayoutFlow = ({ id }) => {
                     position: 'relative',
                   }}
                 >
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '4px',
+                    padding: '6px',
+                    border: '1px solid rgba(10, 10, 10, 0.1)',
+                    borderRadius: '6px',
+                    marginBottom: '6px',
+                    minHeight: '34px',
+                    alignItems: 'center',
+                  }}>
+                    {keywords.map((kw, i) => (
+                      <span key={i} style={{
+                        background: '#C3E11D',
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}>
+                        {kw}
+                        <span style={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => setKeywords(keywords.filter((_, idx) => idx !== i))}>x</span>
+                      </span>
+                    ))}
+                    <input
+                      style={{ border: 'none', outline: 'none', flex: 1, minWidth: '80px', fontSize: '13px' }}
+                      placeholder={keywords.length === 0 ? 'Add keywords (press Enter)' : ''}
+                      value={keywordInput}
+                      onChange={(e) => setKeywordInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && keywordInput.trim()) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setKeywords([...keywords, keywordInput.trim()]);
+                          setKeywordInput('');
+                        }
+                        if (e.key === 'Backspace' && !keywordInput && keywords.length > 0) {
+                          setKeywords(keywords.slice(0, -1));
+                        }
+                      }}
+                    />
+                  </div>
                   <textarea
                     style={{
                       width: '100%',
                       outline: 'none',
                       resize: 'none',
                       borderRadius: '6px',
-                      height: '85%',
+                      height: 'calc(85% - 42px)',
                       padding: '10px',
                       border: '1px solid rgba(10, 10, 10, 0.1)',
                     }}
-                    placeholder="Provide details about the change management process, including key phases such as discovery, design, deploy, adopt, and Run. Highlight objectives, steps, stakeholders, and any important tools or outcomes involved."
+                    placeholder="Describe the change management process — key phases, objectives, stakeholders, and outcomes."
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={(e) =>
                       e.key === 'Enter' && onInit('Playbook Introduction')
