@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BiCheckCircle, BiCopy, BiEdit } from 'react-icons/bi';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
@@ -13,7 +13,16 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDe
   const contextMenuRef = useRef();
 
   const close = useCallback(() => setShowContextMenu(false), []);
-  useOutsideClick(close);
+  useOutsideClick(contextMenuRef, close);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') close(); };
+    if (showContextMenu) {
+      document.addEventListener('keydown', handleEsc);
+      return () => document.removeEventListener('keydown', handleEsc);
+    }
+  }, [showContextMenu, close]);
   return (
     <div
       onClick={(e) => {
