@@ -124,7 +124,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, assessmentData }) => {
       {activeIcon === 'message' && (
         <SideBarModal
           title="Comments"
-          bodyContent={<AssessmentComments Comments={Comment} />}
+          bodyContent={<AssessmentComments comments={comments} />}
           onClose={() => setActiveIcon(null)}
         />
       )}

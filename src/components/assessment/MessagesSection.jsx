@@ -765,20 +765,20 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
         </div>
       )}
       {/* Progress indicator */}
-      {chat.length > 0 && showInputField && !showReportButton && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem 2rem', background: '#fafbfc', borderTop: '1px solid #eee' }}>
-          <div style={{ flex: 1, height: '6px', background: '#e5e7eb', borderRadius: '3px', overflow: 'hidden' }}>
-            <div style={{ width: `${Math.min((chat.filter(c => c.answer || c.status === 'answered').length / Math.max(chat.length, 1)) * 100, 95)}%`, height: '100%', background: '#C3E11D', borderRadius: '3px', transition: 'width 0.3s' }} />
+      {chat.length > 0 && showInputField && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', background: '#fafbfc', borderTop: '1px solid #eee', borderBottom: '1px solid #eee' }}>
+          <div style={{ flex: 1, height: '10px', background: '#e5e7eb', borderRadius: '5px', overflow: 'hidden' }}>
+            <div style={{
+              width: showReportButton ? '100%' : `${Math.min((chat.filter(c => c.answer || c.status === 'answered').length / Math.max(chat.length, 1)) * 100, 90)}%`,
+              height: '100%',
+              background: showReportButton ? '#28a745' : '#C3E11D',
+              borderRadius: '5px',
+              transition: 'width 0.5s ease',
+            }} />
           </div>
-          <span style={{ fontSize: '1.1rem', color: '#666', whiteSpace: 'nowrap' }}>
-            Question {chat.filter(c => c.answer || c.status === 'answered').length + 1}
+          <span style={{ fontSize: '1.3rem', color: showReportButton ? '#28a745' : '#333', fontWeight: 600, whiteSpace: 'nowrap' }}>
+            {showReportButton ? 'Complete' : `Question ${chat.filter(c => c.answer || c.status === 'answered').length + 1}`}
           </span>
-        </div>
-      )}
-      {showReportButton && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem 2rem', background: '#fafbfc', borderTop: '1px solid #eee' }}>
-          <div style={{ flex: 1, height: '6px', background: '#C3E11D', borderRadius: '3px' }} />
-          <span style={{ fontSize: '1.1rem', color: '#28a745', fontWeight: 500 }}>Assessment Complete</span>
         </div>
       )}
       {showInputField && (
@@ -855,11 +855,14 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 }}
                 rows={0} // Initial row
               />
-              <div className="icons" style={{ display: 'flex' }}>
+              <div className="icons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                  <IoAttach size={20} color="#888" title="Attach file" />
+                </label>
                 <IoSend
                   color="C3E11D"
                   onClick={handleSendMessage}
-                  className="send-icon "
+                  className="send-icon"
                 />
               </div>
             </div>
