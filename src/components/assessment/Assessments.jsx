@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import SideBarModal from '../../components/common/SideBarModal';
 
@@ -7,44 +8,45 @@ import AssessmentMedia from './AssessmentComponent/AssessmentMedia';
 import AssessmentComments from './AssessmentComponent/AssessmentComments';
 import AsessmentBookmark from './AssessmentComponent/AssessmentBookMark';
 import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
+import appConfig from '../../config/config.js';
 
 import { IoIosChatboxes } from 'react-icons/io';
 import { PiClockCounterClockwiseBold } from 'react-icons/pi';
 import {
   FaBookmark,
   FaImages,
-  FaUserCircle,
 } from 'react-icons/fa';
 import { RiNewspaperLine } from 'react-icons/ri';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 
-const Assessments = ({ handleAssessmentSelect, folderID, assessmentData }) => {
+const Assessments = ({ handleAssessmentSelect, folderID }) => {
   const [activeIcon, setActiveIcon] = useState('question');
+  const [versions, setVersions] = useState([]);
+  const [comments, setComments] = useState([]);
+  const selectedWorkspace = useSelector(selectWorkspace);
+
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
   };
 
-  // Extract real data from assessmentData
-  const versions = (assessmentData?.qa || []).map((qa, index) => ({
-    date: qa.createdAt || qa.created_at || new Date().toISOString(),
-    users: [{ name: 'You' }],
-  }));
-
-  const images = [];
-  const documents = [];
-  const links = [];
-  const bookmarkData = [];
-
-  // Extract comments from assessment messages
-  const comments = assessmentData?.comments || [];
-  const Comment = comments.length > 0 ? comments[0] : {
-    id: 0,
-    time: '',
-    avatar: <FaUserCircle />,
-    name: '',
-    text: 'No comments yet',
-    status: '',
-    replies: [],
-  };
+  // Fetch assessment data for sidebar when a panel opens
+  useEffect(() => {
+    if (activeIcon === 'clock' && folderID) {
+      // Build version history from completed assessments in this folder
+      const folder = (selectedWorkspace?.folders || []).find(
+        (f) => (f._id || f.id) === folderID
+      );
+      if (folder?.assessments?.length > 0) {
+        const versionList = folder.assessments
+          .filter((a) => a.status === 'completed' || a.report?.length > 0)
+          .map((a) => ({
+            date: a.updatedAt || a.updated_at || a.createdAt || a.created_at || 'N/A',
+            users: [{ name: a.name || 'Assessment' }],
+          }));
+        setVersions(versionList);
+      }
+    }
+  }, [activeIcon, folderID, selectedWorkspace]);
 
   return (
     <>
@@ -124,7 +126,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, assessmentData }) => {
       {activeIcon === 'message' && (
         <SideBarModal
           title="Comments"
-          bodyContent={<AssessmentComments comments={comments} />}
+          bodyContent={<AssessmentComments comments={comments || []} />}
           onClose={() => setActiveIcon(null)}
         />
       )}
