@@ -132,73 +132,119 @@ function PlaybookEditor() {
     }
   };
 
-  // Export as PDF
+  // Strip HTML tags to plain text
+  const stripHtml = (html) => {
+    if (!html) return '';
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  };
+
+  // Export as PDF using jsPDF (more reliable than pdfmake with dynamic imports)
   const exportPdf = async () => {
     setExportOpen(false);
-    const htmlToPdfmake = (await import('html-to-pdfmake')).default;
-    const pdfMake = (await import('pdfmake/build/pdfmake')).default;
-    const pdfFonts = (await import('pdfmake/build/vfs_fonts')).default;
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      const maxWidth = pageWidth - margin * 2;
+      let y = 40;
 
-    const content = [];
+      const checkPage = (needed) => {
+        if (y + needed > 270) { doc.addPage(); y = 20; }
+      };
 
-    // Cover
-    content.push(
-      { text: 'DIGITAL PLAYBOOK', style: 'coverLabel', margin: [0, 80, 0, 10] },
-      { text: playbook?.name || 'Digital Playbook', style: 'coverTitle', margin: [0, 0, 0, 10] },
-      { text: selectedWorkspace?.workspaceName || '', style: 'coverWorkspace', margin: [0, 0, 0, 20] },
-      { canvas: [{ type: 'line', x1: 200, y1: 0, x2: 320, y2: 0, lineWidth: 3, lineColor: '#C3E11D' }], margin: [0, 0, 0, 10] },
-      { text: 'Powered by ChangeAI', style: 'coverPowered', margin: [0, 0, 0, 40] },
-      { text: '', pageBreak: 'after' }
-    );
+      // Cover page
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text('DIGITAL PLAYBOOK', pageWidth / 2, 80, { align: 'center' });
+      doc.setFontSize(22);
+      doc.setTextColor(0, 49, 111);
+      doc.text(playbook?.name || 'Digital Playbook', pageWidth / 2, 95, { align: 'center', maxWidth: maxWidth });
+      doc.setFontSize(12);
+      doc.setTextColor(130);
+      doc.text(selectedWorkspace?.workspaceName || '', pageWidth / 2, 110, { align: 'center' });
+      doc.setDrawColor(195, 225, 29);
+      doc.setLineWidth(1);
+      doc.line(pageWidth / 2 - 20, 120, pageWidth / 2 + 20, 120);
+      doc.setFontSize(8);
+      doc.setTextColor(170);
+      doc.text('Powered by ChangeAI', pageWidth / 2, 130, { align: 'center' });
 
-    // Stages
-    for (const stage of playbook?.stages || []) {
-      content.push({ text: stage.stage, style: 'stageHeading', margin: [0, 10, 0, 8] });
+      doc.addPage();
+      y = 20;
 
-      for (const nd of stage.nodeData || []) {
-        if (nd.heading) content.push({ text: nd.heading, style: 'sectionHeading', margin: [0, 6, 0, 4] });
-        if (nd.description) {
-          try {
-            const parsed = htmlToPdfmake(nd.description);
-            content.push(...(Array.isArray(parsed) ? parsed : [parsed]));
-          } catch {
-            content.push({ text: nd.description, margin: [0, 0, 0, 6] });
+      // Stages
+      for (const stage of playbook?.stages || []) {
+        checkPage(20);
+        doc.setFontSize(16);
+        doc.setTextColor(0, 49, 111);
+        doc.text(stage.stage || '', margin, y);
+        y += 10;
+
+        for (const nd of stage.nodeData || []) {
+          if (nd.heading) {
+            checkPage(12);
+            doc.setFontSize(11);
+            doc.setTextColor(60);
+            doc.setFont(undefined, 'bold');
+            doc.text(nd.heading, margin, y);
+            y += 6;
           }
-        }
-      }
-
-      for (const node of stage.nodes || []) {
-        content.push({ text: node.heading, style: 'nodeHeading', margin: [0, 8, 0, 4] });
-        for (const nd of node.nodeData || []) {
-          if (nd.heading) content.push({ text: nd.heading, style: 'sectionHeading', margin: [0, 4, 0, 2] });
           if (nd.description) {
-            try {
-              const parsed = htmlToPdfmake(nd.description);
-              content.push(...(Array.isArray(parsed) ? parsed : [parsed]));
-            } catch {
-              content.push({ text: nd.description, margin: [0, 0, 0, 4] });
+            const text = stripHtml(nd.description);
+            if (text) {
+              doc.setFontSize(10);
+              doc.setTextColor(50);
+              doc.setFont(undefined, 'normal');
+              const lines = doc.splitTextToSize(text, maxWidth);
+              checkPage(lines.length * 5);
+              doc.text(lines, margin, y);
+              y += lines.length * 5 + 4;
             }
           }
         }
-      }
-    }
 
-    const docDef = {
-      content,
-      defaultStyle: { fontSize: 11 },
-      pageMargins: [40, 60, 40, 60],
-      styles: {
-        coverLabel: { fontSize: 10, alignment: 'center', color: '#666', letterSpacing: 3 },
-        coverTitle: { fontSize: 24, bold: true, alignment: 'center', color: '#00316f' },
-        coverWorkspace: { fontSize: 13, alignment: 'center', color: '#888' },
-        coverPowered: { fontSize: 9, alignment: 'center', color: '#aaa' },
-        stageHeading: { fontSize: 18, bold: true, color: '#00316f' },
-        nodeHeading: { fontSize: 14, bold: true, color: '#333' },
-        sectionHeading: { fontSize: 12, bold: true, color: '#444' },
-      },
-    };
-    pdfMake.createPdf(docDef).download(`${playbook?.name || 'playbook'}.pdf`);
+        for (const node of stage.nodes || []) {
+          checkPage(14);
+          doc.setFontSize(13);
+          doc.setTextColor(50);
+          doc.setFont(undefined, 'bold');
+          doc.text(node.heading || '', margin + 4, y);
+          y += 8;
+
+          for (const nd of node.nodeData || []) {
+            if (nd.heading) {
+              checkPage(10);
+              doc.setFontSize(10);
+              doc.setTextColor(70);
+              doc.setFont(undefined, 'bold');
+              doc.text(nd.heading, margin + 4, y);
+              y += 5;
+            }
+            if (nd.description) {
+              const text = stripHtml(nd.description);
+              if (text) {
+                doc.setFontSize(9);
+                doc.setTextColor(60);
+                doc.setFont(undefined, 'normal');
+                const lines = doc.splitTextToSize(text, maxWidth - 4);
+                checkPage(lines.length * 4.5);
+                doc.text(lines, margin + 4, y);
+                y += lines.length * 4.5 + 3;
+              }
+            }
+          }
+        }
+        y += 6;
+      }
+
+      doc.save(`${playbook?.name || 'playbook'}.pdf`);
+    } catch (err) {
+      console.error('PDF export error:', err);
+      alert('PDF export failed: ' + err.message);
+    }
   };
 
   // Export as Word
