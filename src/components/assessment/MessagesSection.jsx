@@ -415,8 +415,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     messageElements.forEach((element) => {
       const contentElement = element.querySelector('.msg');
       if (contentElement && contentElement.contains(selection.anchorNode)) {
-        const messageRole = element.querySelector('.Heading').textContent || '';
-        if (messageRole === 'ChangeAI' || messageRole === 'You') {
+        const headingEl = element.querySelector('.Heading');
+        const messageRole = headingEl?.textContent || '';
+        if (messageRole === 'ChangeAI' || messageRole === 'You' || !headingEl) {
           isValidSelection = true;
         }
       }
@@ -764,23 +765,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           {error}
         </div>
       )}
-      {/* Progress indicator */}
-      {chat.length > 0 && showInputField && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', background: '#fafbfc', borderTop: '1px solid #eee', borderBottom: '1px solid #eee' }}>
-          <div style={{ flex: 1, height: '10px', background: '#e5e7eb', borderRadius: '5px', overflow: 'hidden' }}>
-            <div style={{
-              width: showReportButton ? '100%' : `${Math.min((chat.filter(c => c.answer || c.status === 'answered').length / Math.max(chat.length, 1)) * 100, 90)}%`,
-              height: '100%',
-              background: showReportButton ? '#28a745' : '#C3E11D',
-              borderRadius: '5px',
-              transition: 'width 0.5s ease',
-            }} />
-          </div>
-          <span style={{ fontSize: '1.3rem', color: showReportButton ? '#28a745' : '#333', fontWeight: 600, whiteSpace: 'nowrap' }}>
-            {showReportButton ? 'Complete' : `Question ${chat.filter(c => c.answer || c.status === 'answered').length + 1}`}
-          </span>
-        </div>
-      )}
+      {/* Progress indicator — rendered just above input */}
       {showInputField && (
         <>
           <div style={{ position: 'relative', width: '70%' }}>
@@ -803,6 +788,24 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
             </button>
           </div>
           <div className="Message_container">
+            {/* Progress bar */}
+            {chat.length > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '8px 16px', marginBottom: '4px' }}>
+                <div style={{ flex: 1, height: '8px', background: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{
+                    width: showReportButton ? '100%' : `${Math.min(((chat.filter(c => c.answer || c.status === 'answered').length) / 7) * 100, 95)}%`,
+                    height: '100%',
+                    background: showReportButton ? '#28a745' : '#C3E11D',
+                    borderRadius: '4px',
+                    transition: 'width 0.5s ease',
+                    minWidth: '5%',
+                  }} />
+                </div>
+                <span style={{ fontSize: '1.2rem', color: showReportButton ? '#28a745' : '#555', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                  {showReportButton ? 'Complete' : `Question ${chat.filter(c => c.answer || c.status === 'answered').length + 1}`}
+                </span>
+              </div>
+            )}
             <div className="input-container">
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {!loading ? (
