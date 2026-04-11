@@ -6,7 +6,7 @@ import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { HexColorPicker } from 'react-colorful';
 import useOutsideClick from '../../hooks/useOutsideClick';
 
-function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
+function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown }) {
   const { id, heading, description, color, isEditing } = nodeData ?? {};
   const [showContextMenu, setShowContextMenu] = useState(false);
   const contextMenuRef = useRef();
@@ -135,6 +135,9 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild }) {
             updateNodeDataWithPropertyName={updateNodeDataWithPropertyName}
             addNodeChild={addNodeChild}
             nodeData={nodeData}
+            onDelete={onDelete}
+            onMoveUp={onMoveUp}
+            onMoveDown={onMoveDown}
           />
         </div>
       ) : null}
@@ -146,6 +149,9 @@ const ContextMenu = ({
   nodeData,
   updateNodeDataWithPropertyName,
   addNodeChild,
+  onDelete,
+  onMoveUp,
+  onMoveDown,
 }) => {
   const { id, heading, description, color: nodeColor, isEditing } = nodeData;
 
@@ -199,6 +205,10 @@ const ContextMenu = ({
             justifyContent: 'center',
             cursor: 'pointer',
           }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onMoveUp) onMoveUp(id);
+          }}
         >
           <BsArrowUp></BsArrowUp>
           <span>Up</span>
@@ -211,6 +221,10 @@ const ContextMenu = ({
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onMoveDown) onMoveDown(id);
           }}
         >
           <BsArrowDown></BsArrowDown>
@@ -263,6 +277,11 @@ const ContextMenu = ({
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
+            color: '#c00',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onDelete) onDelete(id);
           }}
         >
           <RiDeleteBin2Fill />
