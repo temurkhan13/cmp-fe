@@ -292,7 +292,24 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleSendMessage = async () => {
-    // if (!text && !file) return;
+    // Read file content on client side if file is attached
+    let fileText = '';
+    if (file && file instanceof File) {
+      try {
+        fileText = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = () => resolve('');
+          reader.readAsText(file);
+        });
+        if (fileText.length > 30000) {
+          fileText = fileText.substring(0, 30000) + '\n[...truncated...]';
+        }
+      } catch (e) {
+        console.error('File read error:', e);
+      }
+    }
+
     if (firstPrompt) {
       // setChat((prevChat) => [
       //   ...prevChat,
@@ -321,7 +338,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     setLoading(true);
 
     try {
-      const response = await AssessmentReport(firstPrompt, SubReportId);
+      const answerWithFile = fileText
+        ? `${firstPrompt}\n\n[Attached Document Content]:\n${fileText}`
+        : firstPrompt;
+      const response = await AssessmentReport(answerWithFile, SubReportId);
       if (response) {
         setChat((prevChat) => [
           ...prevChat,
