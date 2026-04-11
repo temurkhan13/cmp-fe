@@ -39,7 +39,6 @@ const NewChat = () => {
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState(null);
   const chatContainerRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -252,33 +251,7 @@ const NewChat = () => {
               type="text"
               placeholder="Search chats..."
               value={searchQuery}
-              onChange={(e) => {
-                const q = e.target.value;
-                setSearchQuery(q);
-                if (!q.trim()) {
-                  setSearchResults(null);
-                  return;
-                }
-                // Search across all chats for this workspace
-                const token = localStorage.getItem('token');
-                if (currentWorkspace?.id && token) {
-                  fetch(
-                    `${config.apiURL}/workspace/user/chats?workspaceId=${currentWorkspace.id}`,
-                    { headers: { Authorization: `Bearer ${token}` } }
-                  )
-                    .then((r) => r.json())
-                    .then((allChats) => {
-                      if (Array.isArray(allChats)) {
-                        const filtered = allChats.filter((c) => {
-                          const title = (c.chatTitle || c.chat_title || '').toLowerCase();
-                          return title.includes(q.toLowerCase());
-                        });
-                        setSearchResults(filtered);
-                      }
-                    })
-                    .catch(() => {});
-                }
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
               style={{
                 width: '100%',
                 padding: '8px 12px',
@@ -289,8 +262,14 @@ const NewChat = () => {
               }}
             />
           </div>
-          {Array.isArray(searchResults || showableChats) &&
-            (searchResults || showableChats)
+          {Array.isArray(showableChats) &&
+            showableChats
+            .filter((chat) => {
+              if (!searchQuery.trim()) return true;
+              const q = searchQuery.toLowerCase();
+              const title = String(chat.chatTitle || chat.chat_title || chat.title || '').toLowerCase();
+              return title.includes(q);
+            })
             .map((chat, index) => (
               <section
                 key={chat._id}
