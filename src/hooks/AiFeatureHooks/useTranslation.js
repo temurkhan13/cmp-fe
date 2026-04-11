@@ -12,11 +12,14 @@ const useTranslation = () => {
         message: inputText,
         language: language,
       });
-      setTranslationText(response.data.message);
+      const result = response.data.message;
+      setTranslationText(result);
       setError(null);
+      return result;
     } catch (error) {
       setError(error.message);
       setTranslationText('');
+      return null;
     }
   };
 

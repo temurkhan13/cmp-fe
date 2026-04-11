@@ -70,6 +70,8 @@ import {
 } from '../../redux/slices/workspacesSlice';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire.js';
+import useTranslation from '../../hooks/AiFeatureHooks/useTranslation.js';
+import useExplain from '../../hooks/AiFeatureHooks/useExplain.js';
 
 const MessagesSection = ({ setCurrentChat }) => {
   const dispatch = useDispatch();
@@ -184,6 +186,8 @@ const MessagesSection = ({ setCurrentChat }) => {
   const { LongText } = useLonger();
   const { error, chatWithdoc } = useChat();
   const { handleInspire } = useInspire();
+  const { Translation } = useTranslation();
+  const { Explain } = useExplain();
   const [firstPrompt, setFirstPrompt] = useState('');
 
   const renderIcon = (iconName, style = {}) => {
@@ -337,6 +341,11 @@ const MessagesSection = ({ setCurrentChat }) => {
         response = await improveWriting(selectedText);
       } else if (value === 'Summarize') {
         response = await summarize(selectedText);
+      } else if (value === 'Explain This') {
+        response = await Explain(selectedText);
+      } else if (value.startsWith('Translate:')) {
+        const language = value.replace('Translate:', '').trim();
+        response = await Translation(selectedText, language);
       }
 
       if (response) {
@@ -893,7 +902,7 @@ const MessagesSection = ({ setCurrentChat }) => {
           </label>
         </div>
         <div className="input-container" style={{ position: 'relative' }}>
-          {/* <div
+          <div
             style={{
               position: 'absolute',
               bottom: '13px',
@@ -922,7 +931,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                 }}
               />
             )}
-          </div> */}
+          </div>
 
           <textarea
             placeholder="Enter text here.."
