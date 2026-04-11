@@ -6,7 +6,7 @@ import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { HexColorPicker } from 'react-colorful';
 import useOutsideClick from '../../hooks/useOutsideClick';
 
-function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown }) {
+function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown, closeAllMenus }) {
   const { id, heading, description, color: rawColor, isEditing } = nodeData ?? {};
   const color = rawColor || '#f0f0f0';
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -148,6 +148,7 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDe
             onDelete={onDelete}
             onMoveUp={onMoveUp}
             onMoveDown={onMoveDown}
+            onClose={close}
           />
         </div>
       ) : null}
@@ -162,6 +163,7 @@ const ContextMenu = ({
   onDelete,
   onMoveUp,
   onMoveDown,
+  onClose,
 }) => {
   const { id, heading, description, color: nodeColor, isEditing } = nodeData;
 
@@ -200,7 +202,8 @@ const ContextMenu = ({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            addNodeChild(heading, description, color, isEditing);
+            addNodeChild(heading, description, nodeColor || '#f0f0f0', false);
+            if (onClose) onClose();
           }}
         >
           <BiCopy></BiCopy>
@@ -218,6 +221,7 @@ const ContextMenu = ({
           onClick={(e) => {
             e.stopPropagation();
             if (onMoveUp) onMoveUp(id);
+            if (onClose) onClose();
           }}
         >
           <BsArrowUp></BsArrowUp>
@@ -235,6 +239,7 @@ const ContextMenu = ({
           onClick={(e) => {
             e.stopPropagation();
             if (onMoveDown) onMoveDown(id);
+            if (onClose) onClose();
           }}
         >
           <BsArrowDown></BsArrowDown>
@@ -292,6 +297,7 @@ const ContextMenu = ({
           onClick={(e) => {
             e.stopPropagation();
             if (onDelete) onDelete(id);
+            if (onClose) onClose();
           }}
         >
           <RiDeleteBin2Fill />
