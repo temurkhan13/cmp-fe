@@ -16,6 +16,7 @@ import { BiSolidSpreadsheet } from 'react-icons/bi';
 import { BsFilePlayFill } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GiArtificialHive } from 'react-icons/gi';
+import { HiOutlineDocumentText } from 'react-icons/hi';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
@@ -72,6 +73,11 @@ const DashboardLayout = ({ children }) => {
       path: '/dashboard/HelpCenter',
       name: 'Help Center',
       Icon: <AiFillQuestionCircle />,
+    },
+    {
+      path: '/dashboard/knowledge-base',
+      name: 'Knowledge Base',
+      Icon: <HiOutlineDocumentText />,
     },
     { path: '/dashboard/feedback', name: 'Feedback', Icon: <RiFeedbackFill /> },
     { path: '/dashboard/Trash', name: 'Trash', Icon: <FaTrash /> },
