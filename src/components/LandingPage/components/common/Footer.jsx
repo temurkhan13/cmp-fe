@@ -34,9 +34,9 @@ const Footer = () => {
             ))}
           </div>
           <div className="footer-socials">
-            <SocialIcon href="https://facebook.com" icon={<FaFacebook />} />
-            <SocialIcon href="https://instagram.com" icon={<FaInstagram />} />
-            <SocialIcon href="https://x.com" icon={<FaTwitter />} />
+            <SocialIcon href="#" icon={<FaFacebook />} />
+            <SocialIcon href="#" icon={<FaInstagram />} />
+            <SocialIcon href="#" icon={<FaTwitter />} />
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ const Footer = () => {
 
         @media screen and (min-width: 786px) {
           .footer-sections {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
           }
         }
         .footer-brand{
@@ -96,7 +96,7 @@ const Footer = () => {
         .footer-section {
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-items: flex-start;
           gap: 0.25rem;
         }
 
