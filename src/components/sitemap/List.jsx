@@ -278,7 +278,7 @@ function List() {
                             color: 'rgba(10, 10, 10, 0.46)',
                           }}
                         >
-                          Modifies {timeAgo(updatedAt)}
+                          Modified {timeAgo(updatedAt)}
                         </span>
                       ) : null}
                     </div>

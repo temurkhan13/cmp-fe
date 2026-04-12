@@ -44,7 +44,7 @@ const cards = [
 const Features = () => {
   return (
     <div className="features-container">
-      <h1 className="features-title">Our Features</h1>
+      <h2 className="features-title">Our Features</h2>
       <div className="features-grid">
         {cards.map((card, index) => (
           <FeaturesCard

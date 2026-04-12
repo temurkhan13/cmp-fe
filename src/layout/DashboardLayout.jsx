@@ -140,14 +140,14 @@ const DashboardLayout = ({ children }) => {
             <Link
               to={path}
               key={index}
-              style={{ textDecoration: 'none' }}
+              style={{ textDecoration: 'none', color: 'inherit' }}
               className={location.pathname === path ? 'active-link' : ''}
             >
               <li className="link_namee">
-                <a>
+                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <i style={{ color: 'gray' }}>{Icon}</i>
                   <span className="link_name">{name}</span>
-                </a>
+                </div>
                 <span className="tooltip">{name}</span>
               </li>
             </Link>

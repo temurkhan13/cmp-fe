@@ -86,18 +86,22 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
         <p className="rating-heading">
           How do you rate the quality of our product?
         </p>
-        <div className="rating-numbers">
-          {[1, 2, 3, 4, 5].map((number) => (
-            <div
-              key={number}
-              className={`rating-number ${
-                rating === number ? `active-rating-${number}` : ''
-              }`}
-              onClick={() => handleRatingClick(number)}
-            >
-              {number}
-            </div>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.2rem', color: '#999' }}>Poor</span>
+          <div className="rating-numbers">
+            {[1, 2, 3, 4, 5].map((number) => (
+              <div
+                key={number}
+                className={`rating-number ${
+                  rating === number ? `active-rating-${number}` : ''
+                }`}
+                onClick={() => handleRatingClick(number)}
+              >
+                {number}
+              </div>
+            ))}
+          </div>
+          <span style={{ fontSize: '1.2rem', color: '#999' }}>Excellent</span>
         </div>
         {formErrors.rating && <p className="error-text">{formErrors.rating}</p>}
       </div>

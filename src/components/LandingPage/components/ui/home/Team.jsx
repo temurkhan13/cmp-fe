@@ -5,10 +5,10 @@ import { FaArrowRight } from 'react-icons/fa';
 const Team = () => {
   return (
     <div className="team">
-      <h1>
+      <h2>
         An <span className="text-gradient">END-TO-END</span> business <br />{' '}
         platform for your team
-      </h1>
+      </h2>
       <div className="both">
         <div>
           <img width={'100%'} src={video} alt="" />

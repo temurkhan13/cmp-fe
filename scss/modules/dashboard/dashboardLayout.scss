@@ -320,9 +320,10 @@ body {
   color: var(--color-default);
 }
 
-.sidebar li a .link_name {
-  color: var(--color-black);
-  font-size: 15px;
+.sidebar li a .link_name,
+.sidebar li div .link_name {
+  color: #333;
+  font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
   pointer-events: auto;
@@ -331,13 +332,19 @@ body {
   opacity: 0;
 }
 
+.sidebar .navlist a {
+  color: #333;
+  text-decoration: none;
+}
+
 .sidebar li a:hover .link_name,
 .sidebar li a:hover i {
   transition: all 0.5s ease;
   color: var(--color-default);
 }
 
-.sidebar.open li a .link_name {
+.sidebar.open li a .link_name,
+.sidebar.open li div .link_name {
   opacity: 1;
   pointer-events: auto;
 }

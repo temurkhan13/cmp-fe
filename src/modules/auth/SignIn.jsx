@@ -177,9 +177,12 @@ const SignIn = () => {
       <style>
         {`
           .error-message {
-            color: red;
-            font-weight: bold;
-            margin-bottom: 5px;
+            color: #cc0000;
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 8px;
+            margin-top: 4px;
+            position: relative;
           }
           .forgot-password-link {
             color: #1e90ff;

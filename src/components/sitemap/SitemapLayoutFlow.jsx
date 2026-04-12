@@ -600,6 +600,7 @@ const SitemapLayoutFlow = ({ id }) => {
       fitView
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
+      proOptions={{ hideAttribution: true }}
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
       // defaultzoom={0.2} // Default initial zoom level
