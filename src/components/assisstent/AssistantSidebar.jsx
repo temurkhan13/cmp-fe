@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { SideBarModal } from '../common';
 import PropTypes from 'prop-types';
 
@@ -8,15 +9,33 @@ import ChatBookmark from './assistantModal/ChatBookmark';
 import VersionHistory from './assistantModal/VersionHistory';
 import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import { selectSelectedFolder } from '../../redux/slices/folderSlice';
+import { useGetChatQuery } from '../../redux/api/workspaceApi';
 
 const AssistantSidebar = (props) => {
   const currentChat = props?.currentChat;
   const [bookmarksShow, setBookmarksShow] = useState([]);
 
+  // Read chat directly from RTK Query cache for fresh comments
+  const selectedWorkspace = useSelector(selectWorkspace);
+  const selectedFolder = useSelector(selectSelectedFolder);
+  const chatId = useSelector((state) => state.workspaces.currentChatId);
+  const workspaceId = selectedWorkspace?.id;
+  const folderId = selectedFolder?._id || selectedFolder?.id;
+
+  const { data: liveChat } = useGetChatQuery(
+    { workspaceId, folderId, chatId },
+    { skip: !workspaceId || !folderId || !chatId }
+  );
+
+  // Use liveChat from RTK Query (always fresh), fallback to prop
+  const chatData = liveChat || currentChat;
+
   // Aggregate comments from all messages (backend attaches them per-message)
   const allComments = useMemo(() => {
-    if (!currentChat?.generalMessages) return [];
-    return currentChat.generalMessages
+    if (!chatData?.generalMessages) return [];
+    return chatData.generalMessages
       .filter((msg) => msg.comments && msg.comments.length > 0)
       .flatMap((msg) =>
         msg.comments.map((c) => ({
@@ -28,7 +47,7 @@ const AssistantSidebar = (props) => {
           replies: c.replies || [],
         }))
       );
-  }, [currentChat?.generalMessages]);
+  }, [chatData?.generalMessages]);
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
