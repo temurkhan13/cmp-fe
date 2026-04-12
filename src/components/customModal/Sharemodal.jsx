@@ -120,7 +120,7 @@ const ShareModal = ({ members, onClose }) => {
       <div style={styles.ShareModalOverlay} onClick={onClose}>
         <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
           <div style={styles.header}>
-            <h3 style={styles.shareHeading}>Share “AI Assistant Test File”</h3>
+            <h3 style={styles.shareHeading}>Share "AI Assistant Test File"</h3>
             <div style={styles.closeLinkBtn}>
               <button style={styles.copyLinkBtn}>
                 <IoMdLink size={18} /> Copy Link
