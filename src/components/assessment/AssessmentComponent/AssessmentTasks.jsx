@@ -107,8 +107,18 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
   };
 
   const getColor = (progress) => {
-    if (progress) return { text: 'blue', background: '#ccffcc' };
-    return { text: 'red', background: '#ffcccc' };
+    if (progress) return { text: '#15803d', background: 'rgba(34,197,94,0.1)' };
+    return { text: '#a16207', background: 'rgba(234,179,8,0.1)' };
+  };
+
+  const getStatusDisplay = (status) => {
+    const map = {
+      'pending': { label: 'Pending', color: '#a16207', bg: 'rgba(234,179,8,0.1)' },
+      'in_progress': { label: 'In Progress', color: '#2563eb', bg: 'rgba(59,130,246,0.1)' },
+      'in-progress': { label: 'In Progress', color: '#2563eb', bg: 'rgba(59,130,246,0.1)' },
+      'completed': { label: 'Completed', color: '#15803d', bg: 'rgba(34,197,94,0.1)' },
+    };
+    return map[status] || map['pending'];
   };
 
   const calculateCollectiveProgress = (tasks) => {
@@ -209,43 +219,30 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                     onClick={() => handleAssessmentSelect(assessment)}
                   >
                     <span className="task-name">{assessment}</span>
-                    <span
-                      className={`task-progress hover-show`}
-                      style={{
-                        color:
-                          assessmentsData &&
-                          assessmentsData.find(
-                            (data) => data.name === assessment
-                          )
-                            ? 'black'
-                            : taskColors.text,
-                        backgroundColor:
-                          assessmentsData &&
-                          assessmentsData.find(
-                            (data) => data.name === assessment
-                          )
-                            ? '#C3E11D'
-                            : taskColors.background,
-                        borderRadius: '1rem',
-                        paddingLeft: '0.8rem',
-                        paddingRight: '0.8rem',
-                        fontSize: '1.2rem',
-                        fontWeight: '500',
-                        position: 'absolute',
-                        right: '0',
-                      }}
-                    >
-                      {/* {assessmentData.name === assessment
-                        ? assessmentData.status
-                        : 'Pending'} */}
-
-                      {assessmentsData &&
-                      assessmentsData?.find((data) => data?.name === assessment)
-                        ? assessmentsData?.find(
-                            (data) => data?.name === assessment
-                          ).status
-                        : 'pending'}
-                    </span>
+                    {(() => {
+                      const matchedAssessment = assessmentsData?.find((data) => data?.name === assessment);
+                      const status = matchedAssessment ? matchedAssessment.status : 'pending';
+                      const display = getStatusDisplay(status);
+                      return (
+                        <span
+                          className="task-progress hover-show"
+                          style={{
+                            color: display.color,
+                            backgroundColor: display.bg,
+                            borderRadius: '9999px',
+                            paddingLeft: '0.8rem',
+                            paddingRight: '0.8rem',
+                            padding: '2px 10px',
+                            fontSize: '1.2rem',
+                            fontWeight: '600',
+                            position: 'absolute',
+                            right: '0',
+                          }}
+                        >
+                          {display.label}
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
               );

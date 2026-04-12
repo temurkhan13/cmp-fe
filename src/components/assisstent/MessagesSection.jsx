@@ -124,6 +124,7 @@ const MessagesSection = ({ setCurrentChat }) => {
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
+  const [pendingSuggestionSend, setPendingSuggestionSend] = useState(false);
   const [userProfilePhoto, setUserProfilePhoto] = useState(UserPic);
 
   useEffect(() => {
@@ -454,6 +455,14 @@ const MessagesSection = ({ setCurrentChat }) => {
     refetch(); // Trigger the chat query to refetch
   };
 
+  // Auto-send when suggestion card is clicked
+  useEffect(() => {
+    if (pendingSuggestionSend && text.trim()) {
+      setPendingSuggestionSend(false);
+      handleSendMessage();
+    }
+  }, [pendingSuggestionSend, text]);
+
   const handleSendMessage = async () => {
     if (!text.trim() && !file) return;
 
@@ -625,12 +634,12 @@ const MessagesSection = ({ setCurrentChat }) => {
                 >
                   <div
                     className={
-                      message && message.sender
+                      message && message.sender === 'user'
                         ? 'chat-container-assisstant right'
                         : 'chat-container-assisstant left'
                     }
                   >
-                    {message && message.sender ? (
+                    {message && message.sender === 'user' ? (
                       <div className="card user-card">
                         <div className="user-avatar">
                           <img
@@ -999,7 +1008,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                 <div
                   key={index}
                   className="data-map-item"
-                  onClick={() => setText(question)}
+                  onClick={() => { setText(question); setPendingSuggestionSend(true); }}
                 >
                   {renderIcon(iconName, style)}
                   {question}

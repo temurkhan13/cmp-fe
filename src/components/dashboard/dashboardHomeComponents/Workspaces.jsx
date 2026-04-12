@@ -298,6 +298,7 @@ const Workspaces = ({
           padding: 0.5rem 1rem;
           border-radius: 1rem;
           padding:1.5rem;
+          cursor: pointer;
           }
         .icon-container:hover {
          background-color: #f5f5f5;
