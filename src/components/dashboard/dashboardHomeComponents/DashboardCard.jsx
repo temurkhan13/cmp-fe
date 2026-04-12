@@ -70,9 +70,10 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
     data.chatTitle ||
     (data.report && data.report[0] ? data.report[0].ReportTitle : '') ||
     'Unknown Item';
-  const createdAt = data.createdAt
-    ? new Date(data.createdAt).toLocaleDateString()
-    : 'N/A';
+  const rawDate = data.createdAt || data.created_at || data.updatedAt || data.updated_at;
+  const createdAt = rawDate
+    ? new Date(rawDate).toLocaleDateString()
+    : '';
 
   // Close the dropdown menu when clicking outside of it
   useEffect(() => {

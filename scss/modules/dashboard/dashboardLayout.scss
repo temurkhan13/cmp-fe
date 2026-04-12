@@ -8,6 +8,34 @@
   --color-light: #e0e0e0;
   --color-black: #0a0a0a;
   --color-gray: gray;
+  --border-radius-btn: 10px;
+  --border-radius-input: 10px;
+  --border-radius-card: 12px;
+}
+
+/* Global focus indicator for accessibility */
+*:focus-visible {
+  outline: 2px solid #C3E11D;
+  outline-offset: 2px;
+}
+
+/* Standardize button styles across dashboard */
+.assiss-btn,
+.create-workspace-btn,
+.upgrade-button,
+.workspace-btn {
+  border-radius: var(--border-radius-btn) !important;
+}
+
+/* Standardize input field styles */
+.workspace-input,
+.workspace-description,
+.filter-input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  border-radius: var(--border-radius-input);
 }
 
 * {
@@ -421,12 +449,14 @@ body {
 
 .home-section {
   position: relative;
-  // min-height: 70vh;
   top: 0;
   left: 78px;
   width: calc(100% - 78px);
   transition: all 0.5s ease;
   z-index: 2;
+  min-height: 100vh;
+  overflow: hidden;
+  padding-bottom: 2rem;
 }
 
 .home-section .text {
