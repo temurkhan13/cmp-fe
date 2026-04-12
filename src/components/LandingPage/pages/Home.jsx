@@ -6,15 +6,26 @@ const Home = () => {
       style={{
         maxWidth: '1580px',
         margin: '0 auto',
-        backgroundColor: '#f9f9f9',
+        background: 'radial-gradient(circle at 50% 0%, rgba(195,225,29,0.08) 0%, transparent 50%), #f9f9f9',
+        overflow: 'visible',
       }}
     >
       <HeroSection />
-      <Main />
-      <Features />
-      <Pricing />
-      <Team />
-      <FAQs />
+      <div data-aos="fade-up">
+        <Main />
+      </div>
+      <div data-aos="fade-up">
+        <Features />
+      </div>
+      <div data-aos="fade-up">
+        <Pricing />
+      </div>
+      <div data-aos="fade-up">
+        <Team />
+      </div>
+      <div data-aos="fade-up">
+        <FAQs />
+      </div>
     </div>
   );
 };

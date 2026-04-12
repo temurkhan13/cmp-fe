@@ -406,14 +406,17 @@ function PlaybookList() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1rem',
-                    backgroundColor: '#f9f9f9',
-                    border: '1px solid #ddd',
+                    backgroundColor: '#fff',
+                    border: '1px solid rgba(0,0,0,0.06)',
                     padding: '2rem',
-                    borderRadius: '1rem',
+                    borderRadius: '12px',
                     margin: '0 1rem 1rem 0',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)',
                     cursor: 'pointer',
+                    transition: 'all 0.2s ease',
                   }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)'; }}
                   onClick={() => {
                     if (editingId !== pbId) navigate(`/playbook/${pbId}`);
                   }}

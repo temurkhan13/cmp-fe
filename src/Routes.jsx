@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
-// uuid removed — was causing full remounts on every navigation
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthLayout, PlainsLayout } from './layout';
 import LandingPage from './components/LandingPage/LandingPage';
 import Components from './components';
@@ -9,13 +8,33 @@ import Layout from './components/LandingPage/services/Layout';
 import Loader from './components/common/Loader';
 import PrivacyPolicy from './components/LandingPage/components/PrivacyPolicy';
 import Terms from './components/LandingPage/components/Terms';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const Routess = () => {
+const pageVariants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0 },
+};
+
+const pageTransition = {
+  duration: 0.2,
+  ease: 'easeOut',
+};
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
   return (
-    <>
-      <Router>
-        <Components.Feature.ScrollToTop />
-        <Routes>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+      >
+        <Routes location={location}>
           <Route path="/" element={<Layout />}>
             <Route
               path="/"
@@ -52,8 +71,17 @@ const Routess = () => {
             <Route path={el.path} element={<el.element />} key={el.path} />
           ))}
         </Routes>
-      </Router>
-    </>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const Routess = () => {
+  return (
+    <Router>
+      <Components.Feature.ScrollToTop />
+      <AnimatedRoutes />
+    </Router>
   );
 };
 export default Routess;

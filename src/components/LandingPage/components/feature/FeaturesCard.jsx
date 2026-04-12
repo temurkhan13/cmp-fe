@@ -16,20 +16,20 @@ const FeaturesCard = ({ img, title, desc }) => {
   align-items: flex-start;
   gap: 0.25rem;
   border-width: 2px;
-  border-radius: 20px;
+  border-radius: 16px;
   background-color: #ffffff;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   padding: 4rem;
-  border:none;
+  border: 1px solid rgba(0,0,0,0.06);
   gap:1rem;
-  box-shadow: 0px 1px 10px 0px #bfbfbf40;
-
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .featurecard:hover {
-  background-color: #c3e11d;
-  box-shadow: 0px 0px 5px gray;
-  scale: 1.01;
+  background-color: #fafff0;
+  border-color: rgba(195,225,29,0.3);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
 }
 
 .featurecard img {

@@ -57,68 +57,37 @@ const Pricing = () => {
   const navigate = useNavigate();
 
   return (
-    <section style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-      <h2 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+    <section className="pricing-section">
+      <h2 className="pricing-heading">
         Simple, Transparent Pricing
       </h2>
-      <p style={{ fontSize: '1.5rem', color: '#666', marginBottom: '3rem' }}>
+      <p className="pricing-subheading">
         Choose the plan that fits your change management needs
       </p>
 
-      <div style={{
-        display: 'flex',
-        gap: '2rem',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        maxWidth: '1200px',
-        margin: '0 auto',
-      }}>
-        {plans.map((plan) => (
+      <div className="pricing-grid">
+        {plans.map((plan, index) => (
           <div
             key={plan.name}
-            style={{
-              flex: '1 1 300px',
-              maxWidth: '380px',
-              border: plan.highlighted ? '2px solid #C3E11D' : '1px solid #ddd',
-              borderRadius: '1.5rem',
-              padding: '3rem 2rem',
-              background: plan.highlighted ? '#fafff0' : 'white',
-              boxShadow: plan.highlighted ? '0 8px 30px rgba(195,225,29,0.2)' : '0 2px 8px rgba(0,0,0,0.05)',
-              position: 'relative',
-              textAlign: 'left',
-            }}
+            className={`pricing-card ${plan.highlighted ? 'pricing-card--highlighted' : ''}`}
+            data-aos="fade-up"
+            data-aos-delay={index * 100}
           >
             {plan.highlighted && (
-              <div style={{
-                position: 'absolute',
-                top: '-12px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: '#C3E11D',
-                padding: '4px 16px',
-                borderRadius: '20px',
-                fontSize: '1.2rem',
-                fontWeight: '600',
-              }}>
+              <div className="pricing-badge">
                 Most Popular
               </div>
             )}
-            <h3 style={{ fontSize: '2rem', fontWeight: '600', marginBottom: '0.5rem' }}>{plan.name}</h3>
-            <div style={{ marginBottom: '1rem' }}>
-              <span style={{ fontSize: '3rem', fontWeight: 'bold' }}>{plan.price}</span>
-              <span style={{ fontSize: '1.4rem', color: '#666' }}>{plan.period}</span>
+            <h3 className="pricing-plan-name">{plan.name}</h3>
+            <div className="pricing-price-row">
+              <span className="pricing-price">{plan.price}</span>
+              <span className="pricing-period">{plan.period}</span>
             </div>
-            <p style={{ fontSize: '1.3rem', color: '#666', marginBottom: '2rem' }}>{plan.description}</p>
+            <p className="pricing-description">{plan.description}</p>
 
-            <ul style={{ listStyle: 'none', padding: 0, marginBottom: '2rem' }}>
+            <ul className="pricing-features">
               {plan.features.map((feature, i) => (
-                <li key={i} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontSize: '1.3rem',
-                  marginBottom: '0.75rem',
-                }}>
+                <li key={i} className="pricing-feature-item">
                   <FaCheck style={{ color: '#C3E11D', flexShrink: 0 }} />
                   {feature}
                 </li>
@@ -127,22 +96,154 @@ const Pricing = () => {
 
             <button
               onClick={() => navigate('/sign-up')}
-              style={{
-                width: '100%',
-                padding: '1rem',
-                borderRadius: '2rem',
-                border: 'none',
-                background: plan.highlighted ? '#C3E11D' : '#f0f0f0',
-                fontWeight: '600',
-                fontSize: '1.4rem',
-                cursor: 'pointer',
-              }}
+              className={`pricing-cta ${plan.highlighted ? 'pricing-cta--primary' : ''}`}
             >
               {plan.cta}
             </button>
           </div>
         ))}
       </div>
+
+      <style>{`
+        .pricing-section {
+          padding: 4rem 2rem;
+          text-align: center;
+        }
+
+        .pricing-heading {
+          font-size: clamp(2rem, 3vw, 3rem);
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+        }
+
+        .pricing-subheading {
+          font-size: 1.5rem;
+          color: #6b7280;
+          margin-bottom: 3rem;
+        }
+
+        .pricing-grid {
+          display: flex;
+          gap: 2rem;
+          justify-content: center;
+          flex-wrap: wrap;
+          max-width: 1200px;
+          margin: 0 auto;
+          align-items: stretch;
+        }
+
+        .pricing-card {
+          flex: 1 1 300px;
+          max-width: 380px;
+          border: 1px solid rgba(0,0,0,0.08);
+          border-radius: 1.5rem;
+          padding: 3rem 2rem;
+          background: white;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+          position: relative;
+          text-align: left;
+          transition: all 0.25s ease;
+        }
+
+        .pricing-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card--highlighted {
+          border: 2px solid #C3E11D;
+          background: linear-gradient(135deg, #fefff0, #fff);
+          box-shadow: 0 8px 30px rgba(195,225,29,0.15);
+          transform: scale(1.02);
+        }
+
+        .pricing-card--highlighted:hover {
+          transform: scale(1.02) translateY(-4px);
+          box-shadow: 0 12px 36px rgba(195,225,29,0.25);
+        }
+
+        .pricing-badge {
+          position: absolute;
+          top: -12px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #C3E11D;
+          padding: 4px 16px;
+          border-radius: 9999px;
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
+
+        .pricing-plan-name {
+          font-size: 2rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .pricing-price-row {
+          margin-bottom: 1rem;
+        }
+
+        .pricing-price {
+          font-size: 3rem;
+          font-weight: bold;
+        }
+
+        .pricing-period {
+          font-size: 1.4rem;
+          color: #6b7280;
+        }
+
+        .pricing-description {
+          font-size: 1.3rem;
+          color: #6b7280;
+          margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+          list-style: none;
+          padding: 0;
+          margin-bottom: 2rem;
+        }
+
+        .pricing-feature-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1.3rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .pricing-cta {
+          width: 100%;
+          padding: 1rem;
+          border-radius: 2rem;
+          border: none;
+          background: #f0f0f0;
+          font-weight: 600;
+          font-size: 1.4rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .pricing-cta:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .pricing-cta:active {
+          transform: translateY(0) scale(0.98);
+        }
+
+        .pricing-cta--primary {
+          background: #C3E11D;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .pricing-cta--primary:hover {
+          box-shadow: 0 4px 12px rgba(195,225,29,0.4);
+        }
+      `}</style>
     </section>
   );
 };

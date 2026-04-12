@@ -15,11 +15,11 @@ function App() {
   useEffect(() => {
     Aos.init({
       disable: false,
-      offset: 100,
+      offset: 80,
       delay: 0,
-      duration: 4000,
-      easing: 'ease',
-      once: false,
+      duration: 800,
+      easing: 'ease-out-cubic',
+      once: true,
       mirror: false,
     });
   }, []);

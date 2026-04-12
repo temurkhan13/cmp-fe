@@ -109,12 +109,14 @@ const Footer = () => {
 
         .footer-section a {
           text-decoration: none;
-          color: black;
+          color: #6b7280;
           transition: color 0.2s ease;
+          font-size: 1.3rem;
+          line-height: 2;
         }
 
         .footer-section a:hover {
-          text-decoration: underline;
+          color: #111;
         }
 
         .footer-bottom {

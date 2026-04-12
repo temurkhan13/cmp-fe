@@ -4,9 +4,9 @@ import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
-    <div className="md:px-10 px-5">
+    <div style={{ position: 'relative', overflow: 'visible' }}>
       <Navbar />
-      <main className="flex flex-col items-center justify-center">
+      <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'visible' }}>
         <Outlet />
       </main>
       <Footer />

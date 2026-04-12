@@ -120,6 +120,13 @@ const RAGUpload = () => {
         </div>
       )}
 
+      {files.length === 0 && results.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#9ca3af' }}>
+          <p style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>No documents uploaded yet</p>
+          <p style={{ fontSize: '1.2rem' }}>Upload files to train your AI Assistant with custom knowledge.</p>
+        </div>
+      )}
+
       {results.length > 0 && (
         <div className="results">
           {results.map((r, i) => (
@@ -160,7 +167,14 @@ const RAGUpload = () => {
         }
         .drop-zone:hover, .drop-zone.active {
           border-color: #C3E11D;
-          background: #fafff0;
+          background: rgba(195,225,29,0.05);
+        }
+        .drop-zone:hover svg, .drop-zone.active svg {
+          animation: gentle-bounce 1s ease infinite;
+        }
+        @keyframes gentle-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
         }
         .drop-zone p {
           font-size: 1.4rem;

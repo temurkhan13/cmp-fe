@@ -133,7 +133,11 @@ const Navbar = () => {
           padding: 10px 20px;
           z-index: 1000;
           margin-top:1rem;
-          background-color: #f9f9f9;
+          background: rgba(249,249,249,0.85);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(0,0,0,0.06);
+          transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         .navbar-container {
@@ -209,6 +213,8 @@ const Navbar = () => {
           display: flex;
           align-items: center;
           gap: 5px;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          transition: all 0.2s ease;
         }
 
         .btn:hover {
@@ -216,7 +222,12 @@ const Navbar = () => {
         }
 
         .btn-primary:hover {
-          /* Optional: Add styles for hover effect if needed */
+          box-shadow: 0 4px 12px rgba(195,225,29,0.4);
+          transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+          transform: translateY(0) scale(0.98);
         }
 
         /* Dropdown styles */
