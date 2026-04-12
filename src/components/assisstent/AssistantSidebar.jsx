@@ -88,7 +88,7 @@ const AssistantSidebar = (props) => {
       {isVersionHistoryModalOpen && (
         <SideBarModal
           title="Version History"
-          bodyContent={<VersionHistory versions={currentChat.versions} />}
+          bodyContent={<VersionHistory versions={currentChat?.versions || []} />}
           onClose={closeModal}
         />
       )}
@@ -108,7 +108,7 @@ const AssistantSidebar = (props) => {
       {isCommentsModalOpen && (
         <SideBarModal
           title="Comments"
-          bodyContent={<Comments comments={currentChat.comments} />}
+          bodyContent={<Comments comments={currentChat?.comments || []} />}
           onClose={closeModal}
         />
       )}
@@ -223,6 +223,8 @@ AssistantSidebar.defaultProps = {
   currentChat: {
     bookmarks: [],
     generalMessages: [],
+    comments: [],
+    versions: [],
   },
 };
 

@@ -24,6 +24,8 @@ import {
   MessagesSection,
   NewChat,
 } from '../../components/assisstent/index.js';
+import Modal from '../../components/common/Modal';
+import Questionnaire from '../../modules/assessment/Questionnaire';
 
 const AiAssistantChat = () => {
   const dispatch = useDispatch();
@@ -41,6 +43,7 @@ const AiAssistantChat = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [isFetched, setIsFetched] = useState(false);
+  const [isSurveyOpen, setIsSurveyOpen] = useState(false);
 
   // Memoize active workspace for optimization
   const activeWorkspace = useMemo(
@@ -141,15 +144,32 @@ const AiAssistantChat = () => {
   return (
     <div className="assessmentChat">
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '0.75rem',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0.5rem 1rem', borderBottom: '1px solid #eee', background: '#fff',
       }}>
-        <IoArrowBack
-          size={20}
-          style={{ cursor: 'pointer', color: '#555' }}
-          onClick={() => navigate(-1)}
-        />
-        <span style={{ fontSize: '0.9rem', color: '#555' }}>Back</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <IoArrowBack
+            size={20}
+            style={{ cursor: 'pointer', color: '#555' }}
+            onClick={() => navigate(-1)}
+          />
+          <span style={{ fontSize: '0.9rem', color: '#555' }}>Back</span>
+        </div>
+        <span
+          style={{
+            fontSize: '1.2rem',
+            fontWeight: '500',
+            color: '#00316E',
+            cursor: 'pointer',
+            padding: '0.5rem 1.2rem',
+            borderRadius: '0.6rem',
+            border: '1px solid #ddd',
+            background: '#f9f9f9',
+          }}
+          onClick={() => setIsSurveyOpen(true)}
+        >
+          Survey Info
+        </span>
       </div>
       <section>
         <NewChat />
@@ -163,6 +183,17 @@ const AiAssistantChat = () => {
           type="error"
           onClose={() => setShowNotification(false)}
         />
+      )}
+      {isSurveyOpen && (
+        <Modal
+          title="User Questionnaire"
+          isOpen={isSurveyOpen}
+          onClose={() => setIsSurveyOpen(false)}
+        >
+          <Questionnaire
+            handleCloseImproveResponseModal={() => setIsSurveyOpen(false)}
+          />
+        </Modal>
       )}
     </div>
   );
