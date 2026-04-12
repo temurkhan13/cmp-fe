@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
 import CustomModal from '../customModal/CustomModal';
 import { truncateText } from '../../utils/helperFunction';
+import config from '../../config/config';
 import {
   useMoveToTrashMutation,
   useGetWorkspacesQuery,
@@ -129,11 +130,23 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
               {openDropdown === folder && (
                 <div className="dropdown-menuu" ref={dropdownRef}>
                   <div
+                    className="dropdown-itemm"
+                    onClick={() => {
+                      const newName = prompt('Rename project:', folder.folderName);
+                      if (newName && newName.trim()) {
+                        const token = localStorage.getItem('token');
+                        fetch(`${config.apiURL}/workspace/${workspace.id}/folder/${folder.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                          body: JSON.stringify({ folderName: newName.trim() }),
+                        }).then(() => { onFolderUpdate(); setOpenDropdown(null); });
+                      }
+                    }}
+                  >
+                    Rename
+                  </div>
+                  <div
                     className="dropdown-itemm deletee"
-                    // onClick={() => {
-                    //   handleDeleteWorkspace(workspace.id);
-                    //   setOpenDropdown(null); // Close dropdown after delete
-                    // }}
                     onClick={handleProceedMoveToTrash}
                   >
                     Delete
