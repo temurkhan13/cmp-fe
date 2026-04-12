@@ -103,7 +103,7 @@ const Editor = ({
 
       // Update the editor content with Markdown
       setContent(response?.content); // Ensure safe fallback
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleReportDownload = async () => {
@@ -126,7 +126,7 @@ const Editor = ({
       // Clean up
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const reportHtml = ReactDOMServer.renderToStaticMarkup(
@@ -143,7 +143,7 @@ const Editor = ({
       link.href = URL.createObjectURL(blob);
       link.download = 'document.docx';
       link.click();
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const config = useMemo(
@@ -300,7 +300,7 @@ const Editor = ({
               const id = data._id || data.id;
               if (id) window.location.href = `/playbook/${id}`;
             }
-          } catch (e) { console.error('Create playbook error:', e); }
+          } catch (e) { import.meta.env.DEV && console.error('Create playbook error:', e); }
         }} style={{ padding: '6px 14px', border: '1px solid #00316f', borderRadius: '6px', background: '#f0f5ff', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, color: '#00316f' }}>
           Create Playbook
         </button>

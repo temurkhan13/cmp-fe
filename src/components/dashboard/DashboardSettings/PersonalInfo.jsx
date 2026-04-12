@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
 import config from '../../../config/config.js';
@@ -15,6 +15,7 @@ const PersonalInfo = () => {
     currentUser?.companyName || ''
   );
   const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -140,13 +141,14 @@ const PersonalInfo = () => {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <input
             type="file"
+            ref={fileInputRef}
             onChange={handleImageUpload}
             className="upload-input"
             accept="image/png, image/jpeg, image/gif"
           />
           <button
             type="button"
-            onClick={() => document.querySelector('.upload-input').click()}
+            onClick={() => fileInputRef.current?.click()}
             className="upload-button"
           >
             Upload Image

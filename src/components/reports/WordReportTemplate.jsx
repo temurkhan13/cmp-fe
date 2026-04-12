@@ -1,4 +1,5 @@
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Sidebarlogo from '@assets/dashboard/sidebarLogo.png';
@@ -140,7 +141,7 @@ const WordReportTemplate = ({ content, title }) => {
       {pages.map((pageContent, index) => (
         <ContentPageContainer
           key={index}
-          dangerouslySetInnerHTML={{ __html: pageContent }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(pageContent) }}
         />
       ))}
     </div>

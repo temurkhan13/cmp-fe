@@ -7,6 +7,7 @@ import TrashAssessment from './TrashAssessment';
 import TrashSitemap from './TrashSitemap';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTrashItems } from '../../redux/slices/trashSlice.js';
+import { SkeletonCard } from '../common/Skeleton';
 
 const TrashModule = () => {
   const dispatch = useDispatch();
@@ -68,7 +69,7 @@ const TrashModule = () => {
         </button>
       </div>
       <div className="content">
-        {isLoading && <p>Loading...</p>}
+        {isLoading && <SkeletonCard count={4} />}
         {error && <p>{error}</p>}
         {!isLoading && !error && (
           <>

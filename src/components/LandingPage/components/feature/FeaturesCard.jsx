@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 const FeaturesCard = ({ img, title, desc }) => {
   return (
     <div className="featurecard">
-      <img className="image" src={img} alt="" />
+      <img className="image" src={img} alt={title} />
       <div className="featurecontent">
         <h2 className="title">{title}</h2>
         <p className="description">{desc}</p>

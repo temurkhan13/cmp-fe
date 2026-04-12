@@ -150,13 +150,6 @@ const NewChat = () => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  useEffect(() => {}, [
-    currentFolder,
-    currentChat,
-    currentWorkspace,
-    chats,
-    selectedFolder,
-  ]);
 
   useEffect(() => {
     const chatContainer = chatContainerRef.current;

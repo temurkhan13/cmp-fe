@@ -22,6 +22,23 @@ apiClient.interceptors.request.use(
   }
 );
 
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('accessToken');
+      if (window.location.pathname !== '/log-in' && window.location.pathname !== '/sign-up') {
+        window.location.href = '/log-in';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const setToken = (token) => {
   localStorage.setItem('token', token);
 };

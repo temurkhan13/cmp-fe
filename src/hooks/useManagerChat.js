@@ -179,7 +179,7 @@ const useManagerChat = () => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   // Function to download a chat as a PDF (example)
@@ -197,7 +197,7 @@ const useManagerChat = () => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   useEffect(() => {

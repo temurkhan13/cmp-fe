@@ -328,7 +328,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
           fileText = fileText.substring(0, 30000) + '\n[...truncated...]';
         }
       } catch (e) {
-        console.error('File extraction error:', e);
+        import.meta.env.DEV && console.error('File extraction error:', e);
       }
     }
 

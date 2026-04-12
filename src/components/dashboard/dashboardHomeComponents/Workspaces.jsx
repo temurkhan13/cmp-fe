@@ -85,7 +85,7 @@ const Workspaces = ({
 
       // Show success message
       showSuccess('Workspace created successfully!');
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleWorkspaceSwitch = (workspace) => {
@@ -106,7 +106,7 @@ const Workspaces = ({
       setOpenDropdown(false);
       onWorkspaceUpdated();
       showSuccess('Workspace moved to trash successfully!'); // Show success message
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
   const toggleDropdown = (index) => {
     setOpenDropdown((prevIndex) => (prevIndex === index ? null : index));
@@ -445,7 +445,7 @@ const ModalSections = ({
       }).unwrap();
       setIsRenaming(false);
       showSuccess('Workspace renamed successfully!'); // Show success message
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleMoveToTrash = async () => {
@@ -457,7 +457,7 @@ const ModalSections = ({
       setIsModalOpen(false);
       onWorkspaceUpdated();
       showSuccess('Workspace moved to trash successfully!'); // Show success message
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   return (

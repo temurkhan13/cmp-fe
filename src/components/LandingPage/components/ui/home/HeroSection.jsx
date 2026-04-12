@@ -7,8 +7,8 @@ const HeroSection = () => {
 
   return (
     <div class="container">
-      <img class="main-bg" src={MainBg} alt="" />
-      <img class="dotted-bg" src={DottedBg} alt="" />
+      <img class="main-bg" src={MainBg} alt="ChangeAI platform illustration" />
+      <img class="dotted-bg" src={DottedBg} alt="" role="presentation" />
       <div class="content">
         <h1 class="hero-text">
           Transforming the <br /> future of <br /> Documentation

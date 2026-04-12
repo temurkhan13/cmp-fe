@@ -56,7 +56,7 @@ const TrashWorkspaceTab = ({ workspaces }) => {
     try {
       await dispatch(restoreFromTrash({ type: 'workspace', id }));
       dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleDeletePermanently = async (id) => {
@@ -68,7 +68,7 @@ const TrashWorkspaceTab = ({ workspaces }) => {
       } else {
         dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
       }
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleClickOutside = (event) => {

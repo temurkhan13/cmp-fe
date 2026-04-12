@@ -159,7 +159,7 @@ const TrashAssessment = () => {
       );
       dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
       setShowDropdown(false);
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleDelete = async (assessmentId) => {
@@ -172,7 +172,7 @@ const TrashAssessment = () => {
       } else {
         dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
       }
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const renderTrashItems = (assessments, type) =>

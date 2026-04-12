@@ -67,7 +67,6 @@ const MyAssessmentComp = () => {
         folderId: folder.id || folder._id,
       })
     );
-    console.log('CURRENT FOLDER', assessmentData);
     setAssessmentData(assessmentData);
 
     try {

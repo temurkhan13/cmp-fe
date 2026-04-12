@@ -37,7 +37,7 @@ const SetPassword = () => {
       // Store the token in localStorage
       //   localStorage.setItem('token', response.data.tokens.access.token);
       //   navigate('/verify-email', { state: { email: registrationData.email } });
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
 
     // await register(allDetails, values.password);
     setSubmitting(false);

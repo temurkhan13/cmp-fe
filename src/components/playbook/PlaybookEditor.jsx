@@ -58,7 +58,7 @@ function PlaybookEditor() {
       if (data.accent_color) setAccentColor(data.accent_color);
       if (data.logo_url) setLogoUrl(data.logo_url);
     } catch (err) {
-      console.error('Fetch playbook error:', err);
+      import.meta.env.DEV && console.error('Fetch playbook error:', err);
     } finally {
       setLoading(false);
     }
@@ -81,7 +81,7 @@ function PlaybookEditor() {
         }
       );
     } catch (err) {
-      console.error('Save error:', err);
+      import.meta.env.DEV && console.error('Save error:', err);
     } finally {
       setSaving(false);
     }
@@ -106,7 +106,7 @@ function PlaybookEditor() {
       const data = await res.json();
       return data.content || data.message || '';
     } catch (err) {
-      console.error('Inspire error:', err);
+      import.meta.env.DEV && console.error('Inspire error:', err);
       return '';
     }
   };
@@ -129,7 +129,7 @@ function PlaybookEditor() {
         await fetchPlaybook();
       }
     } catch (err) {
-      console.error('Add stage error:', err);
+      import.meta.env.DEV && console.error('Add stage error:', err);
     } finally {
       setAddingStage(false);
     }
@@ -145,7 +145,7 @@ function PlaybookEditor() {
       });
       await fetchPlaybook();
     } catch (err) {
-      console.error('Delete stage error:', err);
+      import.meta.env.DEV && console.error('Delete stage error:', err);
     }
   };
 
@@ -171,7 +171,7 @@ function PlaybookEditor() {
         body: JSON.stringify({ stageOrder }),
       });
     } catch (err) {
-      console.error('Reorder error:', err);
+      import.meta.env.DEV && console.error('Reorder error:', err);
       await fetchPlaybook();
     }
   };
@@ -186,7 +186,7 @@ function PlaybookEditor() {
       });
       setBrandingOpen(false);
     } catch (err) {
-      console.error('Branding save error:', err);
+      import.meta.env.DEV && console.error('Branding save error:', err);
     }
   };
 
@@ -309,7 +309,7 @@ function PlaybookEditor() {
 
       doc.save(`${playbook?.name || 'playbook'}.pdf`);
     } catch (err) {
-      console.error('PDF export error:', err);
+      import.meta.env.DEV && console.error('PDF export error:', err);
       alert('PDF export failed: ' + err.message);
     }
   };
@@ -446,7 +446,7 @@ function PlaybookEditor() {
 
       pptx.writeFile({ fileName: `${playbook?.name || 'playbook'}.pptx` });
     } catch (err) {
-      console.error('PPTX export error:', err);
+      import.meta.env.DEV && console.error('PPTX export error:', err);
       alert('PowerPoint export failed: ' + err.message);
     }
   };
@@ -500,7 +500,7 @@ function PlaybookEditor() {
       link.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Excel export error:', err);
+      import.meta.env.DEV && console.error('Excel export error:', err);
       alert('Excel export failed: ' + err.message);
     }
   };

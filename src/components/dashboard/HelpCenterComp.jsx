@@ -30,8 +30,6 @@ const HelpCenterComp = () => {
   };
 
   const handleSubmit = () => {
-    console.log('Email:', email);
-    console.log('Description:', description);
     // Add your form submission logic here
     handleCloseModal(); // Close modal after submission
     setModalOpenn(true);
