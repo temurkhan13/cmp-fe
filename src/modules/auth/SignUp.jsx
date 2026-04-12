@@ -4,7 +4,10 @@ import Components from '../../components';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { signinWithGoogle } from './SignInWithGoogle';
+import assets from '../../assets/index.js';
 
 import { useDispatch } from 'react-redux';
 import {
@@ -18,6 +21,8 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, isLoading, error } = useSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const initialValues = {
     email: '',
     firstName: '',
@@ -62,6 +67,22 @@ const SignUp = () => {
         <Components.Feature.Text className="primary--light">
           Please enter the following information in order to sign up
         </Components.Feature.Text>
+        <section className="mbt_Tertiary">
+          <Components.Feature.Button
+            className="auth mb_Secondary"
+            icon={assets.auth.google}
+            onClick={signinWithGoogle}
+          >
+            Continue with Google
+          </Components.Feature.Button>
+        </section>
+        <div className="mb_Tertiary">
+          <span></span>
+          <Components.Feature.Text className="secondary--light">
+            or
+          </Components.Feature.Text>
+          <span></span>
+        </div>
       </header>
       <section>
         <Formik
@@ -96,18 +117,28 @@ const SignUp = () => {
                 place="Enter your Company Name"
                 type="text"
               />
-              <Components.Feature.FormInput
-                type="password"
-                name="password"
-                label="Password"
-                place="Enter Password"
-              />
-              <Components.Feature.FormInput
-                name="confirmPassword"
-                label="Confirm Password"
-                place="Enter Confirm Password"
-                type="password"
-              />
+              <div className="password-input-wrapper">
+                <Components.Feature.FormInput
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  label="Password"
+                  place="Enter Password"
+                />
+                <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                </span>
+              </div>
+              <div className="password-input-wrapper">
+                <Components.Feature.FormInput
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  place="Enter Confirm Password"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                />
+                <span className="password-toggle-icon" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                </span>
+              </div>
 
               {error && <p style={{ color: 'red' }}>{error}</p>}
               <Components.Feature.Button
@@ -115,7 +146,7 @@ const SignUp = () => {
                 type="submit"
                 disabled={isLoading || error} // Disable based on form validity, loading state, or error
               >
-                {isLoading ? 'Signing up...' : 'Submit'}
+                {isLoading ? 'Creating account...' : 'Create Account'}
               </Components.Feature.Button>
             </Form>
           )}
@@ -136,6 +167,23 @@ const SignUp = () => {
           </Link>
         </Components.Feature.Text>
       </center>
+      <style>{`
+        .password-input-wrapper {
+          position: relative;
+        }
+        .password-toggle-icon {
+          position: absolute;
+          top: 70%;
+          right: 10px;
+          cursor: pointer;
+          transform: translateY(-50%);
+          font-size: 1.2rem;
+          color: #555;
+        }
+        .password-toggle-icon:hover {
+          color: #1e90ff;
+        }
+      `}</style>
     </Components.Feature.Container>
   );
 };

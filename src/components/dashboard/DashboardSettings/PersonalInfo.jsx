@@ -135,7 +135,7 @@ const PersonalInfo = () => {
       <hr />
       <div className="upload-section">
         <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}>
-          {!avatar && 'SR'}
+          {!avatar && `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase()}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <input
