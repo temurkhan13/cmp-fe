@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
+import config from '../../../config/config.js';
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
@@ -248,7 +249,7 @@ const PersonalInfo = () => {
             if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
             try {
               const token = localStorage.getItem('token');
-              const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://twoconnectv1-backend.onrender.com/api/v1'}/auth/delete-account`, {
+              const res = await fetch(`${config.apiURL}/auth/delete-account`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` },
               });

@@ -30,12 +30,14 @@ export const workspaceApi = createApi({
         method: 'PATCH',
         body: workspace,
       }),
+      invalidatesTags: ['Workspace'],
     }),
     removeWorkspace: builder.mutation({
       query: (workspaceId) => ({
         url: `workspace/${workspaceId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Workspace'],
     }),
 
     // Folders
@@ -45,6 +47,7 @@ export const workspaceApi = createApi({
         method: 'POST',
         body: { folderName, businessInfo },
       }),
+      invalidatesTags: ['Workspace'],
     }),
     updateFolder: builder.mutation({
       query: ({ workspaceId, folder }) => ({
@@ -52,12 +55,14 @@ export const workspaceApi = createApi({
         method: 'PUT',
         body: folder,
       }),
+      invalidatesTags: ['Workspace'],
     }),
     removeFolder: builder.mutation({
       query: ({ workspaceId, folderId }) => ({
         url: `workspace/${workspaceId}/folders/${folderId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Workspace'],
     }),
 
     // Chats
@@ -67,6 +72,7 @@ export const workspaceApi = createApi({
         method: 'POST',
         // body: chat,
       }),
+      invalidatesTags: ['Workspace'],
     }),
 
     // Query to fetch the full chat object
@@ -345,10 +351,10 @@ export const workspaceApi = createApi({
       }),
     }),
     updateComment: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, comment }) => ({
-        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${comment.commentId}`,
-        method: 'PUT',
-        body: 'text:' + { comment },
+      query: ({ workspaceId, folderId, chatId, commentId, text }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/comment/${commentId}`,
+        method: 'PATCH',
+        body: { text },
       }),
     }),
     removeComment: builder.mutation({

@@ -22,7 +22,7 @@ function App() {
       once: false,
       mirror: false,
     });
-  });
+  }, []);
 
   return (
     <>

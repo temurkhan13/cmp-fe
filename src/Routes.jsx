@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+// uuid removed — was causing full remounts on every navigation
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthLayout, PlainsLayout } from './layout';
 import LandingPage from './components/LandingPage/LandingPage';
@@ -30,26 +30,26 @@ const Routess = () => {
           </Route>
           <Route path="" element={<AuthLayout />}>
             {data.routes.authRoutesData.map((el) => (
-              <Route path={el.path} element={<el.element />} key={uuidv4()} />
+              <Route path={el.path} element={<el.element />} key={el.path} />
             ))}
           </Route>
           <Route path="" element={<PlainsLayout />}>
             {data.routes.plainRoutesData.map((el) => (
-              <Route path={el.path} element={<el.element />} key={uuidv4()} />
+              <Route path={el.path} element={<el.element />} key={el.path} />
             ))}
           </Route>
 
           {data.routes.assessmentRoutesData.map((el) => (
-            <Route path={el.path} element={<el.element />} key={uuidv4()} />
+            <Route path={el.path} element={<el.element />} key={el.path} />
           ))}
           {data.routes.assisstantRoutesData.map((el) => (
-            <Route path={el.path} element={<el.element />} key={uuidv4()} />
+            <Route path={el.path} element={<el.element />} key={el.path} />
           ))}
           {data.routes.dashboardRoutesData.map((el) => (
-            <Route path={el.path} element={<el.element />} key={uuidv4()} />
+            <Route path={el.path} element={<el.element />} key={el.path} />
           ))}
           {data.routes.sitemapRoutesData.map((el) => (
-            <Route path={el.path} element={<el.element />} key={uuidv4()} />
+            <Route path={el.path} element={<el.element />} key={el.path} />
           ))}
         </Routes>
       </Router>
