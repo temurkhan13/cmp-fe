@@ -114,7 +114,8 @@ const NewChat = () => {
 
   const handleAddChat = () => {
     dispatch(setCurrentChatId(null));
-    navigate('/assistant/chat');
+    // Navigate with unique state key to force re-render even on same path
+    navigate('/assistant/chat', { state: { newChat: Date.now() } });
   };
 
   const switchFolder = (folder) => {

@@ -180,6 +180,7 @@ const MessagesSection = ({ setCurrentChat }) => {
   const [askAi, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
   const [showCommentPopup, setShowCommentPopup] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
 
   const { fixGrammar } = useGrammarFix();
   const { improveWriting } = useImproveWriting();
@@ -771,10 +772,51 @@ const MessagesSection = ({ setCurrentChat }) => {
                                 <div key={ci} style={{
                                   display: 'flex', alignItems: 'center', gap: '0.4rem',
                                   padding: '0.3rem 0', fontSize: '0.85rem', color: '#666',
+                                  position: 'relative',
+                                  group: 'comment',
                                 }}>
                                   <FaCommentAlt style={{ fontSize: '0.65rem', color: '#aaa' }} />
-                                  <span style={{ fontWeight: 600, color: '#555' }}>{c.userName || 'You'}:</span>
-                                  <span>{c.text}</span>
+                                  {editingCommentId === (c._id || c.id) ? (
+                                    <input
+                                      autoFocus
+                                      defaultValue={c.text}
+                                      onKeyDown={async (e) => {
+                                        if (e.key === 'Enter') {
+                                          const token = localStorage.getItem('token');
+                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/comment/${c._id || c.id}`, {
+                                            method: 'PATCH',
+                                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                                            body: JSON.stringify({ text: e.target.value }),
+                                          });
+                                          setEditingCommentId(null);
+                                          refetch();
+                                        }
+                                        if (e.key === 'Escape') setEditingCommentId(null);
+                                      }}
+                                      onBlur={() => setEditingCommentId(null)}
+                                      style={{ border: '1px solid #ddd', borderRadius: '4px', padding: '2px 6px', fontSize: '0.85rem', flex: 1 }}
+                                    />
+                                  ) : (
+                                    <>
+                                      <span style={{ fontWeight: 600, color: '#555' }}>{c.userName || c.user_name || 'You'}:</span>
+                                      <span style={{ flex: 1 }}>{c.text}</span>
+                                      <span
+                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#007bff', marginLeft: '0.5rem' }}
+                                        onClick={() => setEditingCommentId(c._id || c.id)}
+                                      >Edit</span>
+                                      <span
+                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#c00', marginLeft: '0.3rem' }}
+                                        onClick={async () => {
+                                          const token = localStorage.getItem('token');
+                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/comment/${c._id || c.id}`, {
+                                            method: 'DELETE',
+                                            headers: { Authorization: `Bearer ${token}` },
+                                          });
+                                          refetch();
+                                        }}
+                                      >Delete</span>
+                                    </>
+                                  )}
                                 </div>
                               ))}
                             </div>
