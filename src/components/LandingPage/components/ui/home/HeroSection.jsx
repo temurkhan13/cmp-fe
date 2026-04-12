@@ -104,12 +104,13 @@ const HeroSection = () => {
 
       @media (min-width: 1280px) {
           .hero-text {
-              font-size: 90px;
-              line-height: 100px;
+              font-size: clamp(40px, 5vw, 72px);
+              line-height: 1.1;
+              letter-spacing: -0.02em;
           }
           .content{
           margin-top: 100px;
-          gap:50px; 
+          gap:50px;
           }
       }
 
@@ -120,11 +121,22 @@ const HeroSection = () => {
           background-color: #C3E11D;
           padding: 10px 30px;
           font-weight: 600;
-          padding: 10px 30px;
-          font-size: 1.4rem !important; 
+          font-size: 1.4rem !important;
           border-radius: 9999px;
           z-index: 10;
           border:none;
+          cursor: pointer;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          transition: all 0.2s ease;
+      }
+
+      .demo-button:hover {
+          box-shadow: 0 4px 12px rgba(195,225,29,0.4);
+          transform: translateY(-1px);
+      }
+
+      .demo-button:active {
+          transform: translateY(0) scale(0.98);
       }
 
       /* Responsive adjustments */

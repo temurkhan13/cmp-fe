@@ -103,17 +103,17 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
 
         {data.status === 'completed' ? (
           <div
-            style={{ backgroundColor: '#C3E11D', color: 'black' }}
+            style={{ backgroundColor: 'rgba(34,197,94,0.1)', color: '#15803d' }}
             className="card-badge"
           >
             Completed
           </div>
         ) : data.status === 'in-progress' ? (
-          <div style={{ backgroundColor: 'orange' }} className="card-badge">
+          <div style={{ backgroundColor: 'rgba(59,130,246,0.1)', color: '#2563eb' }} className="card-badge">
             In Progress
           </div>
         ) : data.status === 'pending' ? (
-          <div style={{ backgroundColor: 'red' }} className="card-badge">
+          <div style={{ backgroundColor: 'rgba(234,179,8,0.1)', color: '#a16207' }} className="card-badge">
             Pending
           </div>
         ) : (

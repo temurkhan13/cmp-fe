@@ -191,13 +191,32 @@ const DashboardLayout = ({ children }) => {
       <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`
+        .navlist a {
+          color: #4b5563 !important;
+          text-decoration: none !important;
+        }
+        .navlist a:visited {
+          color: #4b5563 !important;
+        }
+        .navlist a:hover {
+          color: #1f2937 !important;
+        }
+        .navlist a:hover .link_namee {
+          background: rgba(0,0,0,0.04);
+          border-radius: 8px;
+        }
         .navlist .active-link {
-          background-color: #f0f0f0; /* Active link background color */
-          color: #00316f;
-          font-weight: bold;
+          color: #0B1444 !important;
+          font-weight: 600;
         }
         .navlist .active-link .link_namee {
-          background-color: #f0f0f0; /* Active link text color */
+          background: rgba(195,225,29,0.15);
+          border-radius: 8px;
+        }
+        .link_namee {
+          padding: 8px 12px;
+          border-radius: 8px;
+          transition: all 0.15s ease;
         }
       `}</style>
     </>

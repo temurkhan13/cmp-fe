@@ -25,7 +25,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "formik": "^2.4.6",
-    "framer-motion": "^11.2.6",
+    "framer-motion": "^11.18.2",
     "html-to-pdfmake": "^2.5.15",
     "htmlparser2": "^9.1.0",
     "jodit": "^4.2.27",

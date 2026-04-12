@@ -373,10 +373,16 @@ const PersonalInfo = () => {
           width: 100%;
           padding: 1rem;
           font-size: 1.4rem;
-          border: 0.1rem solid #ddd;
-          border-radius: 1rem;
+          border: 1px solid #ddd;
+          border-radius: 10px;
           outline: none;
           margin-bottom: 0.5rem;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .input-wrapper input:focus {
+          border-color: #C3E11D;
+          box-shadow: 0 0 0 3px rgba(195,225,29,0.12);
         }
 
         .input-error {

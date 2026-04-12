@@ -115,15 +115,19 @@ const TrashModule = () => {
           outline: none;
           font-size: 1.6rem;
           font-weight: 500;
-          color: #555;
-          transition: color 0.3s, border-bottom 0.3s;
+          color: #6b7280;
+          border-bottom: 2px solid transparent;
+          transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+          border-radius: 6px 6px 0 0;
         }
         .tab:hover {
-          color: #000;
+          color: #111;
+          background: rgba(0,0,0,0.03);
         }
         .tab.active {
-          color: black;
-          border-bottom: 3px solid black;
+          color: #111;
+          font-weight: 600;
+          border-bottom: 2px solid #C3E11D;
         }
         .content {
           margin-top: 9rem;

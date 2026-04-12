@@ -65,6 +65,7 @@ const Features = () => {
           color: #00316f;
           text-align: center;
           margin: 0.9375rem 0;
+          font-size: clamp(2rem, 3vw, 3rem);
         }
 
         .features-grid {

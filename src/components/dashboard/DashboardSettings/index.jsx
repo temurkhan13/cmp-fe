@@ -59,29 +59,32 @@ const SettingsTabs = () => {
       }
         .tabs {
           display: flex;
-          justify-content: space-around;
-          border-bottom: 0.0625rem solid #0B1444;
+          gap: 1rem;
+          border-bottom: 1px solid rgba(0,0,0,0.06);
           margin-bottom: 1rem;
+          padding: 0 2rem;
         }
 
         .tabs button {
-          padding: 0.625rem;
+          padding: 0.625rem 1rem;
           background: none;
           border: none;
           cursor: pointer;
           font-size: 1.5rem;
           font-weight: 400;
-          color: #555;
-          transition: color 0.3s ease;
+          color: #6b7280;
+          border-bottom: 2px solid transparent;
+          transition: color 0.15s ease, border-color 0.15s ease;
         }
 
         .tabs button:hover {
-          color: #0B1444;
+          color: #111;
         }
 
         .tabs button.active {
-          color: #000;
-          border-bottom: 0.125rem solid #0B1444;
+          color: #111;
+          font-weight: 600;
+          border-bottom: 2px solid #C3E11D;
         }
 
         .tab-content {
