@@ -783,7 +783,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       onKeyDown={async (e) => {
                                         if (e.key === 'Enter') {
                                           const token = localStorage.getItem('token');
-                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/comment/${c._id || c.id}`, {
+                                          const msgId = c.messageId || c.message_id || message._id;
+                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`, {
                                             method: 'PATCH',
                                             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                                             body: JSON.stringify({ text: e.target.value }),
@@ -808,7 +809,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                         style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#c00', marginLeft: '0.3rem' }}
                                         onClick={async () => {
                                           const token = localStorage.getItem('token');
-                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/comment/${c._id || c.id}`, {
+                                          const msgId = c.messageId || c.message_id || message._id;
+                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`, {
                                             method: 'DELETE',
                                             headers: { Authorization: `Bearer ${token}` },
                                           });
