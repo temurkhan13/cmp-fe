@@ -825,27 +825,36 @@ const MessagesSection = ({ setCurrentChat }) => {
                                     </>
                                   )}
                                   {replyingCommentId === (c._id || c.id) && (
-                                    <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.3rem', marginLeft: '1.5rem' }}>
+                                    <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.3rem', marginLeft: '1.5rem', width: '100%' }}>
                                       <input
                                         autoFocus
-                                        placeholder="Write a reply..."
+                                        placeholder="Write a reply... (Enter to send)"
                                         onKeyDown={async (e) => {
                                           if (e.key === 'Enter' && e.target.value.trim()) {
-                                            const token = localStorage.getItem('token');
-                                            const msgId = c.messageId || c.message_id || message._id;
-                                            await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}/reply`, {
-                                              method: 'POST',
-                                              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                                              body: JSON.stringify({ text: e.target.value }),
-                                            });
-                                            setReplyingCommentId(null);
-                                            refetch();
+                                            const val = e.target.value;
+                                            e.target.disabled = true;
+                                            try {
+                                              const token = localStorage.getItem('token');
+                                              const msgId = c.messageId || c.message_id || message._id;
+                                              await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}/reply`, {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                                                body: JSON.stringify({ text: val }),
+                                              });
+                                              setReplyingCommentId(null);
+                                              refetch();
+                                            } catch (err) {
+                                              e.target.disabled = false;
+                                            }
                                           }
                                           if (e.key === 'Escape') setReplyingCommentId(null);
                                         }}
-                                        onBlur={() => setReplyingCommentId(null)}
-                                        style={{ border: '1px solid #ddd', borderRadius: '4px', padding: '2px 6px', fontSize: '0.8rem', flex: 1 }}
+                                        style={{ border: '1px solid #ddd', borderRadius: '4px', padding: '4px 8px', fontSize: '0.85rem', flex: 1 }}
                                       />
+                                      <span
+                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#999', alignSelf: 'center' }}
+                                        onClick={() => setReplyingCommentId(null)}
+                                      >Cancel</span>
                                     </div>
                                   )}
                                 </div>
