@@ -85,9 +85,11 @@ const DashboardHomeComp = () => {
   const [error, setError] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const [activeWorkspace, setActiveWorkspace] = useState(null);
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
+      setIsFetching(true);
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
         const activeWorkspace =
@@ -98,7 +100,8 @@ const DashboardHomeComp = () => {
         setActiveWorkspace(activeWorkspace);
         handleWorkspaceChange(activeWorkspace);
         // }
-      } catch {}
+      } catch (err) { if (import.meta.env.DEV) console.error(err); }
+      finally { setIsFetching(false); }
     };
     fetchStats();
   }, [dispatch]);
@@ -201,9 +204,7 @@ const DashboardHomeComp = () => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
 
-  const isInitialLoad = !dashboardStats?.workspaces;
-
-  if (isInitialLoad) {
+  if (isFetching) {
     return (
       <div className="dashboard">
         <SkeletonStatCards />

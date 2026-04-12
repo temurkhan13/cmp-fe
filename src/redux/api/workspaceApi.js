@@ -349,6 +349,7 @@ export const workspaceApi = createApi({
         method: 'POST',
         body: { text },
       }),
+      invalidatesTags: ['Workspace'],
     }),
     updateComment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, commentId, text }) => ({
@@ -356,12 +357,14 @@ export const workspaceApi = createApi({
         method: 'PATCH',
         body: { text },
       }),
+      invalidatesTags: ['Workspace'],
     }),
     removeComment: builder.mutation({
       query: ({ workspaceId, folderId, chatId, commentId }) => ({
         url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Workspace'],
     }),
 
     // Replies
@@ -371,6 +374,7 @@ export const workspaceApi = createApi({
         method: 'POST',
         body: reply,
       }),
+      invalidatesTags: ['Workspace'],
     }),
     updateReply: builder.mutation({
       query: ({

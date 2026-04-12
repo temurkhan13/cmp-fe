@@ -1,76 +1,57 @@
-import React from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 
 const Accordian = (props) => {
-  const { title, desc, isOpen, onClick } = props; // Destructure props
+  const { title, desc, isOpen, onClick } = props;
 
   return (
-    <div className="accordion">
-      <div className="accordion-header" onClick={onClick}>
+    <div
+      style={{
+        borderRadius: '8px',
+        marginBottom: '15px',
+        backgroundColor: '#f9f9f9',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        onClick={onClick}
+        style={{
+          padding: '15px 25px',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontWeight: 'bold',
+          backgroundColor: '#fff',
+          borderBottom: '1px solid #ddd',
+          position: 'relative',
+          fontSize: '1.5rem',
+        }}
+      >
         {title}
-        <FaArrowRight className={isOpen ? 'icon-rotate' : 'icon'} />
+        <FaArrowRight
+          style={{
+            fontSize: '18px',
+            position: 'absolute',
+            right: '15px',
+            transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
       </div>
-      <div className={`accordion-body ${isOpen ? 'open' : ''}`}>{desc}</div>
-      <style>
-        {`
-          .accordion {
-            border-radius: 8px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-          }
-
-          .accordion:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-          }
-
-          .accordion-header {
-            padding: 15px 25px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            transition: background-color 0.3s ease;
-            position: relative;
-          }
-
-          .accordion-header:hover {
-            background-color: #f1f1f1;
-          }
-
-          .accordion-body {
-            padding: 0 25px;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: all 0.5s ease, opacity 0.3s ease-out;
-          }
-
-          .accordion-body.open {
-            max-height: 500px;
-            opacity: 1;
-            padding: 15px 25px;
-          }
-
-          .icon {
-            font-size: 18px;
-            transition: transform 0.3s ease-out;
-            position: absolute;
-            right: 15px;
-          }
-
-          .icon-rotate {
-            font-size: 18px;
-            position: absolute;
-            right: 15px;
-            transform: rotate(90deg);
-          }
-        `}
-      </style>
+      <div
+        style={{
+          maxHeight: isOpen ? '500px' : '0',
+          opacity: isOpen ? 1 : 0,
+          padding: isOpen ? '15px 25px' : '0 25px',
+          overflow: 'hidden',
+          transition: 'max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease',
+          fontSize: '1.4rem',
+          lineHeight: '1.6',
+        }}
+      >
+        {desc}
+      </div>
     </div>
   );
 };
