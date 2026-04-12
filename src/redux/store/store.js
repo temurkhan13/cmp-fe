@@ -63,7 +63,9 @@ const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['workspaces'],
+  whitelist: ['workspaces', 'auth'],
+  // Note: workspaces slice is persisted but volatile IDs (currentChatId etc.)
+  // are refreshed on mount via fetchDashboardStats
 };
 
 // Persisted reducers
