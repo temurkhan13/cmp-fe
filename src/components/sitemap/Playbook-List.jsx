@@ -60,6 +60,7 @@ function PlaybookList() {
   const [createMessage, setCreateMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const selectedWorkspace = useSelector(selectWorkspace);
 
   // Fetch playbooks from digital playbook endpoint
@@ -190,7 +191,24 @@ function PlaybookList() {
           flexDirection: 'column',
         }}
       >
-        <section className="generate" style={{ marginTop: '2rem' }}>
+        <div style={{ padding: '0 1rem', marginBottom: '0.5rem', marginTop: '2rem' }}>
+          <input
+            type="text"
+            placeholder="Search playbooks..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              maxWidth: '300px',
+              padding: '8px 12px',
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              fontSize: '1.2rem',
+              outline: 'none',
+            }}
+          />
+        </div>
+        <section className="generate" style={{ marginTop: '1rem' }}>
           <div className="container">
             <div
               style={{
@@ -371,7 +389,12 @@ function PlaybookList() {
               margin: '16px 3rem',
             }}
           >
-            {sortedPlaybooks.map((pb) => {
+            {sortedPlaybooks
+              .filter((pb) => {
+                if (!searchQuery.trim()) return true;
+                return (pb.name || pb.sitemapName || '').toLowerCase().includes(searchQuery.toLowerCase());
+              })
+              .map((pb) => {
               const pbId = pb._id || pb.id;
               const pbUpdated = pb.updated_at || pb.updatedAt || pb.created_at || pb.createdAt;
               return (

@@ -5,22 +5,22 @@ import { Accordian } from '../../feature/Index.js'; // Adjust path to your asset
 const accordianData = [
   {
     title: 'Is there a free trial available?',
-    desc: "Yes, you can try us for free for 30 days. If you want, we'll provide you with a free 30-minute onboarding call to get you up and running. Book a call here.",
+    desc: "Yes, we offer a free Starter plan that lets you explore the AI Assistant, run up to 3 assessments per month, and create your first Digital Playbook — no credit card required.",
     count: 1,
   },
   {
     title: 'Can I change my plan later?',
-    desc: "Yes, you can try us for free for 30 days. If you want, we'll provide you with a free 30-minute onboarding call to get you up and running. Book a call here.",
+    desc: "Absolutely. You can upgrade or downgrade your plan at any time from the Plan & Billing section in your dashboard. Changes take effect immediately and billing is adjusted accordingly.",
     count: 2,
   },
   {
     title: 'How does support work?',
-    desc: "Yes, you can try us for free for 30 days. If you want, we'll provide you with a free 30-minute onboarding call to get you up and running. Book a call here.",
+    desc: "You can reach our support team through the Help Center in your dashboard, or by emailing support@changeai.com. Professional and Enterprise plans include priority support with faster response times.",
     count: 3,
   },
   {
     title: 'Do you provide tutorials?',
-    desc: "Yes, you can try us for free for 30 days. If you want, we'll provide you with a free 30-minute onboarding call to get you up and running. Book a call here.",
+    desc: "Yes, our Help Center includes step-by-step guides for every feature — from running your first AI assessment to building a Digital Playbook. We also offer onboarding sessions for Enterprise customers.",
     count: 4,
   },
 ];

@@ -46,7 +46,7 @@ const DashboardLayout = ({ children }) => {
     { path: '/dashboard', name: 'Dashboard', Icon: <MdDashboard /> },
     {
       path: '/dashboard/AiAssistant',
-      name: 'Ai Assistant',
+      name: 'AI Assistant',
       Icon: <IoIosChatboxes />,
     },
     {

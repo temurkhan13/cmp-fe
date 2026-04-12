@@ -4,7 +4,7 @@ import Header from '../../components/dashboard/Header';
 
 const radioOptions = [
   {
-    label: 'AI Assisstant',
+    label: 'AI Assistant',
     checkboxes: [
       'Version History',
       'Gallery',
