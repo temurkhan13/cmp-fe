@@ -824,6 +824,16 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       >Reply</span>
                                     </>
                                   )}
+                                  {c.replies && c.replies.length > 0 && (
+                                    <div style={{ marginLeft: '1.5rem', borderLeft: '2px solid #eee', paddingLeft: '0.5rem', marginTop: '0.2rem' }}>
+                                      {c.replies.map((r, ri) => (
+                                        <div key={ri} style={{ fontSize: '0.8rem', color: '#777', padding: '0.15rem 0' }}>
+                                          <span style={{ fontWeight: 600, color: '#555' }}>{r.userName || r.user_name || 'User'}:</span>{' '}
+                                          <span>{r.text}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
                                   {replyingCommentId === (c._id || c.id) && (
                                     <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.3rem', marginLeft: '1.5rem', width: '100%' }}>
                                       <input
