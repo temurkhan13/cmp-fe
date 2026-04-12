@@ -84,26 +84,26 @@ const HelpCenterComp = () => {
       content: (
         <div>
           <p>The AI Assistant is your smart, AI-powered chatbot for change management support.</p>
-          <h4 style={{ marginTop: ‘1rem’ }}>Real-Time Assistance</h4>
-          <ul style={{ paddingLeft: ‘1.5rem’, marginTop: ‘0.5rem’ }}>
+          <h4 style={{ marginTop: '1rem' }}>Real-Time Assistance</h4>
+          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
             <li>Get instant, AI-powered responses to change management questions</li>
             <li>Upload documents for contextual analysis and guidance</li>
           </ul>
-          <h4 style={{ marginTop: ‘1rem’ }}>Quick Actions</h4>
-          <ul style={{ paddingLeft: ‘1.5rem’, marginTop: ‘0.5rem’ }}>
+          <h4 style={{ marginTop: '1rem' }}>Quick Actions</h4>
+          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
             <li><strong>Change Tone:</strong> Adjust message tone for different audiences</li>
             <li><strong>Comment & Bookmark:</strong> Annotate and save key conversations</li>
             <li><strong>Inspire Me:</strong> Get AI-generated suggestions and prompts</li>
           </ul>
-          <h4 style={{ marginTop: ‘1rem’ }}>Chat Management</h4>
-          <ul style={{ paddingLeft: ‘1.5rem’, marginTop: ‘0.5rem’ }}>
+          <h4 style={{ marginTop: '1rem' }}>Chat Management</h4>
+          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
             <li>Switch between projects within the chat</li>
             <li>Access recent conversations from the left panel</li>
             <li>Search and filter your chat history</li>
           </ul>
         </div>
       ),
-      style: { backgroundColor: ‘#f8f9fa’, padding: ‘2rem’, borderRadius: ‘8px’ },
+      style: { backgroundColor: '#f8f9fa', padding: '2rem', borderRadius: '8px' },
     },
     {
       id: 'assessment',
@@ -113,13 +113,13 @@ const HelpCenterComp = () => {
           <p>
             The AI Assessment module helps you create, customize, and download
             comprehensive change management reports tailored to your
-            organization’s needs. This tool simplifies the assessment process,
+            organization's needs. This tool simplifies the assessment process,
             making it easier for users to generate insightful reports with
-            minimal effort. Here’s how it works: Step-by-Step Assessment
+            minimal effort. Here's how it works: Step-by-Step Assessment
             Journey: Start by selecting an assessment from a library of 24
             change management reports. The Change AI bot will guide you through
-            a series of questions to help build your report. If you’re unsure of
-            any answers, use the “Inspire Me” button to get ideas and guidance.
+            a series of questions to help build your report. If you're unsure of
+            any answers, use the "Inspire Me" button to get ideas and guidance.
             Customizable Report Editor: After answering the questions, the
             generated report can be opened in an intuitive editor. Modify,
             enhance, and personalize the report to better fit your
