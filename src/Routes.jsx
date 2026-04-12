@@ -8,6 +8,8 @@ import Layout from './components/LandingPage/services/Layout';
 import Loader from './components/common/Loader';
 import PrivacyPolicy from './components/LandingPage/components/PrivacyPolicy';
 import Terms from './components/LandingPage/components/Terms';
+import NotFound from './components/common/NotFound';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const pageVariants = {
@@ -70,6 +72,7 @@ const AnimatedRoutes = () => {
           {data.routes.sitemapRoutesData.map((el) => (
             <Route path={el.path} element={<el.element />} key={el.path} />
           ))}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -80,7 +83,9 @@ const Routess = () => {
   return (
     <Router>
       <Components.Feature.ScrollToTop />
-      <AnimatedRoutes />
+      <ErrorBoundary>
+        <AnimatedRoutes />
+      </ErrorBoundary>
     </Router>
   );
 };

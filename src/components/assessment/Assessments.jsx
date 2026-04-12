@@ -55,7 +55,7 @@ const Assessments = ({ handleAssessmentSelect, folderID }) => {
             ]);
           }
         })
-        .catch((e) => console.log('Version history fetch error:', e));
+        .catch((e) => { if (import.meta.env.DEV) console.error('Version history fetch error:', e); });
     }
   }, [activeIcon, assessmentId]);
 

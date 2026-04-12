@@ -443,7 +443,7 @@ const SitemapLayoutFlow = ({ id }) => {
     setPromptVisible(false);
 
     if (!res || !res.id || !res.stages) {
-      console.error('Sitemap creation failed — invalid response:', res);
+      import.meta.env.DEV && console.error('Sitemap creation failed — invalid response:', res);
       return;
     }
 
@@ -641,7 +641,7 @@ const SitemapLayoutFlow = ({ id }) => {
                     alert('Failed to convert sitemap to playbook');
                   }
                 } catch (err) {
-                  console.error('Convert error:', err);
+                  import.meta.env.DEV && console.error('Convert error:', err);
                   alert('Failed to convert: ' + err.message);
                 } finally {
                   setConvertingPlaybook(false);

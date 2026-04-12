@@ -121,7 +121,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   const currentFolder = useSelector(selectSelectedFolder);
   const currentChat = useSelector(selectCurrentChat);
 
-  useEffect(() => {}, [currentFolder, currentChat, currentWorkspace]);
 
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
@@ -283,7 +282,7 @@ const MessagesSection = ({ setCurrentChat }) => {
         // Refetch the chat to get the latest data from the server
         await refetch();
       } catch (error) {
-        console.error('Failed to update message:', error);
+        import.meta.env.DEV && console.error('Failed to update message:', error);
       }
 
       setPopupVisible(false);
@@ -361,7 +360,7 @@ const MessagesSection = ({ setCurrentChat }) => {
         refetch();
       }
     } catch (error) {
-      console.error('HandleAskAi error:', error);
+      import.meta.env.DEV && console.error('HandleAskAi error:', error);
     } finally {
       setLoading(false);
     }
@@ -511,7 +510,7 @@ const MessagesSection = ({ setCurrentChat }) => {
       setText('');
       setFile(null);
     } catch (error) {
-      console.error('Send message error:', error);
+      import.meta.env.DEV && console.error('Send message error:', error);
     } finally {
       setLoading(false);
     }

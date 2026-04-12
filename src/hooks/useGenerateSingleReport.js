@@ -17,7 +17,7 @@ const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
         }
       );
       return response.data.report;
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   return { error, GenerateSingleReport };

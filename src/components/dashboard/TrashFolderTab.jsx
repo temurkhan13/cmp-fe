@@ -32,7 +32,7 @@ const FolderCard = ({ folder }) => {
       await dispatch(restoreFromTrash({ type: 'folder', id: folder._id }));
       dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
       setShowDropdown(false);
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleDeleteClick = () => {
@@ -51,7 +51,7 @@ const FolderCard = ({ folder }) => {
       } else {
         dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
       }
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleCancelDelete = () => setShowDeleteModal(false);

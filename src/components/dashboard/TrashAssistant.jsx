@@ -24,7 +24,7 @@ const TrashItemCard = ({ name, type, dateDeleted, chat }) => {
       await dispatch(restoreFromTrash({ type: 'chat', id: chat._id }));
       dispatch(fetchTrashItemsAsync()); // Re-fetch the data after restore
       setShowDropdown(false);
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleDeleteClick = async (id) => {
@@ -38,7 +38,7 @@ const TrashItemCard = ({ name, type, dateDeleted, chat }) => {
       } else {
         dispatch(fetchTrashItemsAsync()); // Re-fetch the data after deletion
       }
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
 
   const handleCancelDelete = () => setShowDeleteModal(false);

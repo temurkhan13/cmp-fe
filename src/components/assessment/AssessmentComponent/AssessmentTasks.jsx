@@ -58,7 +58,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
           const singleAssessment = await getAssessment(id);
           setAssessmentData(singleAssessment);
         }
-      } catch (error) {}
+      } catch (error) { if (import.meta.env.DEV) console.error(error); }
     };
     getAssessments();
   }, [workspaceId, folderId]);

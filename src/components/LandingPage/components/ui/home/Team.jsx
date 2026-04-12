@@ -11,7 +11,7 @@ const Team = () => {
       </h2>
       <div className="both">
         <div>
-          <img width={'100%'} src={video} alt="" />
+          <img width={'100%'} src={video} alt="ChangeAI platform demo" />
         </div>
         <div className="slide flex flex-col">
           <div className="div1">
@@ -24,9 +24,9 @@ const Team = () => {
             </h2>
           </div>
           <div className="div2">
-            <img src={teamslide1} alt="" />
-            <img src={teamslide2} alt="" />
-            <img src={teamslide1} alt="" />
+            <img src={teamslide1} alt="Platform feature preview" />
+            <img src={teamslide2} alt="Platform feature preview" />
+            <img src={teamslide1} alt="Platform feature preview" />
           </div>
         </div>
       </div>

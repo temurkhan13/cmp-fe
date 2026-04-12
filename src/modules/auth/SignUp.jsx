@@ -37,7 +37,7 @@ const SignUp = () => {
     try {
       await dispatch(register({ registrationData: values }));
       //navigate('/dashboard');
-    } catch (error) {}
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
 
     setSubmitting(false);
   };
@@ -52,9 +52,10 @@ const SignUp = () => {
 
   useEffect(() => {
     if (error) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         dispatch(resetError());
       }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [dispatch, error]);
 

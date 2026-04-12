@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import { BsFilePlayFill } from 'react-icons/bs';
 
 import './styles/DashboardHome.css';
+import { SkeletonCard, SkeletonStatCards } from '../../common/Skeleton';
 
 const SectionGrid = ({ title, items, itemType, onRemove }) => {
   const navigate = useNavigate();
@@ -199,6 +200,18 @@ const DashboardHomeComp = () => {
   const handleDataUpdated = useCallback(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
+
+  const isInitialLoad = !dashboardStats?.workspaces;
+
+  if (isInitialLoad) {
+    return (
+      <div className="dashboard">
+        <SkeletonStatCards />
+        <SkeletonCard count={3} />
+        <SkeletonCard count={3} />
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">

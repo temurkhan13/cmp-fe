@@ -71,7 +71,6 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   // }, [moveToTrash, selectedFolder, refetch, onFolderUpdate, closeModal]);
 
   const handleProceedMoveToTrash = async () => {
-    console.log('IDDD', folderId);
     try {
       await moveToTrash({
         entityType: 'folder',

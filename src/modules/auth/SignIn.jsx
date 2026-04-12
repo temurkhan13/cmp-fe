@@ -59,7 +59,7 @@ const SignIn = () => {
 
       try {
         await dispatch(googleLogin({ accessToken, navigate, refreshToken }));
-      } catch (error) {}
+      } catch (error) { if (import.meta.env.DEV) console.error(error); }
     }
   };
 

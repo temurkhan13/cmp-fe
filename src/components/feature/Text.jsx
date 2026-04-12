@@ -1,10 +1,15 @@
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 const Text = (props) => {
+  const sanitizedHtml = props.dangerouslySetInnerHTML
+    ? { __html: DOMPurify.sanitize(props.dangerouslySetInnerHTML.__html || '') }
+    : undefined;
+
   return (
     <p
       className={`text text-${props.className}`}
-      dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}
+      dangerouslySetInnerHTML={sanitizedHtml}
       data-aos={props.animation}
       data-aos-duration={props.duration}
       onClick={props.onClick}

@@ -79,7 +79,7 @@ function PlaybookList() {
         }
       }
     } catch (err) {
-      console.error('Fetch playbooks error:', err);
+      import.meta.env.DEV && console.error('Fetch playbooks error:', err);
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ function PlaybookList() {
         }
       }
     } catch (err) {
-      console.error('Create playbook error:', err);
+      import.meta.env.DEV && console.error('Create playbook error:', err);
     } finally {
       setCreating(false);
     }
@@ -146,7 +146,7 @@ function PlaybookList() {
         })
       );
     } catch (err) {
-      console.error('Rename error:', err);
+      import.meta.env.DEV && console.error('Rename error:', err);
     } finally {
       setEditingId(null);
     }
@@ -162,7 +162,7 @@ function PlaybookList() {
       });
       setPlaybooks((prev) => prev.filter((p) => (p._id || p.id) !== id));
     } catch (err) {
-      console.error('Delete error:', err);
+      import.meta.env.DEV && console.error('Delete error:', err);
     }
   };
 
