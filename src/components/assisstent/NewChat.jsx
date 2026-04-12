@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Components from '@components';
 import NewChatSidebarModal from '../customModal/NewChatSidebarModal';
 import { truncateText } from '../../utils/helperFunction.js';
@@ -34,6 +35,7 @@ import {
 } from '../../redux/slices/folderSlice.js';
 
 const NewChat = () => {
+  const navigate = useNavigate();
   const projects = useSelector(selectAllFolders);
 
   const [loading, setLoading] = useState(false);
@@ -112,8 +114,7 @@ const NewChat = () => {
 
   const handleAddChat = () => {
     dispatch(setCurrentChatId(null));
-    // Force re-render by navigating to base chat URL
-    window.location.href = '/assistant/chat';
+    navigate('/assistant/chat');
   };
 
   const switchFolder = (folder) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { SideBarModal } from '../common';
 import PropTypes from 'prop-types';
 
@@ -12,6 +12,23 @@ import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 const AssistantSidebar = (props) => {
   const currentChat = props?.currentChat;
   const [bookmarksShow, setBookmarksShow] = useState([]);
+
+  // Aggregate comments from all messages (backend attaches them per-message)
+  const allComments = useMemo(() => {
+    if (!currentChat?.generalMessages) return [];
+    return currentChat.generalMessages
+      .filter((msg) => msg.comments && msg.comments.length > 0)
+      .flatMap((msg) =>
+        msg.comments.map((c) => ({
+          ...c,
+          commentId: c._id || c.id,
+          userName: c.userName || c.user_name || 'User',
+          text: c.text || c.comment || '',
+          timestamp: c.created_at || c.createdAt || '',
+          replies: c.replies || [],
+        }))
+      );
+  }, [currentChat?.generalMessages]);
 
   const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
     useState(false);
@@ -108,7 +125,7 @@ const AssistantSidebar = (props) => {
       {isCommentsModalOpen && (
         <SideBarModal
           title="Comments"
-          bodyContent={<Comments comments={currentChat?.comments || []} />}
+          bodyContent={<Comments comments={allComments} />}
           onClose={closeModal}
         />
       )}
