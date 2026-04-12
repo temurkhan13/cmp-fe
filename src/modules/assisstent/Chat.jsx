@@ -45,6 +45,16 @@ const AiAssistantChat = () => {
   const [isFetched, setIsFetched] = useState(false);
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
 
+  // Sync Redux chatId with URL param to prevent stale ID API calls
+  const reduxChatId = useSelector((state) => state.workspaces.currentChatId);
+  useEffect(() => {
+    if (chatId && chatId !== reduxChatId) {
+      dispatch(setCurrentChatId(chatId));
+    } else if (!chatId && reduxChatId) {
+      dispatch(setCurrentChatId(null));
+    }
+  }, [chatId]);
+
   // Memoize active workspace for optimization
   const activeWorkspace = useMemo(
     () => selectedWorkspace || allWorkspaces?.[0],
