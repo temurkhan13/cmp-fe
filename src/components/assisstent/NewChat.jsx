@@ -112,10 +112,8 @@ const NewChat = () => {
 
   const handleAddChat = () => {
     dispatch(setCurrentChatId(null));
-    // Update URL to reflect new chat state
-    const currentUrl = window.location.pathname;
-    const baseUrl = currentUrl.replace(/\/assistant\/chat\/[^/]+$/, '/assistant/chat/new');
-    window.history.replaceState(null, '', baseUrl);
+    // Force re-render by navigating to base chat URL
+    window.location.href = '/assistant/chat';
   };
 
   const switchFolder = (folder) => {
