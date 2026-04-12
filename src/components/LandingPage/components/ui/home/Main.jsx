@@ -57,11 +57,11 @@ const Main = () => {
 
   return (
     <div className="main-container">
-      <h1 className="heading-small hidden lg:block">
+      <h2 className="heading-small hidden lg:block">
         Develop your documentation
         <br /> with <span />
         <span className="change-ai-heading">Change AI</span>
-      </h1>
+      </h2>
       <div className="content-grid">
         <div className="card-grid">
           {cards.map((x) => (
@@ -91,7 +91,7 @@ const Main = () => {
 
         @media (min-width: 1024px) {
           .main-container {
-            margin-top: 45rem;
+            margin-top: 4.5rem;
           }
         }
 

@@ -6,7 +6,7 @@ const MainCard = (props) => {
       onMouseLeave={props.onMouseLeave}
     >
       <div className="border-content">
-        <h1>{props.title}</h1>
+        <h3>{props.title}</h3>
         <p className="paragraph">{props.desc}</p>
       </div>
       <style>

@@ -3,7 +3,7 @@ import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <div className="footer-container">
+    <footer className="footer-container">
       <div className="footer-content">
         <div className="footer-sections">
           <div className="footer-brand">
@@ -34,9 +34,9 @@ const Footer = () => {
             ))}
           </div>
           <div className="footer-socials">
-            <SocialIcon href="#" icon={<FaFacebook />} />
-            <SocialIcon href="#" icon={<FaInstagram />} />
-            <SocialIcon href="#" icon={<FaTwitter />} />
+            <SocialIcon href="#" icon={<FaFacebook />} label="Facebook" />
+            <SocialIcon href="#" icon={<FaInstagram />} label="Instagram" />
+            <SocialIcon href="#" icon={<FaTwitter />} label="Twitter" />
           </div>
         </div>
       </div>
@@ -157,13 +157,20 @@ const Footer = () => {
         .footer-socials a:hover {
           color: #000;
         }
+        .footer-bottom-links a {
+          color: #333;
+          text-decoration: none;
+        }
+        .footer-bottom-links a:hover {
+          text-decoration: underline;
+        }
       `}</style>
-    </div>
+    </footer>
   );
 };
 
-const SocialIcon = ({ href, icon }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" className="footer-icon">
+const SocialIcon = ({ href, icon, label }) => (
+  <a href={href} target="_blank" rel="noopener noreferrer" className="footer-icon" aria-label={label}>
     {icon}
   </a>
 );
@@ -172,11 +179,11 @@ const footerLinks = [
   {
     title: 'Product',
     links: [
-      { label: 'Login', href: '/login' },
+      { label: 'Login', href: '/log-in' },
       { label: 'Pricing', href: '/pricing' },
-      { label: 'AI Assistant', href: '/login' },
-      { label: 'Assessments', href: '/login' },
-      { label: 'Digital Playbook', href: '/login' },
+      { label: 'AI Assistant', href: '/log-in' },
+      { label: 'Assessments', href: '/log-in' },
+      { label: 'Digital Playbook', href: '/log-in' },
     ],
   },
   {
@@ -184,13 +191,12 @@ const footerLinks = [
     links: [
       { label: 'About Us', href: '#' },
       { label: 'Contact', href: '#contact' },
-      { label: 'Help Center', href: '/login' },
     ],
   },
   {
     title: 'Support',
     links: [
-      { label: 'Help Center', href: '/login' },
+      { label: 'Help Center', href: '/log-in' },
       { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Terms & Conditions', href: '/terms' },
     ],
@@ -206,7 +212,7 @@ const footerLinks = [
 ];
 
 const bottomLinks = [
-  { label: '© 2025 Change.ai Inc', href: '#' },
+  { label: '© 2026 ChangeAI Inc', href: '#' },
   { label: 'Privacy Notice', href: '/privacy-policy' },
   { label: 'Terms of Service', href: '/terms' },
 ];

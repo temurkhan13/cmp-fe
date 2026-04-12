@@ -58,58 +58,52 @@ const HelpCenterComp = () => {
       title: 'Dashboard',
       content: (
         <div>
-          <p>
-            The Dashboard is your central hub for accessing key insights and
-            navigating through the Change AI application. It provides an
-            at-a-glance view of your ongoing projects, workspaces, and recent
-            activities, helping you stay organized and focused on your tasks.
-            Key features include: Quick Stats: Displays essential metrics for
-            Workspaces, Projects, Recent AI Assistants, AI Assessments, Digital
-            Playbook, and the Current Plan. Allows you to instantly assess your
-            progress and identify areas that need attention. Workspace
-            Management: Create and delete workspaces directly from the dashboard
-            with a single click, making it easy to set up new projects or remove
-            outdated ones. Keep your workspaces organized and relevant to your
-            current goals. Recent Chats and Navigation: Access your recent chats
-            directly from the dashboard, allowing you to quickly pick up where
-            you left off. Helps streamline your workflow by minimizing the need
-            to search for ongoing conversations and recent actions. With the
-            Dashboard, you can manage your activities in one place, saving time
-            and reducing the need to navigate through multiple sections.
-          </p>
+          <p>The Dashboard is your central hub for accessing key insights and navigating through ChangeAI.</p>
+          <h4 style={{ marginTop: '1rem' }}>Quick Stats</h4>
+          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+            <li>View metrics for Workspaces, Projects, AI Assistants, Assessments, and Digital Playbooks</li>
+            <li>Monitor your current plan and usage at a glance</li>
+          </ul>
+          <h4 style={{ marginTop: '1rem' }}>Workspace Management</h4>
+          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+            <li>Create and delete workspaces with a single click</li>
+            <li>Keep workspaces organised and relevant to your current goals</li>
+          </ul>
+          <h4 style={{ marginTop: '1rem' }}>Recent Activity</h4>
+          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+            <li>Access recent chats directly from the dashboard</li>
+            <li>Quickly pick up where you left off without navigating through multiple sections</li>
+          </ul>
         </div>
       ),
-      style: { backgroundColor: '#f0f8ff', padding: '2rem' },
+      style: { backgroundColor: '#f8f9fa', padding: '2rem', borderRadius: '8px' },
     },
     {
       id: 'assistant',
       title: 'AI Assistant',
       content: (
         <div>
-          <p>
-            The AI Assistant is your smart, AI-powered chatbot, designed to
-            support you with change management queries and provide on-the-spot
-            assistance for a variety of tasks. It’s packed with features that
-            enhance your interactions and improve efficiency: Real-Time
-            Assistance: Get instant responses to your change management
-            questions, powered by AI to deliver accurate and relevant answers.
-            Offers expert support at your fingertips, minimizing the time you
-            spend searching for information. Quick Action Options: Change Tone:
-            Instantly adjust the tone of selected messages to align with your
-            communication style or audience requirements. Comment and Bookmark:
-            Add comments or bookmark key conversations for easy reference in the
-            future. Switch Projects: Seamlessly switch between projects within
-            the chat, helping you stay organized and manage multiple projects
-            without losing track. Recent Chats Panel: View your recent
-            conversations in the left drawer, enabling you to quickly jump back
-            into previous discussions. Enhances productivity by keeping your
-            recent activities readily accessible. The AI Assistant is designed
-            to streamline your communication and optimize your workflow by
-            providing contextual support as you work.
-          </p>
+          <p>The AI Assistant is your smart, AI-powered chatbot for change management support.</p>
+          <h4 style={{ marginTop: ‘1rem’ }}>Real-Time Assistance</h4>
+          <ul style={{ paddingLeft: ‘1.5rem’, marginTop: ‘0.5rem’ }}>
+            <li>Get instant, AI-powered responses to change management questions</li>
+            <li>Upload documents for contextual analysis and guidance</li>
+          </ul>
+          <h4 style={{ marginTop: ‘1rem’ }}>Quick Actions</h4>
+          <ul style={{ paddingLeft: ‘1.5rem’, marginTop: ‘0.5rem’ }}>
+            <li><strong>Change Tone:</strong> Adjust message tone for different audiences</li>
+            <li><strong>Comment & Bookmark:</strong> Annotate and save key conversations</li>
+            <li><strong>Inspire Me:</strong> Get AI-generated suggestions and prompts</li>
+          </ul>
+          <h4 style={{ marginTop: ‘1rem’ }}>Chat Management</h4>
+          <ul style={{ paddingLeft: ‘1.5rem’, marginTop: ‘0.5rem’ }}>
+            <li>Switch between projects within the chat</li>
+            <li>Access recent conversations from the left panel</li>
+            <li>Search and filter your chat history</li>
+          </ul>
         </div>
       ),
-      style: { backgroundColor: '#faebd7', padding: '2rem' },
+      style: { backgroundColor: ‘#f8f9fa’, padding: ‘2rem’, borderRadius: ‘8px’ },
     },
     {
       id: 'assessment',

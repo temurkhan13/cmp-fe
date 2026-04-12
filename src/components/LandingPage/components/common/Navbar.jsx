@@ -128,11 +128,12 @@ const Navbar = () => {
           justify-content: center;
           align-items: center;
           font-weight: 600;
-          position: relative;
+          position: sticky;
+          top: 0;
           padding: 10px 20px;
           z-index: 1000;
           margin-top:1rem;
-          background-color:transparent !important;
+          background-color: #f9f9f9;
         }
 
         .navbar-container {

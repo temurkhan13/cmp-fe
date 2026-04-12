@@ -19,6 +19,7 @@ import TonePopup from '../../components/common/TonePopup';
 import CommentPopup from './CommentPopup';
 import { ScaleLoader } from 'react-spinners';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import useGrammarFix from '@hooks/AiFeatureHooks/useGrammarFix';
 import useSummarize from '@hooks/AiFeatureHooks/useSummarize';
 import useImproveWriting from '@hooks/AiFeatureHooks/useImproveWriting';
@@ -650,7 +651,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                           {/*<p className="heading">You</p>*/}
                           {message.text && (
                             <div className="msg" data-message-id={message._id}>
-                              <ReactMarkdown>{message.text}</ReactMarkdown>
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
                             </div>
                           )}
                           {message.file && (
@@ -764,7 +765,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                         <div className="ai-message">
                           {message && (
                             <div className="msg" data-message-id={message._id}>
-                              <ReactMarkdown>{message.text}</ReactMarkdown>
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
                             </div>
                           )}
                           {message.comments && message.comments.length > 0 && (
