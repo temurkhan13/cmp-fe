@@ -8,6 +8,7 @@ import './styles/DashboardCard.css';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { IoIosChatboxes } from 'react-icons/io';
+import AvatarGroup from '../../common/AvatarGroup';
 
 // Enum for item types
 const ItemTypeEnum = Object.freeze({
@@ -124,6 +125,9 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
             <h3>{truncateText(displayName, 20)}</h3>
             <p>Created on: {createdAt}</p>
           </div>
+          {data.sharedUsers?.length > 0 && (
+            <AvatarGroup users={data.sharedUsers} max={3} size={24} />
+          )}
         </div>
 
         <div className="actions" ref={menuRef}>
