@@ -1,63 +1,118 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FaUserCircle } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import apiClient from '../../../api/axios';
+import config from '../../../config/config';
+import toast from 'react-hot-toast';
 
-const AssessmentVersionHistory = ({ versions = [], onClose }) => {
+const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
+  const [versions, setVersions] = useState([]);
   const [selectedVersion, setSelectedVersion] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [restoring, setRestoring] = useState(false);
 
-  const closeModal = () => {
-    if (onClose) onClose();
-  };
+  useEffect(() => {
+    if (assessmentId) {
+      fetchVersions();
+    }
+  }, [assessmentId]);
 
-  const handleRestore = () => {
-    if (selectedVersion !== null) {
-      alert(`Version from "${versions[selectedVersion]?.date || 'selected date'}" would be restored. This feature requires backend integration.`);
-    } else {
-      alert('Please select a version to restore.');
+  const fetchVersions = async () => {
+    try {
+      const res = await apiClient.get(`${config.apiURL}/assessment/${assessmentId}/versions`);
+      setVersions(res.data || []);
+    } catch (err) {
+      if (import.meta.env.DEV) console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const safeVersions = Array.isArray(versions) ? versions : [];
+  const handleSaveVersion = async () => {
+    try {
+      await apiClient.post(`${config.apiURL}/assessment/${assessmentId}/version`);
+      toast.success('Current version saved');
+      fetchVersions();
+    } catch (err) {
+      toast.error('No report found to save as version');
+    }
+  };
+
+  const handleRestore = async () => {
+    if (selectedVersion === null) {
+      toast.error('Please select a version to restore');
+      return;
+    }
+    const version = versions[selectedVersion];
+    setRestoring(true);
+    try {
+      await apiClient.post(`${config.apiURL}/assessment/${assessmentId}/version/${version.id}/restore`);
+      toast.success(`Restored to version ${version.version_number}`);
+      if (onRestore) onRestore();
+      if (onClose) onClose();
+    } catch (err) {
+      toast.error('Failed to restore version');
+    } finally {
+      setRestoring(false);
+    }
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return 'N/A';
+    return new Date(dateStr).toLocaleString('en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+  };
 
   return (
     <div className="version-history">
-      {safeVersions.length === 0 ? (
-        <NoDataAvailable message="No version history available" />
+      {loading ? (
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>Loading versions...</div>
+      ) : versions.length === 0 ? (
+        <div style={{ padding: '1rem' }}>
+          <NoDataAvailable message="No version history available" />
+          <button className="save-version-btn" onClick={handleSaveVersion}>
+            Save Current as Version
+          </button>
+        </div>
       ) : (
         <>
-          <button className="current-version">Current Version</button>
+          <button className="save-version-btn" onClick={handleSaveVersion}>
+            Save Current Version
+          </button>
           <div className="versions-container">
-            {safeVersions.map((version, index) => (
+            {versions.map((version, index) => (
               <div
-                key={index}
-                className={`version ${index >= 3 ? 'blurred' : ''} ${selectedVersion === index ? 'selected' : ''}`}
-                onClick={() => index < 3 && setSelectedVersion(index)}
+                key={version.id}
+                className={`version ${selectedVersion === index ? 'selected' : ''}`}
+                onClick={() => setSelectedVersion(index)}
               >
-                {index >= 3 && <div className="Version-overlay"></div>}
-                {index >= 3 && (
-                  <button className="show-date-button">Upgrade</button>
-                )}
                 <div className="version-content">
-                  <p className="date">{version.date || 'N/A'}</p>
-                  <div className="users">
-                    {(version.users || []).map((user, i) => (
-                      <div key={i} className="user">
-                        <FaUserCircle className="icon" />
-                        <span className="user-name">{user.name || 'User'}</span>
-                      </div>
-                    ))}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <p className="date">{formatDate(version.created_at)}</p>
+                    <span style={{
+                      fontSize: '1.1rem',
+                      color: '#6b7280',
+                      background: '#f3f4f6',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                    }}>v{version.version_number}</span>
                   </div>
+                  <p style={{ fontSize: '1.2rem', color: '#6b7280', marginTop: '0.3rem' }}>
+                    {version.report_content?.substring(0, 80)}...
+                  </p>
                 </div>
               </div>
             ))}
           </div>
           <hr className="straight-Line" />
           <div className="footer-buttons">
-            <button className="cancel" onClick={closeModal}>
-              Cancel
+            <button className="cancel" onClick={onClose}>Cancel</button>
+            <button className="restore-version" onClick={handleRestore} disabled={restoring}>
+              {restoring ? 'Restoring...' : 'Restore Version'}
             </button>
-            <button className="restore-version" onClick={handleRestore}>Restore Version</button>
           </div>
         </>
       )}
@@ -68,133 +123,79 @@ const AssessmentVersionHistory = ({ versions = [], onClose }) => {
           display: flex;
           flex-direction: column;
         }
-        .current-version {
-          background-color: #fff;
+        .save-version-btn {
+          background: #C3E11D;
           border: none;
-          outline: none;
-          padding: 1rem;
-          width: 100%;
-          display: flex;
-          border-radius: 0.8rem;
-          font-weight: 500;
+          padding: 0.8rem 1.5rem;
+          border-radius: 10px;
+          font-weight: 600;
+          font-size: 1.3rem;
           cursor: pointer;
+          margin-bottom: 1rem;
+          width: 100%;
+          transition: all 0.2s ease;
         }
-        .current-version:hover {
-          background-color: lightgray;
+        .save-version-btn:hover {
+          box-shadow: 0 2px 8px rgba(195,225,29,0.4);
         }
         .versions-container {
           flex-grow: 1;
           overflow-y: auto;
-          margin: 1rem 0;
-        }
-        .versions-container::-webkit-scrollbar {
-          width: 0.5rem;
-        }
-        .versions-container::-webkit-scrollbar-thumb {
-          background-color: lightgray;
-          border-radius: 0.25rem;
-        }
-        .versions-container::-webkit-scrollbar-track {
-          background-color: #f1f1f1;
-          border-radius: 0.25rem;
+          margin: 0.5rem 0;
         }
         .version {
           position: relative;
           padding: 1rem;
           cursor: pointer;
+          border-radius: 8px;
+          margin-bottom: 0.5rem;
+          border: 1px solid transparent;
+          transition: all 0.15s ease;
         }
         .version:hover {
-          border-radius: 0.8rem;
-          background-color: #f1f1f1;
+          background-color: #f9fafb;
         }
         .version.selected {
-          border-radius: 0.8rem;
-          background-color: #e8f5e9;
+          background-color: #fafff0;
           border: 1px solid #C3E11D;
-        }
-        .version-content {
-          filter: inherit;
-        }
-        .blurred .version-content {
-          filter: blur(0.2rem);
-        }
-        .Version-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: transparent;
-          pointer-events: none;
         }
         .date {
           font-size: 1.3rem;
-          margin-bottom: 0.6rem;
-          color: #000;
-        }
-        .users {
-          display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
-        }
-        .user {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: gray;
-          font-size: 1.3rem;
-        }
-        .icon {
-          font-size: 3rem;
-          color: lightgray;
+          color: #111;
+          font-weight: 500;
         }
         .footer-buttons {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-top: 2rem;
-          padding-bottom: 2rem;
+          gap: 0.5rem;
+          padding-top: 1rem;
         }
         .cancel {
           background-color: #fff;
-          border: 0.1rem solid black;
-          padding: 1rem;
-          border-radius: 0.8rem;
+          border: 1px solid #d1d5db;
+          padding: 0.8rem;
+          border-radius: 10px;
           font-size: 1.3rem;
           font-weight: 500;
           cursor: pointer;
-          width: 49%;
+          flex: 1;
         }
         .restore-version {
           background-color: #C3E11D;
-          border: 0.2rem solid #C3E11D;
-          padding: 1rem;
+          border: none;
+          padding: 0.8rem;
           font-size: 1.3rem;
-          font-weight: 500;
-          border-radius: 0.8rem;
+          font-weight: 600;
+          border-radius: 10px;
           cursor: pointer;
-          width: 49%;
+          flex: 1;
+        }
+        .restore-version:disabled {
+          opacity: 0.6;
+          cursor: wait;
         }
         .straight-Line {
-          border-top: 0.15rem solid lightgray;
-        }
-        .show-date-button {
-          position: absolute;
-          top: 1rem;
-          right: 1rem;
-          width: 7rem;
-          height: 3rem;
-          border-radius: 2.5rem;
-          background-color: skyblue;
-          border: 0.2rem solid skyblue;
-          padding: 1rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #0066FF;
-          font-size: 1.2rem;
-          font-weight: 600;
-          cursor: pointer;
+          border-top: 1px solid #e5e7eb;
+          margin: 0;
         }
       `}</style>
     </div>
@@ -202,8 +203,9 @@ const AssessmentVersionHistory = ({ versions = [], onClose }) => {
 };
 
 AssessmentVersionHistory.propTypes = {
-  versions: PropTypes.array,
+  assessmentId: PropTypes.string,
   onClose: PropTypes.func,
+  onRestore: PropTypes.func,
 };
 
 export default AssessmentVersionHistory;
