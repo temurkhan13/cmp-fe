@@ -22,17 +22,25 @@ apiClient.interceptors.request.use(
   }
 );
 
+let isRedirecting = false;
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('accessToken');
-      if (window.location.pathname !== '/log-in' && window.location.pathname !== '/sign-up') {
-        window.location.href = '/log-in';
+    if (error.response?.status === 401 && !isRedirecting) {
+      const path = window.location.pathname;
+      // Only redirect if user is on a protected page (not auth pages)
+      if (path !== '/log-in' && path !== '/sign-up' && path !== '/' && !path.startsWith('/privacy') && !path.startsWith('/terms')) {
+        isRedirecting = true;
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('accessToken');
+        // Use setTimeout to avoid interrupting React render cycle
+        setTimeout(() => {
+          window.location.href = '/log-in';
+        }, 0);
       }
     }
     return Promise.reject(error);
