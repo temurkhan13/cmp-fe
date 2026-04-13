@@ -1,14 +1,15 @@
-import Module from '../../modules';
+import React from 'react';
+
 const assisstantRoutesData = [
   {
     title: '',
     path: '/assistant/chat',
-    element: Module.Assisstant.Chat,
+    element: React.lazy(() => import('../../modules/assisstent/Chat')),
   },
   {
     title: '',
     path: '/assistant/chat/:id',
-    element: Module.Assisstant.Chat,
+    element: React.lazy(() => import('../../modules/assisstent/Chat')),
   },
 ];
 

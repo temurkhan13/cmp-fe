@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config';
 import { workspaceApi } from '../api/workspaceApi'; // Import the workspaceApi
 
@@ -9,7 +9,7 @@ export const updateWorkspaceStatus = createAsyncThunk(
   async ({ workspaceId, isActive }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.patch(
+      const response = await apiClient.patch(
         `${config.apiURL}/workspace/${workspaceId}`,
         { isActive },
         {
@@ -32,7 +32,7 @@ export const fetchDashboardStats = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${config.apiURL}/workspace/user/dashboard-stats`,
         {
           headers: {

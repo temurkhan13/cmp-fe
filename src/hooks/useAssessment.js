@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import apiClient from '../api/axios';
 import config from '../config/config';
 
 const useAssessment = ({ workspaceId, folderId }) => {
@@ -8,7 +8,7 @@ const useAssessment = ({ workspaceId, folderId }) => {
   const Assessment = async (assessmentName) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment`,
         {
           user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
@@ -32,7 +32,7 @@ const useAssessment = ({ workspaceId, folderId }) => {
 
   const getAssessment = async (id) => {
     const token = localStorage.getItem('token');
-    const response = await axios.get(
+    const response = await apiClient.get(
       `${config.apiURL}/workspace-assessment/${id}`,
       {
         headers: {

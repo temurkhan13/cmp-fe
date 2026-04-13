@@ -1,29 +1,30 @@
-import Module from '../../modules';
+import React from 'react';
+
 const sitemapRoutesData = [
   {
     title: 'Sitemap',
     path: '/sitemap/list',
-    element: Module.Sitemap.ListSiteMap,
+    element: React.lazy(() => import('../../modules/sitemap/ListSiteMap')),
   },
   {
     title: 'Sitemap New',
     path: '/sitemap/new',
-    element: Module.Sitemap.Sitemap,
+    element: React.lazy(() => import('../../modules/sitemap/Sitemap')),
   },
   {
     title: 'Sitemap Detail',
     path: '/sitemap/:id',
-    element: Module.Sitemap.Sitemap,
+    element: React.lazy(() => import('../../modules/sitemap/Sitemap')),
   },
   {
     title: 'Digital Playbook',
     path: '/digital-playbook/list',
-    element: Module.Dashboard.DigitalPlaybook,
+    element: React.lazy(() => import('../../modules/dashboard/DigitalPlaybook')),
   },
   {
     title: 'Playbook Editor',
     path: '/playbook/:id',
-    element: Module.Playbook.PlaybookEditorPage,
+    element: React.lazy(() => import('../../modules/playbook/PlaybookEditorPage')),
   },
 ];
 

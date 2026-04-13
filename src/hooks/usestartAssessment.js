@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import config from '../config/config';
 import {
   fetchFolderData,
@@ -122,7 +122,7 @@ const useStartAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${config.apiURL}/workspace-assessment/`,
         {
           // message: message || '',

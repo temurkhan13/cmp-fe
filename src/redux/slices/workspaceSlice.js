@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config';
 import { setChats } from '../slices/chatSlice';
 
@@ -20,7 +20,7 @@ export const getChatsAsync = createAsyncThunk(
   async ({ workspaceId, folderId }, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/chat`,
         {
           headers: {

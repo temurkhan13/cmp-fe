@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { rehydrateToken } from './redux/slices/authSlice';
 
 import LoadingBar from 'react-redux-loading-bar';
+import Toast from './components/common/Toast';
+import CommandPalette from './components/common/CommandPalette';
 function App() {
   const dispatch = useDispatch();
 
@@ -26,7 +28,9 @@ function App() {
 
   return (
     <>
-      <LoadingBar style={{ backgroundColor: 'green', height: '5px' }} />
+      <LoadingBar style={{ backgroundColor: '#C3E11D', height: '3px' }} />
+      <Toast />
+      <CommandPalette />
       <Routess />
     </>
   );

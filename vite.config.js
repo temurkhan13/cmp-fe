@@ -20,4 +20,17 @@ export default defineConfig({
       '@store': '/src/store',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-redux': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+          'vendor-ui': ['framer-motion', 'formik', 'yup', 'react-icons'],
+          'vendor-editors': ['jodit-react'],
+          'vendor-export': ['exceljs', 'jspdf', 'pptxgenjs'],
+        },
+      },
+    },
+  },
 });

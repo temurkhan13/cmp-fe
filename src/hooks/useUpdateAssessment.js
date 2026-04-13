@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import apiClient from '../api/axios';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import config from '../config/config';
 
 const useUpdateAssessment = () => {
@@ -21,7 +20,7 @@ const useUpdateAssessment = () => {
         webURL: businessInfo.websiteURL,
       };
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${config.apiURL}/assessment/`,
         {
           message: message || '',

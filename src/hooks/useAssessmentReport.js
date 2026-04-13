@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import config from '../config/config';
 import { addContent } from '../redux/reducers/editorReducer';
 
@@ -22,7 +22,7 @@ const useAssessmentReport = ({
       // Select `questionId` based on whether `assessmentData` is populated
       const questionId = assessmentData.qa[assessmentData.qa.length - 1]._id;
 
-      const response = await axios.patch(
+      const response = await apiClient.patch(
         `${config.apiURL}/workspace-assessment/${assessmentId}/answer`,
         {
           questionId,

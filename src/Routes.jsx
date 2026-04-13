@@ -13,13 +13,15 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { motion } from 'framer-motion';
 
 const PageFade = ({ children }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.2, ease: 'easeOut' }}
-  >
-    {children}
-  </motion.div>
+  <Suspense fallback={<Loader />}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+    >
+      {children}
+    </motion.div>
+  </Suspense>
 );
 
 const Routess = () => {
