@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config';
 
 // Define initial state
@@ -24,7 +24,7 @@ export const googleOAuthLoginAsync = createAsyncThunk(
       localStorage.setItem('refreshToken', refreshToken);
 
       // Hit the API with the access token
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${config.apiURL}/auth/get-user-from-token`,
         {},
         {
@@ -51,7 +51,7 @@ export const loginAsync = createAsyncThunk(
   'auth/login',
   async ({ email, password }, thunkAPI) => {
     try {
-      const response = await axios.post(`${baseURL}/login`, {
+      const response = await apiClient.post(`${baseURL}/login`, {
         email,
         password,
       });
@@ -81,7 +81,7 @@ export const getUserAsync = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(`${baseURL}/users/${userId}`, config);
+      const response = await apiClient.get(`${baseURL}/users/${userId}`, config);
       const user = response.data;
       // Store token and user in localStorage
       localStorage.setItem('user', JSON.stringify(user));
@@ -98,7 +98,7 @@ export const registerAsync = createAsyncThunk(
   'auth/register',
   async ({ registrationData }, thunkAPI) => {
     try {
-      const response = await axios.post(`${baseURL}/`, {
+      const response = await apiClient.post(`${baseURL}/`, {
         email: registrationData.email,
         password: registrationData.password,
         firstName: registrationData.firstName,
@@ -133,7 +133,7 @@ export const codeVerifyAsync = createAsyncThunk(
         },
       };
 
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${baseURL}/verification`,
         {
           verificationCode: value.code,
@@ -161,7 +161,7 @@ export const resentVerificationCodeAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${baseURL}/email/send-verification`,
         {},
         config
@@ -189,7 +189,7 @@ export const forgetPasswordGetCodeAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${baseURL}/forgot/password`,
         { email },
         config
@@ -215,7 +215,7 @@ export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
     };
 
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${baseURL}/reset/password`,
         { email, OTP, newPassword },
         config

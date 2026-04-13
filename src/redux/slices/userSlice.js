@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config.js';
 const initialState = {
   users: [],
@@ -32,7 +32,7 @@ const updateUserAsync = createAsyncThunk(
         formData.append('photoPath', photoPath); // Key for the image file
 
         // Send image as FormData in a separate request
-        await axios.patch(url, formData, {
+        await apiClient.patch(url, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -42,7 +42,7 @@ const updateUserAsync = createAsyncThunk(
 
       // Send other fields as JSON, if available
       if (Object.keys(updatedUserData).length > 0) {
-        const response = await axios.patch(url, updatedUserData, config);
+        const response = await apiClient.patch(url, updatedUserData, config);
         const updatedUser = response.data;
         return updatedUser;
       }

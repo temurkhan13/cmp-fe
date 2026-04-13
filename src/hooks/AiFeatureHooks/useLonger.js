@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config';
 
 const useLonger = () => {
@@ -8,7 +8,7 @@ const useLonger = () => {
   const LongText = async (inputText) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${config.apiURL}/chat/long-text`,
         {
           user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',

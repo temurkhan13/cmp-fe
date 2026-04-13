@@ -1,7 +1,6 @@
 import { useState } from 'react';
-// import apiClient from '../../api/axios';
 import config from '../../config/config';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 
 const useAuto = () => {
   const [error, setError] = useState(null);
@@ -9,7 +8,7 @@ const useAuto = () => {
   const autoWritingFnc = async (inputText) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await apiClient.post(
         config.apiURL + '/chat/auto/',
         {
           user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',

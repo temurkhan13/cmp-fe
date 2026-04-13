@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { setToken } from '../api/auth';
 import apiClient from '../api/axios';
+import { setToken } from '../api/auth';
 
 const useRegister = () => {
   const navigate = useNavigate();

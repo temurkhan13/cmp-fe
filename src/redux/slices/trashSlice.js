@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config';
 
 const initialState = {
@@ -19,7 +19,7 @@ export const fetchTrashItemsAsync = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${config.apiURL}/workspace/user/trash`,
         {
           headers: {
@@ -43,7 +43,7 @@ export const restoreFromTrashAsync = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       const url = `${config.apiURL}/workspace/${type}/${id}/restoreFromTrash`;
-      const response = await axios.patch(
+      const response = await apiClient.patch(
         url,
         {},
         {
@@ -68,7 +68,7 @@ export const deleteFromTrashAsync = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       const url = `${config.apiURL}/workspace/${type}/${id}/deleteFromTrash`;
-      const response = await axios.delete(url, {
+      const response = await apiClient.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

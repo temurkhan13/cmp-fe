@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import apiClient from '../../api/axios';
 import config from '../../config/config';
 
 // Thunk to fetch folder data
@@ -8,7 +8,7 @@ export const fetchFolderData = createAsyncThunk(
   async ({ workspaceId, folderId }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
         {
           headers: {
@@ -34,7 +34,7 @@ export const toggleFolderActivation = createAsyncThunk(
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.patch(
+      const response = await apiClient.patch(
         `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
         { isActive },
         {
@@ -73,7 +73,7 @@ export const fetchWorkspaceAssessments = createAsyncThunk(
       }
 
       const token = localStorage.getItem('token');
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${config.apiURL}/workspace-assessment?folderId=${folderId}`,
         {
           headers: {

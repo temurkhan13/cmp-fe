@@ -20,6 +20,7 @@ import { HiOutlineDocumentText } from 'react-icons/hi';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
+import Breadcrumbs from '../components/common/Breadcrumbs';
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -139,7 +140,7 @@ const DashboardLayout = ({ children }) => {
           {Menu.map(({ path, name, Icon }, index) => (
             <Link
               to={path}
-              key={index}
+              key={path}
               style={{ textDecoration: 'none', color: 'inherit' }}
               className={location.pathname === path ? 'active-link' : ''}
             >
@@ -187,7 +188,10 @@ const DashboardLayout = ({ children }) => {
         </div>
       </div>
 
-      <section className="home-section">{children}</section>
+      <section className="home-section">
+        <Breadcrumbs />
+        {children}
+      </section>
       <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`

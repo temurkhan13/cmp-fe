@@ -138,7 +138,7 @@ const Workspaces = ({
 
       <div className="icons">
         {workspaces?.map((workspace, index) => (
-          <div key={index} className="icon-container">
+          <div key={workspace.id || index} className="icon-container">
             <BsThreeDotsVertical
               style={{ cursor: 'pointer' }}
               size={18}

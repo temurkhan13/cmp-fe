@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import config from '../config/config';
 
 const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
@@ -8,7 +8,7 @@ const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
   const GenerateSingleReport = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${config.apiURL}/workspace-assessment/${assessmentId}`,
         {
           headers: {

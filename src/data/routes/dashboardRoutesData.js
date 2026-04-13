@@ -1,54 +1,55 @@
-import Module from '../../modules';
+import React from 'react';
+
 const dashboardRoutesData = [
   {
     title: '',
     path: '/dashboard',
-    element: Module.Dashboard.DashboardHome,
+    element: React.lazy(() => import('../../modules/dashboard/DashboardHome')),
   },
   {
     title: '',
     path: '/dashboard/aiAssistant',
-    element: Module.Dashboard.AiAssistant,
+    element: React.lazy(() => import('../../modules/dashboard/AiAssistant')),
   },
   {
     title: '',
     path: '/dashboard/DigitalPlaybook',
-    element: Module.Dashboard.DigitalPlaybook,
+    element: React.lazy(() => import('../../modules/dashboard/DigitalPlaybook')),
   },
   {
     title: '',
     path: '/dashboard/feedback',
-    element: Module.Dashboard.Feedback,
+    element: React.lazy(() => import('../../modules/dashboard/Feedback')),
   },
   {
     title: '',
     path: '/dashboard/HelpCenter',
-    element: Module.Dashboard.HelpCenter,
+    element: React.lazy(() => import('../../modules/dashboard/HelpCenter')),
   },
   {
     title: '',
     path: '/dashboard/myAssessments',
-    element: Module.Dashboard.MyAssessments,
+    element: React.lazy(() => import('../../modules/dashboard/MyAssessments')),
   },
   {
     title: '',
     path: '/dashboard/PlanBilling',
-    element: Module.Dashboard.PlanBilling,
+    element: React.lazy(() => import('../../modules/dashboard/PlanBilling')),
   },
   {
     title: '',
     path: '/dashboard/trash',
-    element: Module.Dashboard.Trash,
+    element: React.lazy(() => import('../../modules/dashboard/Trash')),
   },
   {
     title: '',
     path: '/dashboard/settings',
-    element: Module.Dashboard.Settings,
+    element: React.lazy(() => import('../../modules/dashboard/Settings')),
   },
   {
     title: '',
     path: '/dashboard/knowledge-base',
-    element: Module.Dashboard.KnowledgeBase,
+    element: React.lazy(() => import('../../modules/dashboard/KnowledgeBase')),
   },
 ];
 

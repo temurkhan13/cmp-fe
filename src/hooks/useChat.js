@@ -1,6 +1,5 @@
 // import { useState } from "react";
 // import { useNavigate, useLocation } from 'react-router-dom';
-// import apiClient from "../api/axios";
 
 // import { setToken } from '../api/auth';
 
@@ -51,8 +50,7 @@
 // export default useChat;
 
 import { useState } from 'react';
-import apiClient from '@api/axios';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import config from '../config/config';
 
 const useChat = () => {
@@ -75,7 +73,7 @@ const useChat = () => {
       }
 
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${config.apiURL}/chat/`, formData, {
+      const response = await apiClient.post(`${config.apiURL}/chat/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

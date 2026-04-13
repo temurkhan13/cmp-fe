@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import config from '../config/config';
 
@@ -12,7 +12,7 @@ const useForgotVerfication = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post(`${config.apiURL}/auth/verification`, {
+      const response = await apiClient.post(`${config.apiURL}/auth/verification`, {
         code,
       });
       setLoading(false);
