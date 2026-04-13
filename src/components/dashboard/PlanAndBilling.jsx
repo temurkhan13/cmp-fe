@@ -1,179 +1,203 @@
+import { useState, useEffect } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { MdOutlineError } from 'react-icons/md';
-import PlanAndBillingmodal from '../../components/dashboard/PlanAndBillingmodal';
-import { useState } from 'react';
+import { FaCheck } from 'react-icons/fa';
+import apiClient from '../../api/axios';
+import config from '../../config/config';
 import Components from '..';
+import toast from 'react-hot-toast';
+
+const PLAN_FEATURES = {
+  Starter: [
+    '1 Workspace',
+    '1 Project',
+    '3 Assessments/month',
+    '1 Digital Playbook',
+    'PDF Export',
+    '10,000 AI words/month',
+  ],
+  Professional: [
+    '5 Workspaces',
+    '10 Projects',
+    'Unlimited Assessments',
+    'Unlimited Playbooks',
+    'All Export Formats (PDF, Word, PPT, Excel)',
+    'RAG Document Upload',
+    '100,000 AI words/month',
+    'Priority Support',
+  ],
+  Enterprise: [
+    'Unlimited Workspaces',
+    'Unlimited Projects',
+    'Custom AI Training',
+    'SSO & Team Management',
+    'Dedicated Account Manager',
+    'Custom Integrations',
+    'Unlimited AI words',
+    'SLA Guarantee',
+  ],
+};
 
 const PlanAndBilling = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [plans, setPlans] = useState([]);
+  const [currentPlan, setCurrentPlan] = useState(null);
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(null);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [plansRes, subsRes] = await Promise.allSettled([
+        apiClient.get(`${config.apiURL}/subscription`),
+        apiClient.get(`${config.apiURL}/auth/user-subscription`),
+      ]);
+
+      if (plansRes.status === 'fulfilled') {
+        setPlans(plansRes.value.data?.results || plansRes.value.data || []);
+      }
+      if (subsRes.status === 'fulfilled' && subsRes.value.data) {
+        setCurrentPlan(subsRes.value.data);
+      }
+    } catch (err) {
+      if (import.meta.env.DEV) console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const handleSubscribe = async (subscriptionId) => {
+    setCheckoutLoading(subscriptionId);
+    try {
+      const res = await apiClient.post(`${config.apiURL}/subscription`, { subscriptionId });
+      if (res.data?.redirectToCheckoutURL) {
+        window.location.href = res.data.redirectToCheckoutURL;
+      } else {
+        toast.error(res.data?.message || 'Unable to start checkout');
+      }
+    } catch (err) {
+      toast.error('Failed to start checkout. Please try again.');
+    } finally {
+      setCheckoutLoading(null);
+    }
   };
 
-  const planInfo = {
-    name: 'Starter',
-    status: 'Active',
-    price: '29.99',
-    description: [
-      'Unlimited: 30,000 AI words.',
-      'Projects: 2 Assessments, 2 Playbooks.',
-      'Users: 3 users, 2 workspaces.',
-      'Export: PPT, Word, Excel, PDF (no watermark).',
-      'Design: Icons, images, shapes, tables.',
-      'Monthly Limit: 30,000 AI words, Email support.`',
-    ],
-  };
-
-  const billingHistory = [
-    {
-      planName: 'Starter',
-      status: 'Expired',
-      price: '$29.99',
-      purchased: '12/24',
-      expiry: '01/25',
-    },
-    {
-      planName: 'Pro',
-      status: 'Expired',
-      price: '$79.99',
-      purchased: '11/24',
-      expiry: '12/24',
-    },
-    {
-      planName: 'Free',
-      status: 'Expired',
-      price: '$0.00',
-      purchased: '10/24',
-      expiry: '11/24',
-    },
-    {
-      planName: 'Pro',
-      status: 'Expired',
-      price: '$79.99',
-      purchased: '09/24',
-      expiry: '10/24',
-    },
-    {
-      planName: 'Starter',
-      status: 'Expired',
-      price: '$29.99',
-      purchased: '08/24',
-      expiry: '09/24',
-    },
-    {
-      planName: 'Pro',
-      status: 'Expired',
-      price: '$79.99',
-      purchased: '07/24',
-      expiry: '08/24',
-    },
-    {
-      planName: 'Free',
-      status: 'Expired',
-      price: '$0.00',
-      purchased: '06/24',
-      expiry: '07/24',
-    },
-    {
-      planName: 'Pro',
-      status: 'Expired',
-      price: '$79.99',
-      purchased: '05/24',
-      expiry: '06/24',
-    },
-    {
-      planName: 'Starter',
-      status: 'Expired',
-      price: '$29.99',
-      purchased: '04/24',
-      expiry: '05/24',
-    },
-    {
-      planName: 'Free',
-      status: 'Expired',
-      price: '$0.00',
-      purchased: '03/24',
-      expiry: '04/24',
-    },
-  ];
+  const currentPlanName = currentPlan?.name || 'Free';
 
   return (
     <div className="billing-page">
       <Components.Dashboard.Header />
-      <h2>Plan & Billing</h2>
-      <div className="plan-information">
-        <div className="info">
-          <h3>Information:</h3>
-          <p>
-            <strong>Plan Name:</strong> {planInfo.name}
-          </p>
-          <p>
-            <strong>Status:</strong>
-            <span className={`status ${planInfo.status.toLowerCase()}`}>
-              {planInfo.status}
-            </span>
-          </p>
-          <p>
-            <strong>Price:</strong>
-            <span className="price">${planInfo.price}</span>
-          </p>
-          <button className="renew-btn" onClick={openModal}>
-            Renew
-          </button>
-        </div>
+      <h2 style={{ fontSize: '2.4rem', fontWeight: 600, margin: '1rem 2rem' }}>Plan & Billing</h2>
 
-        <div className="description">
-          <h3>Plan Description:</h3>
-          <ul>
-            {planInfo.description.map((item, index) => (
-              <li key={index} className="feature-list">
-                <AiOutlineCheckCircle /> {item}
-              </li>
-            ))}
-          </ul>
+      {/* Current Plan */}
+      <div style={{
+        background: '#fff',
+        borderRadius: '12px',
+        padding: '2rem',
+        margin: '0 2rem 2rem',
+        border: '1px solid rgba(0,0,0,0.06)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <p style={{ fontSize: '1.3rem', color: '#6b7280' }}>Current Plan</p>
+            <h3 style={{ fontSize: '2rem', fontWeight: 600 }}>{currentPlanName}</h3>
+          </div>
+          <span style={{
+            background: 'rgba(34,197,94,0.1)',
+            color: '#15803d',
+            padding: '4px 12px',
+            borderRadius: '9999px',
+            fontSize: '1.2rem',
+            fontWeight: 600,
+          }}>Active</span>
         </div>
       </div>
 
-      <div className="billing-history">
-        <h3>Billing History:</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Plan Name</th>
-              <th>Status</th>
-              <th>Price</th>
-              <th>Purchased</th>
-              <th>Expiry</th>
-            </tr>
-          </thead>
-          <tbody>
-            {billingHistory.map((record, index) => (
-              <tr key={index}>
-                <td className="plan-name">{record.planName}</td>
-                <td>
-                  <span className={`status ${record.status.toLowerCase()}`}>
-                    {record.status === 'Expired' ? (
-                      <MdOutlineError size={18} />
-                    ) : (
-                      <AiOutlineCheckCircle />
-                    )}
-                    {record.status}
-                  </span>
-                </td>
-                <td className="price">{record.price}</td>
-                <td>{record.purchased}</td>
-                <td>{record.expiry}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Plans Grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: '1.5rem',
+        margin: '0 2rem 2rem',
+      }}>
+        {(plans.length > 0 ? plans : [
+          { id: 'free', name: 'Starter', price: 0 },
+          { id: 'pro', name: 'Professional', price: 49 },
+          { id: 'ent', name: 'Enterprise', price: 199 },
+        ]).map((plan) => {
+          const isCurrent = plan.name === currentPlanName;
+          const isHighlighted = plan.name === 'Professional';
+          const features = PLAN_FEATURES[plan.name] || [];
+
+          return (
+            <div key={plan.id} style={{
+              background: isHighlighted ? 'linear-gradient(135deg, #fefff0, #fff)' : '#fff',
+              border: isHighlighted ? '2px solid #C3E11D' : '1px solid rgba(0,0,0,0.08)',
+              borderRadius: '16px',
+              padding: '2rem',
+              position: 'relative',
+              transition: 'all 0.2s ease',
+            }}>
+              {isHighlighted && (
+                <div style={{
+                  position: 'absolute',
+                  top: '-12px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: '#C3E11D',
+                  padding: '4px 16px',
+                  borderRadius: '9999px',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                }}>Most Popular</div>
+              )}
+              <h3 style={{ fontSize: '1.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>{plan.name}</h3>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <span style={{ fontSize: '2.8rem', fontWeight: 700 }}>
+                  {plan.price === 0 ? 'Free' : `£${plan.price}`}
+                </span>
+                {plan.price > 0 && <span style={{ fontSize: '1.3rem', color: '#6b7280' }}>/month</span>}
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, marginBottom: '1.5rem' }}>
+                {features.map((f, i) => (
+                  <li key={i} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '1.25rem',
+                    marginBottom: '0.5rem',
+                    color: '#374151',
+                  }}>
+                    <FaCheck style={{ color: '#C3E11D', flexShrink: 0 }} size={12} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                disabled={isCurrent || checkoutLoading === plan.id}
+                onClick={() => !isCurrent && handleSubscribe(plan.id)}
+                style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: isCurrent ? '#e5e7eb' : isHighlighted ? '#C3E11D' : '#f0f0f0',
+                  fontWeight: 600,
+                  fontSize: '1.3rem',
+                  cursor: isCurrent ? 'default' : 'pointer',
+                  color: '#111',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {checkoutLoading === plan.id ? 'Redirecting...' : isCurrent ? 'Current Plan' : plan.price === 0 ? 'Downgrade' : 'Upgrade'}
+              </button>
+            </div>
+          );
+        })}
       </div>
-      <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`
         .billing-page {
@@ -181,110 +205,6 @@ const PlanAndBilling = () => {
           font-size: 1.4rem;
           background-color: #f9f9f9;
         }
-        h2 {
-          // margin-bottom: 1.25rem;
-        }
-        .tabs {
-          display: flex;
-          margin-bottom: 1.25rem;
-        }
-        .tab {
-          // padding: 0.625rem 1.25rem;
-          cursor: pointer;
-          border-bottom: 0.125rem solid transparent;
-        }
-        .tab.active {
-          border-color: #3f51b5;
-        }
-        .plan-information {
-          display: flex;
-          background-color: #fff;
-          padding: 1.5rem;
-          border-radius: 1rem;
-          margin-bottom: 1.5rem;
-          box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
-        }
-        .info {
-          flex: 1;
-          margin-left: 2rem;
-          display: flex;
-          gap: 1.5rem;
-          flex-direction: column;
-        }
-        .description {
-          flex: 1;
-          list-style: none;
-        }
-        tr td {
-          align-items: center;
-        }
-        .feature-list {
-          list-style: none;
-          font-size: 1.4rem;
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-        .status.active {
-          background-color: rgba(4, 212, 0, 0.1);
-          color: rgba(4, 212, 0, 1);
-          border-radius: 2rem;
-          font-size: 1.4rem;
-          padding: 0.2rem 2rem;
-        }
-        .status.expired {
-          background-color: rgba(203, 23, 12, 0.1);
-          color: rgba(203, 23, 12, 1);
-          border-radius: 1.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0.5rem 0rem;
-          gap: 0.5rem;
-        }
-        .price {
-          color: #3f51b5;
-          font-weight: bold;
-        }
-        .renew-btn {
-          padding: 0.625rem 1.25rem;
-          background-color: rgba(195, 225, 29, 1);
-          color: rgba(11, 20, 68, 1);
-          font-size: 1.5rem;
-          font-weight: 500;
-          border: none;
-          width: 15rem;
-          border-radius: 1rem;
-          cursor: pointer;
-          margin-top: 0.625rem;
-        }
-        .billing-history {
-          background-color: #fff;
-          padding: 1.25rem;
-          border-radius: 0.5rem;
-          box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 0.625rem;
-        }
-        th,
-        td {
-          padding: 0.75rem;
-          text-align: left;
-          border-bottom: 0.0625rem solid #ddd;
-        }
-        th {
-          background-color: #f1f1f1;
-        }
-        .price {
-          color: #3f51b5;
-        }
-          .info p{
-          display:flex;
-          gap: 1rem;
-          }
       `}</style>
     </div>
   );
