@@ -17,19 +17,15 @@ const verification = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    dispatch(forgetPasswordGetCode(values.email))
-      .then((response) => {
-        if (response.payload.code) {
-          setError('Something went wrong, please try again.');
-          return;
-        }
-        localStorage.setItem('forgetEmail', values.email);
-        setSubmitting(false);
-        navigate('/forgot-password/Code');
-      })
-      .catch((error) => {
-        setError('Something went wrong, please try again.');
-      });
+    try {
+      const response = await dispatch(forgetPasswordGetCode(values.email)).unwrap();
+      localStorage.setItem('forgetEmail', values.email);
+      setSubmitting(false);
+      navigate('/forgot-password/Code');
+    } catch (err) {
+      setError(err?.message || 'Something went wrong, please try again.');
+      setSubmitting(false);
+    }
   };
 
   return (

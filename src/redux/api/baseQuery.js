@@ -14,23 +14,65 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
-let isRedirecting = false;
+let isRefreshing = false;
+let refreshPromise = null;
+
+const forceLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('accessToken');
+  const path = window.location.pathname;
+  if (path !== '/log-in' && path !== '/sign-up' && path !== '/' && !path.startsWith('/privacy') && !path.startsWith('/terms') && !path.startsWith('/forgot')) {
+    setTimeout(() => { window.location.href = '/log-in'; }, 0);
+  }
+};
 
 const baseQuery = async (args, api, extraOptions) => {
-  const result = await rawBaseQuery(args, api, extraOptions);
+  let result = await rawBaseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 401 && !isRedirecting) {
-    const path = window.location.pathname;
-    if (path !== '/log-in' && path !== '/sign-up' && path !== '/' && !path.startsWith('/privacy') && !path.startsWith('/terms')) {
-      isRedirecting = true;
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('accessToken');
-      setTimeout(() => {
-        window.location.href = '/log-in';
-      }, 0);
+  if (result.error?.status === 401) {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (!refreshToken) {
+      forceLogout();
+      return result;
+    }
+
+    // If already refreshing, wait for that to complete
+    if (isRefreshing && refreshPromise) {
+      try {
+        await refreshPromise;
+        // Retry with new token
+        return rawBaseQuery(args, api, extraOptions);
+      } catch {
+        return result;
+      }
+    }
+
+    isRefreshing = true;
+    refreshPromise = fetch(`${config.apiURL}/auth/refresh-tokens`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    }).then(async (res) => {
+      if (!res.ok) throw new Error('Refresh failed');
+      const data = await res.json();
+      localStorage.setItem('token', data.access.token);
+      localStorage.setItem('refreshToken', data.refresh.token);
+      return data.access.token;
+    });
+
+    try {
+      await refreshPromise;
+      // Retry original request with new token
+      result = await rawBaseQuery(args, api, extraOptions);
+    } catch {
+      forceLogout();
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
     }
   }
 

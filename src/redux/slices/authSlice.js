@@ -57,12 +57,13 @@ export const loginAsync = createAsyncThunk(
       });
       const { tokens, user } = response.data;
       const token = tokens.access.token;
+      const refreshToken = tokens.refresh.token;
 
-      // Store token and user in localStorage
       localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('user', JSON.stringify(user));
 
-      return { token, user };
+      return { token, refreshToken, user };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -107,12 +108,13 @@ export const registerAsync = createAsyncThunk(
 
       const { tokens, user } = response.data;
       const token = tokens.access.token;
+      const refreshToken = tokens.refresh.token;
 
-      // Store token and user in localStorage
       localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('user', JSON.stringify(user));
 
-      return { token, user };
+      return { token, refreshToken, user };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
