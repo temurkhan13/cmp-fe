@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import Breadcrumbs from '../components/common/Breadcrumbs';
+import OnboardingTour from '../components/common/OnboardingTour';
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -192,6 +193,7 @@ const DashboardLayout = ({ children }) => {
         <Breadcrumbs />
         {children}
       </section>
+      <OnboardingTour />
       <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`
