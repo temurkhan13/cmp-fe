@@ -19,6 +19,7 @@ import editorReducer from '../reducers/editorReducer';
 import { workspaceApi } from '../api/workspaceApi';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
+import { createTransform } from 'redux-persist';
 
 // Custom middleware to trigger loading bar actions for RTK Query requests
 const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
@@ -67,6 +68,20 @@ const persistConfig = {
   // Note: workspaces slice is persisted but volatile IDs (currentChatId etc.)
   // are refreshed on mount via fetchDashboardStats
 };
+
+// Strip volatile auth state (isLoading, error) on rehydration
+// Prevents "Creating account..." button stuck forever after page refresh
+const authTransform = createTransform(
+  (inboundState) => inboundState,
+  (outboundState, key) => {
+    if (key === 'auth') {
+      return { ...outboundState, isLoading: false, error: null };
+    }
+    return outboundState;
+  },
+  { whitelist: ['auth'] }
+);
+persistConfig.transforms = [authTransform];
 
 // Persisted reducers
 // const persistedBusinessInfoReducer = persistReducer(
