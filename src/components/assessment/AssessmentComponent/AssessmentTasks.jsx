@@ -133,9 +133,51 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
   const collectiveProgress = calculateCollectiveProgress(tasks);
   const collectiveColors = getColor(collectiveProgress);
 
+  // Calculate assessment completion stats
+  const totalAssessments = assessmentQnaData?.length || 0;
+  const completedCount = assessmentsData?.filter(d => d.status === 'completed').length || 0;
+  const inProgressCount = assessmentsData?.filter(d => d.status === 'in_progress' || d.status === 'in-progress').length || 0;
+  const progressPercent = totalAssessments > 0 ? Math.round((completedCount / totalAssessments) * 100) : 0;
+  const circumference = 2 * Math.PI * 28;
+  const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
+
   return (
     <>
       <div className="task-list-container">
+        {/* Progress Ring */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+          padding: '1rem 1.5rem',
+          margin: '0.5rem 1rem',
+          background: '#fafff0',
+          borderRadius: '12px',
+          border: '1px solid rgba(195,225,29,0.2)',
+        }}>
+          <svg width="64" height="64" viewBox="0 0 64 64" style={{ flexShrink: 0 }}>
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#e5e7eb" strokeWidth="4" />
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#C3E11D" strokeWidth="4"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              transform="rotate(-90 32 32)"
+              style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+            />
+            <text x="32" y="36" textAnchor="middle" fontSize="14" fontWeight="600" fill="#111">
+              {progressPercent}%
+            </text>
+          </svg>
+          <div>
+            <div style={{ fontSize: '1.3rem', fontWeight: 600, color: '#111' }}>
+              {completedCount}/{totalAssessments} Completed
+            </div>
+            <div style={{ fontSize: '1.1rem', color: '#6b7280' }}>
+              {inProgressCount > 0 ? `${inProgressCount} in progress` : 'Select a report to begin'}
+            </div>
+          </div>
+        </div>
+
         <div
           className="progress-bar"
           onClick={generateAllReports}
