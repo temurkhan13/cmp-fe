@@ -10,6 +10,7 @@ import PrivacyPolicy from './components/LandingPage/components/PrivacyPolicy';
 import Terms from './components/LandingPage/components/Terms';
 import NotFound from './components/common/NotFound';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import CommandPalette from './components/common/CommandPalette';
 import { motion } from 'framer-motion';
 
 const PageFade = ({ children }) => (
@@ -28,6 +29,7 @@ const Routess = () => {
   return (
     <Router>
       <Components.Feature.ScrollToTop />
+      <CommandPalette />
       <ErrorBoundary>
         <Routes>
           <Route path="/" element={<Layout />}>
