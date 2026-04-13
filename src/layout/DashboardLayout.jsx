@@ -22,6 +22,7 @@ import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import OnboardingTour from '../components/common/OnboardingTour';
+import SupportChat from '../components/common/SupportChat';
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -194,6 +195,7 @@ const DashboardLayout = ({ children }) => {
         {children}
       </section>
       <OnboardingTour />
+      <SupportChat />
       <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
       <style>{`
