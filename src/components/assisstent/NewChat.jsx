@@ -53,8 +53,10 @@ const NewChat = () => {
   const currentChat = useSelector(selectCurrentChat);
   const selectedFolder = useSelector(selectSelectedFolder);
 
+  const CHATS_PER_PAGE = 20;
   const chats = useSelector(selectAllChats);
-  const [showableChats, setShowableChats] = useState(chats);
+  const [showableChats, setShowableChats] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(CHATS_PER_PAGE);
   const myChats = useSelector((state) => state.chat.chats);
 
   useEffect(() => {
@@ -73,10 +75,10 @@ const NewChat = () => {
   }, [currentWorkspace, currentFolder, dispatch, selectedFolder]);
 
   useEffect(() => {
-    // if(myChats?.length > 0){
-    setShowableChats(myChats);
-    // }
-  }, [myChats]);
+    if (myChats) {
+      setShowableChats(myChats.slice(0, visibleCount));
+    }
+  }, [myChats, visibleCount]);
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -141,8 +143,11 @@ const NewChat = () => {
         chatContainer.clientHeight * 1.1 &&
       !loading
     ) {
-      setLoading(true);
-      // TODO: Implement lazy loading for chat history
+      if (myChats && visibleCount < myChats.length) {
+        setLoading(true);
+        setVisibleCount((prev) => prev + CHATS_PER_PAGE);
+        setLoading(false);
+      }
     }
   };
 
