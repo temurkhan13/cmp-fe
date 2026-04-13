@@ -39,25 +39,19 @@ const verification = () => {
   }, [dispatch]);
 
   const handleSubmit = async (values) => {
-    dispatch(
-      ResetforgetPasswordWithCode({
-        email: localStorage.getItem('forgetEmail'),
-        OTP: values.otp,
-        newPassword: values.password,
-      })
-    )
-      .then((response) => {
-        if (response.payload.code) {
-          setError('Something went wrong, please try again.');
-          return;
-        }
-
-        localStorage.removeItem('forgetEmail');
-        navigate('/log-in');
-      })
-      .catch((error) => {
-        setError('Something went wrong, please try again.');
-      });
+    try {
+      await dispatch(
+        ResetforgetPasswordWithCode({
+          email: localStorage.getItem('forgetEmail'),
+          OTP: parseInt(values.otp, 10),
+          newPassword: values.password,
+        })
+      ).unwrap();
+      localStorage.removeItem('forgetEmail');
+      navigate('/log-in');
+    } catch (err) {
+      setError(err?.message || 'Invalid OTP or something went wrong. Please try again.');
+    }
   };
 
   return (
