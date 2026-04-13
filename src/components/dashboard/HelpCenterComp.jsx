@@ -1,39 +1,16 @@
 import { useState } from 'react';
-import { FaBars, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
 import {
   MdDashboard,
   MdAssistant,
   MdAssessment,
-  MdSupportAgent,
 } from 'react-icons/md';
 import { BsFilePlayFill } from 'react-icons/bs';
-import { FaSitemap, FaQuestionCircle } from 'react-icons/fa';
 import headingss from '../../assets/dashboard/heading.svg';
-import Modal from '../common/Modal';
 
 const HelpCenterComp = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isModalOpenn, setModalOpenn] = useState(false);
-  const [email, setEmail] = useState('');
-  const [description, setDescription] = useState('');
-
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setEmail(''); // Clear inputs when closing the modal
-    setDescription('');
-  };
-  const handleCloseModall = () => {
-    setModalOpenn(false);
-  };
-
-  const handleSubmit = () => {
-    // Add your form submission logic here
-    handleCloseModal(); // Close modal after submission
-    setModalOpenn(true);
-  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -206,122 +183,6 @@ const HelpCenterComp = () => {
 
   return (
     <div className="helpcenter-wrapper">
-      <div>
-        <MdSupportAgent
-          style={{
-            position: 'fixed',
-            bottom: '4rem',
-            right: '7rem',
-            backgroundColor: '#BEDA18',
-            borderRadius: '200px',
-            padding: '1rem',
-            cursor: 'pointer',
-          }}
-          size={60}
-          onClick={handleOpenModal}
-        />
-
-        <Modal title="Support" isOpen={isModalOpen} onClose={handleCloseModal}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-            style={{ width: '400px' }}
-          >
-            <div>
-              <label
-                htmlFor="email"
-                style={{
-                  display: 'block',
-                  marginBottom: '0.5rem',
-                  fontSize: '1.5rem',
-                }}
-              >
-                Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="Email"
-                style={{
-                  width: '100%',
-                  padding: '0.5rem',
-                  marginBottom: '1rem',
-                  border: '1px solid #ccc',
-                  borderRadius: '0.5rem',
-                }}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="description"
-                style={{
-                  display: 'block',
-                  marginBottom: '0.5rem',
-                  fontSize: '1.5rem',
-                }}
-              >
-                Description:
-              </label>
-              <textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-                placeholder="Description"
-                style={{
-                  width: '100%',
-                  padding: '0.5rem',
-                  marginBottom: '1rem',
-                  border: '1px solid #ccc',
-                  borderRadius: '0.5rem',
-                  resize: 'none',
-                  height: '100px',
-                }}
-              />
-            </div>
-            <button
-              type="submit"
-              style={{
-                backgroundColor: '#BEDA18',
-                color: '#fff',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '0.5rem',
-                cursor: 'pointer',
-              }}
-            >
-              Submit
-            </button>
-          </form>
-        </Modal>
-        <Modal
-          title="Support"
-          isOpen={isModalOpenn}
-          onClose={handleCloseModall}
-        >
-          <FaCheck size={40} />
-          <h1>Email Sent Successfully</h1>
-          <button
-            type="submit"
-            onClick={handleCloseModall}
-            style={{
-              backgroundColor: '#BEDA18',
-              color: '#fff',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-            }}
-          >
-            Ok
-          </button>
-        </Modal>
-      </div>
       <div
         className={`helpcenter-sidebar ${sidebarOpen ? 'open' : ''}`}
         onClick={!sidebarOpen ? toggleSidebar : null}
