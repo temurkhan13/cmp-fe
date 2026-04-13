@@ -16,15 +16,12 @@ const initialState = {
 };
 
 export const getChatsAsync = createAsyncThunk(
-  `/workspace/user/chatsAll?workspaceId`,
+  'workspace/getChats',
   async ({ workspaceId, folderId }, thunkAPI) => {
     try {
-      // Save tokens in localStorage
       const token = localStorage.getItem('token');
-
-      // Hit the API with the access token
       const response = await axios.get(
-        `${config.apiURL}/workspace/user/chats?workspaceId=${workspaceId}&folderId=${folderId}`,
+        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/chat`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,7 +30,7 @@ export const getChatsAsync = createAsyncThunk(
       );
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
