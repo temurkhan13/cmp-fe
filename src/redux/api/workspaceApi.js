@@ -4,6 +4,7 @@ import baseQuery from './baseQuery'; // Adjust the import path as needed
 export const workspaceApi = createApi({
   reducerPath: 'workspaceApi',
   baseQuery,
+  tagTypes: ['Workspace', 'Chat'],
   endpoints: (builder) => ({
     // Workspaces
     getWorkspaces: builder.query({
@@ -94,7 +95,7 @@ export const workspaceApi = createApi({
 
     removeChat: builder.mutation({
       query: ({ workspaceId, folderId, chatId }) => ({
-        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/`,
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}`,
         method: 'DELETE',
       }),
     }),
@@ -349,52 +350,67 @@ export const workspaceApi = createApi({
         method: 'POST',
         body: { text },
       }),
-      invalidatesTags: ['Workspace'],
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
     updateComment: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, commentId, text }) => ({
-        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/comment/${commentId}`,
+      query: ({ workspaceId, folderId, chatId, messageId, commentId, text }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment/${commentId}`,
         method: 'PATCH',
         body: { text },
       }),
-      invalidatesTags: ['Workspace'],
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
     removeComment: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, commentId }) => ({
-        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}`,
+      query: ({ workspaceId, folderId, chatId, messageId, commentId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment/${commentId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Workspace'],
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
 
     // Replies
     addReply: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, commentId, reply }) => ({
-        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/comment/${commentId}/reply`,
+      query: ({ workspaceId, folderId, chatId, messageId, commentId, reply }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment/${commentId}/reply`,
         method: 'POST',
         body: reply,
       }),
-      invalidatesTags: ['Workspace'],
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
     updateReply: builder.mutation({
       query: ({
         workspaceId,
         folderId,
         chatId,
+        messageId,
         commentId,
         replyId,
-        updatedReply,
+        text,
       }) => ({
-        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
-        method: 'PUT',
-        body: { text: updatedReply },
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment/${commentId}/reply/${replyId}`,
+        method: 'PATCH',
+        body: { text },
       }),
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
     removeReply: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, commentId, replyId }) => ({
-        url: `workspace/${workspaceId}/folders/${folderId}/chats/${chatId}/comments/${commentId}/replies/${replyId}`,
+      query: ({ workspaceId, folderId, chatId, messageId, commentId, replyId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/comment/${commentId}/reply/${replyId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
 
     // Bookmarks
@@ -402,8 +418,10 @@ export const workspaceApi = createApi({
       query: ({ workspaceId, folderId, chatId, messageId }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark`,
         method: 'POST',
-        // body: bookmark,
       }),
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
     updateBookmark: builder.mutation({
       query: ({ workspaceId, folderId, chatId, bookmark }) => ({
@@ -417,6 +435,9 @@ export const workspaceApi = createApi({
         url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark/${bookmarkId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
     }),
 
     // Define likeChatMessage mutation

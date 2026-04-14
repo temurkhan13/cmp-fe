@@ -26,10 +26,9 @@ const ChatBookmark = ({ date, messages }) => {
   return (
     <div>
       <div className="chat-bookmark">
-        {!messages ? (
-          <NoDataAvailable message="No bookmark available" />
+        {!messages || messages.length === 0 ? (
+          <NoDataAvailable message="No bookmarks available" />
         ) : (
-          messages &&
           messages.map((message, index) => (
             <div className="message" key={index}>
               <div className="date">{message.localDate}</div>

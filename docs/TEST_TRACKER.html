@@ -66,6 +66,7 @@
     .stat-box.passed .num { color: #15803d; }
     .stat-box.failed .num { color: #dc2626; }
     .stat-box.blocked .num { color: #d97706; }
+    .stat-box.nofeature .num { color: #7c3aed; }
     .stat-box.remaining .num { color: #2563eb; }
 
     .progress-container {
@@ -112,6 +113,12 @@
 
     .progress-bar-bg .blocked-fill {
       background: #d97706;
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-bar-bg .nofeature-fill {
+      background: #7c3aed;
       height: 100%;
       transition: width 0.3s ease;
     }
@@ -240,6 +247,7 @@
     .tc-row.status-passed { background: #f0fdf4; }
     .tc-row.status-failed { background: #fef2f2; }
     .tc-row.status-blocked { background: #fffbeb; }
+    .tc-row.status-nofeature { background: #f5f3ff; }
 
     .tc-info {
       display: flex;
@@ -288,6 +296,7 @@
     .status-select.s-passed { background: #dcfce7; border-color: #86efac; color: #15803d; }
     .status-select.s-failed { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
     .status-select.s-blocked { background: #fef3c7; border-color: #fcd34d; color: #d97706; }
+    .status-select.s-nofeature { background: #ede9fe; border-color: #c4b5fd; color: #7c3aed; }
 
     .notes-input {
       font-size: 0.75rem;
@@ -326,6 +335,7 @@
     .legend-dot.passed { background: #15803d; }
     .legend-dot.failed { background: #dc2626; }
     .legend-dot.blocked { background: #d97706; }
+    .legend-dot.nofeature { background: #7c3aed; }
     .legend-dot.untested { background: #d0d0d0; }
 
     .chevron {
@@ -369,6 +379,10 @@
       <div class="num" id="stat-blocked">0</div>
       <div class="label">Blocked</div>
     </div>
+    <div class="stat-box nofeature">
+      <div class="num" id="stat-nofeature">0</div>
+      <div class="label">No Feature</div>
+    </div>
     <div class="stat-box remaining">
       <div class="num" id="stat-remaining">0</div>
       <div class="label">Remaining</div>
@@ -385,6 +399,7 @@
     <div class="passed-fill" id="bar-passed" style="width:0%"></div>
     <div class="failed-fill" id="bar-failed" style="width:0%"></div>
     <div class="blocked-fill" id="bar-blocked" style="width:0%"></div>
+    <div class="nofeature-fill" id="bar-nofeature" style="width:0%"></div>
   </div>
 </div>
 
@@ -395,11 +410,13 @@
   <button class="filter-btn" data-filter="passed">Passed</button>
   <button class="filter-btn" data-filter="failed">Failed</button>
   <button class="filter-btn" data-filter="blocked">Blocked</button>
+  <button class="filter-btn" data-filter="nofeature">No Feature</button>
   <button class="action-btn export" onclick="exportCSV()">Export CSV</button>
   <button class="action-btn reset" onclick="resetAll()">Reset All</button>
 </div>
 
 <div class="legend">
+  <div class="legend-item"><div class="legend-dot nofeature"></div> No Feature</div>
   <div class="legend-item"><div class="legend-dot untested"></div> Untested</div>
   <div class="legend-item"><div class="legend-dot passed"></div> Passed</div>
   <div class="legend-item"><div class="legend-dot failed"></div> Failed</div>
@@ -666,19 +683,44 @@ const SEED_STATE = {
   "TC-010a": { status: "failed",  notes: "Change password API not found", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-010b": { status: "failed",  notes: "Change password API not found", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-011":  { status: "failed",  notes: "API not found", timestamp: "4/14/2026, 12:00:00 AM" },
-  "TC-012":  { status: "failed",  notes: "Does not redirect to Stripe — shows 'Something went wrong' error", timestamp: "4/14/2026, 12:00:00 AM" },
-  "TC-013":  { status: "blocked", notes: "Payment not working — free trial allows only 1 workspace", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-012":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-013":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-014a": { status: "passed",  notes: "Passed but requires error handling from frontend", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-014b": { status: "passed",  notes: "Passed but requires error handling from frontend", timestamp: "4/14/2026, 12:00:00 AM" },
-  "TC-015":  { status: "failed",  notes: "No rename functionality on frontend", timestamp: "4/14/2026, 12:00:00 AM" },
-  "TC-016":  { status: "blocked", notes: "Cannot test until able to create more than 1 workspace", timestamp: "4/14/2026, 12:00:00 AM" },
-  "TC-017":  { status: "blocked", notes: "Cannot test until able to create more than 1 workspace", timestamp: "4/14/2026, 12:00:00 AM" }
+  "TC-015":  { status: "nofeature",  notes: "No rename functionality on frontend", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-016":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-017":  { status: "failed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-018":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-019a": { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-019b": { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-019c": { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-020":  { status: "failed",  notes: "Allows renaming project with less than 3 characters", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-021":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-022":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-023":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-026":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-027":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-028":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-024":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-079":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-080":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-081":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-031":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-032":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-034":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-035":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-036":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-033":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-037":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-038":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-039":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-040":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" }
 };
 
-// Merge seed into saved state (seed only applies if key is absent)
+// Merge seed into saved state (seed always wins so file edits take effect)
 let state = loadState();
 Object.entries(SEED_STATE).forEach(([k, v]) => {
-  if (!state[k]) state[k] = v;
+  state[k] = v;
 });
 saveState(state);
 
@@ -690,7 +732,7 @@ function getTotal() {
 }
 
 function getCounts() {
-  const counts = { passed: 0, failed: 0, blocked: 0, untested: 0 };
+  const counts = { passed: 0, failed: 0, blocked: 0, nofeature: 0, untested: 0 };
   TEST_DATA.forEach(s => {
     s.tests.forEach(t => {
       const status = state[t.id]?.status || "untested";
@@ -703,11 +745,12 @@ function getCounts() {
 function updateStats() {
   const c = getCounts();
   const total = getTotal();
-  const tested = c.passed + c.failed + c.blocked;
+  const tested = c.passed + c.failed + c.blocked + c.nofeature;
 
   document.getElementById("stat-passed").textContent = c.passed;
   document.getElementById("stat-failed").textContent = c.failed;
   document.getElementById("stat-blocked").textContent = c.blocked;
+  document.getElementById("stat-nofeature").textContent = c.nofeature;
   document.getElementById("stat-remaining").textContent = c.untested;
 
   const pct = total > 0 ? Math.round((tested / total) * 100) : 0;
@@ -716,6 +759,7 @@ function updateStats() {
   document.getElementById("bar-passed").style.width = ((c.passed / total) * 100) + "%";
   document.getElementById("bar-failed").style.width = ((c.failed / total) * 100) + "%";
   document.getElementById("bar-blocked").style.width = ((c.blocked / total) * 100) + "%";
+  document.getElementById("bar-nofeature").style.width = ((c.nofeature / total) * 100) + "%";
 }
 
 function matchesFilter(testId) {
@@ -778,6 +822,7 @@ function render() {
                 <option value="passed" ${status === 'passed' ? 'selected' : ''}>Passed</option>
                 <option value="failed" ${status === 'failed' ? 'selected' : ''}>Failed</option>
                 <option value="blocked" ${status === 'blocked' ? 'selected' : ''}>Blocked</option>
+                <option value="nofeature" ${status === 'nofeature' ? 'selected' : ''}>No Feature</option>
               </select>
             </div>
           `;

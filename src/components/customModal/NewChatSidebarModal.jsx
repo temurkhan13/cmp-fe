@@ -1,11 +1,21 @@
 import PropTypes from 'prop-types';
-import { FaFolder, FaTrash } from 'react-icons/fa';
-import { deleteChat } from '../../redux/slices/chatSlice';
-import { useDispatch } from 'react-redux';
+import { FaTrash } from 'react-icons/fa';
+import { useRemoveChatMutation } from '../../redux/api/workspaceApi';
 
-const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
-  const dispatch = useDispatch();
+const NewChatSidebarModal = ({ isOpen, closeModal, chatId, workspaceId, folderId, onDeleted, position }) => {
+  const [removeChat] = useRemoveChatMutation();
+
   if (!isOpen) return null;
+
+  const handleMoveToTrash = async () => {
+    try {
+      await removeChat({ workspaceId, folderId, chatId }).unwrap();
+      if (onDeleted) onDeleted(chatId);
+    } catch (error) {
+      import.meta.env.DEV && console.error('Failed to move chat to trash:', error);
+    }
+    closeModal();
+  };
 
   return (
     <>
@@ -18,22 +28,9 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* <div
-          className="dropdown-item"
-          onClick={() => {
-            // Handle Move to Folder
-            closeModal();
-          }}
-        >
-          <FaFolder className="newchat-icon" /> Move to Folder
-        </div> */}
         <div
           className="dropdown-item"
-          onClick={() => {
-            // Handle Move to Trash
-            dispatch(deleteChat(chatId));
-            closeModal();
-          }}
+          onClick={handleMoveToTrash}
         >
           <FaTrash className="newchat-icon" /> Move to Trash
         </div>
@@ -45,7 +42,6 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
             width: 100%;
             height: 100%;
             z-index: 999;
-            // background: rgba(0, 0, 0, 0.5);
           }
           .dropdown-menu {
             z-index: 1000;
@@ -68,10 +64,10 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, position }) => {
             background-color: lightgray;
             border-radius:0.8rem;
           }
-            .newchat-icon{
+          .newchat-icon{
             margin-right:0.8rem;
             color:gray;
-            }
+          }
         `}</style>
       </div>
     </>
@@ -82,6 +78,9 @@ NewChatSidebarModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   chatId: PropTypes.string.isRequired,
+  workspaceId: PropTypes.string.isRequired,
+  folderId: PropTypes.string.isRequired,
+  onDeleted: PropTypes.func,
   position: PropTypes.shape({
     top: PropTypes.number.isRequired,
     left: PropTypes.number.isRequired,

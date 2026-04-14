@@ -63,26 +63,25 @@ const AssistantSidebar = (props) => {
   };
 
   useEffect(() => {
-    const findingAllbookmarks = currentChat
-      ? currentChat.bookmarks.map((item) => {
-          const foundMessage = currentChat.generalMessages.find(
-            (message) => message._id === item.messageId
-          );
-
-          if (foundMessage) {
-            const date = new Date(foundMessage.createdAt);
-            const localDate = date.toLocaleString();
-            return {
-              ...foundMessage,
-              localDate,
-            };
-          }
-        })
-      : [];
-    if (findingAllbookmarks.length > 0) {
-      setBookmarksShow(findingAllbookmarks);
+    const source = chatData;
+    if (!source?.bookmarks || !source?.generalMessages) {
+      setBookmarksShow([]);
+      return;
     }
-  }, [currentChat]);
+    const findingAllbookmarks = source.bookmarks
+      .map((item) => {
+        const foundMessage = source.generalMessages.find(
+          (message) => (message._id || message.id) === (item.messageId || item.message_id)
+        );
+        if (foundMessage) {
+          const date = new Date(foundMessage.createdAt || foundMessage.created_at);
+          return { ...foundMessage, localDate: date.toLocaleString() };
+        }
+        return null;
+      })
+      .filter(Boolean);
+    setBookmarksShow(findingAllbookmarks);
+  }, [chatData]);
 
   return (
     <>
