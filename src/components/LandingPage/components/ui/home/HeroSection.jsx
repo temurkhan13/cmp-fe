@@ -6,15 +6,15 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="container">
-      <img class="main-bg" src={MainBg} alt="ChangeAI platform illustration" />
-      <img class="dotted-bg" src={DottedBg} alt="" role="presentation" />
-      <div class="content">
-        <h1 class="hero-text">
+    <div className="container">
+      <img className="main-bg" src={MainBg} alt="ChangeAI platform illustration" />
+      <img className="dotted-bg" src={DottedBg} alt="" role="presentation" />
+      <div className="content">
+        <h1 className="hero-text">
           Transforming the <br /> future of <br /> Documentation
         </h1>
         <button
-          class="demo-button"
+          className="demo-button"
           onClick={() => {
             navigate('/sign-up');
           }}

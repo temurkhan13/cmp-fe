@@ -17,7 +17,7 @@ import { BsFilePlayFill } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GiArtificialHive } from 'react-icons/gi';
 import { HiOutlineDocumentText } from 'react-icons/hi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import Breadcrumbs from '../components/common/Breadcrumbs';
@@ -30,6 +30,7 @@ const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -157,37 +158,40 @@ const DashboardLayout = ({ children }) => {
           ))}
         </ul>
 
-        <div className="upgrade-plan">
-          <button
-            className="upgrade-button"
-            onClick={handlePlanRoute}
-            style={{
-              padding: isOpen ? '1.5rem 3rem' : '1rem',
-              marginRight: isOpen ? '2.5rem' : '3rem',
-              width: '100%',
-              backgroundColor: '#f0f0f0',
-              color: '#00316f',
-              fontWeight: '500',
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center' }}>
-              <GiArtificialHive className="upgrade-icon" />
-              <span
-                style={{
-                  display: isOpen ? 'flex' : 'none',
-                  alignItems: 'center',
-                }}
-              >
-                Upgrade Plan
+        {user && !user.subscription && (
+          <div className="upgrade-plan">
+            <button
+              className="upgrade-button"
+              onClick={handlePlanRoute}
+              style={{
+                padding: isOpen ? '1.5rem 3rem' : '1rem',
+                marginRight: isOpen ? '2.5rem' : '3rem',
+                width: '100%',
+                backgroundColor: '#f0f0f0',
+                color: '#00316f',
+                fontWeight: '500',
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <GiArtificialHive className="upgrade-icon" />
+                <span
+                  style={{
+                    display: isOpen ? 'flex' : 'none',
+                    alignItems: 'center',
+                  }}
+                >
+                  Upgrade Plan
+                </span>
               </span>
-            </span>
-            {isOpen && (
-              <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
-                Get Change AI Starter Plan
-              </p>
-            )}
-          </button>
-        </div>
+              {isOpen && (
+                <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
+                  Get Change AI Starter Plan
+                </p>
+              )}
+            </button>
+          </div>
+        )}
+
       </div>
 
       <section className="home-section">

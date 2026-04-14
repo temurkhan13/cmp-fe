@@ -51,7 +51,7 @@ const PlanAndBilling = () => {
   const fetchData = async () => {
     try {
       const [plansRes, subsRes] = await Promise.allSettled([
-        apiClient.get(`${config.apiURL}/subscription`),
+        apiClient.get(`${config.apiURL}/stripe/subscription`),
         apiClient.get(`${config.apiURL}/auth/user-subscription`),
       ]);
 
@@ -59,7 +59,7 @@ const PlanAndBilling = () => {
         setPlans(plansRes.value.data?.results || plansRes.value.data || []);
       }
       if (subsRes.status === 'fulfilled' && subsRes.value.data) {
-        setCurrentPlan(subsRes.value.data);
+        setCurrentPlan(subsRes.value.data || 'Free');
       }
     } catch (err) {
       if (import.meta.env.DEV) console.error(err);
@@ -71,7 +71,8 @@ const PlanAndBilling = () => {
   const handleSubscribe = async (subscriptionId) => {
     setCheckoutLoading(subscriptionId);
     try {
-      const res = await apiClient.post(`${config.apiURL}/subscription`, { subscriptionId });
+      const res = await apiClient.post(`${config.apiURL}/stripe/subscription`, { subscriptionId });
+      console.log(res)
       if (res.data?.redirectToCheckoutURL) {
         window.location.href = res.data.redirectToCheckoutURL;
       } else {
@@ -84,7 +85,7 @@ const PlanAndBilling = () => {
     }
   };
 
-  const currentPlanName = currentPlan?.name || 'Free';
+  const currentPlanName = currentPlan?.name || '-';
 
   return (
     <div className="billing-page">
