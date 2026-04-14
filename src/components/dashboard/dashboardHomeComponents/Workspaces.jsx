@@ -97,15 +97,15 @@ const Workspaces = ({
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
-  const handleMoveToTrash = async () => {
+  const handleMoveToTrash = async (workspaceId) => {
     try {
       await moveToTrash({
         entityType: 'workspace',
-        id: activeWorkspace.id,
+        id: workspaceId,
       }).unwrap();
       setOpenDropdown(false);
       onWorkspaceUpdated();
-      showSuccess('Workspace moved to trash successfully!'); // Show success message
+      showSuccess('Workspace moved to trash successfully!');
     } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
   const toggleDropdown = (index) => {
@@ -153,7 +153,7 @@ const Workspaces = ({
                   //   handleDeleteWorkspace(workspace.id);
                   //   setOpenDropdown(null); // Close dropdown after delete
                   // }}
-                  onClick={handleMoveToTrash}
+                  onClick={() => handleMoveToTrash(workspace.id)}
                 >
                   Delete
                 </div>

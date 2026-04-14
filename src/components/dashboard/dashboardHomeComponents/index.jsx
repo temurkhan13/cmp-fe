@@ -200,9 +200,15 @@ const DashboardHomeComp = () => {
     });
   }, []);
 
-  const handleDataUpdated = useCallback(() => {
-    dispatch(fetchDashboardStats());
-  }, [dispatch]);
+  const handleDataUpdated = useCallback(async () => {
+    const stats = await dispatch(fetchDashboardStats()).unwrap();
+    const refreshedWorkspace = stats.workspaces.find(
+      (ws) => ws.id === activeWorkspace?.id
+    ) || stats.workspaces.find((ws) => ws.isActive) || stats.workspaces[0];
+    if (refreshedWorkspace) {
+      setActiveWorkspace(refreshedWorkspace);
+    }
+  }, [dispatch, activeWorkspace?.id]);
 
   if (isFetching) {
     return (

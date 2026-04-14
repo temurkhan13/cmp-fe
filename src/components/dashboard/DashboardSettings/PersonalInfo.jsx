@@ -257,7 +257,7 @@ const PersonalInfo = () => {
               });
               if (res.ok) {
                 localStorage.clear();
-                window.location.href = '/login';
+                window.location.href = '/log-in';
               } else {
                 alert('Failed to delete account. Please try again.');
               }

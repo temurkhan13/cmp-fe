@@ -70,15 +70,15 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   //   setIsTrashModalOpen(false);
   // }, [moveToTrash, selectedFolder, refetch, onFolderUpdate, closeModal]);
 
-  const handleProceedMoveToTrash = async () => {
+  const handleProceedMoveToTrash = async (folder) => {
     try {
       await moveToTrash({
         entityType: 'folder',
-        id: folderId.id,
+        id: folder.id || folder._id,
       }).unwrap();
       refetch();
       onFolderUpdate();
-      setIsModalOpen(false);
+      setOpenDropdown(null);
     } catch {
       setError('Error moving to trash');
     }
@@ -146,7 +146,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
                   </div>
                   <div
                     className="dropdown-itemm deletee"
-                    onClick={handleProceedMoveToTrash}
+                    onClick={() => handleProceedMoveToTrash(folder)}
                   >
                     Delete
                   </div>

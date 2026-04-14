@@ -1,6 +1,9 @@
 import * as Yup from "yup";
 
-const email = Yup.string().email("Email is invalid").required("Required");
+const email = Yup.string()
+  .email("Email is invalid")
+  .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Please enter a valid email address")
+  .required("Required");
 const password = Yup.string()
   .required("Required")
   .min(8, "Password must be at least 8 characters long")
@@ -31,6 +34,7 @@ const validationSignIn = Yup.object({
 const signupValidationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email format')
+    .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Please enter a valid email address")
     .required('Email is required'),
   firstName: Yup.string()
     .min(2, 'First name must be at least 2 characters')
