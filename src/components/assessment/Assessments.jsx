@@ -9,7 +9,6 @@ import AssessmentMedia from './AssessmentComponent/AssessmentMedia';
 import AssessmentComments from './AssessmentComponent/AssessmentComments';
 import AsessmentBookmark from './AssessmentComponent/AssessmentBookMark';
 import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
-import appConfig from '../../config/config.js';
 
 import { IoIosChatboxes } from 'react-icons/io';
 import { PiClockCounterClockwiseBold } from 'react-icons/pi';
@@ -19,45 +18,19 @@ import {
 } from 'react-icons/fa';
 import { RiNewspaperLine } from 'react-icons/ri';
 
-const Assessments = ({ handleAssessmentSelect, folderID }) => {
+const Assessments = ({ handleAssessmentSelect, folderID, chatMedia }) => {
   const [activeIcon, setActiveIcon] = useState('question');
-  const [versions, setVersions] = useState([]);
   const [comments, setComments] = useState([]);
+  const [bookmarkData] = useState([]);
   const { id: assessmentId } = useParams();
+
+  const images = chatMedia?.images || [];
+  const documents = chatMedia?.documents || [];
+  const links = chatMedia?.links || [];
 
   const handleIconClick = (icon) => {
     setActiveIcon((prevIcon) => (prevIcon === icon ? null : icon));
   };
-
-  // Fetch assessment data directly from API when version history is opened
-  useEffect(() => {
-    if (activeIcon === 'clock' && assessmentId) {
-      const token = localStorage.getItem('token');
-      fetch(`${appConfig.apiURL}/workspace-assessment/${assessmentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((r) => r.json())
-        .then((data) => {
-          const assessment = data?.data || data;
-          if (assessment?.qa?.length > 0) {
-            const versionList = assessment.qa
-              .filter((q) => q.status === 'answered' || q.answer)
-              .map((q) => ({
-                date: q.answered_at || q.answeredAt || q.created_at || q.createdAt || 'N/A',
-                users: [{ name: q.question?.substring(0, 50) + '...' || 'Question' }],
-              }));
-            setVersions(versionList);
-          }
-          if (assessment?.report) {
-            setVersions((prev) => [
-              { date: assessment.report.generated_at || assessment.report.generatedAt || 'Report generated', users: [{ name: 'Report: ' + (assessment.report.title || assessment.name || 'Final Report') }] },
-              ...prev,
-            ]);
-          }
-        })
-        .catch((e) => { if (import.meta.env.DEV) console.error('Version history fetch error:', e); });
-    }
-  }, [activeIcon, assessmentId]);
 
   return (
     <>
@@ -117,11 +90,11 @@ const Assessments = ({ handleAssessmentSelect, folderID }) => {
       {activeIcon === 'clock' && (
         <SideBarModal
           title="Version History"
-          bodyContent={<AssessmentVersionHistory versions={versions} />}
+          bodyContent={<AssessmentVersionHistory assessmentId={assessmentId} onClose={() => setActiveIcon(null)} />}
           onClose={() => setActiveIcon(null)}
         />
       )}
-      {activeIcon === 'gallery' && (
+      {/* {activeIcon === 'gallery' && (
         <SideBarModal
           title="Media"
           bodyContent={
@@ -133,7 +106,7 @@ const Assessments = ({ handleAssessmentSelect, folderID }) => {
           }
           onClose={() => setActiveIcon(null)}
         />
-      )}
+      )} */}
       {activeIcon === 'message' && (
         <SideBarModal
           title="Comments"

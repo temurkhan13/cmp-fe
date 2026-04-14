@@ -14,6 +14,7 @@ import { IoAttach, IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { IoSend } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci';
 import AiPic from '../../assets/dashboard/sidebarLogo.png';
+import UserAvatar from '../common/UserAvatar';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import TonePopup from '../../components/common/TonePopup';
 import { ScaleLoader } from 'react-spinners';
@@ -57,7 +58,7 @@ import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
 import Editor from './AssessmentComponent/Editor.jsx';
 import useAssessment from '../../hooks/useAssessment.js';
 
-const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
+const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUpdate }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
@@ -80,9 +81,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [showModal, setShowModal] = useState(false);
   const [allAssessmentData, setAllAssessmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
-  const [reactions, setReactions] = useState('');
-  const [copy, setCopy] = useState('');
-  const [bookmark, setBookmark] = useState('');
+  const [reactions, setReactions] = useState({});
+  const [copy, setCopy] = useState({});
+  const [bookmark, setBookmark] = useState({});
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
@@ -206,7 +207,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const [removeBookmark] = useRemoveBookmarkMutation();
   const [likeChatMessage] = useLikeChatMessageMutation();
   const [dislikeChatMessage] = useDislikeChatMessageMutation();
-  const chatId = useSelector((state) => state.workspaces.currentChatId);
   const userId = useSelector((state) => state.auth.user?.id);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
@@ -215,14 +215,21 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   const { handleInspire } = useInspire();
 
   const { error, chatWithdoc } = useChat();
-  const [photoPath, setPhotoPath] = useState('false');
-  const [user, setUser] = useState(null);
+  const [userProfilePhoto, setUserProfilePhoto] = useState(null);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setPhotoPath(storedUser.photoPath);
-      setUser(storedUser);
+    try {
+      const storedUser = localStorage.getItem('user');
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+      setUserProfilePhoto(parsedUser?.photoPath || null);
+      setUserName(
+        [parsedUser?.firstName || parsedUser?.first_name, parsedUser?.lastName || parsedUser?.last_name]
+          .filter(Boolean).join(' ') || parsedUser?.name || parsedUser?.email || ''
+      );
+    } catch {
+      setUserProfilePhoto(null);
+      setUserName('');
     }
   }, []);
 
@@ -247,45 +254,32 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
   };
 
   const handleAddBookmark = async (message) => {
-    // const bookmark = {
-    //   bookmarkId: 'bookmarkId3',
-    //   userId: 'userId4',
-    //   timestamp: '2024-07-12T12:40:00Z',
-    //   date: '2024-07-12',
-    //   messages: [
-    //     {
-    //       messageId: messageId,
-    //       sender: 'ChangeAI',
-    //       text: content,
-    //       savedBy: 'You',
-    //     },
-    //   ],
-    // };
-    //dispatch(addBookmark(bookmark));
-
-    const bookmark =
+    const msgId = message._id || message.id;
+    const existingBookmark =
       chat &&
       chat.bookmarks?.filter(
-        (bookmark) =>
-          bookmark.messageId === message._id &&
-          bookmark.userId === JSON.parse(localStorage.getItem('user')).id
+        (b) =>
+          b.messageId === msgId &&
+          b.userId === JSON.parse(localStorage.getItem('user')).id
       );
 
-    if (bookmark && bookmark.length > 0) {
+    if (existingBookmark && existingBookmark.length > 0) {
       await removeBookmark({
         workspaceId,
-        folderId: folderId._id || folderId.id,
-        chatId,
-        messageId: message._id,
-        bookmarkId: bookmark[0]._id, // Send the whole bookmark data
+        folderId,
+        chatId: assessmentId,
+        messageId: msgId,
+        bookmarkId: existingBookmark[0]._id || existingBookmark[0].id,
       }).unwrap();
+      setBookmark((prev) => ({ ...prev, [msgId]: false }));
     } else {
       await addBookmark({
         workspaceId,
-        folderId: folderId._id || folderId.id,
-        chatId,
-        messageId: message._id, // Send the whole bookmark data
+        folderId,
+        chatId: assessmentId,
+        messageId: msgId,
       }).unwrap();
+      setBookmark((prev) => ({ ...prev, [msgId]: true }));
     }
 
     // Dispatch action to add bookmark
@@ -453,14 +447,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     }
   };
 
-  const getInitials = () => {
-    if (!user) {
-      return 'N/A';
-    }
-    return `${user.firstName?.[0] || ''}${
-      user.lastName?.[0] || ''
-    }`.toUpperCase();
-  };
   // handle Tone change
   const handleToneChange = async (tone) => {
     setSelectedTone(tone);
@@ -590,24 +576,55 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
     scrollToBottom();
   }, [chat]);
 
+  // Extract media (documents, images, links) from chat messages and report to parent
+  useEffect(() => {
+    if (!onMediaUpdate) return;
+    const documents = [];
+    const images = [];
+    const links = [];
+
+    chat.forEach((item) => {
+      if (item.fileName) {
+        const ext = item.fileName.split('.').pop().toLowerCase();
+        const isImage = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'].includes(ext);
+        if (isImage) {
+          if (item.file) images.push(item.file);
+        } else {
+          documents.push({
+            name: item.fileName,
+            date: new Date().toLocaleDateString(),
+            size: '',
+            url: item.file || '',
+          });
+        }
+      }
+    });
+
+    onMediaUpdate({ images, documents, links });
+  }, [chat, onMediaUpdate]);
+
   const handleLikeClick = async (message) => {
+    const msgId = message._id || message.id;
     await likeChatMessage({
       workspaceId,
-      folderId: folderId._id || folderId.id,
-      chatId,
-      messageId: message._id, // Send the whole bookmark data
+      folderId,
+      chatId: assessmentId,
+      messageId: msgId,
     }).unwrap();
-    refetch(); // Trigger the chat query to refetch
+    setReactions((prev) => ({ ...prev, [msgId]: prev[msgId] === 'like' ? '' : 'like' }));
+    refetch();
   };
 
   const handleDislikeMessage = async (message) => {
+    const msgId = message._id || message.id;
     await dislikeChatMessage({
       workspaceId,
-      folderId: folderId._id || folderId.id,
-      chatId,
-      messageId: message._id, // Send the whole bookmark data
+      folderId,
+      chatId: assessmentId,
+      messageId: msgId,
     }).unwrap();
-    refetch(); // Trigger the chat query to refetch
+    setReactions((prev) => ({ ...prev, [msgId]: prev[msgId] === 'dislike' ? '' : 'dislike' }));
+    refetch();
   };
 
   const handleCopyMessage = (text) => {
@@ -650,84 +667,177 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment }) => {
                 key={index}
                 ref={index === chat.length - 1 ? messagesEndRef : null}
               >
-                {/* Display the Question on the left */}
-                <div className="chat-container-assisstant left">
-                  <div className="card assistant-card">
-                    <div className="header">
-                      <img src={AiPic} alt="avatar" className="avatar" />
-                    </div>
-                    <div className="msg">
-                      <ReactMarkdown>{item.question}</ReactMarkdown>
-                    </div>
-                    <div className="message-action-icons">
-                      <div
-                        className="message-icon-wrapper"
-                        title="Copy"
-                        onClick={() => handleCopyMessage(item.answer)}
-                      >
-                        <FaCopy
-                          onClick={() => setCopy('copy')}
-                          style={{
-                            cursor: 'pointer',
-                            color: copy === 'copy' ? '#C3E11D' : '',
-                          }}
+                {/* User-uploaded file or standalone user message */}
+                {item.role === 'user' && (
+                  <div className="chat-container-assisstant right">
+                    <div className="card user-card">
+                      <div className="user-avatar">
+                        <UserAvatar
+                          src={userProfilePhoto}
+                          name={userName}
+                          size={50}
+                          imgClassName="avatar"
                         />
-                        <span className="tooltip-assessment">Copy</span>
                       </div>
-                      <div
-                        className="message-icon-wrapper"
-                        title="Like"
-                        onClick={() => setReactions('like')}
-                      >
-                        <FaThumbsUp
-                          style={
-                            reactions === 'like'
-                              ? { color: '#C3E11D' }
-                              : { color: '' }
-                          }
-                        />
-                        <span className="tooltip-assessment">Like</span>
-                      </div>
-                      <div
-                        className="message-icon-wrapper"
-                        title="Dislike"
-                        onClick={() => setReactions('disLike')}
-                      >
-                        <FaThumbsDown
-                          style={
-                            reactions === 'disLike' ? { color: '#C3E11D' } : {}
-                          }
-                        />
-                        <span className="tooltip-assessment">Dislike</span>
-                      </div>
-                      <div className="message-icon-wrapper" title="Bookmark">
-                        <FaBookmark
-                          onClick={() => setBookmark('bookmark')}
-                          style={
-                            bookmark === 'bookmark' ? { color: '#C3E11D' } : {}
-                          }
-                        />
-                        <span className="tooltip-assessment">Bookmark</span>
+                      <div className="msg">
+                        {item.file && (
+                          <div style={{ marginBottom: '0.5rem' }}>
+                            <a href={item.file} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+                              {item.fileName || 'Attached file'}
+                            </a>
+                          </div>
+                        )}
+                        {item.question && <ReactMarkdown>{item.question}</ReactMarkdown>}
+                        {item.answer && <ReactMarkdown>{item.answer}</ReactMarkdown>}
                       </div>
                     </div>
                   </div>
-                </div>
-                {item.status === 'answered' && (
+                )}
+                {/* AI message */}
+                {item.role === 'ai' && (
+                  <div className="chat-container-assisstant left">
+                    <div className="card assistant-card">
+                      <div className="ai-avatar">
+                        <UserAvatar
+                          src={AiPic}
+                          name="AI Assistant"
+                          size={50}
+                          imgClassName="avatar"
+                        />
+                      </div>
+                      <div className="msg">
+                        <ReactMarkdown>{item.question}</ReactMarkdown>
+                      </div>
+                      <div className="message-action-icons">
+                        <div
+                          className="message-icon-wrapper"
+                          title="Copy"
+                          onClick={() => { handleCopyMessage(item.question); setCopy((prev) => ({ ...prev, [item._id || item.id || index]: true })); }}
+                        >
+                          <FaCopy
+                            style={{
+                              cursor: 'pointer',
+                              color: copy[item._id || item.id || index] ? '#C3E11D' : '',
+                            }}
+                          />
+                          <span className="tooltip-assessment">Copy</span>
+                        </div>
+                        <div
+                          className="message-icon-wrapper"
+                          title="Like"
+                          onClick={() => handleLikeClick(item)}
+                        >
+                          <FaThumbsUp
+                            style={
+                              reactions[item._id || item.id || index] === 'like'
+                                ? { color: '#C3E11D' }
+                                : { color: '' }
+                            }
+                          />
+                          <span className="tooltip-assessment">Like</span>
+                        </div>
+                        <div
+                          className="message-icon-wrapper"
+                          title="Dislike"
+                          onClick={() => handleDislikeMessage(item)}
+                        >
+                          <FaThumbsDown
+                            style={
+                              reactions[item._id || item.id || index] === 'dislike' ? { color: '#C3E11D' } : {}
+                            }
+                          />
+                          <span className="tooltip-assessment">Dislike</span>
+                        </div>
+                        <div className="message-icon-wrapper" title="Bookmark" onClick={() => handleAddBookmark(item)}>
+                          <FaBookmark
+                            style={
+                              bookmark[item._id || item.id || index] ? { color: '#C3E11D' } : {}
+                            }
+                          />
+                          <span className="tooltip-assessment">Bookmark</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Q&A format from backend (no role field) — AI question on left */}
+                {!item.role && item.question && (
+                  <div className="chat-container-assisstant left">
+                    <div className="card assistant-card">
+                      <div className="ai-avatar">
+                        <UserAvatar
+                          src={AiPic}
+                          name="AI Assistant"
+                          size={50}
+                          imgClassName="avatar"
+                        />
+                      </div>
+                      <div className="msg">
+                        <ReactMarkdown>{item.question}</ReactMarkdown>
+                      </div>
+                      <div className="message-action-icons">
+                        <div
+                          className="message-icon-wrapper"
+                          title="Copy"
+                          onClick={() => { handleCopyMessage(item.question); setCopy((prev) => ({ ...prev, [item._id || item.id || index]: true })); }}
+                        >
+                          <FaCopy
+                            style={{
+                              cursor: 'pointer',
+                              color: copy[item._id || item.id || index] ? '#C3E11D' : '',
+                            }}
+                          />
+                          <span className="tooltip-assessment">Copy</span>
+                        </div>
+                        <div
+                          className="message-icon-wrapper"
+                          title="Like"
+                          onClick={() => handleLikeClick(item)}
+                        >
+                          <FaThumbsUp
+                            style={
+                              reactions[item._id || item.id || index] === 'like'
+                                ? { color: '#C3E11D' }
+                                : { color: '' }
+                            }
+                          />
+                          <span className="tooltip-assessment">Like</span>
+                        </div>
+                        <div
+                          className="message-icon-wrapper"
+                          title="Dislike"
+                          onClick={() => handleDislikeMessage(item)}
+                        >
+                          <FaThumbsDown
+                            style={
+                              reactions[item._id || item.id || index] === 'dislike' ? { color: '#C3E11D' } : {}
+                            }
+                          />
+                          <span className="tooltip-assessment">Dislike</span>
+                        </div>
+                        <div className="message-icon-wrapper" title="Bookmark" onClick={() => handleAddBookmark(item)}>
+                          <FaBookmark
+                            style={
+                              bookmark[item._id || item.id || index] ? { color: '#C3E11D' } : {}
+                            }
+                          />
+                          <span className="tooltip-assessment">Bookmark</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Q&A format — user answer on right */}
+                {!item.role && item.status === 'answered' && (
                   <div className="chat-container-assisstant right">
                     <div className="card user-card">
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {photoPath ? (
-                          <img
-                            src={photoPath}
-                            alt="profile"
-                            className="ProfileImage"
-                            style={{ cursor: 'pointer' }}
-                          />
-                        ) : (
-                          <div className="initials-placeholder">
-                            {getInitials()}
-                          </div>
-                        )}
+                      <div className="user-avatar">
+                        <UserAvatar
+                          src={userProfilePhoto}
+                          name={userName}
+                          size={50}
+                          imgClassName="avatar"
+                        />
                       </div>
                       <div className="msg">
                         <ReactMarkdown>{item.answer}</ReactMarkdown>

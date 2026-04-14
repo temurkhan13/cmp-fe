@@ -50,6 +50,8 @@ function getAuthHeaders() {
   };
 }
 
+const ITEMS_PER_PAGE = 9;
+
 function PlaybookList() {
   const navigate = useNavigate();
   const [playbooks, setPlaybooks] = useState([]);
@@ -61,21 +63,31 @@ function PlaybookList() {
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
   const selectedWorkspace = useSelector(selectWorkspace);
 
   // Fetch playbooks from digital playbook endpoint
-  const fetchPlaybooks = async () => {
+  const fetchPlaybooks = async (requestedPage = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(`${config.apiURL}/dpb/sitemap`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await fetch(
+        `${config.apiURL}/dpb/sitemap?page=${requestedPage}&limit=${ITEMS_PER_PAGE}`,
+        { headers: getAuthHeaders() }
+      );
       if (res.ok) {
         const data = await res.json();
-        // Handle both paginated response and array response
-        const list = data.results || data;
-        if (Array.isArray(list)) {
-          setPlaybooks(list);
+        if (data.results && Array.isArray(data.results)) {
+          setPlaybooks(data.results);
+          setPage(data.page || requestedPage);
+          setTotalPages(data.totalPages || 1);
+          setTotalResults(data.totalResults || data.results.length);
+        } else if (Array.isArray(data)) {
+          setPlaybooks(data);
+          setPage(1);
+          setTotalPages(1);
+          setTotalResults(data.length);
         }
       }
     } catch (err) {
@@ -86,7 +98,7 @@ function PlaybookList() {
   };
 
   useEffect(() => {
-    fetchPlaybooks();
+    fetchPlaybooks(1);
   }, []);
 
   const sortedPlaybooks = useMemo(() => {
@@ -122,7 +134,7 @@ function PlaybookList() {
           setShowCreate(false);
           setCreateName('');
           setCreateMessage('');
-          await fetchPlaybooks();
+          await fetchPlaybooks(1);
         }
       }
     } catch (err) {
@@ -160,7 +172,9 @@ function PlaybookList() {
         method: 'DELETE',
         headers: getAuthHeaders(),
       });
-      setPlaybooks((prev) => prev.filter((p) => (p._id || p.id) !== id));
+      const remaining = playbooks.length - 1;
+      const targetPage = remaining === 0 && page > 1 ? page - 1 : page;
+      await fetchPlaybooks(targetPage);
     } catch (err) {
       import.meta.env.DEV && console.error('Delete error:', err);
     }
@@ -380,13 +394,11 @@ function PlaybookList() {
         ) : (
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              flexWrap: 'wrap',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1rem',
               width: '100%',
-              margin: '16px 3rem',
+              padding: '16px 1rem',
             }}
           >
             {sortedPlaybooks
@@ -401,8 +413,6 @@ function PlaybookList() {
                 <div
                   key={pbId}
                   style={{
-                    width: '100%',
-                    maxWidth: '350px',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1rem',
@@ -410,7 +420,6 @@ function PlaybookList() {
                     border: '1px solid rgba(0,0,0,0.06)',
                     padding: '2rem',
                     borderRadius: '12px',
-                    margin: '0 1rem 1rem 0',
                     boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
@@ -494,6 +503,87 @@ function PlaybookList() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {!loading && totalPages > 1 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              margin: '1.5rem 3rem 0',
+              flexWrap: 'wrap',
+            }}
+          >
+            <button
+              disabled={page <= 1}
+              onClick={() => fetchPlaybooks(page - 1)}
+              style={{
+                padding: '8px 14px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                background: page <= 1 ? '#f5f5f5' : '#fff',
+                cursor: page <= 1 ? 'not-allowed' : 'pointer',
+                opacity: page <= 1 ? 0.5 : 1,
+                fontSize: '0.95rem',
+              }}
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+              .reduce((acc, p, idx, arr) => {
+                if (idx > 0 && p - arr[idx - 1] > 1) acc.push('...');
+                acc.push(p);
+                return acc;
+              }, [])
+              .map((item, idx) =>
+                item === '...' ? (
+                  <span key={`ellipsis-${idx}`} style={{ padding: '0 4px', color: '#999' }}>
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={item}
+                    onClick={() => fetchPlaybooks(item)}
+                    style={{
+                      padding: '8px 14px',
+                      border: item === page ? '2px solid #C3E11D' : '1px solid #ddd',
+                      borderRadius: '8px',
+                      background: item === page ? '#fafff0' : '#fff',
+                      fontWeight: item === page ? '600' : '400',
+                      cursor: item === page ? 'default' : 'pointer',
+                      fontSize: '0.95rem',
+                    }}
+                  >
+                    {item}
+                  </button>
+                )
+              )}
+
+            <button
+              disabled={page >= totalPages}
+              onClick={() => fetchPlaybooks(page + 1)}
+              style={{
+                padding: '8px 14px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                background: page >= totalPages ? '#f5f5f5' : '#fff',
+                cursor: page >= totalPages ? 'not-allowed' : 'pointer',
+                opacity: page >= totalPages ? 0.5 : 1,
+                fontSize: '0.95rem',
+              }}
+            >
+              Next
+            </button>
+
+            <span style={{ marginLeft: '1rem', fontSize: '0.9rem', color: '#888' }}>
+              {totalResults} playbook{totalResults !== 1 ? 's' : ''}
+            </span>
           </div>
         )}
       </div>

@@ -25,7 +25,7 @@ async function loadPdfMake() {
 
 const Editor = ({
   placeholder,
-  height,
+  height = '100%',
   data,
   title,
   assesmentId,
@@ -36,6 +36,7 @@ const Editor = ({
   const [assessmentID, setAssessmentID] = useState(assesmentId);
   const [editReport] = useEditReportMutation();
   const [downloadReport] = useDownloadReportMutation();
+  const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
 
   // Convert Markdown to HTML for editor display
   const htmlContent = useMemo(
@@ -90,6 +91,7 @@ const Editor = ({
 
   const handleContentUpdate = async (newContent) => {
     try {
+      setSaveStatus('saving');
       // Convert HTML back to Markdown using Turndown
       const turndownService = new TurndownService();
       const markdownContent = turndownService.turndown(newContent);
@@ -103,7 +105,13 @@ const Editor = ({
 
       // Update the editor content with Markdown
       setContent(response?.content); // Ensure safe fallback
-    } catch (error) { if (import.meta.env.DEV) console.error(error); }
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (error) {
+      if (import.meta.env.DEV) console.error(error);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    }
   };
 
   const handleReportDownload = async () => {
@@ -175,21 +183,6 @@ const Editor = ({
         'image',
         'table',
         '|',
-        {
-          name: 'save',
-          tooltip: 'Save Content',
-          exec: () => {
-            const currentContent = editor.current?.getEditorValue() || '';
-            handleContentUpdate(currentContent);
-          },
-        },
-        {
-          name: 'Download',
-          tooltip: 'Download Report',
-          exec: () => {
-            handleReportDownload();
-          },
-        },
         'fullsize',
         'print',
         '|',
@@ -207,7 +200,8 @@ const Editor = ({
   };
 
   const exportWord = async () => {
-    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import('docx');
+    const docxModule = await import('docx');
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docxModule.default || docxModule;
     const editorContent = editor.current?.value || content || '';
     const plainText = stripHtml(editorContent);
     const children = [
@@ -225,7 +219,8 @@ const Editor = ({
   };
 
   const exportPptx = async () => {
-    const PptxGenJS = (await import('pptxgenjs')).default;
+    const pptxModule = await import('pptxgenjs');
+    const PptxGenJS = pptxModule.default || pptxModule;
     const pptx = new PptxGenJS();
     const slide = pptx.addSlide();
     slide.addText(title || 'Assessment Report', {
@@ -239,7 +234,8 @@ const Editor = ({
   };
 
   const exportExcel = async () => {
-    const ExcelJS = (await import('exceljs')).default;
+    const excelModule = await import('exceljs');
+    const ExcelJS = excelModule.default || excelModule;
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet(title || 'Report');
     sheet.columns = [
@@ -262,7 +258,26 @@ const Editor = ({
 
   return (
     <div style={{ width: '870px' }}>
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <button
+          onClick={() => {
+            const currentContent = editor.current?.value || editor.current?.getEditorValue?.() || '';
+            handleContentUpdate(currentContent);
+          }}
+          disabled={saveStatus === 'saving'}
+          style={{
+            padding: '6px 14px',
+            border: '1px solid #15803d',
+            borderRadius: '6px',
+            background: saveStatus === 'saved' ? '#dcfce7' : saveStatus === 'error' ? '#fee2e2' : '#f0fdf4',
+            cursor: saveStatus === 'saving' ? 'not-allowed' : 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            color: saveStatus === 'error' ? '#dc2626' : '#15803d',
+          }}
+        >
+          {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save Failed' : 'Save'}
+        </button>
         <button onClick={handleReportDownload} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
           PDF
         </button>
@@ -323,8 +338,5 @@ Editor.propTypes = {
   data: PropTypes.any,
 };
 
-Editor.defaultProps = {
-  height: '100%',
-};
 
 export default Editor;

@@ -114,14 +114,23 @@ const MessagesSection = ({ setCurrentChat }) => {
   const [dislikeChatMessage] = useDislikeChatMessageMutation();
   const userId = useSelector((state) => state.auth.user?.id);
   const { data: workspaces } = useGetWorkspacesQuery(userId);
-  const workspaceId = useSelector(
-    (state) => state.workspaces.currentWorkspaceId
-  );
-  const folderId = useSelector(selectSelectedFolder);
+  const currentWorkspace = useSelector(selectWorkspace);
+  const workspaceId = currentWorkspace?.id;
+  const selectedFolder = useSelector(selectSelectedFolder);
   const chatId = useSelector((state) => state.workspaces.currentChatId);
   const [messageId, setMessageId] = useState();
-  const currentWorkspace = useSelector(selectWorkspace);
-  const currentFolder = useSelector(selectSelectedFolder);
+
+  // Ensure folderId belongs to the current workspace — fall back to active/first folder if stale
+  const folderId = (() => {
+    const selId = selectedFolder?._id || selectedFolder?.id;
+    const belongsToWorkspace = currentWorkspace?.folders?.some(
+      (f) => (f._id || f.id) === selId
+    );
+    if (selId && belongsToWorkspace) return selectedFolder;
+    const fallback = currentWorkspace?.folders?.find((f) => f.isActive) || currentWorkspace?.folders?.[0];
+    return fallback || selectedFolder;
+  })();
+  const currentFolder = folderId;
   const currentChat = useSelector(selectCurrentChat);
 
 
