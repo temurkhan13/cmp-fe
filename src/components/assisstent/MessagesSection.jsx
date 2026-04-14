@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import '@styles/chat/ChatMessage.scss';
 import {
   FaCopy,
@@ -73,9 +74,11 @@ import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire.js';
 import useExplain from '../../hooks/AiFeatureHooks/useExplain.js';
 import config from '../../config/config.js';
+import UserAvatar from '../common/UserAvatar';
 
 const MessagesSection = ({ setCurrentChat }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // const state = useSelector((state) => state.workspace);
   // const selectedWorkspaceId = useSelector(
   //   (state) => state.workspace.selectedWorkspaceId
@@ -125,27 +128,26 @@ const MessagesSection = ({ setCurrentChat }) => {
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
   const [pendingSuggestionSend, setPendingSuggestionSend] = useState(false);
-  const [userProfilePhoto, setUserProfilePhoto] = useState(UserPic);
+  const [userProfilePhoto, setUserProfilePhoto] = useState(null);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
-    const getUserProfilePhoto = async () => {
-      try {
-        const storedUser = await localStorage.getItem('user');
-        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-        const userPhoto = parsedUser?.photoPath;
-
-        // Set profile photo, fallback to default if no photo is found
-        setUserProfilePhoto(userPhoto ? userPhoto : UserPic);
-      } catch (error) {
-        setUserProfilePhoto(UserPic); // Fallback to default image in case of error
-      }
-    };
-
-    getUserProfilePhoto();
+    try {
+      const storedUser = localStorage.getItem('user');
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+      setUserProfilePhoto(parsedUser?.photoPath || null);
+      setUserName(
+        [parsedUser?.firstName || parsedUser?.first_name, parsedUser?.lastName || parsedUser?.last_name]
+          .filter(Boolean).join(' ') || parsedUser?.name || parsedUser?.email || ''
+      );
+    } catch {
+      setUserProfilePhoto(null);
+      setUserName('');
+    }
   }, []);
 
   const resolvedFolderId = folderId?._id || folderId?.id;
-  const { data: chat, refetch: rawRefetch } = useGetChatQuery({
+  const { data: chat, refetch: rawRefetch, isLoading: isChatLoading, isFetching: isChatFetching } = useGetChatQuery({
     workspaceId,
     folderId: resolvedFolderId,
     chatId,
@@ -501,6 +503,11 @@ const MessagesSection = ({ setCurrentChat }) => {
       }
 
       if (!chatId && data?.success) {
+        const newChatId = data.chat?._id || data.chat?.id;
+        if (newChatId) {
+          dispatch(setCurrentChatId(newChatId));
+          navigate(`/assistant/chat/${newChatId}`, { replace: true });
+        }
         dispatch(
           getChatsAsync({
             workspaceId: currentWorkspace.id,
@@ -509,9 +516,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         )
           .then((response) => {
             dispatch(setChats(response.payload.data));
-            if (response.payload.data.length > 0) {
-              dispatch(setCurrentChatId(response.payload.data[0]._id));
-            }
           })
           .catch((error) => {});
       }
@@ -611,7 +615,11 @@ const MessagesSection = ({ setCurrentChat }) => {
           style={{ display: 'none' }}
           multiple
         />
-        {chatId && chat && chat.generalMessages.length > 0 ? (
+        {chatId && (isChatLoading || (isChatFetching && (!chat || (chat._id || chat.id) !== chatId))) ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <ScaleLoader color="#00316E" />
+          </div>
+        ) : chatId && chat && chat.generalMessages.length > 0 ? (
           <div className="chat-scroll">
             {popupVisible && (
               <TonePopup
@@ -634,26 +642,20 @@ const MessagesSection = ({ setCurrentChat }) => {
                 >
                   <div
                     className={
-                      message && message.sender === 'user'
+                      message && (message.sender || message.from) === 'user'
                         ? 'chat-container-assisstant right'
                         : 'chat-container-assisstant left'
                     }
                   >
-                    {message && message.sender === 'user' ? (
+                    {message && (message.sender || message.from) === 'user' ? (
                       <div className="card user-card">
                         <div className="user-avatar">
-                          <img
-                            src={
-                              userProfilePhoto ||
-                              'https://avatar.iran.liara.run/public/boy?username=Ash'
-                            }
-                            alt="avatar"
-                            onError={(e) =>
-                              (e.target.src =
-                                'https://avatar.iran.liara.run/public/boy?username=Ash')
-                            }
+                          <UserAvatar
+                            src={userProfilePhoto}
+                            name={userName}
+                            size={50}
+                            imgClassName="avatar"
                           />
-                          {/*<FaUser />*/}
                         </div>
                         <div className="user-message">
                           {/*<p className="heading">You</p>*/}
@@ -761,13 +763,11 @@ const MessagesSection = ({ setCurrentChat }) => {
                     ) : (
                       <div className="card ai-card">
                         <div className="ai-avatar">
-                          <img
-                            src={AiPic || 'https://via.placeholder.com/50'}
-                            alt="avatar"
-                            className="avatar"
-                            onError={(e) =>
-                              (e.target.src = 'https://via.placeholder.com/50')
-                            }
+                          <UserAvatar
+                            src={AiPic}
+                            name="AI Assistant"
+                            size={50}
+                            imgClassName="avatar"
                           />
                         </div>
                         <div className="ai-message">

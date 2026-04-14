@@ -21,27 +21,37 @@ import {
   useRemoveCommentMutation,
   useAddReplyMutation,
   useUpdateCommentMutation,
+  useUpdateReplyMutation,
+  useRemoveReplyMutation,
 } from '../../../redux/api/workspaceApi';
+import { selectSelectedFolder } from '../../../redux/slices/folderSlice';
 
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );
-  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const selectedFolder = useSelector(selectSelectedFolder);
+  const folderId = selectedFolder?._id || selectedFolder?.id;
   const chatId = useSelector((state) => state.workspaces.currentChatId);
   const [removeCommentMutation] = useRemoveCommentMutation();
   const [addReplyMutation] = useAddReplyMutation();
   const [updateCommentMutation] = useUpdateCommentMutation();
+  const [updateReplyMutation] = useUpdateReplyMutation();
+  const [removeReplyMutation] = useRemoveReplyMutation();
 
   const [selectedComment, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
   const [editingCommentId, setEditingCommentId] = useState(null); // Separate state for comment editing
   const [editingReplyId, setEditingReplyId] = useState(null); // Separate state for reply editing
   const [editedCommentText, setEditedCommentText] = useState(''); // Separate state for comment text
-  const [editedReplyText, setEditedReplyText] = useState(''); // Separate state for reply text
+  const [replyTexts, setReplyTexts] = useState({}); // Keyed by commentId
+  const [editedReplyText, setEditedReplyText] = useState(''); // For editing existing replies
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dropdownKey, setDropdownKey] = useState(0);
+  const closeDropdown = () => setDropdownKey((k) => k + 1);
   const [photoPath, setPhotoPath] = useState('false');
   const [user, setUser] = useState(null);
 
@@ -72,9 +82,9 @@ const Comments = ({ comments }) => {
     setEditedCommentText(comment.text); // Set the text for the specific comment
   };
 
-  const handleSaveEdit = async (commentId) => {
+  const handleSaveEdit = async (commentId, messageId) => {
     const updatedComment = editedCommentText;
-    await updateCommentMutation({ workspaceId, folderId, chatId, commentId, text: updatedComment });
+    await updateCommentMutation({ workspaceId, folderId, chatId, messageId, commentId, text: updatedComment });
     setEditingCommentId(null);
     setEditedCommentText('');
   };
@@ -86,25 +96,28 @@ const Comments = ({ comments }) => {
     setEditedReplyText(reply.text); // Set the text for the specific reply
   };
 
-  const handleSaveReply = (commentId, replyId) => {
-    const updatedReply = editedReplyText;
-    dispatch(updateReply({ commentId, replyId, updatedReply }));
-    setEditingReplyId(null); // Stop editing
+  const handleSaveReply = async (commentId, replyId, messageId) => {
+    await updateReplyMutation({ workspaceId, folderId, chatId, messageId, commentId, replyId, text: editedReplyText });
+    setEditingReplyId(null);
     setEditedReplyText('');
   };
 
-  const handleAddReply = async (commentId) => {
-    const text = editedReplyText;
+  const handleAddReply = async (commentId, messageId) => {
+    const text = replyTexts[commentId] || '';
     if (!text.trim()) return;
-    await addReplyMutation({ workspaceId, folderId, chatId, commentId, text });
-    setEditedReplyText('');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    await addReplyMutation({
+      workspaceId, folderId, chatId, messageId, commentId,
+      reply: { text, userId: user.id, userName: [user.firstName || user.first_name, user.lastName || user.last_name].filter(Boolean).join(' ') || user.name || '' },
+    });
+    setReplyTexts((prev) => ({ ...prev, [commentId]: '' }));
   };
 
-  const handleDeleteComment = async (commentId, isReply, parentCommentId) => {
+  const handleDeleteComment = async (commentId, isReply, parentCommentId, messageId) => {
     if (isReply) {
-      dispatch(removeReply({ commentId: parentCommentId, replyId: commentId }));
+      await removeReplyMutation({ workspaceId, folderId, chatId, messageId, commentId: parentCommentId, replyId: commentId });
     } else {
-      await removeCommentMutation({ workspaceId, folderId, chatId, commentId });
+      await removeCommentMutation({ workspaceId, folderId, chatId, messageId, commentId });
     }
     setShowDropdown(false); // Close dropdown after deletion
     setSelectedComment(null);
@@ -127,11 +140,34 @@ const Comments = ({ comments }) => {
 
   const menuItems = ['Sort by date', 'Sort by unread', 'Sort by resolved'];
 
+  const filteredComments = (comments || [])
+    .filter((comment) => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        (comment.text || '').toLowerCase().includes(q) ||
+        (comment.userName || comment.user_name || '').toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      if (selectedItem === 'Sort by date') {
+        return new Date(b.timestamp || b.created_at || 0) - new Date(a.timestamp || a.created_at || 0);
+      }
+      return 0;
+    });
+
   return (
     <>
       <div className="comment-input">
         <CiSearch className="search-icon" />
-        <input className="filter-input" placeholder="Find any word" />
+        <input
+          className="filter-input"
+          placeholder="Find any word"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          style={{ fontSize: '1.2rem' }}
+        />
         <IoFilter onClick={toggleDropdown} className="filter-icon" />
         {showDropdown && (
           <div className="dropdown-menu">
@@ -148,10 +184,10 @@ const Comments = ({ comments }) => {
       </div>
       <hr />
       <div className="chat-container">
-        {comments.length === 0 ? (
-          <NoDataAvailable message="No comments available" />
+        {filteredComments.length === 0 ? (
+          <NoDataAvailable message={searchQuery ? "No matching comments" : "No comments available"} />
         ) : (
-          comments.map((comment) => (
+          filteredComments.map((comment) => (
             <div key={comment.commentId}>
               <div className="comment-container">
                 <span className="comment-time">{comment.timestamp}</span>
@@ -179,17 +215,22 @@ const Comments = ({ comments }) => {
                         </span>
                       </span>
                       <Dropdown
+                        key={`comment-dd-${comment.commentId}-${dropdownKey}`}
                         title={<FaEllipsisV className="options-icon" />}
                         buttonClassName="dropdown-button"
                       >
                         <Dropdown.Item
-                          onClick={() => handleEditComment(comment.commentId)}
+                          onClick={() => {
+                            closeDropdown();
+                            handleEditComment(comment.commentId);
+                          }}
                         >
                           Edit Comment
                         </Dropdown.Item>
                         <Dropdown.Item
                           onClick={() => {
-                            handleDeleteComment(comment._id, false);
+                            closeDropdown();
+                            handleDeleteComment(comment._id, false, null, comment.messageId || comment.message_id);
                           }}
                         >
                           Delete Comment
@@ -202,10 +243,10 @@ const Comments = ({ comments }) => {
                           type="text"
                           value={editedCommentText}
                           onChange={(e) => setEditedCommentText(e.target.value)}
-                          onBlur={() => handleSaveEdit(comment.commentId)}
+                          onBlur={() => handleSaveEdit(comment.commentId, comment.messageId || comment.message_id)}
                           onKeyPress={(e) => {
                             if (e.key === 'Enter')
-                              handleSaveEdit(comment.commentId);
+                              handleSaveEdit(comment.commentId, comment.messageId || comment.message_id);
                           }}
                         />
                       ) : (
@@ -243,27 +284,31 @@ const Comments = ({ comments }) => {
                               </span>
                             </span>
                             <Dropdown
+                              key={`reply-dd-${reply.replyId}-${dropdownKey}`}
                               title={<FaEllipsisV className="options-icon" />}
                               buttonClassName="dropdown-button"
                             >
                               <Dropdown.Item
-                                onClick={() =>
+                                onClick={() => {
+                                  closeDropdown();
                                   handleEditReply(
                                     comment.commentId,
                                     reply.replyId
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 Edit Reply
                               </Dropdown.Item>
                               <Dropdown.Item
-                                onClick={() =>
+                                onClick={() => {
+                                  closeDropdown();
                                   handleDeleteComment(
                                     reply.replyId,
                                     true,
-                                    comment.commentId
-                                  )
-                                }
+                                    comment.commentId,
+                                    comment.messageId || comment.message_id
+                                  );
+                                }}
                               >
                                 Delete Reply
                               </Dropdown.Item>
@@ -280,14 +325,16 @@ const Comments = ({ comments }) => {
                                 onBlur={() =>
                                   handleSaveReply(
                                     comment.commentId,
-                                    reply.replyId
+                                    reply.replyId,
+                                    comment.messageId || comment.message_id
                                   )
                                 }
                                 onKeyPress={(e) => {
                                   if (e.key === 'Enter')
                                     handleSaveReply(
                                       comment.commentId,
-                                      reply.replyId
+                                      reply.replyId,
+                                      comment.messageId || comment.message_id
                                     );
                                 }}
                               />
@@ -311,11 +358,11 @@ const Comments = ({ comments }) => {
                     <input
                       type="text"
                       placeholder="Reply"
-                      value={editedReplyText}
-                      onChange={(e) => setEditedReplyText(e.target.value)}
+                      value={replyTexts[comment.commentId] || ''}
+                      onChange={(e) => setReplyTexts((prev) => ({ ...prev, [comment.commentId]: e.target.value }))}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter')
-                          handleAddReply(comment.commentId);
+                          handleAddReply(comment.commentId, comment.messageId || comment.message_id);
                       }}
                     />
                     {/* <div className="user-icon">
@@ -326,7 +373,7 @@ const Comments = ({ comments }) => {
                     </div> */}
                     <div
                       className="send-icon"
-                      onClick={() => handleAddReply(comment.commentId)}
+                      onClick={() => handleAddReply(comment.commentId, comment.messageId || comment.message_id)}
                     >
                       <IoSend />
                     </div>
@@ -479,6 +526,9 @@ max-width: 100%;
       flex-grow: 1;
       border: none;
       outline: none;
+      font-size: 1.2rem;
+      padding: 0.3rem;
+      min-width: 0;
     }
     .filter-icon {
       font-size: 1.5rem;
