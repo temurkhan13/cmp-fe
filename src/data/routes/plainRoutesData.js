@@ -10,6 +10,11 @@ const plainRoutesData = [
     path: 'check-out',
     element: Module.Auth.CheckOut,
   },
+  {
+    title: '',
+    path: 'success',
+    element: Module.Auth.PaymentSuccess,
+  },
 ];
 
 export default plainRoutesData;

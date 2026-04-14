@@ -6,9 +6,10 @@ export { default as BusinessInfo } from './BusinessInfo';
 export { default as SetPassword } from './SetPassword';
 export { default as VerifyEmail } from './VerifyEmail';
 
-// stipe
+// stripe
 export { default as ChoosePlain } from './ChoosePlain';
 export { default as CheckOut } from './CheckOut';
+export { default as PaymentSuccess } from './PaymentSuccess';
 
 // forgot password
 export { default as Verification } from './Verification';
