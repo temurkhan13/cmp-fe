@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FaUserCircle } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import apiClient from '../../../api/axios';
-import config from '../../../config/config';
 import toast from 'react-hot-toast';
 
 const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
@@ -11,17 +9,23 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
   const [selectedVersion, setSelectedVersion] = useState(null);
   const [loading, setLoading] = useState(true);
   const [restoring, setRestoring] = useState(false);
+  const [hasReport, setHasReport] = useState(true);
 
   useEffect(() => {
     if (assessmentId) {
-      fetchVersions();
+      fetchData();
     }
   }, [assessmentId]);
 
-  const fetchVersions = async () => {
+  const fetchData = async () => {
     try {
-      const res = await apiClient.get(`${config.apiURL}/assessment/${assessmentId}/versions`);
-      setVersions(res.data || []);
+      const [versionsRes, assessmentRes] = await Promise.all([
+        apiClient.get(`/assessment/${assessmentId}/versions`),
+        apiClient.get(`/workspace-assessment/${assessmentId}`).catch(() => null),
+      ]);
+      setVersions(versionsRes.data || []);
+      const assessment = assessmentRes?.data?.data || assessmentRes?.data;
+      setHasReport(!!(assessment?.report && assessment.report.isGenerated));
     } catch (err) {
       if (import.meta.env.DEV) console.error(err);
     } finally {
@@ -31,7 +35,7 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
 
   const handleSaveVersion = async () => {
     try {
-      await apiClient.post(`${config.apiURL}/assessment/${assessmentId}/version`);
+      await apiClient.post(`/assessment/${assessmentId}/version`);
       toast.success('Current version saved');
       fetchVersions();
     } catch (err) {
@@ -47,7 +51,7 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
     const version = versions[selectedVersion];
     setRestoring(true);
     try {
-      await apiClient.post(`${config.apiURL}/assessment/${assessmentId}/version/${version.id}/restore`);
+      await apiClient.post(`/assessment/${assessmentId}/version/${version.id}/restore`);
       toast.success(`Restored to version ${version.version_number}`);
       if (onRestore) onRestore();
       if (onClose) onClose();
@@ -70,6 +74,10 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
     <div className="version-history">
       {loading ? (
         <div style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>Loading versions...</div>
+      ) : !hasReport ? (
+        <div style={{ padding: '1rem' }}>
+          <NoDataAvailable message="No report has been generated yet. Complete an assessment to generate a report before saving versions." />
+        </div>
       ) : versions.length === 0 ? (
         <div style={{ padding: '1rem' }}>
           <NoDataAvailable message="No version history available" />

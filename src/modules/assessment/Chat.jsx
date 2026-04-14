@@ -42,6 +42,7 @@ const Chat = () => {
   const folderData = useSelector(selectFolderData);
 
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [chatMedia, setChatMedia] = useState({ images: [], documents: [], links: [] });
 
   const handleAssessmentSelect = (assessment) => {
     if (assessment) {
@@ -172,11 +173,13 @@ const Chat = () => {
         <MessagesSection
           handleAssessmentSelect={handleAssessmentSelect}
           selectedAssessment={selectedAssessment}
+          onMediaUpdate={setChatMedia}
         />
 
         <Assessments
           folderID={folderID}
           handleAssessmentSelect={handleAssessmentSelect}
+          chatMedia={chatMedia}
         />
       </section>
     </div>

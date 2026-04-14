@@ -108,7 +108,7 @@ const splitContentIntoPages = (htmlContent) => {
 };
 
 // Main component
-const WordReportTemplate = ({ content, title }) => {
+const WordReportTemplate = ({ content = '', title }) => {
   // Ensure content is a valid string
   const safeContent = content || '';
   const htmlContent = marked(safeContent || ''); // Convert Markdown to HTML
@@ -154,9 +154,5 @@ WordReportTemplate.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-// Default Props
-WordReportTemplate.defaultProps = {
-  content: '',
-};
 
 export default WordReportTemplate;

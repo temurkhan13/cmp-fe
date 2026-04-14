@@ -69,20 +69,28 @@ const NewChat = () => {
     }));
 
   useEffect(() => {
-    if ((selectedFolder?.id || selectedFolder?._id) && currentWorkspace?.id) {
-      setChatsLoading(true);
-      dispatch(
-        getChatsAsync({
-          workspaceId: currentWorkspace.id,
-          folderId: selectedFolder._id || selectedFolder.id,
-        })
-      )
-        .then((response) => {
-          dispatch(setChats(normalizeChats(response.payload.data)));
-        })
-        .catch((error) => {})
-        .finally(() => setChatsLoading(false));
-    }
+    const fId = selectedFolder?._id || selectedFolder?.id;
+    const wId = currentWorkspace?.id;
+    if (!fId || !wId) return;
+
+    // Ensure the selected folder belongs to the current workspace to avoid cross-workspace mismatches
+    const folderBelongsToWorkspace = currentWorkspace.folders?.some(
+      (f) => (f._id || f.id) === fId
+    );
+    if (!folderBelongsToWorkspace) return;
+
+    setChatsLoading(true);
+    dispatch(
+      getChatsAsync({
+        workspaceId: wId,
+        folderId: fId,
+      })
+    )
+      .then((response) => {
+        dispatch(setChats(normalizeChats(response.payload.data)));
+      })
+      .catch((error) => {})
+      .finally(() => setChatsLoading(false));
   }, [currentWorkspace, currentFolder, dispatch, selectedFolder]);
 
   useEffect(() => {

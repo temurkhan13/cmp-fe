@@ -77,7 +77,7 @@ const workspacesSlice = createSlice({
     },
     setSelectedFolder: (state, action) => {
       state.selectedFolder = action.payload;
-      state.currentFolderId = action.payload._id;
+      state.currentFolderId = action.payload?._id || action.payload?.id || null;
     },
     setCurrentChatId: (state, action) => {
       state.currentChatId = action.payload;

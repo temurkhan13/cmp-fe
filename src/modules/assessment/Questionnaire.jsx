@@ -11,6 +11,8 @@ import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import { useAddProjectSurveyMutation } from '../../redux/api/workspaceApi';
 import { useSelector } from 'react-redux';
+import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import { selectSelectedFolder } from '../../redux/slices/folderSlice';
 
 const Questionnaire = ({ handleCloseImproveResponseModal }) => {
   const [AddProjectSurvey] = useAddProjectSurveyMutation();
@@ -19,11 +21,12 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [Questions, setQuestions] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const { loading, handleInspire } = useInspire();
-  const workspaceId = useSelector(
-    (state) => state.workspaces.currentWorkspaceId
-  );
-  const folderId = useSelector((state) => state.workspaces.currentFolderId);
+  const currentWorkspace = useSelector(selectWorkspace);
+  const selectedFolder = useSelector(selectSelectedFolder);
+  const workspaceId = currentWorkspace?.id;
+  const folderId = selectedFolder?._id || selectedFolder?.id;
   const logAnswers = () => {
     const questionsArray = data.questionnaire.Questions.map((question) => {
       const answer = answers[`question-${question.id}`] || 'No answer provided';
@@ -37,6 +40,14 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
   };
 
   const handleSubmit = async () => {
+    const hasAtLeastOneAnswer = Questions && Questions.some(
+      (q) => q.answer && q.answer.trim() && q.answer !== 'No answer provided'
+    );
+    if (!hasAtLeastOneAnswer) {
+      setSubmitError('Please answer at least one question before submitting.');
+      return;
+    }
+    setSubmitError('');
     await AddProjectSurvey({ workspaceId, folderId, survey: Questions });
     handleCloseImproveResponseModal(false);
   };
@@ -72,9 +83,8 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
   };
 
   const handleInspireClick = async () => {
-    const currentQuestionKey = `question-${
-      data.questionnaire.Questions[activeStep - 1].id
-    }`;
+    const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id
+      }`;
     const inspiredText = await handleInspire(
       data.questionnaire.Questions[activeStep - 1].question
     );
@@ -94,9 +104,8 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
           {data.questionnaire.Questions.map((_, index) => (
             <div key={index} className={styles.StepWrapper}>
               <div
-                className={`${styles.StepStyle} ${
-                  activeStep > index + 1 || isSubmitted ? 'completed' : ''
-                }  ${activeStep === index + 1 ? styles.ActiveStep : ''}`}
+                className={`${styles.StepStyle} ${activeStep > index + 1 || isSubmitted ? 'completed' : ''
+                  }  ${activeStep === index + 1 ? styles.ActiveStep : ''}`}
               >
                 {activeStep > index + 1 || isSubmitted ? (
                   <div className={styles.CheckMark}>
@@ -142,6 +151,11 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
                   Done
                 </button>
               </div>
+              {submitError && (
+                <p style={{ color: '#dc2626', fontSize: '1.2rem', marginTop: '0.5rem' }}>
+                  {submitError}
+                </p>
+              )}
             </div>
           </div>
         ) : showQuestionnaire ? (
@@ -151,14 +165,12 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
               <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
               <div style={{ position: 'relative' }}>
                 <textarea
-                  name={`question-${
-                    data.questionnaire.Questions[activeStep - 1].id
-                  }`}
+                  name={`question-${data.questionnaire.Questions[activeStep - 1].id
+                    }`}
                   value={
                     answers[
-                      `question-${
-                        data.questionnaire.Questions[activeStep - 1].id
-                      }`
+                    `question-${data.questionnaire.Questions[activeStep - 1].id
+                    }`
                     ] || ''
                   }
                   onChange={handleTextareaChange}
@@ -212,9 +224,8 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
                 onClick={skipStep}
                 disabled={
                   !!answers[
-                    `question-${
-                      data.questionnaire.Questions[activeStep - 1].id
-                    }`
+                  `question-${data.questionnaire.Questions[activeStep - 1].id
+                  }`
                   ]
                 }
               >
