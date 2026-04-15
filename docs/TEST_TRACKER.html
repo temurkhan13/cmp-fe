@@ -364,7 +364,7 @@
 <div class="header">
   <div>
     <h1>CMP Frontend — Test Case Tracker</h1>
-    <p>97 test cases across 22 feature sections</p>
+    <p id="subtitle"></p>
   </div>
   <div class="stats-bar">
     <div class="stat-box passed">
@@ -581,7 +581,7 @@ const TEST_DATA = [
     section: "15. AI Writing Tools",
     tests: [
       { id: "TC-068", name: "Summarize Text (Happy Path)", type: "happy" },
-      { id: "TC-069", name: "Translate Text (Happy Path)", type: "happy" },
+
       { id: "TC-070", name: "Explain Text (Happy Path)", type: "happy" },
       { id: "TC-071", name: "Fix Grammar (Happy Path)", type: "happy" },
       { id: "TC-072", name: "Change Tone (Happy Path)", type: "happy" },
@@ -687,7 +687,7 @@ const SEED_STATE = {
   "TC-013":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-014a": { status: "passed",  notes: "Passed but requires error handling from frontend", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-014b": { status: "passed",  notes: "Passed but requires error handling from frontend", timestamp: "4/14/2026, 12:00:00 AM" },
-  "TC-015":  { status: "nofeature",  notes: "No rename functionality on frontend", timestamp: "4/14/2026, 12:00:00 AM" },
+  "TC-015":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-016":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-017":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-018":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
@@ -740,7 +740,7 @@ const SEED_STATE = {
   "TC-067":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-062":  { status: "passed",  notes: "", timestamp: "4/14/2026, 12:00:00 AM" },
   "TC-068":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-069":  { status: "nofeature",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
+
   "TC-070":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-071":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-072":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
@@ -750,10 +750,10 @@ const SEED_STATE = {
   "TC-076":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-077":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-078":  { status: "passed",  notes: "Only in AI Chat assistant, not in report editor", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-049":  { status: "blocked",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-050":  { status: "blocked",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-051":  { status: "blocked",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-052":  { status: "blocked",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
+  "TC-049":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
+  "TC-050":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
+  "TC-051":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
+  "TC-052":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-082":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-083":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-084":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
@@ -767,9 +767,10 @@ const SEED_STATE = {
   "TC-092":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-093":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-095":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-096":  { status: "nofeature",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
+  "TC-096":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
   "TC-098":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
-  "TC-097":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" }
+  "TC-097":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" },
+  "TC-025":  { status: "passed",  notes: "", timestamp: "4/15/2026, 12:00:00 AM" }
 };
 
 // Merge seed into saved state (seed always wins so file edits take effect)
@@ -802,6 +803,7 @@ function updateStats() {
   const total = getTotal();
   const tested = c.passed + c.failed + c.blocked + c.nofeature;
 
+  document.getElementById("subtitle").textContent = total + " test cases across " + TEST_DATA.length + " feature sections";
   document.getElementById("stat-passed").textContent = c.passed;
   document.getElementById("stat-failed").textContent = c.failed;
   document.getElementById("stat-blocked").textContent = c.blocked;

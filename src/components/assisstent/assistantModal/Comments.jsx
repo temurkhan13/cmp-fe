@@ -399,8 +399,8 @@ const Comments = ({ comments }) => {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #007bff;
-    color: #ffffff;
+    background-color: #C3E11D;
+    color: #0B1444;
     font-size: 18px;
     font-weight: bold;
     text-align: center;

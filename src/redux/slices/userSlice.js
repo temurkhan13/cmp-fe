@@ -13,42 +13,39 @@ const baseURL = `${config.apiURL}/auth`; // Change this as per your API
 // Async thunk action to handle user update
 const updateUserAsync = createAsyncThunk(
   'user/updateUser',
-  async ({ userId, updatedUserData, photoPath }, thunkAPI) => {
+  async ({ userId, updatedUserData, photoPath, removePhoto }, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token'); // Authorization token
+      const token = localStorage.getItem('token');
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      // API base URL for user updates
       const url = `${baseURL}/users/${userId}`;
 
-      // If photoPath exists, upload image using FormData
+      // If a new photo file is provided, upload it via FormData
       if (photoPath) {
         const formData = new FormData();
-        formData.append('photoPath', photoPath); // Key for the image file
+        formData.append('photoPath', photoPath);
+        Object.entries(updatedUserData).forEach(([key, value]) => {
+          if (value !== undefined) formData.append(key, value);
+        });
 
-        // Send image as FormData in a separate request
-        await apiClient.patch(url, formData, {
+        const response = await apiClient.patch(url, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         });
+        return response.data;
       }
 
-      // Send other fields as JSON, if available
-      if (Object.keys(updatedUserData).length > 0) {
-        const response = await apiClient.patch(url, updatedUserData, config);
-        const updatedUser = response.data;
-        return updatedUser;
+      // If photo was deleted, include photoPath: '' to clear it on the server
+      const payload = { ...updatedUserData };
+      if (removePhoto) {
+        payload.photoPath = '';
       }
 
-      // If no fields were updated, return the current user (or any relevant data)
-      return thunkAPI.fulfillWithValue('No fields updated');
+      const response = await apiClient.patch(url, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || 'Update failed');
     }

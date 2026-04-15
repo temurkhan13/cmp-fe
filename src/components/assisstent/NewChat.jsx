@@ -334,8 +334,9 @@ const NewChat = () => {
                         isOpen={isModalOpen}
                         closeModal={closeModal}
                         chatId={chat._id || chat.id}
+                        chatTitle={chat.chatTitle || chat.chat_title || ''}
                         workspaceId={currentWorkspace?.id}
-                        folderId={selectedFolder?._id || selectedFolder?.id}
+                        folderId={chat.folder_id || selectedFolder?._id || selectedFolder?.id}
                         onDeleted={(deletedId) => {
                           const updated = (myChats || []).filter(c => (c._id || c.id) !== deletedId);
                           dispatch(setChats(updated));
@@ -343,6 +344,14 @@ const NewChat = () => {
                             dispatch(setCurrentChatId(null));
                             navigate('/assistant/chat', { replace: true });
                           }
+                        }}
+                        onRenamed={(renamedId, newTitle) => {
+                          const updated = (myChats || []).map(c =>
+                            (c._id || c.id) === renamedId
+                              ? { ...c, chatTitle: newTitle, chat_title: newTitle }
+                              : c
+                          );
+                          dispatch(setChats(updated));
                         }}
                         position={showMenu.position}
                       />
