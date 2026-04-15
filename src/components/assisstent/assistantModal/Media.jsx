@@ -73,7 +73,12 @@ const Media = ({ images, documents, links }) => {
               <NoDataAvailable message="No documents available" />
             ) : (
               documents.map((doc, index) => (
-                <div key={index} className="document-item">
+                <div
+                  key={index}
+                  className="document-item"
+                  onClick={() => doc.url && window.open(doc.url, '_blank')}
+                  style={{ cursor: doc.url ? 'pointer' : 'default' }}
+                >
                   <div className="document-icon">
                     <IoMdDocument />
                   </div>
@@ -95,7 +100,12 @@ const Media = ({ images, documents, links }) => {
               <NoDataAvailable message="No links available" />
             ) : (
               links.map((link, index) => (
-                <div key={index} className="link-item">
+                <div
+                  key={index}
+                  className="link-item"
+                  onClick={() => link.url && window.open(link.url, '_blank')}
+                  style={{ cursor: 'pointer' }}
+                >
                   <button className="link-button">
                     <MdInsertLink />
                   </button>
@@ -333,6 +343,7 @@ Media.propTypes = {
   documents: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
+      url: PropTypes.string,
       date: PropTypes.string.isRequired,
       size: PropTypes.string.isRequired,
     })

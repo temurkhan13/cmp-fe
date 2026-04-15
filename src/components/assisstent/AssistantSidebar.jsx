@@ -11,7 +11,12 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice';
-import { useGetChatQuery } from '../../redux/api/workspaceApi';
+import {
+  useGetChatQuery,
+  useGetChatMediaQuery,
+  useGetChatDocumentsQuery,
+  useGetChatLinksQuery,
+} from '../../redux/api/workspaceApi';
 
 const AssistantSidebar = (props) => {
   const currentChat = props?.currentChat;
@@ -24,13 +29,46 @@ const AssistantSidebar = (props) => {
   const workspaceId = selectedWorkspace?.id;
   const folderId = selectedFolder?._id || selectedFolder?.id;
 
+  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
+    useState(false);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
+
   const { data: liveChat } = useGetChatQuery(
     { workspaceId, folderId, chatId },
     { skip: !workspaceId || !folderId || !chatId }
   );
 
+  const skipMedia = !workspaceId || !folderId || !chatId || !isMediaModalOpen;
+  const { data: mediaData } = useGetChatMediaQuery(
+    { workspaceId, folderId, chatId },
+    { skip: skipMedia, refetchOnMountOrArgChange: true }
+  );
+  const { data: documentsData } = useGetChatDocumentsQuery(
+    { workspaceId, folderId, chatId },
+    { skip: skipMedia, refetchOnMountOrArgChange: true }
+  );
+  const { data: linksData } = useGetChatLinksQuery(
+    { workspaceId, folderId, chatId },
+    { skip: skipMedia, refetchOnMountOrArgChange: true }
+  );
+
   // Use liveChat from RTK Query (always fresh), fallback to prop
   const chatData = liveChat || currentChat;
+
+  // Transform media data for the Media component
+  const images = (mediaData || []).map((m) => m.url);
+  const documents = (documentsData || []).map((d) => ({
+    name: d.file_name || d.name || 'Unknown',
+    url: d.url || '',
+    date: d.date ? new Date(d.date).toLocaleDateString() : '',
+    size: d.size ? `${(d.size / 1024).toFixed(1)} KB` : '',
+  }));
+  const links = (linksData || []).map((l) => ({
+    name: l.name || l.url || 'Link',
+    url: l.url || '',
+  }));
 
   // Aggregate comments from all messages (backend attaches them per-message)
   const allComments = useMemo(() => {
@@ -48,12 +86,6 @@ const AssistantSidebar = (props) => {
         }))
       );
   }, [chatData?.generalMessages]);
-
-  const [isVersionHistoryModalOpen, setIsVersionHistoryModalOpen] =
-    useState(false);
-  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
-  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
-  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
 
   const closeModal = () => {
     setIsVersionHistoryModalOpen(false);
@@ -96,13 +128,13 @@ const AssistantSidebar = (props) => {
             <FaHistory className="icon" size={20} />
             <span className="tooltip">Version History</span>
           </span> */}
-          {/*<span*/}
-          {/*  className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}*/}
-          {/*  onClick={() => setIsMediaModalOpen(true)}*/}
-          {/*>*/}
-          {/*  <FaImages className="icon" size={20} />*/}
-          {/*  <span className="tooltip">Media</span>*/}
-          {/*</span>*/}
+          <span
+            className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}
+            onClick={() => setIsMediaModalOpen(true)}
+          >
+            <FaImages className="icon" size={20} />
+            <span className="tooltip">Media</span>
+          </span>
           <span
             className={`iconButton ${isCommentsModalOpen ? 'active' : ''}`}
             onClick={() => setIsCommentsModalOpen(true)}
@@ -127,19 +159,19 @@ const AssistantSidebar = (props) => {
           onClose={closeModal}
         />
       )}
-      {/*{isMediaModalOpen && (*/}
-      {/*  <SideBarModal*/}
-      {/*    title="Media"*/}
-      {/*    bodyContent={*/}
-      {/*      <Media*/}
-      {/*        images={currentChat.images}*/}
-      {/*        documents={currentChat.documents}*/}
-      {/*        links={currentChat.links}*/}
-      {/*      />*/}
-      {/*    }*/}
-      {/*    onClose={closeModal}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {isMediaModalOpen && (
+        <SideBarModal
+          title="Media"
+          bodyContent={
+            <Media
+              images={images}
+              documents={documents}
+              links={links}
+            />
+          }
+          onClose={closeModal}
+        />
+      )}
       {isCommentsModalOpen && (
         <SideBarModal
           title="Comments"
