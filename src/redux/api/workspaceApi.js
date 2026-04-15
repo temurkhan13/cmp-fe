@@ -483,6 +483,27 @@ export const workspaceApi = createApi({
         method: 'DELETE',
       }),
     }),
+    getChatMedia: builder.query({
+      query: ({ workspaceId, folderId, chatId }) =>
+        `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/media`,
+      providesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
+    }),
+    getChatDocuments: builder.query({
+      query: ({ workspaceId, folderId, chatId }) =>
+        `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/documents`,
+      providesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
+    }),
+    getChatLinks: builder.query({
+      query: ({ workspaceId, folderId, chatId }) =>
+        `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/links`,
+      providesTags: (result, error, { workspaceId, folderId, chatId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      ],
+    }),
 
     // Tasks
     addTask: builder.mutation({
@@ -601,6 +622,9 @@ export const {
   useAddMediaMutation,
   useUpdateMediaMutation,
   useRemoveMediaMutation,
+  useGetChatMediaQuery,
+  useGetChatDocumentsQuery,
+  useGetChatLinksQuery,
   useAddTaskMutation,
   useUpdateTaskMutation,
   useRemoveTaskMutation,
