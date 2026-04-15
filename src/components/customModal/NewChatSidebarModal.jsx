@@ -1,11 +1,29 @@
 import PropTypes from 'prop-types';
-import { FaTrash } from 'react-icons/fa';
-import { useRemoveChatMutation } from '../../redux/api/workspaceApi';
+import { FaTrash, FaPen } from 'react-icons/fa';
+import { useRemoveChatMutation, useUpdateChatMutation } from '../../redux/api/workspaceApi';
 
-const NewChatSidebarModal = ({ isOpen, closeModal, chatId, workspaceId, folderId, onDeleted, position }) => {
+const NewChatSidebarModal = ({ isOpen, closeModal, chatId, chatTitle, workspaceId, folderId, onDeleted, onRenamed, position }) => {
   const [removeChat] = useRemoveChatMutation();
+  const [updateChat] = useUpdateChatMutation();
 
   if (!isOpen) return null;
+
+  const handleRenameChat = async () => {
+    const newName = prompt('Rename chat:', chatTitle || '');
+    if (!newName || !newName.trim()) return;
+    try {
+      await updateChat({
+        workspaceId,
+        folderId,
+        chatId,
+        chat: { chatTitle: newName.trim() },
+      }).unwrap();
+      if (onRenamed) onRenamed(chatId, newName.trim());
+    } catch (error) {
+      import.meta.env.DEV && console.error('Failed to rename chat:', error);
+    }
+    closeModal();
+  };
 
   const handleMoveToTrash = async () => {
     try {
@@ -28,6 +46,12 @@ const NewChatSidebarModal = ({ isOpen, closeModal, chatId, workspaceId, folderId
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        <div
+          className="dropdown-item"
+          onClick={handleRenameChat}
+        >
+          <FaPen className="newchat-icon" /> Rename
+        </div>
         <div
           className="dropdown-item"
           onClick={handleMoveToTrash}
@@ -78,9 +102,11 @@ NewChatSidebarModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   chatId: PropTypes.string.isRequired,
+  chatTitle: PropTypes.string,
   workspaceId: PropTypes.string.isRequired,
   folderId: PropTypes.string.isRequired,
   onDeleted: PropTypes.func,
+  onRenamed: PropTypes.func,
   position: PropTypes.shape({
     top: PropTypes.number.isRequired,
     left: PropTypes.number.isRequired,

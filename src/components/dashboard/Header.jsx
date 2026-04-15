@@ -8,22 +8,14 @@ import NotificationDropdown from './NotificationDropdown';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
 import { logout } from '../../redux/slices/authSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import { persistor } from '../../redux/store/store.js';
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [photoPath, setPhotoPath] = useState('false');
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setPhotoPath(storedUser.photoPath);
-      setUser(storedUser);
-    }
-  }, []);
+  const user = useSelector((state) => state.auth.user);
+  const photoPath = user?.photoPath || '';
 
   const getInitials = () => {
     if (!user) {
@@ -238,8 +230,8 @@ const Header = () => {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          background-color: #007bff;
-          color: #ffffff;
+          background-color: #C3E11D;
+          color: #0B1444;
           font-size: 18px;
           font-weight: bold;
           text-align: center;

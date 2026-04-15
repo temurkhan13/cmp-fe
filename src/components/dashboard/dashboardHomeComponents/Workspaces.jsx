@@ -12,6 +12,7 @@ import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redu
 import {
   useAddWorkspaceMutation,
   useMoveToTrashMutation,
+  useUpdateWorkspaceMutation,
 } from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
 import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
@@ -38,6 +39,7 @@ const Workspaces = ({
   const dispatch = useDispatch();
   const [addWorkspace] = useAddWorkspaceMutation();
   const [moveToTrash] = useMoveToTrashMutation();
+  const [updateWorkspaceMutation] = useUpdateWorkspaceMutation();
 
   const showSuccess = (message) => {
     setSuccessMessage(message);
@@ -97,6 +99,31 @@ const Workspaces = ({
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
+  const handleRenameWorkspace = async (workspace) => {
+    if (workspace.workspaceName === 'Default Workspace') {
+      showError('Default workspace cannot be renamed.');
+      return;
+    }
+    const newName = prompt('Rename workspace:', workspace.workspaceName);
+    if (!newName || !newName.trim()) return;
+    if (newName.trim().length < 3) {
+      showError('Workspace name must be at least 3 characters.');
+      return;
+    }
+    try {
+      await updateWorkspaceMutation({
+        workspaceId: workspace.id,
+        workspaceName: newName.trim(),
+      }).unwrap();
+      setOpenDropdown(null);
+      onWorkspaceUpdated();
+      showSuccess('Workspace renamed successfully!');
+    } catch (error) {
+      if (import.meta.env.DEV) console.error(error);
+      showError('Failed to rename workspace.');
+    }
+  };
+
   const handleMoveToTrash = async (workspaceId) => {
     try {
       await moveToTrash({
@@ -148,11 +175,13 @@ const Workspaces = ({
             {openDropdown === index && (
               <div className="dropdown-menuu">
                 <div
+                  className="dropdown-itemm"
+                  onClick={() => handleRenameWorkspace(workspace)}
+                >
+                  Rename
+                </div>
+                <div
                   className="dropdown-itemm deletee"
-                  // onClick={() => {
-                  //   handleDeleteWorkspace(workspace.id);
-                  //   setOpenDropdown(null); // Close dropdown after delete
-                  // }}
                   onClick={() => handleMoveToTrash(workspace.id)}
                 >
                   Delete

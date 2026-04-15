@@ -260,6 +260,10 @@ const authSlice = createSlice({
     },
     resetLoading: (state) => {
       state.isLoggedIn = false; // Reset error to null
+    },
+    updateUser: (state, action) => {
+      state.user = action.payload;
+      localStorage.setItem('user', JSON.stringify(action.payload));
     }
   },
   extraReducers: (builder) => {
@@ -329,7 +333,7 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 // Export async actions
-export const { logout, rehydrateToken, resetError, resetLoading } =
+export const { logout, rehydrateToken, resetError, resetLoading, updateUser } =
   authSlice.actions;
 export {
   loginAsync as login,

@@ -15,6 +15,7 @@ const PersonalInfo = () => {
     currentUser?.companyName || ''
   );
   const [selectedFile, setSelectedFile] = useState(null);
+  const [photoDeleted, setPhotoDeleted] = useState(false);
   const fileInputRef = useRef(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -28,6 +29,8 @@ const PersonalInfo = () => {
     setLastName(currentUser?.lastName || '');
     setEmail(currentUser?.email || '');
     setCompanyName(currentUser?.companyName || '');
+    setPhotoDeleted(false);
+    setSelectedFile(null);
   }, [currentUser]);
 
   useEffect(() => {
@@ -36,9 +39,10 @@ const PersonalInfo = () => {
         lastName !== currentUser?.lastName ||
         email !== currentUser?.email ||
         companyName !== currentUser?.companyName ||
-        selectedFile !== null
+        selectedFile !== null ||
+        photoDeleted
     );
-  }, [firstName, lastName, email, companyName, selectedFile, currentUser]);
+  }, [firstName, lastName, email, companyName, selectedFile, photoDeleted, currentUser]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -47,15 +51,16 @@ const PersonalInfo = () => {
       reader.onload = (e) => setAvatar(e.target.result);
       reader.readAsDataURL(file);
       setSelectedFile(file);
+      setPhotoDeleted(false);
     } else {
       alert('File size should be less than 1 MB.');
     }
   };
 
   const handleImageDelete = () => {
-    const generatedImage = generateInitialsImage();
-    setAvatar(generatedImage);
+    setAvatar('');
     setSelectedFile(null);
+    setPhotoDeleted(true);
   };
 
   const generateInitialsImage = () => {
@@ -99,12 +104,11 @@ const PersonalInfo = () => {
         companyName,
       };
 
-      const imageToSend = selectedFile ? selectedFile : null;
-
       const formData = {
         userId: currentUser.id,
         updatedUserData,
-        photoPath: imageToSend,
+        photoPath: selectedFile ? selectedFile : null,
+        removePhoto: photoDeleted && !selectedFile,
       };
 
       try {
@@ -112,10 +116,10 @@ const PersonalInfo = () => {
 
         if (updateUserAsync.fulfilled.match(result)) {
           setSuccessMessage('Changes have been updated successfully!');
-          // Directly update Redux store's user data after successful update
+          setPhotoDeleted(false);
           dispatch({
             type: 'auth/updateUser',
-            payload: { ...currentUser, ...updatedUserData, photoPath: avatar },
+            payload: result.payload,
           });
         } else {
           setErrors({ form: 'Failed to update user information.' });

@@ -37,9 +37,9 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
     try {
       await apiClient.post(`/assessment/${assessmentId}/version`);
       toast.success('Current version saved');
-      fetchVersions();
+      await fetchData();
     } catch (err) {
-      toast.error('No report found to save as version');
+      toast.error(err?.response?.data?.message || 'No report found to save as version');
     }
   };
 
