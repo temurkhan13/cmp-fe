@@ -1,165 +1,210 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
+import { FaBookmark } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import { truncateText } from '../../../utils/helperFunction';
 
 const ChatBookmark = ({ date, messages }) => {
-  const [bookmarks, setBookmarks] = useState(
-    messages && messages.map(() => false)
-  );
+  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const [expandedTextIndex, setExpandedTextIndex] = useState(null); // State to track expanded text
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) setUser(storedUser);
+  }, []);
 
-  const toggleBookmark = (index) => {
-    setBookmarks((prevBookmarks) =>
-      prevBookmarks.map((bookmarked, i) =>
-        i === index ? !bookmarked : bookmarked
-      )
-    );
+  const getInitials = (name) => {
+    if (name) {
+      const parts = name.trim().split(/\s+/);
+      return ((parts[0]?.[0] || '') + (parts[1]?.[0] || '')).toUpperCase();
+    }
+    if (!user) return '?';
+    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
   };
 
-  const toggleTextExpansion = (index) => {
-    setExpandedTextIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the expansion of the text
+  const photoPath = user?.photoPath || '';
+
+  const toggleExpand = (index) => {
+    setExpandedIndex((prev) => (prev === index ? null : index));
   };
+
+  if (!messages || messages.length === 0) {
+    return <NoDataAvailable message="No bookmarks yet" />;
+  }
 
   return (
-    <div>
-      <div className="chat-bookmark">
-        {!messages || messages.length === 0 ? (
-          <NoDataAvailable message="No bookmarks available" />
-        ) : (
-          messages.map((message, index) => (
-            <div className="message" key={index}>
-              <div className="date">{message.localDate}</div>
-              <div className="header-content">
-                <div className="avatar">
-                  {/* <img src={message.avatar} alt={`${message.sender} avatar`} /> */}
-                  {message.avatar}
-                </div>
-                <div className="content">
-                  <div className="header">
-                    <div className="sender">{message.from}</div>
-                    {/* {bookmarks[index] ? (
-                      <FaBookmark
-                        className="bookmark-icon"
-                        onClick={() => toggleBookmark(index)}
-                      />
-                    ) : (
-                      <FaRegBookmark
-                        className="bookmark-icon"
-                        onClick={() => toggleBookmark(index)}
-                      />
-                    )} */}
+    <>
+      <div className="bm-list">
+        {messages.map((message, index) => {
+          const isExpanded = expandedIndex === index;
+          const needsTruncate = message.text && message.text.length > 200;
+
+          return (
+            <div className="bm-card" key={message._id || message.id || index}>
+              {/* Header */}
+              <div className="bm-card-header">
+                <div className="bm-avatar-row">
+                  {photoPath ? (
+                    <img src={photoPath} alt="" className="bm-avatar-img" />
+                  ) : (
+                    <span className="bm-avatar-initials">
+                      {getInitials(message.from)}
+                    </span>
+                  )}
+                  <div className="bm-meta">
+                    <span className="bm-sender">{message.from || 'You'}</span>
+                    <span className="bm-date">{message.localDate}</span>
                   </div>
                 </div>
+                <FaBookmark className="bm-icon" size={14} />
               </div>
-              <div className="bookmark-text">
-                {expandedTextIndex === index
-                  ? message.text
-                  : truncateText(message.text, 300)}{' '}
-                {/* Show full or truncated text based on state */}
+
+              {/* Content */}
+              <div className="bm-content">
+                <p className="bm-text">
+                  {isExpanded ? message.text : truncateText(message.text, 200)}
+                </p>
+                {needsTruncate && (
+                  <button
+                    className="bm-toggle"
+                    onClick={() => toggleExpand(index)}
+                  >
+                    {isExpanded ? 'Show less' : 'Show more'}
+                  </button>
+                )}
               </div>
-              <button
-                className="see-more-btn"
-                onClick={() => toggleTextExpansion(index)}
-              >
-                {expandedTextIndex === index ? 'See Less' : 'See More'}
-              </button>{' '}
-              {/* Toggle the button text */}
-              <div className="saved-by">
-                <span> Saved by </span>
-                You
-                {/* {message.savedBy} */}
+
+              {/* Footer */}
+              <div className="bm-footer">
+                <span className="bm-saved">Saved by </span>
+                <span className="bm-saved-user">You</span>
               </div>
             </div>
-          ))
-        )}
-        <style>{`
-          .chat-bookmark {
-            padding: 1rem;
-            border-bottom: 1px solid #ddd;
-            &:hover {
-              background-color: #f1f1f1;
-              // cursor: pointer;
-            }
-          }
-          .date {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            margin-top: 3rem;
-            margin-left: 1rem;
-            font-weight: 500;
-          }
-          .message {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-          }
-          .header-content {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-          .avatar {
-            margin-right: 1rem;
-            font-size: 3rem;
-          }
-          .content {
-            flex: 1;
-          }
-          .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-          }
-          .sender {
-            font-size: 1.5rem;
-            font-weight: 500;
-          }
-          .bookmark-text {
-            margin-bottom: 0.5rem;
-            border: 2px solid lightgray;
-            font-size: 1.4rem;
-            padding: 1rem;
-            border-radius: 1rem;
-          }
-          .see-more-btn {
-            background: none;
-            border: none;
-            display:flex;
-            align-items: flex-end;
-            color: #007bff;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 0.5rem 0;
-            text-align: left;
-          }
-          .saved-by {
-            font-size: 1.1rem;
-          }
-          .saved-by span {
-            color: gray;
-          }
-        `}</style>
+          );
+        })}
       </div>
-    </div>
+
+      <style>{`
+        .bm-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+          padding: 0.25rem;
+        }
+
+        .bm-card {
+          background: #fff;
+          border: 1px solid #f0f0f0;
+          border-radius: 10px;
+          padding: 1.2rem;
+          transition: box-shadow 0.2s;
+        }
+        .bm-card:hover {
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Header */
+        .bm-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 0.8rem;
+        }
+        .bm-avatar-row {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+        }
+        .bm-avatar-img {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        .bm-avatar-initials {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: #C3E11D;
+          color: #0B1444;
+          font-size: 1.2rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .bm-meta {
+          display: flex;
+          flex-direction: column;
+        }
+        .bm-sender {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: #1a1a1a;
+          line-height: 1.3;
+        }
+        .bm-date {
+          font-size: 1.1rem;
+          color: #999;
+        }
+        .bm-icon {
+          color: #C3E11D;
+          flex-shrink: 0;
+        }
+
+        /* Content */
+        .bm-content {
+          background: #fafafa;
+          border-radius: 8px;
+          padding: 1rem;
+          margin-bottom: 0.6rem;
+        }
+        .bm-text {
+          font-size: 1.3rem;
+          color: #444;
+          line-height: 1.55;
+          margin: 0;
+          white-space: pre-wrap;
+          word-break: break-word;
+        }
+        .bm-toggle {
+          background: none;
+          border: none;
+          color: #2563eb;
+          font-size: 1.15rem;
+          font-weight: 500;
+          cursor: pointer;
+          padding: 0.3rem 0 0 0;
+        }
+        .bm-toggle:hover {
+          text-decoration: underline;
+        }
+
+        /* Footer */
+        .bm-footer {
+          font-size: 1.1rem;
+        }
+        .bm-saved {
+          color: #999;
+        }
+        .bm-saved-user {
+          color: #1a1a1a;
+          font-weight: 500;
+        }
+      `}</style>
+    </>
   );
 };
 
 ChatBookmark.propTypes = {
-  date: PropTypes.string.isRequired,
+  date: PropTypes.number,
   messages: PropTypes.arrayOf(
     PropTypes.shape({
-      avatar: PropTypes.string.isRequired,
-      sender: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      savedBy: PropTypes.string.isRequired,
+      from: PropTypes.string,
+      text: PropTypes.string,
+      localDate: PropTypes.string,
     })
-  ).isRequired,
+  ),
 };
 
 export default ChatBookmark;

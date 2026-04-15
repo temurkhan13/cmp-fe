@@ -65,6 +65,25 @@
   font-size: 1.6rem;
 }
 
+.topbar .selected-workspace-name {
+  position: relative;
+  p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .workspace-badge {
+    background-color: #C3E11D;
+    color: #0B1444;
+    padding: 0.25rem 0.75rem;
+    border-radius: 7px;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+}
+
 .improve-response {
   font-size: 1.5rem;
   font-weight: 500;

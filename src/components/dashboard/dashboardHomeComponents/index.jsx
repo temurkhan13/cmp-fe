@@ -214,8 +214,10 @@ const DashboardHomeComp = () => {
     return (
       <div className="dashboard">
         <SkeletonStatCards />
-        <SkeletonCard count={3} />
-        <SkeletonCard count={3} />
+        <div style={{ padding: '1rem 2.5rem' }}>
+          <SkeletonCard count={3} />
+          <SkeletonCard count={3} />
+        </div>
       </div>
     );
   }

@@ -30,6 +30,7 @@ const UserAvatar = ({
   imgClassName = '',
   initialsClassName = '',
   style = {},
+  initialsStyle = {},
 }) => {
   const [imgFailed, setImgFailed] = useState(false);
   const showImage = src && !imgFailed;
@@ -79,6 +80,7 @@ const UserAvatar = ({
           fontFamily: 'Poppins, sans-serif',
           lineHeight: 1,
           userSelect: 'none',
+          ...initialsStyle,
         }}
       >
         {initials}

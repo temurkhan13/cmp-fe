@@ -94,7 +94,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia }) => {
           onClose={() => setActiveIcon(null)}
         />
       )}
-      {/* {activeIcon === 'gallery' && (
+      {activeIcon === 'gallery' && (
         <SideBarModal
           title="Media"
           bodyContent={
@@ -106,7 +106,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia }) => {
           }
           onClose={() => setActiveIcon(null)}
         />
-      )} */}
+      )}
       {activeIcon === 'message' && (
         <SideBarModal
           title="Comments"
