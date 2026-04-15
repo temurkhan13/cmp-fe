@@ -7,6 +7,7 @@ import Loading from './Loading';
 import config from '../../config/config.js';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
+import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import { timeAgo } from './helper.js';
 
 const PLAYBOOK_TEMPLATES = [
@@ -67,6 +68,7 @@ function PlaybookList() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const selectedWorkspace = useSelector(selectWorkspace);
+  const selectedFolder = useSelector(selectSelectedFolder);
 
   // Fetch playbooks from digital playbook endpoint
   const fetchPlaybooks = async (requestedPage = 1) => {
@@ -123,6 +125,7 @@ function PlaybookList() {
           message: createMessage || createName,
           sitemapName: createName,
           userId: user.id || user._id,
+          folderId: selectedFolder?.id || selectedFolder?._id,
         }),
       });
       if (res.ok) {
