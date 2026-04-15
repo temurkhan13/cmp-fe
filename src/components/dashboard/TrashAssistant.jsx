@@ -75,6 +75,7 @@ const TrashItemCard = ({ name, type, dateDeleted, chat }) => {
           transition: transform 0.2s ease, box-shadow 0.2s ease;
           position: relative;
           width: 20rem;
+          margin-top: 1rem;
         }
         .trash-card:hover {
           transform: translateY(-5px);
@@ -193,7 +194,7 @@ const TrashAssistant = ({ chat }) => {
           display: flex;
           flex-wrap: wrap;
           gap: 20px;
-          padding: 20px;
+          padding: 20px 0;
           align-items: start;
           justify-content: flex-start;
         }

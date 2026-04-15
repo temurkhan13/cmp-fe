@@ -17,7 +17,7 @@ function Sitemap() {
         .selected-workspace-name {
           position: absolute;
           top: 2rem;
-          left: 4rem;
+          left: 3rem;
         }
         .selected-workspace-name p {
           font-size: 1.5rem;

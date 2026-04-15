@@ -116,22 +116,19 @@ const Chat = () => {
 
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        const initialWorkspace =
-          dashboardStats.workspaces.find((ws) => ws.isActive) ||
-          dashboardStats.workspaces[0];
-        if (
-          !selectedWorkspace ||
-          selectedWorkspace.id !== initialWorkspace.id
-        ) {
+
+        // Only initialize workspace if none is selected yet
+        if (!selectedWorkspace) {
+          const initialWorkspace =
+            dashboardStats.workspaces.find((ws) => ws.isActive) ||
+            dashboardStats.workspaces[0];
           dispatch(setSelectedWorkspace(initialWorkspace));
           handleWorkspaceChange(initialWorkspace);
-        } else {
-          if (selectedWorkspace?.folders?.length > 0) {
-            const firstFolder =
-              selectedWorkspace.folders.find((folder) => folder.isActive) ||
-              selectedWorkspace.folders[0];
-            handleFolderSelection(firstFolder, selectedWorkspace.id);
-          }
+        } else if (selectedWorkspace?.folders?.length > 0) {
+          const firstFolder =
+            selectedWorkspace.folders.find((folder) => folder.isActive) ||
+            selectedWorkspace.folders[0];
+          handleFolderSelection(firstFolder, selectedWorkspace.id);
         }
         setIsFetched(true); // Mark as fetched after successful load
       } catch {

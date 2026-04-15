@@ -235,7 +235,6 @@ const Header = () => {
           font-size: 18px;
           font-weight: bold;
           text-align: center;
-          margin-right: 8px;
           cursor: pointer;
         }
 

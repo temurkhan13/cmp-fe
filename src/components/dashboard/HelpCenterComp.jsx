@@ -285,7 +285,7 @@ const HelpCenterComp = () => {
         .sidebar-toggle {
           position: absolute;
           top: 1rem;
-          left: 1rem;
+          left: 1.3rem;
           background: none;
           border: none;
           cursor: pointer;

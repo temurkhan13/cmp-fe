@@ -118,7 +118,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
           <div
             key={folder.id}
             className="file"
-            // onClick={() => openModal(folder)}
+          // onClick={() => openModal(folder)}
           >
             <span className="icon">
               <BsThreeDotsVertical
@@ -155,8 +155,9 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
               <BiSolidFolderOpen
                 style={
                   folderId?.id === folder.id
-                    ? { color: 'black', fontSize: '5rem' }
-                    : { color: 'grey', fontSize: '5rem' }
+                    ? { color: '#C3E11D', height: '5rem', width: '5rem' }
+                    : { color: 'grey', height: '5rem', width: '5rem' }
+
                 }
                 onClick={() => {
                   dispatch(setSelectedReduxFolder(folder));

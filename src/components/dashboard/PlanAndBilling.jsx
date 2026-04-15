@@ -63,6 +63,7 @@ const PlanAndBilling = () => {
       }
     } catch (err) {
       if (import.meta.env.DEV) console.error(err);
+      setCurrentPlan('Free');
     } finally {
       setLoading(false);
     }

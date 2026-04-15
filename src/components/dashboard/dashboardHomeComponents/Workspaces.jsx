@@ -192,8 +192,8 @@ const Workspaces = ({
               onClick={() => handleWorkspaceSwitch(workspace)}
               style={
                 activeWorkspace?.id === workspace.id
-                  ? { color: 'black' }
-                  : { color: 'grey' }
+                  ? { color: '#C3E11D', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
+                  : { color: 'grey', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
               }
               className="collection-icon"
             />
@@ -303,12 +303,11 @@ const Workspaces = ({
         .workspace-btn {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          padding: 0.9rem 2rem;
+          gap: 0.3rem;
           border: none;
           border-radius: 1rem;
-          font-size: 1.5rem;
           font-weight: 600;
-          padding: 1rem 2rem;
           background-color: #c3e11d;
         }
         .icons {
@@ -318,6 +317,7 @@ const Workspaces = ({
           gap: 0.3rem;
           color: gray;
           font-size: 6rem;
+          margin-top: 1rem;
         }
         .icon-container {
           display: flex;

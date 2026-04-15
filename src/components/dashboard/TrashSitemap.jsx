@@ -45,7 +45,7 @@ const TrashItemCard = ({ name, type, dateDeleted, onRestore, onDelete }) => {
       <style>{`
         .trash-card {
           background-color: #f8f8f8;
-          padding: 20px;
+          padding: 20px 0;
           border-radius: 12px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           text-align: center;
@@ -134,12 +134,12 @@ const TrashSitemap = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', padding: '20px', alignItems: 'start' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', padding: '20px 0', marginTop: '1rem', alignItems: 'start' }}>
       {sitemaps.length > 0 ? (
         sitemaps.map((sitemap) => (
           <TrashItemCard
             key={sitemap._id || sitemap.id}
-            name={sitemap.name || sitemap.sitemapName || 'Unnamed'}
+            name={sitemap.name || sitemap.sitemapName || sitemap.sitemapTitle || 'Unnamed'}
             type="Sitemap"
             dateDeleted={sitemap.dateDeleted || sitemap.deleted_at || 'Unknown'}
             onRestore={() => handleRestore(sitemap._id || sitemap.id)}

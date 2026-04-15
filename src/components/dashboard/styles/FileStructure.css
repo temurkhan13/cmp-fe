@@ -1,13 +1,11 @@
 .folders-files {
-  padding: 2rem 4rem;
-  margin-top: 2rem;
+  padding: 2rem 3rem;
 }
 
 .heading {
   font-size: 1.5em;
   font-weight: 500;
   margin-bottom: 1.5rem;
-  margin-left: 2rem;
 }
 
 .files-container {

@@ -97,15 +97,19 @@ const AiAssistant = () => {
 
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        const initialWorkspace =
-          dashboardStats.workspaces.find((ws) => ws.isActive) ||
-          dashboardStats.workspaces[0];
-        if (
-          !selectedWorkspace ||
-          selectedWorkspace.id !== initialWorkspace.id
-        ) {
+
+        // Only initialize workspace if none is selected yet
+        if (!selectedWorkspace) {
+          const initialWorkspace =
+            dashboardStats.workspaces.find((ws) => ws.isActive) ||
+            dashboardStats.workspaces[0];
           dispatch(setSelectedWorkspace(initialWorkspace));
           handleWorkspaceChange(initialWorkspace);
+        } else if (selectedWorkspace?.folders?.length > 0) {
+          const firstFolder =
+            selectedWorkspace.folders.find((folder) => folder.isActive) ||
+            selectedWorkspace.folders[0];
+          handleFolderSelection(firstFolder, selectedWorkspace.id);
         }
         setIsFetched(true); // Mark as fetched after successful load
       } catch {
@@ -191,7 +195,7 @@ const AiAssistant = () => {
         </div>
       </section>
 
-      <div className="section">
+      <div className="section assistant-section">
         <div className="workspace-header"></div>
         {folderData?.[0]?.chats.length > 0 ? (
           <div className="grid">
@@ -225,7 +229,7 @@ const AiAssistant = () => {
       .selected-workspace-name {
         position: absolute;
         top: 2rem;
-        left: 4rem;
+        left: 3rem;
       }
       .selected-workspace-name p {
         font-size: 1.5rem;
@@ -253,6 +257,10 @@ const AiAssistant = () => {
 
         .section {
           margin-top: 2rem;
+        }
+
+        .assistant-section {
+          margin-top: 0 !important;
         }
 
         .userName, .fileName {

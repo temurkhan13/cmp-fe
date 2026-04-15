@@ -86,7 +86,7 @@ function List() {
       style={{
         width: '100%',
         height: '80vh',
-        padding: '16px',
+        padding: '2rem 3rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -102,12 +102,11 @@ function List() {
           style={{
             width: '100%',
             height: '100%',
-            padding: '16px',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
-          <div style={{ padding: '0 1rem', marginBottom: '0.5rem', marginTop: '2rem' }}>
+          <div style={{ marginBottom: '0.5rem' }}>
             <input
               type="text"
               placeholder="Search sitemaps..."
@@ -125,36 +124,34 @@ function List() {
             />
           </div>
           <section className="generate" style={{ marginTop: '1rem' }}>
-            <div className="container">
-              <div
-                // className="left-buttons"
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <p className="assistant-heading">
-                  <FaFolderTree />
-                  Sitemaps
-                </p>
-                <div className="center-buttons">
-                  <button
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                    }}
-                    className="assiss-btn"
-                    onClick={() => {
-                      navigate('/sitemap/new');
-                    }}
-                  >
-                    Create Sitemap
-                    <BiPlus />
-                  </button>
-                </div>
+            <div
+              // className="left-buttons"
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <p className="assistant-heading">
+                <FaFolderTree />
+                Sitemaps
+              </p>
+              <div className="center-buttons">
+                <button
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                  className="assiss-btn"
+                  onClick={() => {
+                    navigate('/sitemap/new');
+                  }}
+                >
+                  Create Sitemap
+                  <BiPlus />
+                </button>
               </div>
             </div>
           </section>
@@ -181,7 +178,7 @@ function List() {
                 alignItems: 'flex-start',
                 flexWrap: 'wrap',
                 width: '100%',
-                margin: '16px 3rem',
+                margin: '1.25rem 0',
               }}
             >
               {recentModifiedSiteMap
@@ -306,7 +303,7 @@ function List() {
         .selected-workspace-name {
           position: absolute;
           top: 2rem;
-          left: 4rem;
+          left: 3rem;
         }
         .selected-workspace-name p {
           font-size: 1.5rem;

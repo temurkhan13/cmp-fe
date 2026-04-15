@@ -16,7 +16,7 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
           <div
             className="counts"
             style={{
-              fontSize: `${String(card.count).length > 3 ? '3rem' : '3.6rem'}`,
+              fontSize: `${String(card.count).length > 3 ? '2.5rem' : '3rem'}`,
             }}
           >
             {card.count || 0}
@@ -33,7 +33,7 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
           align-items: center;
           justify-content: space-between;
           gap: 1rem;
-          margin: 1rem 2.3rem;
+          margin: 2rem 2.3rem;
         }
 
         @media screen and (max-width: 1240px) {
@@ -50,8 +50,7 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
           padding: 1rem;
           width: 40rem;
           height: 15rem;
-          background-color: white;
-          border: 1px solid rgba(0,0,0,0.08);
+          background-color: #C3E11D;
           border-radius: 12px;
           box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
           transition: all 0.2s ease;
@@ -70,7 +69,7 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
         }
 
         .count-heading {
-          font-size: 2rem;
+          font-size: 1.5rem;
           font-weight: 500;
           text-align: center;
         }
