@@ -89,8 +89,6 @@ const PlanAndBilling = () => {
 
   return (
     <div className="billing-page">
-      <Components.Dashboard.Header />
-      <h2 style={{ fontSize: '2.4rem', fontWeight: 600, margin: '1rem 2rem' }}>Plan & Billing</h2>
 
       {/* Current Plan */}
       <div style={{
@@ -202,9 +200,8 @@ const PlanAndBilling = () => {
 
       <style>{`
         .billing-page {
-          padding: 1.25rem;
+          padding: 1rem;
           font-size: 1.4rem;
-          background-color: #f9f9f9;
         }
       `}</style>
     </div>

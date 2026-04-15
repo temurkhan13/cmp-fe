@@ -22,36 +22,39 @@ const SettingsTabs = () => {
   };
 
   return (
-    <div>
-      <div className="setting-heading">Settings</div>
-      <div className="tabs">
+    <div className='settings-page'>
+      {/* <div className="tabs">
         <button
           className={activeTab === 'personal-info' ? 'active' : ''}
           onClick={() => setActiveTab('personal-info')}
         >
           Personal Information
-        </button>
-        {/* <button
+        </button> */}
+      {/* <button
           className={activeTab === 'payment-method' ? 'active' : ''}
           onClick={() => setActiveTab('payment-method')}
         >
           Payment Method
         </button> */}
-        {/* <button
+      {/* <button
           className={activeTab === 'change-password' ? 'active' : ''}
           onClick={() => setActiveTab('change-password')}
         >
           Change Password
         </button> */}
-        {/* <button
+      {/* <button
           className={activeTab === 'notifications' ? 'active' : ''}
           onClick={() => setActiveTab('notifications')}
         >
           Notifications
         </button> */}
-      </div>
-      <div className="tab-content">{renderContent()}</div>
+      {/* </div>
+      <div className="tab-content">{renderContent()}</div> */}
+      <div><PersonalInfo /></div>
       <style>{`
+      .settings-page {
+        padding: 1rem 3rem;
+      }
       .setting-heading{
       font-size: 2.25rem;
       font-weight: bold;
@@ -62,7 +65,6 @@ const SettingsTabs = () => {
           gap: 1rem;
           border-bottom: 1px solid rgba(0,0,0,0.06);
           margin-bottom: 1rem;
-          padding: 0 2rem;
         }
 
         .tabs button {
@@ -85,10 +87,6 @@ const SettingsTabs = () => {
           color: #111;
           font-weight: 600;
           border-bottom: 2px solid #C3E11D;
-        }
-
-        .tab-content {
-          padding: 1rem;
         }
       `}</style>
     </div>

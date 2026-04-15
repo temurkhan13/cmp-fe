@@ -276,10 +276,7 @@ const PersonalInfo = () => {
       <style>{`
         .personal-info {
           margin: 0 auto;
-          padding: 2rem;
-          background: #f9f9f9;
           border-radius: 0.8rem;
-          box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
         }
 
         h2 {

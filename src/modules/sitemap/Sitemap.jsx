@@ -14,21 +14,26 @@ function Sitemap() {
       </div>
       <style>
         {`
-        .selected-workspace-name{
-      position:absolute;
-      top:2rem;
-      left:4rem;
-    p{
-    font-size:1.5rem;
-    font-weight:600;
-    span{
-    padding:1rem;
-    background-color:#f5f5f5;
-    border-radius:1rem;
-    border:1px solid gray;
-    }
-    }
-      }`}
+        .selected-workspace-name {
+          position: absolute;
+          top: 2rem;
+          left: 4rem;
+        }
+        .selected-workspace-name p {
+          font-size: 1.5rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .selected-workspace-name .workspace-badge {
+          background-color: #C3E11D;
+          color: #0B1444;
+          padding: 0.25rem 0.75rem;
+          border-radius: 7px;
+          font-size: 1.3rem;
+          font-weight: 700;
+        }`}
       </style>
     </div>
   );
