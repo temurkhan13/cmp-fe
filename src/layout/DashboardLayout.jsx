@@ -20,7 +20,6 @@ import { HiOutlineDocumentText } from 'react-icons/hi';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
-import Breadcrumbs from '../components/common/Breadcrumbs';
 import OnboardingTour from '../components/common/OnboardingTour';
 import SupportChat from '../components/common/SupportChat';
 
@@ -195,7 +194,6 @@ const DashboardLayout = ({ children }) => {
       </div>
 
       <section className="home-section">
-        <Breadcrumbs />
         {children}
       </section>
       <OnboardingTour />

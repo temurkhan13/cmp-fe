@@ -35,7 +35,6 @@ const TrashModule = () => {
 
   return (
     <div className="trash-container">
-      <h1 className="heading">Trash</h1>
       <div className="tabs">
         <button
           className={`tab ${activeTab === 'Workspace' ? 'active' : ''}`}
@@ -89,8 +88,8 @@ const TrashModule = () => {
         .trash-container {
           display: flex;
           flex-direction: column;
-          margin-top:2rem;
           text-align: center;
+          padding: 1rem 3rem;
           }
           .heading {
             position: absolute;
@@ -103,9 +102,6 @@ const TrashModule = () => {
         }
         .tabs {
           display: flex;
-          position: absolute;
-          top: 12rem;
-          left: 3rem;
           gap: 1.5rem;
         }
         .tab {
@@ -131,7 +127,6 @@ const TrashModule = () => {
           border-bottom: 2px solid #C3E11D;
         }
         .content {
-          margin-top: 9rem;
           display: flex;
           flex-direction: column;
         }

@@ -22,6 +22,7 @@ import {
   toggleFolderActivation,
 } from '../../redux/slices/folderSlice.js';
 import { IoIosChatboxes } from 'react-icons/io';
+import PageHeader from '../../components/common/PageHeader';
 
 const AiAssistant = () => {
   const navigate = useNavigate();
@@ -151,13 +152,12 @@ const AiAssistant = () => {
 
   return (
     <DashboardLayout>
-      <div style={{ marginBottom: '2rem' }}>
-        <Component.Dashboard.Header />
-      </div>
+      <Component.Dashboard.Header />
+      <PageHeader title="AI Assistant" />
 
       <div className="selected-workspace-name">
         <p>
-          Workspace <span>{selectedWorkspace?.workspaceName}</span>
+          Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
         </p>
       </div>
       <Folder
@@ -222,20 +222,25 @@ const AiAssistant = () => {
       </div>
 
       <style>{`
-      .selected-workspace-name{
-      position:absolute;
-      top:2rem;
-      left:4rem;
-    p{
-    font-size:1.5rem;
-    font-weight:600;
-    span{
-    padding:1rem;
-    background-color:#f5f5f5;
-    border-radius:1rem;
-    border:1px solid gray;
-    }
-    }
+      .selected-workspace-name {
+        position: absolute;
+        top: 2rem;
+        left: 4rem;
+      }
+      .selected-workspace-name p {
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .selected-workspace-name .workspace-badge {
+        background-color: #C3E11D;
+        color: #0B1444;
+        padding: 0.25rem 0.75rem;
+        border-radius: 7px;
+        font-size: 1.3rem;
+        font-weight: 700;
       }
         .grid {
           display: grid;

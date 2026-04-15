@@ -101,7 +101,6 @@ const FolderCard = ({ folder }) => {
           gap: 15px; /* Space between items */
           padding: 0;
           position: relative;
-          margin: 0 0 0 50px;
           list-style: none;
         }
         .folder-card {
@@ -242,7 +241,7 @@ const FolderTab = () => {
           display: flex;
           flex-wrap: wrap;
           gap: 2rem;
-          padding: 2rem;
+          padding: 2rem 0;
         }
       `}</style>
     </div>

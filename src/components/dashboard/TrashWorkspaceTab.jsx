@@ -125,6 +125,7 @@ const TrashWorkspaceTab = ({ workspaces }) => {
         .workspace-content {
           width: 100%;
           text-align: left;
+          margin-top: 2rem;
         }
         .workspace-items {
           display: flex;
@@ -132,7 +133,6 @@ const TrashWorkspaceTab = ({ workspaces }) => {
           flex-wrap: wrap;
           gap: 15px;
           padding: 0;
-          margin: 0 0 0 50px;
           list-style: none;
         }
         .workspace-item {

@@ -1,6 +1,7 @@
 import DashboardLayout from '@layout/DashboardLayout';
 import FeedbackComponent from '../../components/dashboard/Feedback';
 import Header from '../../components/dashboard/Header';
+import PageHeader from '../../components/common/PageHeader';
 
 const radioOptions = [
   {
@@ -38,6 +39,7 @@ const Feedback = () => {
   return (
     <DashboardLayout>
       <Header />
+      <PageHeader title="Feedback" />
       <FeedbackComponent
         welcomeNote="Welcome to the Feedback Form!"
         radioOptions={radioOptions}
