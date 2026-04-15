@@ -110,14 +110,12 @@ const AiAssistantChat = () => {
 
       try {
         const dashboardStats = await dispatch(fetchDashboardStats()).unwrap();
-        const initialWorkspace =
-          dashboardStats.workspaces.find((ws) => ws.isActive) ||
-          dashboardStats.workspaces[0];
 
-        if (
-          !selectedWorkspace ||
-          selectedWorkspace.id !== initialWorkspace.id
-        ) {
+        // Only initialize workspace if none is selected yet
+        if (!selectedWorkspace) {
+          const initialWorkspace =
+            dashboardStats.workspaces.find((ws) => ws.isActive) ||
+            dashboardStats.workspaces[0];
           handleWorkspaceChange(initialWorkspace);
         } else if (selectedWorkspace?.folders?.length > 0) {
           const firstFolder =

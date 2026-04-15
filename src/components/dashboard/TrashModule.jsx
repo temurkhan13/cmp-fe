@@ -1,104 +1,210 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import FolderTab from './TrashFolderTab';
-import TrashWorkspaceTab from './TrashWorkspaceTab';
-import TrashAssistant from './TrashAssistant';
-import TrashAssessment from './TrashAssessment';
-import TrashSitemap from './TrashSitemap';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTrashItems } from '../../redux/slices/trashSlice.js';
+import { FiMoreVertical } from 'react-icons/fi';
+import { MdOutlineSettingsBackupRestore, MdDeleteForever } from 'react-icons/md';
+import { BsWindowStack } from 'react-icons/bs';
+import { FaRegFolderOpen, FaTrash } from 'react-icons/fa';
+import { IoIosChatboxes } from 'react-icons/io';
+import { RiNewspaperLine } from 'react-icons/ri';
+import { FaFolderTree } from 'react-icons/fa6';
+import { truncateText } from '../../utils/helperFunction';
+import {
+  fetchTrashItems,
+  restoreFromTrash,
+  deleteFromTrash,
+} from '../../redux/slices/trashSlice';
 import { SkeletonCard } from '../common/Skeleton';
+import NotificationBar from '../common/NotificationBar';
+
+const typeIcons = {
+  workspace: <BsWindowStack size={20} color="grey" />,
+  folder: <FaRegFolderOpen size={20} color="grey" />,
+  chat: <IoIosChatboxes size={20} color="grey" />,
+  assessment: <RiNewspaperLine size={20} color="grey" />,
+  sitemap: <FaFolderTree size={20} color="grey" />,
+};
+
+const getDisplayName = (item, type) => {
+  if (type === 'workspace') return item.workspaceName || 'Unnamed';
+  if (type === 'folder') return item.folderName || 'Unnamed';
+  if (type === 'chat') return item.chatTitle || 'Unnamed';
+  if (type === 'assessment') return item.assessmentTitle || 'Unnamed';
+  if (type === 'sitemap') return item.name || item.sitemapName || item.sitemapTitle || 'Unnamed';
+  return 'Unnamed';
+};
+
+const getId = (item) => item._id || item.id;
+
+const TrashCard = ({ item, entityType, onAction }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const displayName = getDisplayName(item, entityType);
+  const rawDate = item.dateDeleted || item.deleted_at || item.createdAt || item.created_at;
+  const parsed = rawDate ? new Date(rawDate) : null;
+  const dateLabel = parsed && !isNaN(parsed.getTime()) ? parsed.toLocaleDateString() : '';
+
+  const handleAction = async (action, e) => {
+    e.stopPropagation();
+    setIsMenuOpen(false);
+    setIsLoading(true);
+    await onAction(action, entityType, getId(item));
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="card-dashboard trash-card-item">
+      <div>{typeIcons[entityType]}</div>
+      <div className="info">
+        <div>
+          <h3>{truncateText(displayName, 20)}</h3>
+          {dateLabel && <p>Deleted: {dateLabel}</p>}
+        </div>
+      </div>
+      <div className="actions" ref={menuRef}>
+        <FiMoreVertical
+          className="more-icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsMenuOpen(!isMenuOpen);
+          }}
+          size={18}
+          color="#000"
+        />
+        {isMenuOpen && (
+          <div className="dropdown-menu">
+            <button
+              className="dropdown-item"
+              onClick={(e) => handleAction('restore', e)}
+              disabled={isLoading}
+            >
+              <MdOutlineSettingsBackupRestore size={16} />
+              {isLoading ? 'Restoring...' : 'Restore'}
+            </button>
+            <button
+              className="dropdown-item trash-delete-btn"
+              onClick={(e) => handleAction('delete', e)}
+              disabled={isLoading}
+            >
+              <MdDeleteForever size={16} />
+              {isLoading ? 'Deleting...' : 'Delete Permanently'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const TrashEmpty = () => (
+  <div className="trash-empty">
+    <FaTrash size={40} color="#ccc" />
+    <p className="trash-empty__title">No recent trash here</p>
+    <p className="trash-empty__desc">
+      Any file you trash will end up here. You&apos;ll have 30 days
+      to restore them before they are automatically deleted from your Trash.
+    </p>
+  </div>
+);
+
+const TABS = [
+  { key: 'workspace', label: 'Workspaces', stateKey: 'workspaces' },
+  { key: 'folder', label: 'Projects', stateKey: 'folders' },
+  { key: 'chat', label: 'Assistant', stateKey: 'chats' },
+  { key: 'assessment', label: 'Assessment', stateKey: 'assessments' },
+  { key: 'sitemap', label: 'Sitemap', stateKey: 'sitemaps' },
+];
 
 const TrashModule = () => {
   const dispatch = useDispatch();
-
-  // Ensure the state is not undefined
   const trashState = useSelector((state) => state.trash || {});
-  const {
-    workspaces = [],
-    folders = [],
-    assessments = [],
-    chats = [],
-  } = trashState.trashItems || {};
+  const trashItems = trashState.trashItems || {};
   const isLoading = trashState.isLoading || false;
   const error = trashState.error || null;
 
-  const [activeTab, setActiveTab] = useState('Workspace');
+  const [activeTab, setActiveTab] = useState('workspace');
+  const [notification, setNotification] = useState(null);
 
-  // Fetch trash items on component mount
   useEffect(() => {
     dispatch(fetchTrashItems());
   }, [dispatch]);
 
-  // Log the state after it updates
-  useEffect(() => {}, [trashState]);
+  const handleAction = useCallback(async (action, entityType, id) => {
+    try {
+      if (action === 'restore') {
+        await dispatch(restoreFromTrash({ type: entityType, id })).unwrap();
+        setNotification({ message: 'Item restored successfully', type: 'success' });
+      } else {
+        await dispatch(deleteFromTrash({ type: entityType, id })).unwrap();
+        setNotification({ message: 'Item deleted permanently', type: 'success' });
+      }
+      dispatch(fetchTrashItems());
+    } catch {
+      setNotification({ message: `Failed to ${action} item. Please try again.`, type: 'error' });
+    }
+  }, [dispatch]);
+
+  const activeTabConfig = TABS.find((t) => t.key === activeTab);
+  const items = trashItems[activeTabConfig?.stateKey] || [];
 
   return (
     <div className="trash-container">
       <div className="tabs">
-        <button
-          className={`tab ${activeTab === 'Workspace' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Workspace')}
-        >
-          Workspaces
-        </button>
-        <button
-          className={`tab ${activeTab === 'Folder' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Folder')}
-        >
-          Projects
-        </button>
-        <button
-          className={`tab ${activeTab === 'Assistant' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Assistant')}
-        >
-          Assistant
-        </button>
-        <button
-          className={`tab ${activeTab === 'Assessment' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Assessment')}
-        >
-          Assessment
-        </button>{' '}
-        <button
-          className={`tab ${activeTab === 'Sitemap' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Sitemap')}
-        >
-          Sitemap
-        </button>
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            className={`tab ${activeTab === tab.key ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
-      <div className="content">
-        {isLoading && <SkeletonCard count={4} />}
-        {error && <p>{error}</p>}
-        {!isLoading && !error && (
-          <>
-            {activeTab === 'Workspace' && (
-              <TrashWorkspaceTab workspaces={workspaces} />
-            )}
-            {activeTab === 'Folder' && <FolderTab folders={folders} />}
-            {activeTab === 'Assistant' && <TrashAssistant chats={chats} />}
-            {activeTab === 'Assessment' && (
-              <TrashAssessment assessments={assessments} />
-            )}
-            {activeTab === 'Sitemap' && <TrashSitemap />}
-          </>
+      <div className="trash-content">
+        {isLoading ? (
+          <SkeletonCard count={4} />
+        ) : error ? (
+          <p style={{ color: '#dc2626', fontSize: '1.3rem' }}>{error}</p>
+        ) : items.length > 0 ? (
+          <div className="trash-grid">
+            {items.map((item) => (
+              <TrashCard
+                key={getId(item)}
+                item={item}
+                entityType={activeTab}
+                onAction={handleAction}
+              />
+            ))}
+          </div>
+        ) : (
+          <TrashEmpty />
         )}
       </div>
+
+      {notification && (
+        <NotificationBar
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
+
       <style>{`
         .trash-container {
           display: flex;
           flex-direction: column;
-          text-align: center;
           padding: 1rem 3rem;
-          }
-          .heading {
-            position: absolute;
-            // top: 4rem;
-            margin-bottom:2rem;
-          left: 1.25rem;
-          font-size: 3rem;
-          font-weight: bold;
-          color: #333;
         }
         .tabs {
           display: flex;
@@ -126,17 +232,48 @@ const TrashModule = () => {
           font-weight: 600;
           border-bottom: 2px solid #C3E11D;
         }
-        .content {
+        .trash-content {
+          margin-top: 1.5rem;
+        }
+        .trash-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 1rem;
+        }
+        .trash-card-item .dropdown-menu {
+          width: 190px;
+        }
+        .trash-card-item .dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1.3rem;
+        }
+        .trash-card-item .trash-delete-btn {
+          color: #dc2626;
+        }
+        .trash-empty {
           display: flex;
           flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 4rem 2rem;
+          color: #666;
+          text-align: center;
+        }
+        .trash-empty__title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 1rem 0 0.25rem;
+        }
+        .trash-empty__desc {
+          font-size: 1.2rem;
+          line-height: 1.6;
+          max-width: 400px;
         }
       `}</style>
     </div>
   );
-};
-
-TrashModule.propTypes = {
-  activeTab: PropTypes.string,
 };
 
 export default TrashModule;

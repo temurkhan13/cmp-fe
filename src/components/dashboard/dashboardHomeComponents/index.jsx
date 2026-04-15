@@ -134,7 +134,7 @@ const DashboardHomeComp = () => {
               folderId: folder.id,
             })
           ).unwrap();
-        } catch {}
+        } catch { }
       }
     },
     [dispatch, selectedWorkspace]
@@ -227,6 +227,7 @@ const DashboardHomeComp = () => {
           Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
         </p>
       </div>
+
       <CountingCards
         activeWorkspace={activeWorkspace?.workspaceName}
         totalWorkspaces={dashboardStats?.totalWorkspaces}
@@ -249,7 +250,7 @@ const DashboardHomeComp = () => {
       />
 
       <section className="folder-details">
-        <div className="container">
+        <div style={{ padding: '0.25rem' }}>
           {/* Rendering SectionGrid Components Conditionally */}
           {folderData?.[0]?.chats?.length > 0 ? (
             <SectionGrid
@@ -309,7 +310,7 @@ const DashboardHomeComp = () => {
         .selected-workspace-name {
           position: absolute;
           top: 2rem;
-          left: 4rem;
+          left: 3rem;
         }
         .selected-workspace-name p {
           font-size: 1.5rem;

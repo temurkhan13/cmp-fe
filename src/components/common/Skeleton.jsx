@@ -14,8 +14,8 @@ const SkeletonCard = ({ count = 3 }) => {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           gap: 1rem;
-          padding: 15px;
-          margin: 0 10px;
+          padding: 1.5rem 0;
+          padding-top: 0;
         }
 
         .skeleton-card {

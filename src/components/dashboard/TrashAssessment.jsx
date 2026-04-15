@@ -59,6 +59,7 @@ const TrashItemCard = ({ name, type, dateDeleted, onRestore, onDelete }) => {
           text-align: center;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
           position: relative;
+          margin-top: 1rem;
         }
 
         .trash-card:hover {
@@ -201,7 +202,7 @@ const TrashAssessment = () => {
           display: flex;
           flex-wrap: wrap;
           gap: 20px;
-          padding: 20px;
+          padding: 20px 0;
           align-items: start;
           justify-content: flex-start;
         }

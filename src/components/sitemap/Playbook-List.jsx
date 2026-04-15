@@ -106,10 +106,10 @@ function PlaybookList() {
   const sortedPlaybooks = useMemo(() => {
     return playbooks.length > 0
       ? [...playbooks].sort(
-          (a, b) =>
-            new Date(b.updated_at || b.updatedAt || b.created_at || b.createdAt) -
-            new Date(a.updated_at || a.updatedAt || a.created_at || a.createdAt)
-        )
+        (a, b) =>
+          new Date(b.updated_at || b.updatedAt || b.created_at || b.createdAt) -
+          new Date(a.updated_at || a.updatedAt || a.created_at || a.createdAt)
+      )
       : [];
   }, [playbooks]);
 
@@ -188,7 +188,7 @@ function PlaybookList() {
       style={{
         width: '100%',
         height: '80vh',
-        padding: '16px',
+        padding: '2rem 3rem',
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
@@ -203,12 +203,11 @@ function PlaybookList() {
         style={{
           width: '100%',
           height: '100%',
-          padding: '16px',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <div style={{ padding: '0 1rem', marginBottom: '0.5rem', marginTop: '2rem' }}>
+        <div style={{ marginBottom: '0.5rem' }}>
           <input
             type="text"
             placeholder="Search playbooks..."
@@ -226,33 +225,31 @@ function PlaybookList() {
           />
         </div>
         <section className="generate" style={{ marginTop: '1rem' }}>
-          <div className="container">
-            <div
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <p className="assistant-heading">
-                <BsFilePlayFill />
-                Digital Playbooks
-              </p>
-              <div className="center-buttons">
-                <button
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                  className="assiss-btn"
-                  onClick={() => setShowCreate(true)}
-                >
-                  Create Playbook
-                  <BiPlus />
-                </button>
-              </div>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <p className="assistant-heading">
+              <BsFilePlayFill />
+              Digital Playbooks
+            </p>
+            <div className="center-buttons">
+              <button
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                className="assiss-btn"
+                onClick={() => setShowCreate(true)}
+              >
+                Create Playbook
+                <BiPlus />
+              </button>
             </div>
           </div>
         </section>
@@ -401,7 +398,8 @@ function PlaybookList() {
               gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '1rem',
               width: '100%',
-              padding: '16px 1rem',
+              padding: '1rem 0',
+              marginTop: '1rem'
             }}
           >
             {sortedPlaybooks
@@ -410,102 +408,102 @@ function PlaybookList() {
                 return (pb.name || pb.sitemapName || '').toLowerCase().includes(searchQuery.toLowerCase());
               })
               .map((pb) => {
-              const pbId = pb._id || pb.id;
-              const pbUpdated = pb.updated_at || pb.updatedAt || pb.created_at || pb.createdAt;
-              return (
-                <div
-                  key={pbId}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    backgroundColor: '#fff',
-                    border: '1px solid rgba(0,0,0,0.06)',
-                    padding: '2rem',
-                    borderRadius: '12px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)'; }}
-                  onClick={() => {
-                    if (editingId !== pbId) navigate(`/playbook/${pbId}`);
-                  }}
-                >
+                const pbId = pb._id || pb.id;
+                const pbUpdated = pb.updated_at || pb.updatedAt || pb.created_at || pb.createdAt;
+                return (
                   <div
+                    key={pbId}
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
+                      flexDirection: 'column',
                       gap: '1rem',
+                      backgroundColor: '#fff',
+                      border: '1px solid rgba(0,0,0,0.06)',
+                      padding: '2rem',
+                      borderRadius: '12px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)'; }}
+                    onClick={() => {
+                      if (editingId !== pbId) navigate(`/playbook/${pbId}`);
                     }}
                   >
-                    <BsFilePlayFill size={18} />
-                    {editingId === pbId ? (
-                      <input
-                        autoFocus
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        onBlur={() => renamePlaybook(pbId, editName)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') renamePlaybook(pbId, editName);
-                          if (e.key === 'Escape') setEditingId(null);
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                          fontSize: '1.5rem',
-                          fontWeight: '500',
-                          border: '1px solid #C3E11D',
-                          borderRadius: '6px',
-                          padding: '4px 8px',
-                          outline: 'none',
-                          width: '100%',
-                        }}
-                      />
-                    ) : (
-                      <>
-                        <span
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                      }}
+                    >
+                      <BsFilePlayFill size={18} />
+                      {editingId === pbId ? (
+                        <input
+                          autoFocus
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          onBlur={() => renamePlaybook(pbId, editName)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') renamePlaybook(pbId, editName);
+                            if (e.key === 'Escape') setEditingId(null);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
                           style={{
                             fontSize: '1.5rem',
                             fontWeight: '500',
-                            flex: 1,
-                          }}
-                        >
-                          {pb.name}
-                        </span>
-                        <BiEdit
-                          size={16}
-                          style={{ opacity: 0.4 }}
-                          title="Rename"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingId(pbId);
-                            setEditName(pb.name);
+                            border: '1px solid #C3E11D',
+                            borderRadius: '6px',
+                            padding: '4px 8px',
+                            outline: 'none',
+                            width: '100%',
                           }}
                         />
-                        <FiTrash2
-                          size={16}
-                          style={{ opacity: 0.4, color: '#c00' }}
-                          title="Delete"
-                          onClick={(e) => deletePlaybook(pbId, e)}
-                        />
-                      </>
+                      ) : (
+                        <>
+                          <span
+                            style={{
+                              fontSize: '1.5rem',
+                              fontWeight: '500',
+                              flex: 1,
+                            }}
+                          >
+                            {pb.name}
+                          </span>
+                          <BiEdit
+                            size={16}
+                            style={{ opacity: 0.4 }}
+                            title="Rename"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingId(pbId);
+                              setEditName(pb.name);
+                            }}
+                          />
+                          <FiTrash2
+                            size={16}
+                            style={{ opacity: 0.4, color: '#c00' }}
+                            title="Delete"
+                            onClick={(e) => deletePlaybook(pbId, e)}
+                          />
+                        </>
+                      )}
+                    </div>
+
+                    {pbUpdated && (
+                      <span
+                        style={{
+                          fontSize: '1.2rem',
+                          color: 'rgba(10, 10, 10, 0.46)',
+                        }}
+                      >
+                        Modified {timeAgo(pbUpdated)}
+                      </span>
                     )}
                   </div>
-
-                  {pbUpdated && (
-                    <span
-                      style={{
-                        fontSize: '1.2rem',
-                        color: 'rgba(10, 10, 10, 0.46)',
-                      }}
-                    >
-                      Modified {timeAgo(pbUpdated)}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         )}
 
@@ -596,7 +594,7 @@ function PlaybookList() {
         .selected-workspace-name {
           position: absolute;
           top: 2rem;
-          left: 4rem;
+          left: 3rem;
         }
         .selected-workspace-name p {
           font-size: 1.5rem;

@@ -9,7 +9,6 @@ const DashboardHome = () => {
     <DashboardLayout>
       <EmailVerificationHandler />
       <Header />
-      <PageHeader title="Dashboard" />
       <DashboardHomeComp />
     </DashboardLayout>
   );
