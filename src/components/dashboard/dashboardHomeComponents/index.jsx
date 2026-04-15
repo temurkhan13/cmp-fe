@@ -284,12 +284,12 @@ const DashboardHomeComp = () => {
             <NoDataMessage title="Sitemaps" icon={<FaFolderTree />} />
           )}
 
-          {folderData?.[0]?.wireframes?.length > 0 ? (
+          {folderData?.[0]?.sitemaps?.length > 0 ? (
             <SectionGrid
               title="Digital PlayBook"
-              items={folderData[0].wireframes}
-              itemType="wireframes"
-              onRemove={(id) => handleRemoveItem(id, 'Digital PlayBook')}
+              items={folderData[0].sitemaps}
+              itemType="sitemaps"
+              onRemove={(id) => handleRemoveItem(id, 'sitemaps')}
             />
           ) : (
             <NoDataMessage title="Digital PlayBook" icon={<BsFilePlayFill />} />
