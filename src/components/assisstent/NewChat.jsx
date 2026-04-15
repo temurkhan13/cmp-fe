@@ -89,7 +89,7 @@ const NewChat = () => {
       .then((response) => {
         dispatch(setChats(normalizeChats(response.payload.data)));
       })
-      .catch((error) => {})
+      .catch((error) => { })
       .finally(() => setChatsLoading(false));
   }, [currentWorkspace, currentFolder, dispatch, selectedFolder]);
 
@@ -147,7 +147,7 @@ const NewChat = () => {
         .then((response) => {
           dispatch(setChats(normalizeChats(response.payload.data)));
         })
-        .catch((error) => {})
+        .catch((error) => { })
         .finally(() => setChatsLoading(false));
     }
   };
@@ -156,7 +156,7 @@ const NewChat = () => {
     const chatContainer = chatContainerRef.current;
     if (
       chatContainer.scrollHeight - chatContainer.scrollTop <=
-        chatContainer.clientHeight * 1.1 &&
+      chatContainer.clientHeight * 1.1 &&
       !loading
     ) {
       if (myChats && visibleCount < myChats.length) {
@@ -184,19 +184,17 @@ const NewChat = () => {
     <div
       className={`newChat ${sidebarCollapsed ? 'collapsed' : ''}`}
       ref={chatContainerRef}
-      style={{ overflowY: 'auto', height: '80vh' }}
+      style={{ overflowY: 'auto', height: 'calc(100vh - 121px)' }}
     >
       <div
-        className={`sidebar-header ${
-          sidebarCollapsed ? 'header-collapsed' : ''
-        }`}
+        className={`sidebar-header ${sidebarCollapsed ? 'header-collapsed' : ''
+          }`}
       >
         <div
           onClick={handleAddChat}
           style={{ cursor: 'pointer' }}
-          className={`sidebar-header-title ${
-            sidebarCollapsed ? 'header-collapsed-title' : ''
-          }`}
+          className={`sidebar-header-title ${sidebarCollapsed ? 'header-collapsed-title' : ''
+            }`}
         >
           {!sidebarCollapsed && (
             <>
@@ -284,80 +282,83 @@ const NewChat = () => {
               <Spinner />
             </div>
           ) : (
-            Array.isArray(showableChats) &&
-            showableChats
-              .filter((chat) => {
-                if (!searchQuery.trim()) return true;
-                const q = searchQuery.toLowerCase();
-                const title = String(chat.chatTitle || chat.chat_title || chat.title || '').toLowerCase();
-                return title.includes(q);
-              })
-              .map((chat, index) => (
-                <section
-                  key={chat._id || chat.id}
-                  onClick={() => handleChatSelect(chat._id || chat.id)}
-                  onMouseEnter={() => setHoveredChatIndex(index)}
-                  onMouseLeave={() => setHoveredChatIndex(null)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '1rem',
-                    justifyContent: 'space-between',
-                    fontSize: '1.5rem !important',
-                    borderRadius: '1rem',
-                    backgroundColor:
-                      currentChatId === (chat._id || chat.id) ? '#f0f0f0' : 'transparent',
-                  }}
-                  className="chat-item-section"
-                >
-                  <Components.Feature.Text
-                    className="middium--light"
-                    style={{
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {truncateText(capitalizeFirstWord(chat.chatTitle || chat.chat_title || chat.title || 'Untitled'), 25)}
-                  </Components.Feature.Text>
-                  {hoveredChatIndex === index && (
-                    <BsThreeDots
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openModal(index, chat._id || chat.id, e);
+            <div style={{ display: 'flex', flexDirection: 'column', padding: '1rem' }}>
+              {Array.isArray(showableChats) &&
+                showableChats
+                  .filter((chat) => {
+                    if (!searchQuery.trim()) return true;
+                    const q = searchQuery.toLowerCase();
+                    const title = String(chat.chatTitle || chat.chat_title || chat.title || '').toLowerCase();
+                    return title.includes(q);
+                  })
+                  .map((chat, index) => (
+                    <section
+                      key={chat._id || chat.id}
+                      onClick={() => handleChatSelect(chat._id || chat.id)}
+                      onMouseEnter={() => setHoveredChatIndex(index)}
+                      onMouseLeave={() => setHoveredChatIndex(null)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '1rem',
+                        justifyContent: 'space-between',
+                        fontSize: '1.5rem !important',
+                        borderRadius: '1rem',
+                        backgroundColor:
+                          currentChatId === (chat._id || chat.id) ? '#c3e11d' : 'transparent',
                       }}
-                      style={{ cursor: 'pointer', fontSize: '1.5rem' }}
-                    />
-                  )}
+                      className="chat-item-section"
+                    >
+                      <Components.Feature.Text
+                        className="middium--light"
+                        style={{
+                          cursor: 'pointer',
+                          color: currentChatId === (chat._id || chat.id) ? '#000' : 'inherit',
+                        }}
+                      >
+                        {truncateText(capitalizeFirstWord(chat.chatTitle || chat.chat_title || chat.title || 'Untitled'), 25)}
+                      </Components.Feature.Text>
+                      {hoveredChatIndex === index && (
+                        <BsThreeDots
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openModal(index, chat._id || chat.id, e);
+                          }}
+                          style={{ cursor: 'pointer', fontSize: '1.5rem' }}
+                        />
+                      )}
 
-                  {showMenu.index === index &&
-                    showMenu.chatId === (chat._id || chat.id) && (
-                      <NewChatSidebarModal
-                        isOpen={isModalOpen}
-                        closeModal={closeModal}
-                        chatId={chat._id || chat.id}
-                        chatTitle={chat.chatTitle || chat.chat_title || ''}
-                        workspaceId={currentWorkspace?.id}
-                        folderId={chat.folder_id || selectedFolder?._id || selectedFolder?.id}
-                        onDeleted={(deletedId) => {
-                          const updated = (myChats || []).filter(c => (c._id || c.id) !== deletedId);
-                          dispatch(setChats(updated));
-                          if (deletedId === currentChatId) {
-                            dispatch(setCurrentChatId(null));
-                            navigate('/assistant/chat', { replace: true });
-                          }
-                        }}
-                        onRenamed={(renamedId, newTitle) => {
-                          const updated = (myChats || []).map(c =>
-                            (c._id || c.id) === renamedId
-                              ? { ...c, chatTitle: newTitle, chat_title: newTitle }
-                              : c
-                          );
-                          dispatch(setChats(updated));
-                        }}
-                        position={showMenu.position}
-                      />
-                    )}
-                </section>
-              ))
+                      {showMenu.index === index &&
+                        showMenu.chatId === (chat._id || chat.id) && (
+                          <NewChatSidebarModal
+                            isOpen={isModalOpen}
+                            closeModal={closeModal}
+                            chatId={chat._id || chat.id}
+                            chatTitle={chat.chatTitle || chat.chat_title || ''}
+                            workspaceId={currentWorkspace?.id}
+                            folderId={chat.folder_id || selectedFolder?._id || selectedFolder?.id}
+                            onDeleted={(deletedId) => {
+                              const updated = (myChats || []).filter(c => (c._id || c.id) !== deletedId);
+                              dispatch(setChats(updated));
+                              if (deletedId === currentChatId) {
+                                dispatch(setCurrentChatId(null));
+                                navigate('/assistant/chat', { replace: true });
+                              }
+                            }}
+                            onRenamed={(renamedId, newTitle) => {
+                              const updated = (myChats || []).map(c =>
+                                (c._id || c.id) === renamedId
+                                  ? { ...c, chatTitle: newTitle, chat_title: newTitle }
+                                  : c
+                              );
+                              dispatch(setChats(updated));
+                            }}
+                            position={showMenu.position}
+                          />
+                        )}
+                    </section>
+                  ))}
+            </div>
           )}
         </>
       )}

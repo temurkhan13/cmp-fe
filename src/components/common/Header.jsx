@@ -48,7 +48,7 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
   const handleCloseImproveResponseModal = () =>
     setIsImproveResponseModalOpen(false);
 
-  const [photoPath, setPhotoPath] = useState('false');
+  const [photoPath, setPhotoPath] = useState(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -72,9 +72,11 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
     <div className="topbar">
       <div>
         <Components.Feature.HeaderDropDown />
-        <Components.Feature.Button className="secondry">
-          {selectedWorkspace?.workspaceName}
-        </Components.Feature.Button>
+        <div className="selected-workspace-name">
+          <p>
+            Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
+          </p>
+        </div>
         {(siteMapId && location.pathname === '/sitemap/new') ||
         location.pathname === `/sitemap/${siteMapId}` ? (
           <div>
@@ -184,6 +186,27 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
           />
         </Modal>
       )}
+      <style>{`
+        .topbar .initials-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: #C3E11D;
+          color: #0B1444;
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+        .topbar .ProfileImage {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      `}</style>
     </div>
   );
 };

@@ -526,7 +526,7 @@ const MessagesSection = ({ setCurrentChat }) => {
           .then((response) => {
             dispatch(setChats(response.payload.data));
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
       refetch();
       setText('');
@@ -664,6 +664,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                             name={userName}
                             size={50}
                             imgClassName="avatar"
+                            style={{ backgroundColor: '#C3E11D' }}
+                            initialsStyle={{ color: '#0B1444' }}
                           />
                         </div>
                         <div className="user-message">
@@ -707,8 +709,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                 message?.reactions?.some(
                                   (react) =>
                                     react.user ==
-                                      JSON.parse(localStorage.getItem('user'))
-                                        .id && react.type == 'like'
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id && react.type == 'like'
                                 )
                                   ? { color: '#c1de1c' }
                                   : {}
@@ -726,8 +728,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                 message?.reactions?.some(
                                   (react) =>
                                     react.user ==
-                                      JSON.parse(localStorage.getItem('user'))
-                                        .id && react.type == 'dislike'
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id && react.type == 'dislike'
                                 )
                                   ? { color: '#c1de1c' }
                                   : {}
@@ -758,8 +760,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                   (bookmark) =>
                                     bookmark.messageId === message._id &&
                                     bookmark.userId ===
-                                      JSON.parse(localStorage.getItem('user'))
-                                        .id
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id
                                 )
                                   ? { color: '#c1de1c' }
                                   : {}
@@ -909,8 +911,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                 message?.reactions?.some(
                                   (react) =>
                                     react.user ==
-                                      JSON.parse(localStorage.getItem('user'))
-                                        .id && react.type == 'like'
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id && react.type == 'like'
                                 )
                                   ? { color: '#c1de1c' }
                                   : {}
@@ -928,8 +930,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                 message?.reactions?.some(
                                   (react) =>
                                     react.user ==
-                                      JSON.parse(localStorage.getItem('user'))
-                                        .id && react.type == 'dislike'
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id && react.type == 'dislike'
                                 )
                                   ? { color: '#c1de1c' }
                                   : {}
@@ -965,8 +967,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                   (bookmark) =>
                                     bookmark.messageId === message._id &&
                                     bookmark.userId ===
-                                      JSON.parse(localStorage.getItem('user'))
-                                        .id
+                                    JSON.parse(localStorage.getItem('user'))
+                                      .id
                                 )
                                   ? { color: '#c1de1c' }
                                   : {}
@@ -1035,19 +1037,33 @@ const MessagesSection = ({ setCurrentChat }) => {
       )}
       {/* input */}
       <div className="Message_container">
-        <div>
-          <label htmlFor="file-input" className="file-upload-text">
-            {/* {file ? file.map((f) => f.name).join(", ") : ""} */}
-            {/* {file.name} */}
-            {file ? file.name : ''}
-          </label>
-        </div>
+        {file && file.name && (
+          <div className="file-preview-chip">
+            <div className="file-preview-chip__icon">
+              {file.type?.includes('pdf') ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              ) : file.type?.includes('image') ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              )}
+            </div>
+            <div className="file-preview-chip__info">
+              <span className="file-preview-chip__name">{file.name.length > 30 ? file.name.slice(0, 27) + '...' : file.name}</span>
+              <span className="file-preview-chip__size">{(file.size / 1024).toFixed(0)} KB</span>
+            </div>
+            <button
+              className="file-preview-chip__remove"
+              onClick={() => setFile(null)}
+              title="Remove file"
+            >
+              &times;
+            </button>
+          </div>
+        )}
         <div className="input-container" style={{ position: 'relative' }}>
           <div
             style={{
-              position: 'absolute',
-              bottom: '13px',
-              right: '99%',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -1058,12 +1074,16 @@ const MessagesSection = ({ setCurrentChat }) => {
                 src={InpireMeIcon}
                 alt="Inspire Me"
                 onClick={handleInspireClick}
+                style={{
+                  width: '16px',
+                  height: '16px',
+                }}
               />
             ) : (
               <div
                 style={{
-                  border: '2px solid rgba(0, 0, 0, 0.1)',
-                  borderTop: '2px solid #000',
+                  border: '2px solid #c3e11d10',
+                  borderTop: '2px solid #c3e11d',
                   borderRadius: '50%',
                   width: '16px',
                   height: '16px',
@@ -1101,18 +1121,20 @@ const MessagesSection = ({ setCurrentChat }) => {
               fontFamily: 'Arial, sans-serif',
               boxSizing: 'border-box',
               outline: 'none',
+              boxShadow: 'none !important',
+              marginLeft: '0.5rem'
             }}
             rows={1} // Initial row
           />
           <div className="icons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-              <IoAttach size={20} color="#888" title="Attach file" />
+              <IoAttach size={32} color="#888" title="Attach file" />
             </label>
             <IoSend
               onClick={handleSendMessage}
               className="send-icon"
               color="#c3e11d"
-              size={20}
+              size={32}
             />
           </div>
         </div>
@@ -1173,7 +1195,7 @@ MessagesSection.propTypes = {
 
 // Optionally, define defaultProps if needed
 MessagesSection.defaultProps = {
-  setCurrentChat: () => {}, // Default no-op function if none is passed
+  setCurrentChat: () => { }, // Default no-op function if none is passed
 };
 
 export default MessagesSection;

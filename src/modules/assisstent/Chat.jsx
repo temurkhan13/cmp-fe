@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import { IoArrowBack } from 'react-icons/io5';
+import { useParams } from 'react-router-dom';
+
 import Components from '../../components';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import {
@@ -29,7 +29,6 @@ import Questionnaire from '../../modules/assessment/Questionnaire';
 
 const AiAssistantChat = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { chatId } = useParams();
   const userId =
     useSelector((state) => state.auth.user?.id) ||
@@ -151,34 +150,10 @@ const AiAssistantChat = () => {
 
   return (
     <div className="assessmentChat">
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0.5rem 1rem', borderBottom: '1px solid #eee', background: '#fff',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <IoArrowBack
-            size={20}
-            style={{ cursor: 'pointer', color: '#555' }}
-            onClick={() => navigate(-1)}
-          />
-          <span style={{ fontSize: '0.9rem', color: '#555' }}>Back</span>
-        </div>
-        <span
-          style={{
-            fontSize: '1.2rem',
-            fontWeight: '500',
-            color: '#00316E',
-            cursor: 'pointer',
-            padding: '0.5rem 1.2rem',
-            borderRadius: '0.6rem',
-            border: '1px solid #ddd',
-            background: '#f9f9f9',
-          }}
-          onClick={() => setIsSurveyOpen(true)}
-        >
-          Survey Info
-        </span>
-      </div>
+      <Components.Common.Header
+        activeWorkspace={selectedWorkspace}
+        workspaces={allWorkspaces}
+      />
       <section>
         <NewChat />
         <MessagesSection setCurrentChat={setCurrentChat} />

@@ -1,359 +1,373 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
-import { IoMdDocument } from 'react-icons/io';
-import { MdInsertLink } from 'react-icons/md';
-import { GrPrevious, GrNext } from 'react-icons/gr';
-import { IoIosChatboxes } from 'react-icons/io';
+import { FiImage, FiFile, FiLink, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import NoDataAvailable from '../../common/NoDataAvailable';
 
-const Media = ({ images, documents, links }) => {
-  const [activeTab, setActiveTab] = useState('Images');
-  const [popupImageIndex, setPopupImageIndex] = useState(null);
+const TABS = [
+  { key: 'images', label: 'Images', icon: FiImage },
+  { key: 'documents', label: 'Documents', icon: FiFile },
+  { key: 'links', label: 'Links', icon: FiLink },
+];
 
-  const closePopup = () => {
-    setPopupImageIndex(null);
-  };
+const Media = ({ images = [], documents = [], links = [] }) => {
+  const [activeTab, setActiveTab] = useState('images');
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
-  const showPreviousImage = () => {
-    setPopupImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
+  const closeLightbox = () => setLightboxIndex(null);
 
-  const showNextImage = () => {
-    setPopupImageIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
-  };
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape') setLightboxIndex(null);
+      if (e.key === 'ArrowLeft') setLightboxIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+      if (e.key === 'ArrowRight') setLightboxIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [lightboxIndex, images.length]);
+
+  const counts = { images: images.length, documents: documents.length, links: links.length };
 
   return (
-    <div className="container">
-      <div className="tabs">
-        <button
-          onClick={() => setActiveTab('Images')}
-          className={activeTab === 'Images' ? 'active' : ''}
-        >
-          Images
-        </button>
-        <button
-          onClick={() => setActiveTab('Documents')}
-          className={activeTab === 'Documents' ? 'active' : ''}
-        >
-          Documents
-        </button>
-        <button
-          onClick={() => setActiveTab('Links')}
-          className={activeTab === 'Links' ? 'active' : ''}
-        >
-          Links
-        </button>
-      </div>
-      <div className="content">
-        {activeTab === 'Images' && (
-          <div className="image-gallery">
-            {images.length === 0 ? (
-              <NoDataAvailable message="No images available" />
+    <>
+      <div className="md-container">
+        {/* Tabs */}
+        <div className="md-tabs">
+          {TABS.map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              className={`md-tab ${activeTab === key ? 'md-tab--active' : ''}`}
+              onClick={() => setActiveTab(key)}
+            >
+              <Icon size={15} />
+              {label}
+              {counts[key] > 0 && <span className="md-tab-count">{counts[key]}</span>}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="md-content">
+          {/* Images */}
+          {activeTab === 'images' && (
+            images.length === 0 ? (
+              <NoDataAvailable message="No images yet" />
             ) : (
-              images.map((src, index) => (
-                <img
-                  key={index}
-                  src={src}
-                  alt={`img-${index}`}
-                  className="gallery-image"
-                  onClick={() => setPopupImageIndex(index)}
-                />
-              ))
-            )}
-          </div>
-        )}
-        {activeTab === 'Documents' && (
-          <div className="documents-list">
-            {documents.length === 0 ? (
-              <NoDataAvailable message="No documents available" />
-            ) : (
-              documents.map((doc, index) => (
-                <div
-                  key={index}
-                  className="document-item"
-                  onClick={() => doc.url && window.open(doc.url, '_blank')}
-                  style={{ cursor: doc.url ? 'pointer' : 'default' }}
-                >
-                  <div className="document-icon">
-                    <IoMdDocument />
+              <div className="md-gallery">
+                {images.map((src, i) => (
+                  <div key={i} className="md-gallery-item" onClick={() => setLightboxIndex(i)}>
+                    <img src={src} alt={`Image ${i + 1}`} className="md-gallery-img" />
                   </div>
-                  <div className="document-info">
-                    <div className="document-name">
-                      <div>{doc.name}</div>
-                      <div className="document-size">{doc.size}</div>
+                ))}
+              </div>
+            )
+          )}
+
+          {/* Documents */}
+          {activeTab === 'documents' && (
+            documents.length === 0 ? (
+              <NoDataAvailable message="No documents yet" />
+            ) : (
+              <div className="md-list">
+                {documents.map((doc, i) => (
+                  <div
+                    key={i}
+                    className="md-list-item"
+                    onClick={() => doc.url && window.open(doc.url, '_blank')}
+                    style={{ cursor: doc.url ? 'pointer' : 'default' }}
+                  >
+                    <div className="md-list-icon md-list-icon--doc"><FiFile size={18} /></div>
+                    <div className="md-list-info">
+                      <span className="md-list-name">{doc.name}</span>
+                      <span className="md-list-meta">
+                        {[doc.date, doc.size].filter(Boolean).join(' · ')}
+                      </span>
                     </div>
-                    <div className="document-details">{doc.date}</div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-        {activeTab === 'Links' && (
-          <div className="links-list">
-            {links.length === 0 ? (
-              <NoDataAvailable message="No links available" />
+                ))}
+              </div>
+            )
+          )}
+
+          {/* Links */}
+          {activeTab === 'links' && (
+            links.length === 0 ? (
+              <NoDataAvailable message="No links yet" />
             ) : (
-              links.map((link, index) => (
-                <div
-                  key={index}
-                  className="link-item"
-                  onClick={() => link.url && window.open(link.url, '_blank')}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <button className="link-button">
-                    <MdInsertLink />
-                  </button>
-                  <div className="link-info">
-                    <div className="link-name">{link.name}</div>
-                    <div className="link-url">{link.url}</div>
+              <div className="md-list">
+                {links.map((link, i) => (
+                  <div
+                    key={i}
+                    className="md-list-item"
+                    onClick={() => link.url && window.open(link.url, '_blank')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="md-list-icon md-list-icon--link"><FiLink size={18} /></div>
+                    <div className="md-list-info">
+                      <span className="md-list-name">{link.name}</span>
+                      <span className="md-list-url">{link.url}</span>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+                ))}
+              </div>
+            )
+          )}
+        </div>
       </div>
 
-      {popupImageIndex !== null && (
-        <div className="popup" onClick={closePopup}>
-          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={closePopup}>
-              <RxCross2 />
-              <IoIosChatboxes />
-            </button>
-            <img
-              src={images[popupImageIndex]}
-              alt="Popup"
-              className="popup-image"
-            />
-            <button className="prev-btn" onClick={showPreviousImage}>
-              <GrPrevious />
-            </button>
-            <button className="next-btn" onClick={showNextImage}>
-              <GrNext />
-            </button>
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <div className="md-lightbox" onClick={closeLightbox}>
+          <div className="md-lightbox-inner" onClick={(e) => e.stopPropagation()}>
+            <button className="md-lb-close" onClick={closeLightbox}><RxCross2 size={20} /></button>
+            {images.length > 1 && (
+              <>
+                <button className="md-lb-nav md-lb-nav--prev" onClick={() => setLightboxIndex((i) => (i === 0 ? images.length - 1 : i - 1))}><FiChevronLeft size={24} /></button>
+                <button className="md-lb-nav md-lb-nav--next" onClick={() => setLightboxIndex((i) => (i === images.length - 1 ? 0 : i + 1))}><FiChevronRight size={24} /></button>
+              </>
+            )}
+            <img src={images[lightboxIndex]} alt="Preview" className="md-lb-img" />
+            <div className="md-lb-counter">{lightboxIndex + 1} / {images.length}</div>
           </div>
         </div>
       )}
 
-      <style>{`
-        .container {
-          margin: 0 auto;
-          text-align: center;
-        }
-        .tabs {
-          display: flex;
-          align-items: center;
-          justify-content: space-evenly;
-          border-bottom: 1px solid lightgray;
-          margin-bottom: 1.25rem; 
-        }
-        .tabs button {
-          background-color: transparent;
-          border: none;
-          padding: 0.625rem 1.25rem; 
-          cursor: pointer;
-          margin: 0 0.3125rem; 
-          font-size: 1.3rem; 
-        }
-        .tabs button:focus {
-          outline: none;
-          border-bottom: 1px solid black;
-        }
-        .content {
-          display: flex;
-          justify-content: center;
-        }
-        .image-gallery {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 0.625rem;
-        }
-        .gallery-image {
-          width: 100%;
-          height: 9.375rem;
-          object-fit: cover;
-          cursor: pointer;
-          transition: transform 0.2s ease-in-out;
-        }
-        .gallery-image:hover {
-          transform: scale(1.05);
-        }
-        .popup {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: rgba(0, 0, 0, 0.8);
-          animation: fadeIn 0.3s ease-in-out;
-        }
-        .popup-content {
-          position: relative;
-          max-width: 80%;
-          max-height: 80%;
-          background-size: cover;
-          animation: zoomIn 0.1s ease-in-out;
-        }
-        .popup-image {
-          width: 80vw;
-          height: 80vh;
-        }
-        .close-btn {
-          display: flex;
-          flex-direction: row-reverse;
-          align-items: center;
-          justify-content: space-around;
-          position: absolute;
-          top: 0rem;
-          right: -10rem;
-          background-color: white;
-          color: gray;
-          border: none;
-          cursor: pointer;
-          font-size: 2rem;
-          padding: 1rem;
-          gap: 0.5rem;
-          border-radius: 1rem;
-        }
-        .prev-btn, .next-btn {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          border: none;
-          cursor: pointer;
-          font-size: 1.8rem;
-          padding: 0.8rem;
-          display: flex;
-          justify-content: center;
-          border-radius: 50%;
-        }
-        .prev-btn {
-          right: -8rem;
-        }
-        .next-btn {
-          left: -8rem;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        @keyframes zoomIn {
-          from {
-            transform: scale(0.5);
-          }
-          to {
-            transform: scale(1);
-          }
-        }
-        .documents-list {
-          width: 100%;
-        }
-        .document-item {
-          display: flex;
-          align-items: center;
-          padding: 0.625rem; 
-          border-radius: 1rem;
-          padding-bottom: 1rem;
-          &:hover {
-            background-color: #f1f1f1;
-            cursor: pointer;
-          }
-        }
-        .document-icon {
-          color: gray;
-          display: flex;
-          font-size: 4rem; 
-          margin-right: 0.625rem; 
-        }
-        .document-info {
-          text-align: left;
-          width: 100%;
-        }
-        .document-name {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-size: 1.3rem;
-          font-weight: 500;
-        }
-        .document-details {
-          font-size: 1.1rem; 
-          text-align: left;
-          color: gray;
-        }
-        .document-size {
-          font-size: 1.1rem;
-          color: gray;
-        }
-        .links-list {
-          width: 100%;
-        }
-        .link-item {
-          display: flex;
-          align-items: center;
-          padding: 1rem; 
-        }
-        .link-button {
-          display: flex;
-          font-size: 2.5rem; 
-          margin-right: 1rem; 
-          outline: none;
-          background-color: #f1f1f1;
-          padding: 0.5rem;
-          border-radius: 0.5rem;
-          border: none;
-        }
-        .link-info {
-          text-align: left;
-          width: 100%;
-        }
-        .link-name {
-          font-size: 1.3rem; 
-          font-weight: 500;
-          color: #000;
-        }
-        .link-url {
-          font-size: 1.1rem; 
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: gray;
-        }
-      `}</style>
-    </div>
+      <style>{mediaStyles}</style>
+    </>
   );
 };
 
+const mediaStyles = `
+  .md-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Tabs */
+  .md-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0 0.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 1rem;
+  }
+  .md-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .md-tab:hover { color: #555; }
+  .md-tab--active {
+    color: #0B1444;
+    border-bottom-color: #C3E11D;
+  }
+  .md-tab-count {
+    font-size: 1.05rem;
+    background: #f0f0f0;
+    color: #666;
+    padding: 0.1rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .md-tab--active .md-tab-count {
+    background: #eef7c2;
+    color: #0B1444;
+  }
+
+  /* Content */
+  .md-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0.25rem;
+  }
+
+  /* Image Gallery */
+  .md-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  .md-gallery-item {
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 1;
+    position: relative;
+  }
+  .md-gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.15s;
+    border-radius: 8px;
+  }
+  .md-gallery-item:hover::after {
+    background: rgba(0,0,0,0.06);
+  }
+  .md-gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Document & Link List */
+  .md-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .md-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 8px;
+    transition: background 0.12s;
+  }
+  .md-list-item:hover { background: #fafafa; }
+  .md-list-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .md-list-icon--doc { background: #f0f0f0; color: #666; }
+  .md-list-icon--link { background: #eef7c2; color: #0B1444; }
+  .md-list-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .md-list-name {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .md-list-meta {
+    font-size: 1.1rem;
+    color: #999;
+  }
+  .md-list-url {
+    font-size: 1.1rem;
+    color: #2563eb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Lightbox */
+  .md-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: md-fadeIn 0.2s;
+  }
+  .md-lightbox-inner {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .md-lb-img {
+    max-width: 85vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  .md-lb-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .md-lb-close:hover { background: rgba(255,255,255,0.3); }
+  .md-lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .md-lb-nav:hover { background: rgba(255,255,255,0.3); }
+  .md-lb-nav--prev { left: -56px; }
+  .md-lb-nav--next { right: -56px; }
+  .md-lb-counter {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.6);
+    font-size: 1.2rem;
+  }
+  @keyframes md-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+`;
+
 Media.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.string).isRequired,
+  images: PropTypes.arrayOf(PropTypes.string),
   documents: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       url: PropTypes.string,
-      date: PropTypes.string.isRequired,
-      size: PropTypes.string.isRequired,
+      date: PropTypes.string,
+      size: PropTypes.string,
     })
-  ).isRequired,
+  ),
   links: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
     })
-  ).isRequired,
+  ),
 };
 
 export default Media;

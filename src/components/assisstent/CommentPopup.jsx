@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-
-import { RxAvatar } from 'react-icons/rx';
-import { MdOutlineAttachFile } from 'react-icons/md';
-import { MdAlternateEmail } from 'react-icons/md';
-import { RiSendPlane2Fill } from 'react-icons/ri';
+import { IoSend } from 'react-icons/io5';
 import { useAddCommentMutation } from '../../redux/api/workspaceApi';
 
 const CommentPopup = ({
@@ -17,26 +13,21 @@ const CommentPopup = ({
   const [comment, setComment] = useState('');
   const [addComment] = useAddCommentMutation();
   const popupRef = useRef(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
-        onClose(); // Close the comment popup when clicking outside
+        onClose();
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
-
-  const handleEnterKey = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSend();
-    }
-  };
 
   const handleSend = async () => {
     if (comment.trim()) {
@@ -50,77 +41,72 @@ const CommentPopup = ({
   return (
     <>
       <div
-        className="commentPopup"
+        className="cm-popup"
         ref={popupRef}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="user-image">
-          <RxAvatar style={{ fontSize: '3.5rem' }} />
-        </div>
-        <div className="comment-box">
-          <div className="input-wrapper">
-            <input
-              type="text"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Reply"
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={handleEnterKey}
-            />
-            {/* <div className="user-icon">
-              <MdOutlineAttachFile />
-            </div>
-            <div className="mention-icon">
-              <MdAlternateEmail />
-            </div> */}
-            <div
-              onClick={handleSend}
-              className="send-icon"
-              style={{ color: comment.trim() ? 'black' : 'gray' }} // Conditional color
-            >
-              <RiSendPlane2Fill />
-            </div>
-          </div>
+        <div className="cm-popup-input-box">
+          <input
+            ref={inputRef}
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Add a comment..."
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
+          />
+          <button
+            className="cm-popup-send"
+            onClick={handleSend}
+            disabled={!comment.trim()}
+          >
+            <IoSend size={16} />
+          </button>
         </div>
       </div>
       <style>{`
-        .commentPopup {
-          position: absolute;
-          display: flex;
-          box-shadow: 0px 4px 24px 0px #0000001F;
-          background-color: white;
+        .cm-popup {
           position: fixed;
           top: 5rem;
-          padding: 2rem;
-          border-radius: 1rem;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+          padding: 1rem 1.2rem;
+          z-index: 100;
+          min-width: 280px;
         }
-        .comment-box {
-          display: flex;
-          border: 1px solid lightgray;
-          border-radius: 0.7rem;
-        }
-        .user-image {
-          margin-right: 1rem;
-        }
-        .input-wrapper {
+        .cm-popup-input-box {
           display: flex;
           align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          font-size: 1.6rem;
-          margin-right: 1rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 0.5rem 0.8rem;
+          background: #fafafa;
+          transition: border-color 0.2s;
         }
-        .input-wrapper input {
-          margin-left: 1rem;
+        .cm-popup-input-box:focus-within {
+          border-color: #C3E11D;
+        }
+        .cm-popup-input-box input {
+          flex: 1;
           border: none;
           outline: none;
+          font-size: 1.3rem;
+          background: transparent;
         }
-        .user-icon, .mention-icon, .send-icon {
-          font-size: 2rem;
+        .cm-popup-send {
+          background: none;
+          border: none;
           cursor: pointer;
-          // display:flex;
+          color: #999;
+          display: flex;
           align-items: center;
+          padding: 0.3rem;
+          border-radius: 4px;
+          transition: color 0.2s;
         }
+        .cm-popup-send:not(:disabled):hover { color: #0B1444; }
+        .cm-popup-send:disabled { cursor: default; opacity: 0.4; }
       `}</style>
     </>
   );
