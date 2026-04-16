@@ -732,8 +732,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                             </a>
                           </div>
                         )}
-                        {item.question && <ReactMarkdown>{item.question}</ReactMarkdown>}
-                        {item.answer && <ReactMarkdown>{item.answer}</ReactMarkdown>}
+                        {item.question && <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>}
+                        {item.answer && <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.answer}</ReactMarkdown>}
                       </div>
                     </div>
                   </div>
@@ -887,7 +887,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                         />
                       </div>
                       <div className="msg">
-                        <ReactMarkdown>{item.answer}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.answer}</ReactMarkdown>
                       </div>
                     </div>
                   </div>
@@ -1190,11 +1190,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     .chat-message .msg em,
     .chat-message .msg i { font-style: italic; }
     .chat-message .msg a {
-      color: #2563eb;
+      color: #0B1444;
       text-decoration: underline;
       word-break: break-word;
     }
-    .chat-message .msg a:hover { color: #1d4ed8; }
+    .chat-message .msg a:hover { color: #1e2a5c; }
     .chat-message .msg code {
       background: rgba(0, 0, 0, 0.06);
       padding: 0.15rem 0.35rem;
@@ -1237,7 +1237,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       border-collapse: collapse;
       width: 100%;
       margin: 1.1rem 0;
-      font-size: 0.95rem;
+      font-size: 12px;
       display: block;
       overflow-x: auto;
     }
