@@ -3,7 +3,7 @@ import assets from '../assets';
 
 const AuthLayout = () => {
   const divStyle = {
-    backgroundImage: `url(${assets.auth.banner})`,
+    backgroundImage: `url("${assets.auth.banner}")`,
   };
   return (
     <div className="authLayout">
