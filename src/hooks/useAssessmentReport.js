@@ -68,7 +68,7 @@ const useAssessmentReport = ({
       addContent(question);
 
       setError(null);
-      return question;
+      return data;
     } catch (error) {
       setError(error.response?.data?.message || error.message);
     }

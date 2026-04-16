@@ -20,6 +20,7 @@ import TonePopup from '../../components/common/TonePopup';
 import { ScaleLoader } from 'react-spinners';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // ASk-Ai
 import useGrammarFix from '../../hooks/AiFeatureHooks/useGrammarFix';
@@ -370,12 +371,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
 
     try {
       // File parsing is now handled server-side — just pass the file to the hook
-      const response = await AssessmentReport(firstPrompt, SubReportId, currentFile);
-      if (response) {
-        setChat((prevChat) => [
-          ...prevChat,
-          { role: 'ai', question: response, status: 'pending' },
-        ]);
+      const data = await AssessmentReport(firstPrompt, SubReportId, currentFile);
+      // Server is source of truth for Q&A — overwrite local chat with persisted qa
+      // so every item stays in backend shape ({ _id, question, answer?, status? })
+      // and the render branches for !item.role handle both the AI question and the
+      // user's answer consistently across all turns.
+      if (data?.qa) {
+        setChat(data.qa);
       }
       setFirstPrompt('');
       setFile(null);
@@ -749,7 +751,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                         />
                       </div>
                       <div className="msg">
-                        <ReactMarkdown>{item.question}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
                       </div>
                       <div className="message-action-icons">
                         <div
@@ -816,7 +818,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                         />
                       </div>
                       <div className="msg">
-                        <ReactMarkdown>{item.question}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
                       </div>
                       <div className="message-action-icons">
                         <div
@@ -1138,7 +1140,122 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     .msg {
       margin: 1rem 0;
       font-size: 1rem;
-      text-align: justify;
+      text-align: left;
+      line-height: 1.75;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    /* Markdown content styles — scoped to rendered chat message content */
+    .chat-message .msg > :first-child { margin-top: 0; }
+    .chat-message .msg > :last-child { margin-bottom: 0; }
+    .chat-message .msg > * + * { margin-top: 0.9rem; }
+    .chat-message .msg p {
+      margin: 0.9rem 0;
+      line-height: 1.75;
+    }
+    .chat-message .msg h1,
+    .chat-message .msg h2,
+    .chat-message .msg h3,
+    .chat-message .msg h4,
+    .chat-message .msg h5,
+    .chat-message .msg h6 {
+      font-weight: 600;
+      line-height: 1.35;
+      margin: 1.75rem 0 0.85rem;
+      color: #0B1444;
+    }
+    .chat-message .msg h1 { font-size: 1.6rem; }
+    .chat-message .msg h2 { font-size: 1.4rem; }
+    .chat-message .msg h3 { font-size: 1.2rem; }
+    .chat-message .msg h4 { font-size: 1.1rem; }
+    .chat-message .msg h5,
+    .chat-message .msg h6 { font-size: 1rem; }
+    .chat-message .msg ul,
+    .chat-message .msg ol {
+      margin: 0.9rem 0;
+      padding-left: 1.75rem;
+    }
+    .chat-message .msg li {
+      margin: 0.5rem 0;
+      line-height: 1.75;
+    }
+    .chat-message .msg li > p { margin: 0.5rem 0; }
+    .chat-message .msg li + li { margin-top: 0.5rem; }
+    .chat-message .msg ul ul,
+    .chat-message .msg ul ol,
+    .chat-message .msg ol ul,
+    .chat-message .msg ol ol { margin: 0.5rem 0; }
+    .chat-message .msg strong,
+    .chat-message .msg b { font-weight: 600; }
+    .chat-message .msg em,
+    .chat-message .msg i { font-style: italic; }
+    .chat-message .msg a {
+      color: #2563eb;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+    .chat-message .msg a:hover { color: #1d4ed8; }
+    .chat-message .msg code {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9em;
+    }
+    .chat-message .msg pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1.1rem 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .chat-message .msg pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
+    .chat-message .msg blockquote {
+      border-left: 3px solid #C3E11D;
+      padding: 0.5rem 1rem;
+      margin: 1.1rem 0;
+      color: #555;
+      background: rgba(195, 225, 29, 0.06);
+      border-radius: 0 6px 6px 0;
+    }
+    .chat-message .msg blockquote > p { margin: 0.5rem 0; }
+    .chat-message .msg hr {
+      border: none;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      margin: 1.5rem 0;
+    }
+    .chat-message .msg table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.1rem 0;
+      font-size: 0.95rem;
+      display: block;
+      overflow-x: auto;
+    }
+    .chat-message .msg th,
+    .chat-message .msg td {
+      border: 1px solid #e5e7eb;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+    .chat-message .msg th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+    .chat-message .msg tr:nth-child(even) td { background: #fafafa; }
+    .chat-message .msg img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin: 0.5rem 0;
     }
       .initials-placeholder {
           display: flex;
