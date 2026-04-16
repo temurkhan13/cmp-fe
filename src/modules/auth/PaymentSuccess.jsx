@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Components from '../../components';
 import apiClient from '../../api/axios';
+import { getUser } from '../../redux/slices/authSlice';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
@@ -22,6 +25,11 @@ const PaymentSuccess = () => {
           session_id: sessionId,
         });
         if (res.data?.status) {
+          // Refresh user data so subscription is reflected in Redux/localStorage
+          const user = JSON.parse(localStorage.getItem('user'));
+          if (user?.id) {
+            await dispatch(getUser(user.id));
+          }
           setStatus('success');
         } else {
           setStatus('error');
@@ -32,7 +40,7 @@ const PaymentSuccess = () => {
     };
 
     verifyPayment();
-  }, [sessionId]);
+  }, [sessionId, dispatch]);
 
   return (
     <div className="paymentSuccess">

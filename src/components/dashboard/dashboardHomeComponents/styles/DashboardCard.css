@@ -103,3 +103,14 @@
 .dropdown-item:hover {
   background-color: #f0f0f0;
 }
+
+@media (max-width: 600px) {
+  .card-dashboard {
+    max-width: 100%;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+  .info h3 {
+    font-size: 1.3rem;
+  }
+}

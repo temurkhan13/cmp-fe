@@ -10,6 +10,7 @@ import { BsFilePlayFill } from 'react-icons/bs';
 import { BiArrowBack, BiPlus } from 'react-icons/bi';
 import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
+import ConfirmModal from '../common/ConfirmModal';
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
@@ -34,6 +35,7 @@ function PlaybookEditor() {
   const [accentColor, setAccentColor] = useState('#00316f');
   const [logoUrl, setLogoUrl] = useState('');
   const exportRef = useRef(null);
+  const [deleteStageConfirm, setDeleteStageConfirm] = useState({ open: false, stageId: null });
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -137,7 +139,6 @@ function PlaybookEditor() {
 
   // Delete stage
   const deleteStage = async (stageId) => {
-    if (!window.confirm('Delete this stage and all its content?')) return;
     try {
       await fetch(`${config.apiURL}/dpb/${id}/stage/${stageId}`, {
         method: 'DELETE',
@@ -605,7 +606,7 @@ function PlaybookEditor() {
             onUpdateNodeData={updateNodeData}
             onInspire={inspireSection}
             onRefresh={fetchPlaybook}
-            onDeleteStage={deleteStage}
+            onDeleteStage={(stageId) => setDeleteStageConfirm({ open: true, stageId })}
             onMoveStage={moveStage}
           />
         ))}
@@ -628,6 +629,19 @@ function PlaybookEditor() {
           </button>
         </div>
       </div>
+      <ConfirmModal
+        isOpen={deleteStageConfirm.open}
+        title="Delete Stage"
+        description="Delete this stage and all its content?"
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          const stageId = deleteStageConfirm.stageId;
+          await deleteStage(stageId);
+          setDeleteStageConfirm({ open: false, stageId: null });
+        }}
+        onCancel={() => setDeleteStageConfirm({ open: false, stageId: null })}
+      />
     </div>
   );
 }

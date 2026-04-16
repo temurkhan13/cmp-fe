@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import { timeAgo } from './helper.js';
+import ConfirmModal from '../common/ConfirmModal';
 
 const PLAYBOOK_TEMPLATES = [
   {
@@ -69,6 +70,7 @@ function PlaybookList() {
   const [totalResults, setTotalResults] = useState(0);
   const selectedWorkspace = useSelector(selectWorkspace);
   const selectedFolder = useSelector(selectSelectedFolder);
+  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
 
   // Fetch playbooks from digital playbook endpoint
   const fetchPlaybooks = async (requestedPage = 1) => {
@@ -167,9 +169,7 @@ function PlaybookList() {
     }
   };
 
-  const deletePlaybook = async (id, e) => {
-    e.stopPropagation();
-    if (!window.confirm('Delete this playbook? This cannot be undone.')) return;
+  const deletePlaybook = async (id) => {
     try {
       await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
         method: 'DELETE',
@@ -485,7 +485,7 @@ function PlaybookList() {
                             size={16}
                             style={{ opacity: 0.4, color: '#c00' }}
                             title="Delete"
-                            onClick={(e) => deletePlaybook(pbId, e)}
+                            onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: pbId }); }}
                           />
                         </>
                       )}
@@ -612,6 +612,19 @@ function PlaybookList() {
           font-weight: 700;
         }`}
       </style>
+      <ConfirmModal
+        isOpen={deleteConfirm.open}
+        title="Delete Playbook"
+        description="Delete this playbook? This cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          const id = deleteConfirm.id;
+          await deletePlaybook(id);
+          setDeleteConfirm({ open: false, id: null });
+        }}
+        onCancel={() => setDeleteConfirm({ open: false, id: null })}
+      />
     </div>
   );
 }

@@ -247,6 +247,34 @@ const Header = () => {
           background-color: rgba(0, 0, 0, 0);
           z-index: 0;
         }
+
+        @media (max-width: 1080px) {
+          .header {
+            padding-left: 5rem;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .header {
+            padding: 0.5rem 1rem 0.5rem 5rem;
+          }
+          .BellIcon {
+            height: 2.5rem;
+            width: 2.5rem;
+          }
+          .ProfileImage {
+            height: 3rem;
+            width: 3rem;
+          }
+          .initials-placeholder {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+          }
+          .dropdownMenu {
+            width: 16rem;
+          }
+        }
       `}</style>
     </header>
   );

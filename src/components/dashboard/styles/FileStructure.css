@@ -92,3 +92,25 @@
   background-color: red;
   color: white;
 }
+
+@media (max-width: 1080px) {
+  .folders-files {
+    padding: 1.5rem;
+  }
+  .fs-modal {
+    width: 90%;
+    max-width: 400px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (max-width: 600px) {
+  .folders-files {
+    padding: 1rem;
+  }
+  .fs-modal {
+    width: calc(100% - 2rem);
+    max-width: none;
+  }
+}

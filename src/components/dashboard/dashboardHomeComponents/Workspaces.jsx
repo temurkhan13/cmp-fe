@@ -17,6 +17,7 @@ import {
 import NotificationBar from '../../common/NotificationBar';
 import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
+import InputModal from '../../common/InputModal';
 
 const Workspaces = ({
   activeWorkspace,
@@ -35,6 +36,7 @@ const Workspaces = ({
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const modalRef = useRef(null);
   const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
+  const [renameModal, setRenameModal] = useState({ open: false, workspace: null });
 
   const dispatch = useDispatch();
   const [addWorkspace] = useAddWorkspaceMutation();
@@ -99,25 +101,29 @@ const Workspaces = ({
   const truncateString = (str, num) =>
     str.length > num ? str.slice(0, num) + '...' : str;
 
-  const handleRenameWorkspace = async (workspace) => {
+  const handleRenameWorkspace = (workspace) => {
     if (workspace.workspaceName === 'Default Workspace') {
       showError('Default workspace cannot be renamed.');
       return;
     }
-    const newName = prompt('Rename workspace:', workspace.workspaceName);
-    if (!newName || !newName.trim()) return;
-    if (newName.trim().length < 3) {
+    console.log('handleRenameWorkspace called', workspace.workspaceName);
+    setRenameModal({ open: true, workspace });
+    setOpenDropdown(null);
+  };
+
+  const handleRenameConfirm = async (newName) => {
+    if (newName.length < 3) {
       showError('Workspace name must be at least 3 characters.');
       return;
     }
     try {
       await updateWorkspaceMutation({
-        workspaceId: workspace.id,
-        workspaceName: newName.trim(),
+        workspaceId: renameModal.workspace.id,
+        workspaceName: newName,
       }).unwrap();
-      setOpenDropdown(null);
       onWorkspaceUpdated();
       showSuccess('Workspace renamed successfully!');
+      setRenameModal({ open: false, workspace: null });
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
       showError('Failed to rename workspace.');
@@ -176,7 +182,7 @@ const Workspaces = ({
               <div className="dropdown-menuu">
                 <div
                   className="dropdown-itemm"
-                  onClick={() => handleRenameWorkspace(workspace)}
+                  onClick={(e) => { e.stopPropagation(); handleRenameWorkspace(workspace); }}
                 >
                   Rename
                 </div>
@@ -446,7 +452,34 @@ const Workspaces = ({
 .icon-container {
   position: relative; /* Required for dropdown positioning */
 }
-          .
+
+@media (max-width: 1080px) {
+  .icons {
+    padding: 5px 1.5rem;
+  }
+  .modal {
+    width: 90%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  .icons {
+    padding: 5px 1rem;
+    justify-content: center;
+  }
+  .icon-container {
+    padding: 1rem;
+  }
+  .modal {
+    width: calc(100% - 2rem);
+    max-width: none;
+  }
+  .workspace-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 1.2rem;
+  }
+}
       `}</style>
     </div>
   );
@@ -576,6 +609,16 @@ const ModalSections = ({
         color:white;
         }
       `}</style>
+      <InputModal
+        isOpen={renameModal.open}
+        title="Rename Workspace"
+        confirmText="Rename"
+        cancelText="Cancel"
+        defaultValue={renameModal.workspace?.workspaceName || ''}
+        placeholder="Enter workspace name"
+        onConfirm={handleRenameConfirm}
+        onCancel={() => setRenameModal({ open: false, workspace: null })}
+      />
     </div>
   );
 };

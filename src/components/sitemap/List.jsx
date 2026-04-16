@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
 import { FaFolderTree } from 'react-icons/fa6';
+import ConfirmModal from '../common/ConfirmModal';
 
 function List() {
   let navigate = useNavigate();
@@ -18,6 +19,7 @@ function List() {
   const [editName, setEditName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const selectedWorkspace = useSelector(selectWorkspace);
+  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
 
   async function getData(
     workSpaceId,
@@ -51,9 +53,7 @@ function List() {
     setEditingId(null);
   };
 
-  const deleteSitemap = async (id, e) => {
-    e.stopPropagation();
-    if (!window.confirm('Delete this sitemap? This cannot be undone.')) return;
+  const deleteSitemap = async (id) => {
     const authToken = localStorage.getItem('token');
     await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
       method: 'DELETE',
@@ -262,7 +262,7 @@ function List() {
                               size={16}
                               style={{ opacity: 0.4, color: '#c00' }}
                               title="Delete"
-                              onClick={(e) => deleteSitemap(_id, e)}
+                              onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: _id }); }}
                             />
                           </>
                         )}
@@ -321,6 +321,19 @@ function List() {
           font-weight: 700;
         }`}
       </style>
+      <ConfirmModal
+        isOpen={deleteConfirm.open}
+        title="Delete Sitemap"
+        description="Delete this sitemap? This cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          const id = deleteConfirm.id;
+          await deleteSitemap(id);
+          setDeleteConfirm({ open: false, id: null });
+        }}
+        onCancel={() => setDeleteConfirm({ open: false, id: null })}
+      />
     </div>
   );
 }

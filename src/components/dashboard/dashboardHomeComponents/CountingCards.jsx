@@ -79,6 +79,33 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
           color: black;
           margin-bottom: 1rem;
         }
+
+        @media (max-width: 1080px) {
+          .counting-cards {
+            flex-wrap: wrap;
+          }
+          .dashboard-card {
+            width: calc(50% - 0.5rem);
+            height: 12rem;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .counting-cards {
+            flex-direction: column;
+            margin: 1.5rem 1rem;
+          }
+          .dashboard-card {
+            width: 100%;
+            height: 10rem;
+          }
+          .counts {
+            font-size: 2rem !important;
+          }
+          .count-heading {
+            font-size: 1.3rem;
+          }
+        }
       `}</style>
     </div>
   );
