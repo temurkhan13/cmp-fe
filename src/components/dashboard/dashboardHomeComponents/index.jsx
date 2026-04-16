@@ -194,18 +194,13 @@ const DashboardHomeComp = () => {
   }, [selectedWorkspace, currentFolder]);
 
   const handleRemoveItem = useCallback((itemId, itemType) => {
-    setCurrentFolder((prevFolder) => {
-      // Check if the itemType exists in prevFolder and is an array before filtering
-      if (Array.isArray(prevFolder[itemType])) {
-        return {
-          ...prevFolder,
-          [itemType]: prevFolder[itemType].filter((item) => item.id !== itemId),
-        };
-      }
-      // If itemType doesn't exist or is not an array, return prevFolder unmodified
-      return prevFolder;
-    });
-  }, []);
+    // Refetch folder data from backend so Redux state updates
+    const folder = currentFolder;
+    const wsId = activeWorkspace?.id || selectedWorkspace?.id;
+    if (folder && wsId) {
+      dispatch(fetchFolderData({ workspaceId: wsId, folderId: folder.id }));
+    }
+  }, [dispatch, currentFolder, activeWorkspace, selectedWorkspace]);
 
   const handleDataUpdated = useCallback(async () => {
     const stats = await dispatch(fetchDashboardStats()).unwrap();

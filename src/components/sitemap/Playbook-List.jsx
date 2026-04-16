@@ -10,6 +10,7 @@ import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import { timeAgo } from './helper.js';
 import ConfirmModal from '../common/ConfirmModal';
+import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 
 const PLAYBOOK_TEMPLATES = [
   {
@@ -71,6 +72,7 @@ function PlaybookList() {
   const selectedWorkspace = useSelector(selectWorkspace);
   const selectedFolder = useSelector(selectSelectedFolder);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
+  const [moveToTrash] = useMoveToTrashMutation();
 
   // Fetch playbooks from digital playbook endpoint
   const fetchPlaybooks = async (requestedPage = 1) => {
@@ -171,15 +173,12 @@ function PlaybookList() {
 
   const deletePlaybook = async (id) => {
     try {
-      await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-      });
+      await moveToTrash({ entityType: 'sitemap', id }).unwrap();
       const remaining = playbooks.length - 1;
       const targetPage = remaining === 0 && page > 1 ? page - 1 : page;
       await fetchPlaybooks(targetPage);
     } catch (err) {
-      import.meta.env.DEV && console.error('Delete error:', err);
+      import.meta.env.DEV && console.error('Move to trash error:', err);
     }
   };
 
@@ -614,9 +613,9 @@ function PlaybookList() {
       </style>
       <ConfirmModal
         isOpen={deleteConfirm.open}
-        title="Delete Playbook"
-        description="Delete this playbook? This cannot be undone."
-        confirmText="Delete"
+        title="Move to Trash"
+        description="This playbook will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
         cancelText="Cancel"
         onConfirm={async () => {
           const id = deleteConfirm.id;

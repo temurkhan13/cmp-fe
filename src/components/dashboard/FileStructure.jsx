@@ -18,6 +18,7 @@ import './styles/FileStructure.css';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import InputModal from '../common/InputModal';
+import ConfirmModal from '../common/ConfirmModal';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const folderId = useSelector(selectSelectedFolder);
   const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
   const [renameModal, setRenameModal] = useState({ open: false, folder: null });
+  const [trashConfirm, setTrashConfirm] = useState({ open: false, folder: null });
   const dropdownRef = useRef(null);
 
   // Close dropdown on click outside
@@ -141,7 +143,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
                   </div>
                   <div
                     className="dropdown-itemm deletee"
-                    onClick={() => handleProceedMoveToTrash(folder)}
+                    onClick={() => { setOpenDropdown(null); setTrashConfirm({ open: true, folder }); }}
                   >
                     Delete
                   </div>
@@ -209,6 +211,18 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
           setRenameModal({ open: false, folder: null });
         }}
         onCancel={() => setRenameModal({ open: false, folder: null })}
+      />
+      <ConfirmModal
+        isOpen={trashConfirm.open}
+        title="Move to Trash"
+        description="This project will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          await handleProceedMoveToTrash(trashConfirm.folder);
+          setTrashConfirm({ open: false, folder: null });
+        }}
+        onCancel={() => setTrashConfirm({ open: false, folder: null })}
       />
     </section>
   );

@@ -18,6 +18,7 @@ import NotificationBar from '../../common/NotificationBar';
 import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import InputModal from '../../common/InputModal';
+import ConfirmModal from '../../common/ConfirmModal';
 
 const Workspaces = ({
   activeWorkspace,
@@ -37,6 +38,7 @@ const Workspaces = ({
   const modalRef = useRef(null);
   const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
   const [renameModal, setRenameModal] = useState({ open: false, workspace: null });
+  const [trashConfirm, setTrashConfirm] = useState({ open: false, id: null });
 
   const dispatch = useDispatch();
   const [addWorkspace] = useAddWorkspaceMutation();
@@ -188,7 +190,7 @@ const Workspaces = ({
                 </div>
                 <div
                   className="dropdown-itemm deletee"
-                  onClick={() => handleMoveToTrash(workspace.id)}
+                  onClick={() => { setOpenDropdown(null); setTrashConfirm({ open: true, id: workspace.id }); }}
                 >
                   Delete
                 </div>
@@ -301,6 +303,19 @@ const Workspaces = ({
         placeholder="Enter workspace name"
         onConfirm={handleRenameConfirm}
         onCancel={() => setRenameModal({ open: false, workspace: null })}
+      />
+
+      <ConfirmModal
+        isOpen={trashConfirm.open}
+        title="Move to Trash"
+        description="This workspace will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          await handleMoveToTrash(trashConfirm.id);
+          setTrashConfirm({ open: false, id: null });
+        }}
+        onCancel={() => setTrashConfirm({ open: false, id: null })}
       />
 
       <style>{`
