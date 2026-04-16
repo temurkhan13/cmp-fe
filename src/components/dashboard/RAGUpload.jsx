@@ -51,10 +51,12 @@ const RAGUpload = () => {
         if (res.ok) {
           uploadResults.push({ name: file.name, status: 'success' });
         } else {
-          uploadResults.push({ name: file.name, status: 'error', message: 'Upload failed' });
+          const errorData = await res.json().catch(() => ({}));
+          const message = errorData.error || 'Upload failed';
+          uploadResults.push({ name: file.name, status: 'error', message });
         }
-      } catch (err) {
-        uploadResults.push({ name: file.name, status: 'error', message: err.message });
+      } catch {
+        uploadResults.push({ name: file.name, status: 'error', message: 'Upload failed. Please try again.' });
       }
     }
 

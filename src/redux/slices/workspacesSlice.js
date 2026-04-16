@@ -99,8 +99,8 @@ const workspacesSlice = createSlice({
       .addCase(fetchDashboardStats.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.dashboardStats = payload;
-        // Set the first workspace as default
-        if (payload.workspaces && payload.workspaces.length > 0) {
+        // Only set workspace if none is currently selected
+        if (!state.selectedWorkspace && payload.workspaces && payload.workspaces.length > 0) {
           const activeWorkspace =
             payload.workspaces.find((workspace) => workspace.isActive) ||
             (payload.results && payload.results[0]);
