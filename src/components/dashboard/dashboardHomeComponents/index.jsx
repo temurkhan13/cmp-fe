@@ -95,11 +95,18 @@ const DashboardHomeComp = () => {
         const activeWorkspace =
           dashboardStats.workspaces.find((workspace) => workspace.isActive) ||
           dashboardStats.workspaces[0];
-        // if (!selectedWorkspace || selectedWorkspace.id !== activeWorkspace.id) {
-        dispatch(setSelectedWorkspace(activeWorkspace));
-        setActiveWorkspace(activeWorkspace);
-        handleWorkspaceChange(activeWorkspace);
-        // }
+        if (!selectedWorkspace) {
+          dispatch(setSelectedWorkspace(activeWorkspace));
+          setActiveWorkspace(activeWorkspace);
+          handleWorkspaceChange(activeWorkspace);
+        } else {
+          // Refresh local state with already-selected workspace from Redux
+          const currentWs = dashboardStats.workspaces.find(
+            (ws) => ws.id === selectedWorkspace.id
+          ) || activeWorkspace;
+          setActiveWorkspace(currentWs);
+          handleWorkspaceChange(currentWs);
+        }
       } catch (err) { if (import.meta.env.DEV) console.error(err); }
       finally { setIsFetching(false); }
     };

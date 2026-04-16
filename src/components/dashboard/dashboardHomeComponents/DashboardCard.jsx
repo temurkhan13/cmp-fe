@@ -51,7 +51,7 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
       setIsMenuOpen(false);
       try {
         const entityType = getEntityType(data.type);
-        await moveToTrash({ entityType: data.type, id: data.id }).unwrap();
+        await moveToTrash({ entityType, id: data.id }).unwrap();
         onRemove(data.id); // Ensure UI updates instantly
       } catch (error) {
         setShowNotification(true);

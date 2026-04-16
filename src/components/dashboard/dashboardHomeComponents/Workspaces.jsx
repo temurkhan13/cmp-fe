@@ -292,6 +292,17 @@ const Workspaces = ({
         />
       )}
 
+      <InputModal
+        isOpen={renameModal.open}
+        title="Rename Workspace"
+        confirmText="Rename"
+        cancelText="Cancel"
+        defaultValue={renameModal.workspace?.workspaceName || ''}
+        placeholder="Enter workspace name"
+        onConfirm={handleRenameConfirm}
+        onCancel={() => setRenameModal({ open: false, workspace: null })}
+      />
+
       <style>{`
         .collection-heading {
           font-size: 2.5rem;
@@ -609,16 +620,6 @@ const ModalSections = ({
         color:white;
         }
       `}</style>
-      <InputModal
-        isOpen={renameModal.open}
-        title="Rename Workspace"
-        confirmText="Rename"
-        cancelText="Cancel"
-        defaultValue={renameModal.workspace?.workspaceName || ''}
-        placeholder="Enter workspace name"
-        onConfirm={handleRenameConfirm}
-        onCancel={() => setRenameModal({ open: false, workspace: null })}
-      />
     </div>
   );
 };
