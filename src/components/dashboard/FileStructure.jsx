@@ -17,6 +17,7 @@ import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import './styles/FileStructure.css';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import useOutsideClick from '../../hooks/useOutsideClick';
+import InputModal from '../common/InputModal';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const { refetch } = useGetWorkspacesQuery(workspace.id);
   const folderId = useSelector(selectSelectedFolder);
   const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
+  const [renameModal, setRenameModal] = useState({ open: false, folder: null });
   const dropdownRef = useRef(null);
 
   // Close dropdown on click outside
@@ -131,15 +133,8 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
                   <div
                     className="dropdown-itemm"
                     onClick={() => {
-                      const newName = prompt('Rename project:', folder.folderName);
-                      if (newName && newName.trim()) {
-                        const token = localStorage.getItem('token');
-                        fetch(`${config.apiURL}/workspace/${workspace.id}/folder/${folder.id}`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                          body: JSON.stringify({ folderName: newName.trim() }),
-                        }).then(() => { onFolderUpdate(); setOpenDropdown(null); });
-                      }
+                      setRenameModal({ open: true, folder });
+                      setOpenDropdown(null);
                     }}
                   >
                     Rename
@@ -196,6 +191,25 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
           proceedText="Proceed"
         />
       )}
+      <InputModal
+        isOpen={renameModal.open}
+        title="Rename Project"
+        confirmText="Rename"
+        cancelText="Cancel"
+        defaultValue={renameModal.folder?.folderName || ''}
+        placeholder="Enter project name"
+        onConfirm={async (newName) => {
+          const token = localStorage.getItem('token');
+          await fetch(`${config.apiURL}/workspace/${workspace.id}/folder/${renameModal.folder.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ folderName: newName }),
+          });
+          onFolderUpdate();
+          setRenameModal({ open: false, folder: null });
+        }}
+        onCancel={() => setRenameModal({ open: false, folder: null })}
+      />
     </section>
   );
 };

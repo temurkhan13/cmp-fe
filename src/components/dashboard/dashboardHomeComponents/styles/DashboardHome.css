@@ -55,3 +55,20 @@
   padding: 2rem;
   margin: 0 1rem;
 }
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    margin: 0;
+  }
+  .container-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+  }
+  .dashboard {
+    padding-top: 1rem;
+  }
+}

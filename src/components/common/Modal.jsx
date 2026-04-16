@@ -51,10 +51,8 @@ const Modal = ({ title, isOpen, onClose, children }) => {
           padding: 2rem;
           border-radius: 1rem;
           position: relative;
-          // max-width: 90vw;
+          max-width: 90vw;
           max-height:98vh;
-          // z-index: 10002; 
-
         }
         .modal-header {
           display: flex;
@@ -83,6 +81,16 @@ const Modal = ({ title, isOpen, onClose, children }) => {
           flex-direction: column;
           gap: 1rem;
           overflow-y: auto;
+        }
+
+        @media (max-width: 600px) {
+          .modal-content {
+            padding: 1.5rem;
+            max-width: calc(100vw - 2rem);
+          }
+          .modal-title {
+            font-size: 1.6rem;
+          }
         }
       `}</style>
     </div>

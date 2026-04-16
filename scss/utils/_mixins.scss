@@ -41,4 +41,14 @@
       @content;
     } //1600
   }
+  @if $breakpoint == dashboard-tablet {
+    @media only screen and (max-width: $dashboard_tablet) {
+      @content;
+    } //1080px
+  }
+  @if $breakpoint == dashboard-mobile {
+    @media only screen and (max-width: $dashboard_mobile) {
+      @content;
+    } //600px
+  }
 }

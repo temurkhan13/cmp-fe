@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
 import config from '../../../config/config.js';
+import ConfirmModal from '../../common/ConfirmModal';
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const PersonalInfo = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasChanged, setHasChanged] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Sync local state with currentUser from Redux store whenever it changes
   useEffect(() => {
@@ -251,28 +253,37 @@ const PersonalInfo = () => {
         <button
           type="button"
           className="delete-account-button"
-          onClick={async () => {
-            if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
-            try {
-              const token = localStorage.getItem('token');
-              const res = await fetch(`${config.apiURL}/auth/delete-account`, {
-                method: 'DELETE',
-                headers: { Authorization: `Bearer ${token}` },
-              });
-              if (res.ok) {
-                localStorage.clear();
-                window.location.href = '/log-in';
-              } else {
-                alert('Failed to delete account. Please try again.');
-              }
-            } catch {
-              alert('Failed to delete account. Please try again.');
-            }
-          }}
+          onClick={() => setShowDeleteConfirm(true)}
         >
           Delete Account
         </button>
       </div>
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        title="Delete Account"
+        description="Are you sure you want to delete your account? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${config.apiURL}/auth/delete-account`, {
+              method: 'DELETE',
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+              localStorage.clear();
+              window.location.href = '/log-in';
+            } else {
+              alert('Failed to delete account. Please try again.');
+            }
+          } catch {
+            alert('Failed to delete account. Please try again.');
+          }
+          setShowDeleteConfirm(false);
+        }}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
       <style>{`
         .personal-info {
           margin: 0 auto;

@@ -22,14 +22,35 @@ import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import OnboardingTour from '../components/common/OnboardingTour';
 import SupportChat from '../components/common/SupportChat';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation(); // Use location to get current path
-  const [isOpen, setIsOpen] = useState(true);
+  const isSmallScreen = useMediaQuery('(max-width: 1080px)');
+  const [isOpen, setIsOpen] = useState(!isSmallScreen);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+
+  // Auto-close sidebar when entering small screen
+  useEffect(() => {
+    if (isSmallScreen) setIsOpen(false);
+  }, [isSmallScreen]);
+
+  // Lock body scroll when sidebar overlay is active
+  useEffect(() => {
+    if (isSmallScreen && isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isSmallScreen, isOpen]);
+
+  const handleNavClick = () => {
+    if (isSmallScreen) setIsOpen(false);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -104,11 +125,21 @@ const DashboardLayout = ({ children }) => {
   };
 
   const handlePlanRoute = () => {
-    navigate('/choose-plan');
+    navigate('/dashboard/PlanBilling');
   };
 
   return (
     <>
+      {isSmallScreen && !isOpen && (
+        <button className="hamburger-btn" onClick={toggleSidebar}>
+          <i className="bx bx-menu"></i>
+        </button>
+      )}
+
+      {isSmallScreen && isOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />
+      )}
+
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="logo_details">
           <div
@@ -145,6 +176,7 @@ const DashboardLayout = ({ children }) => {
               key={path}
               style={{ textDecoration: 'none', color: 'inherit' }}
               className={location.pathname === path ? 'active-link' : ''}
+              onClick={handleNavClick}
             >
               <li className="link_namee">
                 <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>

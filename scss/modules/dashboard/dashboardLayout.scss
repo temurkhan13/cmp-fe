@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import "../../utils/mixins";
 
 :root {
   --color-default: #004f83;
@@ -44,7 +45,7 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
   border-color: #C3E11D;
-  box-shadow: 0 0 0 3px rgba(195,225,29,0.12);
+  box-shadow: 0 0 0 3px rgba(195, 225, 29, 0.12);
   outline: none;
 }
 
@@ -58,6 +59,7 @@ textarea:focus {
 body {
   min-height: 100vh;
 }
+
 .SibebarIcons {
   position: absolute;
   font-size: 15px;
@@ -117,6 +119,7 @@ body {
     align-items: center;
     text-align: center;
     justify-content: space-between;
+
     .NewChat {
       border: none;
       outline: none;
@@ -124,10 +127,12 @@ body {
       border-radius: 7px;
       font-size: 15px;
     }
+
     .NewChat:hover {
       background-color: rgba(211, 211, 211, 0.762);
       color: black;
     }
+
     .closeChatHistoryBtn:hover {
       color: rgba(211, 211, 211, 0.762);
     }
@@ -150,10 +155,12 @@ body {
       display: flex;
       display: 'flex';
     }
+
     .commonSidebar:hover {
       background-color: rgba(211, 211, 211, 0.356);
     }
   }
+
   .History::-webkit-scrollbar {
     display: none;
   }
@@ -184,6 +191,7 @@ body {
     align-items: center;
     text-align: center;
     justify-content: space-between;
+
     .NewChat {
       border: none;
       outline: none;
@@ -191,10 +199,12 @@ body {
       border-radius: 7px;
       font-size: 15px;
     }
+
     .NewChat:hover {
       background-color: rgba(211, 211, 211, 0.762);
       color: black;
     }
+
     .closeChatHistoryBtn:hover {
       color: rgba(211, 211, 211, 0.762);
     }
@@ -212,13 +222,16 @@ body {
   font-weight: 600;
   opacity: 0;
   transition: all 0.5s ease;
+
   .logo_content {
     display: flex;
-    align-items: center; /* Vertical alignment */
+    align-items: center;
+    /* Vertical alignment */
   }
 
   .logo_text {
-    margin-left: 10px; /* Adjust as needed */
+    margin-left: 10px;
+    /* Adjust as needed */
   }
 }
 
@@ -254,7 +267,8 @@ body {
 
 .sidebar .navlist {
   margin-top: 20px;
-  height: 100%;
+  height: calc(100dvh - 106px);
+  overflow-y: auto;
 }
 
 .sidebar li {
@@ -473,10 +487,11 @@ body {
   margin: 18px;
 }
 
-.sidebar.open ~ .home-section {
+.sidebar.open~.home-section {
   left: 250px;
   width: calc(100% - 250px);
 }
+
 .upgrade-plan {
   position: absolute;
   bottom: 1rem;
@@ -495,12 +510,69 @@ body {
     // width: 2rem;
     border-radius: 1.5rem;
     font-size: 1.8rem;
+
     &:hover {
       background-color: lightgray;
     }
+
     .upgrade-icon {
       margin-right: 0.5rem;
       font-size: 1.8rem;
     }
+  }
+}
+
+// ── Responsive: Sidebar overlay + hamburger ──
+.sidebar-overlay {
+  display: none;
+}
+
+.hamburger-btn {
+  display: none;
+}
+
+@include respond(dashboard-tablet) {
+  .sidebar {
+    z-index: 100;
+    transform: translateX(-100%);
+    width: 250px;
+    background-color: #fff;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 99;
+  }
+
+  .home-section {
+    left: 0 !important;
+    width: 100% !important;
+  }
+
+  .sidebar.open~.home-section {
+    left: 0;
+    width: 100%;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 1.2rem;
+    left: 1rem;
+    z-index: 101;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: #0a0a0a;
   }
 }

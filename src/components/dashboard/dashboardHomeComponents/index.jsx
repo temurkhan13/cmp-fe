@@ -329,6 +329,27 @@ const DashboardHomeComp = () => {
           font-size: 1.3rem;
           font-weight: 700;
         }
+
+        @media (max-width: 1080px) {
+          .selected-workspace-name {
+            position: relative;
+            top: 0;
+            left: 0;
+            padding: 0 2rem;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .selected-workspace-name {
+            padding: 0 1rem;
+          }
+          .selected-workspace-name p {
+            font-size: 1.3rem;
+          }
+          .selected-workspace-name .workspace-badge {
+            font-size: 1.1rem;
+          }
+        }
         `}
       </style>
     </div>

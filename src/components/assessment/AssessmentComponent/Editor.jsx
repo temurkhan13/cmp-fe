@@ -12,6 +12,7 @@ import {
   useDownloadReportMutation,
 } from '../../../redux/api/workspaceApi';
 import appConfig from '../../../config/config';
+import ConfirmModal from '../../common/ConfirmModal';
 import { marked } from 'marked'; // Markdown to HTML converter
 import TurndownService from 'turndown'; // HTML to Markdown converter
 
@@ -37,6 +38,7 @@ const Editor = ({
   const [editReport] = useEditReportMutation();
   const [downloadReport] = useDownloadReportMutation();
   const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
+  const [showRegenConfirm, setShowRegenConfirm] = useState(false);
 
   // Convert Markdown to HTML for editor display
   const htmlContent = useMemo(
@@ -290,11 +292,7 @@ const Editor = ({
         <button onClick={exportExcel} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
           Excel
         </button>
-        <button onClick={() => {
-          if (window.confirm('Re-generate this report? Your edits will be replaced.')) {
-            handleReportDownload();
-          }
-        }} style={{ padding: '6px 14px', border: '1px solid #C3E11D', borderRadius: '6px', background: '#fafff0', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500 }}>
+        <button onClick={() => setShowRegenConfirm(true)} style={{ padding: '6px 14px', border: '1px solid #C3E11D', borderRadius: '6px', background: '#fafff0', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500 }}>
           Re-generate
         </button>
         <button onClick={async () => {
@@ -326,6 +324,18 @@ const Editor = ({
         config={config}
         tabIndex={1}
         onBlur={(newContent) => handleContentUpdate(newContent)}
+      />
+      <ConfirmModal
+        isOpen={showRegenConfirm}
+        title="Re-generate Report"
+        description="Re-generate this report? Your edits will be replaced."
+        confirmText="Re-generate"
+        cancelText="Cancel"
+        onConfirm={async () => {
+          await handleReportDownload();
+          setShowRegenConfirm(false);
+        }}
+        onCancel={() => setShowRegenConfirm(false)}
       />
     </div>
   );
