@@ -9,6 +9,7 @@ import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { IoIosChatboxes } from 'react-icons/io';
 import AvatarGroup from '../../common/AvatarGroup';
+import ConfirmModal from '../../common/ConfirmModal';
 
 // Enum for item types
 const ItemTypeEnum = Object.freeze({
@@ -34,6 +35,7 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [moveToTrash, { isLoading }] = useMoveToTrashMutation();
   const [showNotification, setShowNotification] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const menuRef = useRef(null);
   const mountedRef = useRef(true); // Track component mounting status
 
@@ -45,15 +47,24 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
     };
   }, []);
 
-  const handleMoveToTrash = useCallback(
-    async (event) => {
+  const handleTrashClick = useCallback(
+    (event) => {
       event.stopPropagation();
       setIsMenuOpen(false);
+      setShowConfirm(true);
+    },
+    []
+  );
+
+  const handleConfirmTrash = useCallback(
+    async () => {
       try {
         const entityType = getEntityType(data.type);
         await moveToTrash({ entityType, id: data.id }).unwrap();
-        onRemove(data.id); // Ensure UI updates instantly
+        setShowConfirm(false);
+        onRemove(data.id);
       } catch (error) {
+        setShowConfirm(false);
         setShowNotification(true);
       }
     },
@@ -144,10 +155,10 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
             <div className="dropdown-menu">
               <button
                 className="dropdown-item"
-                onClick={handleMoveToTrash}
+                onClick={handleTrashClick}
                 disabled={isLoading}
               >
-                {isLoading ? 'Moving...' : 'Move to Trash'}
+                Move to Trash
               </button>
             </div>
           )}
@@ -160,6 +171,15 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
           onClose={handleCloseNotification}
         />
       )}
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="Move to Trash"
+        description="This item will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={handleConfirmTrash}
+        onCancel={() => setShowConfirm(false)}
+      />
     </>
   );
 };

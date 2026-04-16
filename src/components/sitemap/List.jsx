@@ -10,6 +10,7 @@ import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import ConfirmModal from '../common/ConfirmModal';
+import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 
 function List() {
   let navigate = useNavigate();
@@ -20,6 +21,7 @@ function List() {
   const [searchQuery, setSearchQuery] = useState('');
   const selectedWorkspace = useSelector(selectWorkspace);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
+  const [moveToTrash] = useMoveToTrashMutation();
 
   async function getData(
     workSpaceId,
@@ -54,11 +56,7 @@ function List() {
   };
 
   const deleteSitemap = async (id) => {
-    const authToken = localStorage.getItem('token');
-    await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
+    await moveToTrash({ entityType: 'sitemap', id }).unwrap();
     setSitemaps((prev) => prev.filter((s) => s._id !== id));
   };
 
@@ -323,9 +321,9 @@ function List() {
       </style>
       <ConfirmModal
         isOpen={deleteConfirm.open}
-        title="Delete Sitemap"
-        description="Delete this sitemap? This cannot be undone."
-        confirmText="Delete"
+        title="Move to Trash"
+        description="This sitemap will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
         cancelText="Cancel"
         onConfirm={async () => {
           const id = deleteConfirm.id;
