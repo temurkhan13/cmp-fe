@@ -63,6 +63,7 @@ const UserAvatar = ({
             height: '100%',
             objectFit: 'cover',
             borderRadius: '50%',
+            margin: '0',
           }}
         />
       </div>

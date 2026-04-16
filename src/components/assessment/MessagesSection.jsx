@@ -327,19 +327,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     }
 
     if (firstPrompt) {
-      // setChat((prevChat) => [
-      //   ...prevChat,
-      //   { role: 'user', answer: firstPrompt || null, status: 'answered' },
-      // ]);
-      const updatedChat = [...chat];
-      updatedChat[updatedChat.length - 1] = {
-        ...updatedChat[updatedChat.length - 1],
-        answer: firstPrompt,
-        status: 'answered',
-      };
-
-      // Update the chat state with the modified array
-      setChat(updatedChat);
+      setChat((prevChat) => {
+        const updated = [...prevChat];
+        updated[updated.length - 1] = {
+          ...updated[updated.length - 1],
+          answer: firstPrompt,
+          status: 'answered',
+        };
+        return updated;
+      });
     } else {
       setChat((prevChat) => [
         ...prevChat,

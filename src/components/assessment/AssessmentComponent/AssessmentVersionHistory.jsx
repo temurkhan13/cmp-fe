@@ -13,7 +13,12 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
   const [hasReport, setHasReport] = useState(true);
 
   useEffect(() => {
-    if (assessmentId) fetchData();
+    if (assessmentId) {
+      fetchData();
+    } else {
+      setLoading(false);
+      setHasReport(false);
+    }
   }, [assessmentId]);
 
   const fetchData = async () => {
