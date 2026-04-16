@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Components from '@components';
 import NewChatSidebarModal from '../customModal/NewChatSidebarModal';
+import InputModal from '../common/InputModal';
+import { useUpdateChatMutation } from '../../redux/api/workspaceApi';
 import { truncateText } from '../../utils/helperFunction.js';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import {
@@ -44,6 +46,8 @@ const NewChat = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const chatContainerRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [renameChat, setRenameChat] = useState({ open: false, chatId: null, chatTitle: '', folderId: null });
+  const [updateChatMutation] = useUpdateChatMutation();
   const dispatch = useDispatch();
   const [hoveredChatIndex, setHoveredChatIndex] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -334,7 +338,6 @@ const NewChat = () => {
                             isOpen={isModalOpen}
                             closeModal={closeModal}
                             chatId={chat._id || chat.id}
-                            chatTitle={chat.chatTitle || chat.chat_title || ''}
                             workspaceId={currentWorkspace?.id}
                             folderId={chat.folder_id || selectedFolder?._id || selectedFolder?.id}
                             onDeleted={(deletedId) => {
@@ -345,13 +348,13 @@ const NewChat = () => {
                                 navigate('/assistant/chat', { replace: true });
                               }
                             }}
-                            onRenamed={(renamedId, newTitle) => {
-                              const updated = (myChats || []).map(c =>
-                                (c._id || c.id) === renamedId
-                                  ? { ...c, chatTitle: newTitle, chat_title: newTitle }
-                                  : c
-                              );
-                              dispatch(setChats(updated));
+                            onRename={() => {
+                              setRenameChat({
+                                open: true,
+                                chatId: chat._id || chat.id,
+                                chatTitle: chat.chatTitle || chat.chat_title || '',
+                                folderId: chat.folder_id || selectedFolder?._id || selectedFolder?.id,
+                              });
                             }}
                             position={showMenu.position}
                           />
@@ -362,6 +365,34 @@ const NewChat = () => {
           )}
         </>
       )}
+      <InputModal
+        isOpen={renameChat.open}
+        title="Rename Chat"
+        confirmText="Rename"
+        cancelText="Cancel"
+        defaultValue={renameChat.chatTitle}
+        placeholder="Enter chat name"
+        onConfirm={async (newName) => {
+          try {
+            await updateChatMutation({
+              workspaceId: currentWorkspace?.id,
+              folderId: renameChat.folderId,
+              chatId: renameChat.chatId,
+              chat: { chatTitle: newName },
+            }).unwrap();
+            const updated = (myChats || []).map(c =>
+              (c._id || c.id) === renameChat.chatId
+                ? { ...c, chatTitle: newName, chat_title: newName }
+                : c
+            );
+            dispatch(setChats(updated));
+          } catch (error) {
+            import.meta.env.DEV && console.error('Failed to rename chat:', error);
+          }
+          setRenameChat({ open: false, chatId: null, chatTitle: '', folderId: null });
+        }}
+        onCancel={() => setRenameChat({ open: false, chatId: null, chatTitle: '', folderId: null })}
+      />
     </div>
   );
 };

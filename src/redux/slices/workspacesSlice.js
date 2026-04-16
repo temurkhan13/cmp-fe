@@ -129,21 +129,37 @@ const workspacesSlice = createSlice({
     builder.addMatcher(
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
-        // Find the active workspace or fall back to the first one if none are active
-        const activeWorkspace =
-          payload.results.find((workspace) => workspace.isActive) ||
-          payload.results[0];
-        // Set the workspaces and default selection
-        if (activeWorkspace) {
-          state.workspaces = payload.results;
-          state.selectedWorkspace = activeWorkspace;
-          state.currentWorkspaceId = activeWorkspace?.id;
-          const activeFolder =
-            activeWorkspace?.folders?.find((folder) => folder.isActive) ||
-            (activeWorkspace.folders && activeWorkspace.folders[0]);
-          if (activeFolder) {
-            state.selectedFolder = activeFolder;
-            state.currentFolderId = activeFolder?.id;
+        // Always update the workspaces list with fresh data
+        state.workspaces = payload.results;
+
+        // Only set workspace/folder selection if none is currently selected
+        // (e.g., first visit or after logout). On page reload, redux-persist
+        // rehydrates the previous selection — we must not overwrite it with
+        // the backend's isActive flag, which may point to a different workspace.
+        if (!state.selectedWorkspace) {
+          const activeWorkspace =
+            payload.results.find((workspace) => workspace.isActive) ||
+            payload.results[0];
+          if (activeWorkspace) {
+            state.selectedWorkspace = activeWorkspace;
+            state.currentWorkspaceId = activeWorkspace?.id;
+            const activeFolder =
+              activeWorkspace?.folders?.find((folder) => folder.isActive) ||
+              (activeWorkspace.folders && activeWorkspace.folders[0]);
+            if (activeFolder) {
+              state.selectedFolder = activeFolder;
+              state.currentFolderId = activeFolder?.id;
+            }
+          }
+        } else {
+          // Workspace already selected (persisted) — refresh its data from
+          // the API response so folders/metadata stay up-to-date without
+          // changing which workspace is selected.
+          const refreshed = payload.results.find(
+            (ws) => ws.id === state.currentWorkspaceId
+          );
+          if (refreshed) {
+            state.selectedWorkspace = refreshed;
           }
         }
       }

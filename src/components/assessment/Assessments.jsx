@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ import SideBarModal from '../../components/common/SideBarModal';
 import AssessmentTasks from './AssessmentComponent/AssessmentTasks';
 import AssessmentMedia from './AssessmentComponent/AssessmentMedia';
 import AssessmentComments from './AssessmentComponent/AssessmentComments';
-import AsessmentBookmark from './AssessmentComponent/AssessmentBookMark';
+import ChatBookmark from '../assisstent/assistantModal/ChatBookmark';
 import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
 
 import { IoIosChatboxes } from 'react-icons/io';
@@ -18,10 +18,9 @@ import {
 } from 'react-icons/fa';
 import { RiNewspaperLine } from 'react-icons/ri';
 
-const Assessments = ({ handleAssessmentSelect, folderID, chatMedia }) => {
+const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData = [] }) => {
   const [activeIcon, setActiveIcon] = useState('question');
   const [comments, setComments] = useState([]);
-  const [bookmarkData] = useState([]);
   const { id: assessmentId } = useParams();
 
   const images = chatMedia?.images || [];
@@ -57,13 +56,13 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia }) => {
             <FaImages className="icon" />
             <span className="tooltip">Media</span>
           </span>
-          <span
+          {/* <span
             className={`iconButton ${activeIcon === 'message' ? 'active' : ''}`}
             onClick={() => handleIconClick('message')}
           >
             <IoIosChatboxes className="icon" />
             <span className="tooltip">Comments</span>
-          </span>
+          </span> */}
           <span
             className={`iconButton ${activeIcon === 'bookmark' ? 'active' : ''}`}
             onClick={() => handleIconClick('bookmark')}
@@ -118,19 +117,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia }) => {
         <SideBarModal
           title="Bookmark"
           bodyContent={
-            <div>
-              {bookmarkData.length > 0 ? (
-                bookmarkData.map((item, index) => (
-                  <AsessmentBookmark
-                    key={index}
-                    date={item.date}
-                    messages={item.messages}
-                  />
-                ))
-              ) : (
-                <p style={{ padding: '1rem', color: '#888', textAlign: 'center' }}>No bookmarks yet</p>
-              )}
-            </div>
+            <ChatBookmark messages={bookmarkData} />
           }
           onClose={() => setActiveIcon(null)}
         />

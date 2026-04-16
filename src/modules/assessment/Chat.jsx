@@ -43,6 +43,7 @@ const Chat = () => {
 
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [chatMedia, setChatMedia] = useState({ images: [], documents: [], links: [] });
+  const [assessmentBookmarks, setAssessmentBookmarks] = useState([]);
 
   const handleAssessmentSelect = (assessment) => {
     if (assessment) {
@@ -171,12 +172,14 @@ const Chat = () => {
           handleAssessmentSelect={handleAssessmentSelect}
           selectedAssessment={selectedAssessment}
           onMediaUpdate={setChatMedia}
+          onBookmarksUpdate={setAssessmentBookmarks}
         />
 
         <Assessments
           folderID={folderID}
           handleAssessmentSelect={handleAssessmentSelect}
           chatMedia={chatMedia}
+          bookmarkData={assessmentBookmarks}
         />
       </section>
     </div>

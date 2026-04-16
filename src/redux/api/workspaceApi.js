@@ -415,12 +415,12 @@ export const workspaceApi = createApi({
 
     // Bookmarks
     addBookmark: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, messageId }) => ({
-        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark`,
+      query: ({ workspaceId, folderId, contextType = 'chat', contextId, messageId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/${contextType}/${contextId}/message/${messageId}/bookmark`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
-        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      invalidatesTags: (result, error, { workspaceId, folderId, contextId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${contextId}` },
       ],
     }),
     updateBookmark: builder.mutation({
@@ -431,34 +431,34 @@ export const workspaceApi = createApi({
       }),
     }),
     removeBookmark: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, messageId, bookmarkId }) => ({
-        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/bookmark/${bookmarkId}`,
+      query: ({ workspaceId, folderId, contextType = 'chat', contextId, messageId, bookmarkId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/${contextType}/${contextId}/message/${messageId}/bookmark/${bookmarkId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
-        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      invalidatesTags: (result, error, { workspaceId, folderId, contextId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${contextId}` },
       ],
     }),
 
     // Define likeChatMessage mutation
     likeChatMessage: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, messageId }) => ({
-        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/toggle-like`,
+      query: ({ workspaceId, folderId, contextType = 'chat', contextId, messageId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/${contextType}/${contextId}/message/${messageId}/toggle-like`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
-        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      invalidatesTags: (result, error, { workspaceId, folderId, contextId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${contextId}` },
       ],
     }),
 
     // Define dislikeChatMessage mutation
     dislikeChatMessage: builder.mutation({
-      query: ({ workspaceId, folderId, chatId, messageId }) => ({
-        url: `workspace/${workspaceId}/folder/${folderId}/chat/${chatId}/message/${messageId}/toggle-dislike`,
+      query: ({ workspaceId, folderId, contextType = 'chat', contextId, messageId }) => ({
+        url: `workspace/${workspaceId}/folder/${folderId}/${contextType}/${contextId}/message/${messageId}/toggle-dislike`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { workspaceId, folderId, chatId }) => [
-        { type: 'Chat', id: `${workspaceId}-${folderId}-${chatId}` },
+      invalidatesTags: (result, error, { workspaceId, folderId, contextId }) => [
+        { type: 'Chat', id: `${workspaceId}-${folderId}-${contextId}` },
       ],
     }),
 

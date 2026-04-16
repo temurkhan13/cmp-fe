@@ -3,12 +3,7 @@ import React from 'react';
 const assessmentRoutesData = [
   {
     title: '',
-    path: '/assessment/chat',
-    element: React.lazy(() => import('../../modules/assessment/Chat')),
-  },
-  {
-    title: '',
-    path: '/assessment/chat/:id',
+    path: '/assessment/chat/:id?',
     element: React.lazy(() => import('../../modules/assessment/Chat')),
   },
   {
