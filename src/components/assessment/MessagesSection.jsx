@@ -38,7 +38,7 @@ import usestartAssessment from '../../hooks/usestartAssessment';
 import useAssessmentReport from '../../hooks/useAssessmentReport';
 // chat upload pdf & text
 import useChat from '../../hooks/useChat';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import assessmentQnaData, { assessmentDescriptions, assessmentPhases } from '../../data/chat/assessmentQnaData';
 import appConfig from '../../config/config.js';
 import {
@@ -50,7 +50,7 @@ import {
   useUpdateChatMutation,
 } from '../../redux/api/workspaceApi';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
-import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import { selectWorkspace, setCurrentSelectedTitle } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
@@ -58,7 +58,8 @@ import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
 import Editor from './AssessmentComponent/Editor.jsx';
 import useAssessment from '../../hooks/useAssessment.js';
 
-const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUpdate }) => {
+const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUpdate, onBookmarksUpdate }) => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
@@ -118,33 +119,67 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   }, [selectedAssessment]);
 
   useEffect(() => {
+    // Reset input state when switching assessments
+    setFirstPrompt('');
+    setFile([]);
+    setChat([]);
+    setShowReportButton(false);
+    setShowInputField(false);
+    setSubReportId('');
+
     setAssessmentId(id);
     if (id) {
       const getAssessmentAsync = async () => {
-        const singleAssessment = await getAssessment(id);
+        try {
+          const singleAssessment = await getAssessment(id);
 
-        if (singleAssessment.report && singleAssessment.report.isGenerated) {
-          setShowReportButton(true);
+          if (singleAssessment.report && singleAssessment.report.isGenerated) {
+            setShowReportButton(true);
+          }
+
+          setAssessmentData(singleAssessment);
+
+          if (singleAssessment.name) {
+            dispatch(setCurrentSelectedTitle(singleAssessment.name));
+          }
+
+          setAssessmentId(id);
+          setSubReportId(singleAssessment?.report?.id || id);
+
+          // If report exists but no Q&A, show report as a chat message
+          if (singleAssessment.qa && singleAssessment.qa.length > 0) {
+            setChat(singleAssessment.qa);
+
+            // Initialize reactions from persisted data
+            const initialReactions = {};
+            const currentUserId = JSON.parse(localStorage.getItem('user'))?.id;
+            singleAssessment.qa.forEach((q) => {
+              const msgId = q._id || q.id;
+              const userReaction = (q.reactions || []).find((r) => r.user_id === currentUserId);
+              if (userReaction) {
+                initialReactions[msgId] = userReaction.type;
+              }
+            });
+            setReactions(initialReactions);
+
+            // Initialize bookmarks from persisted data (store full bookmark object for unbookmark)
+            const initialBookmarks = {};
+            (singleAssessment.bookmarks || []).forEach((b) => {
+              const msgId = b.messageId || b.message_id;
+              if (b.userId === currentUserId || b.user_id === currentUserId) {
+                initialBookmarks[msgId] = b;
+              }
+            });
+            setBookmark(initialBookmarks);
+          } else if (singleAssessment.report?.content) {
+            setChat([{ question: singleAssessment.report.content, status: 'report' }]);
+            setShowReportButton(true);
+          }
+
+          setShowInputField(true);
+        } catch (error) {
+          if (import.meta.env.DEV) console.error('Failed to load assessment:', error);
         }
-
-        setAssessmentData(singleAssessment);
-        const filteredFolders = (selectedWorkspace?.folders || []).filter(
-          (item) => (item._id || item.id) === folderId
-        );
-
-        handleAssessmentSelect(filteredFolders[0]?.assessments[0]);
-        setAssessmentId(id);
-        setSubReportId(singleAssessment?.report?.id || id);
-
-        // If report exists but no Q&A, show report as a chat message
-        if (singleAssessment.qa && singleAssessment.qa.length > 0) {
-          setChat(singleAssessment.qa);
-        } else if (singleAssessment.report?.content) {
-          setChat([{ question: singleAssessment.report.content, status: 'report' }]);
-          setShowReportButton(true);
-        }
-
-        setShowInputField(true);
       };
       getAssessmentAsync();
     }
@@ -152,12 +187,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
 
   useEffect(() => {
     if (assessmentId) {
-      const cleanPathname = location.pathname.replace(/\/+$/, ''); // Remove any trailing slashes
-      if (!cleanPathname.includes(assessmentId)) {
-        navigate(`${cleanPathname}/${assessmentId}`, { replace: true });
+      const cleanPathname = location.pathname.replace(/\/+$/, '');
+      // Only append ID if we're on the base /assessment/chat route (no ID in URL yet)
+      if (cleanPathname === '/assessment/chat' && !id) {
+        navigate(`/assessment/chat/${assessmentId}`, { replace: true });
       }
     }
-  }, [assessmentId, location.pathname, navigate]);
+  }, [assessmentId, location.pathname, navigate, id]);
 
   useEffect(() => {
     if (folder) {
@@ -255,76 +291,58 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
 
   const handleAddBookmark = async (message) => {
     const msgId = message._id || message.id;
-    const existingBookmark =
-      chat &&
-      chat.bookmarks?.filter(
-        (b) =>
-          b.messageId === msgId &&
-          b.userId === JSON.parse(localStorage.getItem('user')).id
-      );
+    const existing = bookmark[msgId];
 
-    if (existingBookmark && existingBookmark.length > 0) {
+    if (existing) {
       await removeBookmark({
         workspaceId,
         folderId,
-        chatId: assessmentId,
+        contextType: 'assessment',
+        contextId: assessmentId,
         messageId: msgId,
-        bookmarkId: existingBookmark[0]._id || existingBookmark[0].id,
+        bookmarkId: existing._id || existing.id,
       }).unwrap();
-      setBookmark((prev) => ({ ...prev, [msgId]: false }));
+      setBookmark((prev) => {
+        const next = { ...prev };
+        delete next[msgId];
+        return next;
+      });
     } else {
-      await addBookmark({
+      const result = await addBookmark({
         workspaceId,
         folderId,
-        chatId: assessmentId,
+        contextType: 'assessment',
+        contextId: assessmentId,
         messageId: msgId,
       }).unwrap();
-      setBookmark((prev) => ({ ...prev, [msgId]: true }));
+      setBookmark((prev) => ({ ...prev, [msgId]: result }));
     }
 
     // Dispatch action to add bookmark
     refetch(); // Trigger the chat query to refetch
   };
 
-  const handleSendMessage = async () => {
-    // Extract file content — upload to backend for parsing (PDF/DOCX need server-side processing)
-    let fileText = '';
-    if (file && file instanceof File) {
-      try {
-        const ext = file.name.split('.').pop().toLowerCase();
-        if (ext === 'txt' || ext === 'csv') {
-          // Plain text files — read on client
-          fileText = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = () => resolve('');
-            reader.readAsText(file);
-          });
-        } else {
-          // PDF/DOCX — send to backend for text extraction
-          const token = localStorage.getItem('token');
-          const formData = new FormData();
-          formData.append('pdfPath', file);
-          const extractRes = await fetch(
-            `${appConfig.apiURL}/workspace/extract-text`,
-            {
-              method: 'POST',
-              headers: { Authorization: `Bearer ${token}` },
-              body: formData,
-            }
-          );
-          if (extractRes.ok) {
-            const extractData = await extractRes.json();
-            fileText = extractData.text || '';
-          }
-        }
-        if (fileText.length > 30000) {
-          fileText = fileText.substring(0, 30000) + '\n[...truncated...]';
-        }
-      } catch (e) {
-        import.meta.env.DEV && console.error('File extraction error:', e);
-      }
+  // Sync bookmarks to sidebar whenever bookmark state or chat changes
+  useEffect(() => {
+    if (onBookmarksUpdate) {
+      const bookmarkedMessages = Object.entries(bookmark).map(([msgId, bData]) => {
+        const qaItem = chat.find((q) => (q._id || q.id) === msgId);
+        return {
+          _id: bData._id || bData.id || msgId,
+          text: qaItem?.question || '',
+          from: 'AI',
+          localDate: bData.created_at
+            ? new Date(bData.created_at).toLocaleDateString()
+            : '',
+        };
+      });
+      onBookmarksUpdate(bookmarkedMessages);
     }
+  }, [bookmark, chat, onBookmarksUpdate]);
+
+  const handleSendMessage = async () => {
+    const hasFile = file && file instanceof File;
+    const currentFile = hasFile ? file : null;
 
     if (firstPrompt) {
       setChat((prevChat) => {
@@ -333,16 +351,17 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
           ...updated[updated.length - 1],
           answer: firstPrompt,
           status: 'answered',
+          ...(hasFile ? { file: URL.createObjectURL(file), fileName: file.name } : {}),
         };
         return updated;
       });
-    } else {
+    } else if (hasFile) {
       setChat((prevChat) => [
         ...prevChat,
         {
           role: 'user',
-          file: file ? URL.createObjectURL(file) : null,
-          fileName: file ? file.name : null,
+          file: URL.createObjectURL(file),
+          fileName: file.name,
         },
       ]);
       scrollToBottom();
@@ -350,10 +369,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     setLoading(true);
 
     try {
-      const answerWithFile = fileText
-        ? `${firstPrompt}\n\n[Attached Document Content]:\n${fileText}`
-        : firstPrompt;
-      const response = await AssessmentReport(answerWithFile, SubReportId);
+      // File parsing is now handled server-side — just pass the file to the hook
+      const response = await AssessmentReport(firstPrompt, SubReportId, currentFile);
       if (response) {
         setChat((prevChat) => [
           ...prevChat,
@@ -362,7 +379,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       }
       setFirstPrompt('');
       setFile(null);
-      document.getElementById('file-input').value = '';
+      const fileInput = document.getElementById('file-input');
+      if (fileInput) fileInput.value = '';
       setText('');
     } finally {
       setLoading(false);
@@ -572,39 +590,65 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     scrollToBottom();
   }, [chat]);
 
-  // Extract media (documents, images, links) from chat messages and report to parent
+  // Extract media from persisted assessment data and local chat state
   useEffect(() => {
     if (!onMediaUpdate) return;
     const documents = [];
     const images = [];
     const links = [];
 
+    // Load persisted media, documents, and links from backend
+    const assessmentMedia = singleAssessmenChats?.media || [];
+    const assessmentDocs = singleAssessmenChats?.documents || [];
+    const assessmentLinks = singleAssessmenChats?.links || [];
+
+    assessmentMedia.forEach((m) => {
+      if (m.url) images.push(m.url);
+    });
+    assessmentDocs.forEach((d) => {
+      documents.push({
+        name: d.fileName || d.file_name || d.name || 'Document',
+        date: d.date ? new Date(d.date).toLocaleDateString() : '',
+        size: d.size || '',
+        url: d.url || '',
+      });
+    });
+    assessmentLinks.forEach((l) => {
+      links.push({ name: l.name || l.url || 'Link', url: l.url || '' });
+    });
+
+    // Also include any locally-attached files from current session (not yet persisted)
     chat.forEach((item) => {
-      if (item.fileName) {
+      if (item.fileName && item.file) {
         const ext = item.fileName.split('.').pop().toLowerCase();
         const isImage = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'].includes(ext);
+        // Only add if not already in persisted data (avoid duplicates)
         if (isImage) {
-          if (item.file) images.push(item.file);
+          if (!images.includes(item.file)) images.push(item.file);
         } else {
-          documents.push({
-            name: item.fileName,
-            date: new Date().toLocaleDateString(),
-            size: '',
-            url: item.file || '',
-          });
+          const alreadyExists = documents.some((d) => d.name === item.fileName);
+          if (!alreadyExists) {
+            documents.push({
+              name: item.fileName,
+              date: new Date().toLocaleDateString(),
+              size: '',
+              url: item.file,
+            });
+          }
         }
       }
     });
 
     onMediaUpdate({ images, documents, links });
-  }, [chat, onMediaUpdate]);
+  }, [chat, onMediaUpdate, singleAssessmenChats]);
 
   const handleLikeClick = async (message) => {
     const msgId = message._id || message.id;
     await likeChatMessage({
       workspaceId,
       folderId,
-      chatId: assessmentId,
+      contextType: 'assessment',
+      contextId: assessmentId,
       messageId: msgId,
     }).unwrap();
     setReactions((prev) => ({ ...prev, [msgId]: prev[msgId] === 'like' ? '' : 'like' }));
@@ -616,7 +660,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     await dislikeChatMessage({
       workspaceId,
       folderId,
-      chatId: assessmentId,
+      contextType: 'assessment',
+      contextId: assessmentId,
       messageId: msgId,
     }).unwrap();
     setReactions((prev) => ({ ...prev, [msgId]: prev[msgId] === 'dislike' ? '' : 'dislike' }));

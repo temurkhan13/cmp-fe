@@ -42,26 +42,28 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
     setIsModalOpen(true);
   };
 
-  useEffect(() => {
-    const getAssessments = async () => {
-      try {
-        if (!folderID) return;
-        const assessmentDATA = await dispatch(
-          fetchWorkspaceAssessments({
-            folderId: folderID,
-          })
-        );
-        const fetchedData = assessmentDATA?.payload?.results || [];
-        setAssessmentsData(fetchedData);
+  const fetchAssessments = async () => {
+    try {
+      if (!folderID) return;
+      const assessmentDATA = await dispatch(
+        fetchWorkspaceAssessments({
+          folderId: folderID,
+        })
+      );
+      const fetchedData = assessmentDATA?.payload?.results || [];
+      setAssessmentsData(fetchedData);
 
-        if (id) {
-          const singleAssessment = await getAssessment(id);
-          setAssessmentData(singleAssessment);
-        }
-      } catch (error) { if (import.meta.env.DEV) console.error(error); }
-    };
-    getAssessments();
-  }, [workspaceId, folderId]);
+      if (id) {
+        const singleAssessment = await getAssessment(id);
+        setAssessmentData(singleAssessment);
+      }
+    } catch (error) { if (import.meta.env.DEV) console.error(error); }
+  };
+
+  // Fetch fresh data whenever component mounts, folder changes, or assessment id changes
+  useEffect(() => {
+    fetchAssessments();
+  }, [workspaceId, folderId, folderID, id]);
   useEffect(() => {
     if (workspaceId && folderId && selectedWorkspace?.folders) {
       const filteredFolders = selectedWorkspace.folders.filter(
@@ -253,16 +255,24 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
         ) : (
           <div className="task-list">
             {assessmentQnaData.map((assessment, index) => {
+              const matchedAssessment = assessmentsData?.find((data) => data?.name === assessment);
               const taskColors = getColor(false);
               return (
                 <div className="task-item" key={index}>
                   <div
                     className="task-info"
-                    onClick={() => handleAssessmentSelect(assessment)}
+                    onClick={() => {
+                      if (matchedAssessment && matchedAssessment.status !== 'pending') {
+                        // Navigate to existing chat — the id useEffect in MessagesSection loads the data
+                        navigate(`/assessment/chat/${matchedAssessment.id || matchedAssessment._id}`);
+                      } else {
+                        // Start new assessment for pending ones
+                        handleAssessmentSelect(assessment);
+                      }
+                    }}
                   >
                     <span className="task-name">{assessment}</span>
                     {(() => {
-                      const matchedAssessment = assessmentsData?.find((data) => data?.name === assessment);
                       const status = matchedAssessment ? matchedAssessment.status : 'pending';
                       const display = getStatusDisplay(status);
                       return (

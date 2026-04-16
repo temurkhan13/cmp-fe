@@ -108,7 +108,6 @@ const Workspaces = ({
       showError('Default workspace cannot be renamed.');
       return;
     }
-    console.log('handleRenameWorkspace called', workspace.workspaceName);
     setRenameModal({ open: true, workspace });
     setOpenDropdown(null);
   };
@@ -200,7 +199,7 @@ const Workspaces = ({
               onClick={() => handleWorkspaceSwitch(workspace)}
               style={
                 activeWorkspace?.id === workspace.id
-                  ? { color: '#C3E11D', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
+                  ? { color: 'black', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
                   : { color: 'grey', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
               }
               className="collection-icon"

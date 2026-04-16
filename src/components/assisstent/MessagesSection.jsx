@@ -163,8 +163,8 @@ const MessagesSection = ({ setCurrentChat }) => {
   }, { skip: !workspaceId || !resolvedFolderId || !chatId });
 
   // Safe refetch that doesn't throw when query is skipped
-  const refetch = () => {
-    try { if (chatId) rawRefetch(); } catch (e) { /* query not active */ }
+  const refetch = async () => {
+    try { if (chatId) await rawRefetch(); } catch (e) { /* query not active */ }
   };
 
   useEffect(() => {
@@ -449,16 +449,18 @@ const MessagesSection = ({ setCurrentChat }) => {
       await removeBookmark({
         workspaceId,
         folderId: folderId._id || folderId.id,
-        chatId,
+        contextType: 'chat',
+        contextId: chatId,
         messageId: message._id,
-        bookmarkId: bookmark[0]._id, // Send the whole bookmark data
+        bookmarkId: bookmark[0]._id,
       }).unwrap();
     } else {
       await addBookmark({
         workspaceId,
         folderId: folderId._id || folderId.id,
-        chatId,
-        messageId: message._id, // Send the whole bookmark data
+        contextType: 'chat',
+        contextId: chatId,
+        messageId: message._id,
       }).unwrap();
     }
 
@@ -528,9 +530,9 @@ const MessagesSection = ({ setCurrentChat }) => {
           })
           .catch((error) => { });
       }
-      refetch();
       setText('');
       setFile(null);
+      await refetch();
     } catch (error) {
       import.meta.env.DEV && console.error('Send message error:', error);
     } finally {
@@ -592,20 +594,22 @@ const MessagesSection = ({ setCurrentChat }) => {
     await likeChatMessage({
       workspaceId,
       folderId: folderId._id || folderId.id,
-      chatId,
-      messageId: message._id, // Send the whole bookmark data
+      contextType: 'chat',
+      contextId: chatId,
+      messageId: message._id,
     }).unwrap();
-    refetch(); // Trigger the chat query to refetch
+    refetch();
   };
 
   const handleDislikeMessage = async (message) => {
     await dislikeChatMessage({
       workspaceId,
       folderId: folderId._id || folderId.id,
-      chatId,
-      messageId: message._id, // Send the whole bookmark data
+      contextType: 'chat',
+      contextId: chatId,
+      messageId: message._id,
     }).unwrap();
-    refetch(); // Trigger the chat query to refetch
+    refetch();
   };
 
   const handleCopyMessage = (text) => {

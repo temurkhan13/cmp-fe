@@ -152,7 +152,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
               <BiSolidFolderOpen
                 style={
                   folderId?.id === folder.id
-                    ? { color: '#C3E11D', height: '5rem', width: '5rem' }
+                    ? { color: 'black', height: '5rem', width: '5rem' }
                     : { color: 'grey', height: '5rem', width: '5rem' }
 
                 }
