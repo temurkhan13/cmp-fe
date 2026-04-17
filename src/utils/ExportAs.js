@@ -1,14 +1,5 @@
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
-import { jsPDF } from 'jspdf';
-
-
-export const downloadChatAsPDF = (chat) => {
-  const doc = new jsPDF();
-  doc.text(chat.title, 10, 10);
-  doc.text(chat.content, 10, 20);
-  doc.save(`${chat.title}.pdf`);
-};
 
 export const downloadFolderAsZip = async (folder) => {
   const zip = new JSZip();
