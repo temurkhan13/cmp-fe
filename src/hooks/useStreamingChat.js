@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import config from '../config/config';
 
-const AI_URL = import.meta.env.VITE_AI_URL || 'https://cmp-ai-check.onrender.com';
+const AI_URL = import.meta.env.VITE_AI_URL || config.baseURL;
 
 /**
  * Hook for streaming AI responses via SSE.
