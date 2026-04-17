@@ -28,7 +28,6 @@ export default defineConfig({
           'vendor-redux': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
           'vendor-ui': ['framer-motion', 'formik', 'yup', 'react-icons'],
           'vendor-editors': ['jodit-react'],
-          'vendor-export': ['exceljs', 'jspdf', 'pptxgenjs'],
         },
       },
     },

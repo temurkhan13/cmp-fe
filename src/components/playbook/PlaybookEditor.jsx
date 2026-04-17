@@ -11,6 +11,7 @@ import { BiArrowBack, BiPlus } from 'react-icons/bi';
 import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
 import ConfirmModal from '../common/ConfirmModal';
+import { exportDocument } from '@utils/exportDocument';
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
@@ -202,307 +203,20 @@ function PlaybookEditor() {
     reader.readAsDataURL(file);
   };
 
-  // Strip HTML tags to plain text
-  const stripHtml = (html) => {
-    if (!html) return '';
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return div.textContent || div.innerText || '';
-  };
-
-  // ── EXPORT: PDF ──
-  const exportPdf = async () => {
+  const handleExport = async (type) => {
     setExportOpen(false);
     try {
-      const { jsPDF } = await import('jspdf');
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
-      const maxWidth = pageWidth - margin * 2;
-      let y = 40;
-
-      const checkPage = (needed) => {
-        if (y + needed > 270) { doc.addPage(); y = 20; }
-      };
-
-      // Cover page
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.text('DIGITAL PLAYBOOK', pageWidth / 2, 80, { align: 'center' });
-      doc.setFontSize(22);
-      doc.setTextColor(0, 49, 111);
-      doc.text(playbook?.name || 'Digital Playbook', pageWidth / 2, 95, { align: 'center', maxWidth: maxWidth });
-      doc.setFontSize(12);
-      doc.setTextColor(130);
-      doc.text(selectedWorkspace?.workspaceName || '', pageWidth / 2, 110, { align: 'center' });
-      doc.setDrawColor(195, 225, 29);
-      doc.setLineWidth(1);
-      doc.line(pageWidth / 2 - 20, 120, pageWidth / 2 + 20, 120);
-      doc.setFontSize(8);
-      doc.setTextColor(170);
-      doc.text('Powered by ChangeAI', pageWidth / 2, 130, { align: 'center' });
-      doc.addPage();
-      y = 20;
-
-      for (const stage of playbook?.stages || []) {
-        checkPage(20);
-        doc.setFontSize(16);
-        doc.setTextColor(0, 49, 111);
-        doc.text(stage.stage || '', margin, y);
-        y += 10;
-
-        for (const nd of stage.nodeData || []) {
-          if (nd.heading) {
-            checkPage(12);
-            doc.setFontSize(11);
-            doc.setTextColor(60);
-            doc.setFont(undefined, 'bold');
-            doc.text(nd.heading, margin, y);
-            y += 6;
-          }
-          if (nd.description) {
-            const text = stripHtml(nd.description);
-            if (text) {
-              doc.setFontSize(10);
-              doc.setTextColor(50);
-              doc.setFont(undefined, 'normal');
-              const lines = doc.splitTextToSize(text, maxWidth);
-              checkPage(lines.length * 5);
-              doc.text(lines, margin, y);
-              y += lines.length * 5 + 4;
-            }
-          }
-        }
-
-        for (const node of stage.nodes || []) {
-          checkPage(14);
-          doc.setFontSize(13);
-          doc.setTextColor(50);
-          doc.setFont(undefined, 'bold');
-          doc.text(node.heading || '', margin + 4, y);
-          y += 8;
-
-          for (const nd of node.nodeData || []) {
-            if (nd.heading) {
-              checkPage(10);
-              doc.setFontSize(10);
-              doc.setTextColor(70);
-              doc.setFont(undefined, 'bold');
-              doc.text(nd.heading, margin + 4, y);
-              y += 5;
-            }
-            if (nd.description) {
-              const text = stripHtml(nd.description);
-              if (text) {
-                doc.setFontSize(9);
-                doc.setTextColor(60);
-                doc.setFont(undefined, 'normal');
-                const lines = doc.splitTextToSize(text, maxWidth - 4);
-                checkPage(lines.length * 4.5);
-                doc.text(lines, margin + 4, y);
-                y += lines.length * 4.5 + 3;
-              }
-            }
-          }
-        }
-        y += 6;
-      }
-
-      doc.save(`${playbook?.name || 'playbook'}.pdf`);
+      await exportDocument({
+        type,
+        source: 'playbook',
+        sourceId: id,
+        options: {
+          branding: { accentColor, logoUrl },
+        },
+      });
     } catch (err) {
-      import.meta.env.DEV && console.error('PDF export error:', err);
-      alert('PDF export failed: ' + err.message);
-    }
-  };
-
-  // ── EXPORT: Word ──
-  const exportWord = async () => {
-    setExportOpen(false);
-    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import('docx');
-
-    const children = [];
-    children.push(
-      new Paragraph({ text: playbook?.name || 'Digital Playbook', heading: HeadingLevel.TITLE })
-    );
-
-    for (const stage of playbook?.stages || []) {
-      children.push(
-        new Paragraph({
-          text: stage.stage,
-          heading: HeadingLevel.HEADING_1,
-          spacing: { before: 400, after: 200 },
-        })
-      );
-
-      for (const nd of stage.nodeData || []) {
-        if (nd.heading) {
-          children.push(
-            new Paragraph({ text: nd.heading, heading: HeadingLevel.HEADING_2, spacing: { before: 200 } })
-          );
-        }
-        if (nd.description) {
-          children.push(
-            new Paragraph({ children: [new TextRun(stripHtml(nd.description))], spacing: { after: 120 } })
-          );
-        }
-      }
-
-      for (const node of stage.nodes || []) {
-        children.push(
-          new Paragraph({ text: node.heading, heading: HeadingLevel.HEADING_2, spacing: { before: 300 } })
-        );
-        for (const nd of node.nodeData || []) {
-          if (nd.heading) {
-            children.push(
-              new Paragraph({ text: nd.heading, heading: HeadingLevel.HEADING_3, spacing: { before: 100 } })
-            );
-          }
-          if (nd.description) {
-            children.push(
-              new Paragraph({ children: [new TextRun(stripHtml(nd.description))], spacing: { after: 100 } })
-            );
-          }
-        }
-      }
-    }
-
-    const doc = new Document({ sections: [{ children }] });
-    const blob = await Packer.toBlob(doc);
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${playbook?.name || 'playbook'}.docx`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // ── EXPORT: PowerPoint ──
-  const exportPptx = async () => {
-    setExportOpen(false);
-    try {
-      const PptxGenJS = (await import('pptxgenjs')).default;
-      const pptx = new PptxGenJS();
-      pptx.layout = 'LAYOUT_WIDE';
-
-      // Cover slide
-      const coverSlide = pptx.addSlide();
-      coverSlide.addText('DIGITAL PLAYBOOK', {
-        x: 0, y: 1.5, w: '100%', fontSize: 12, color: '888888', align: 'center',
-      });
-      coverSlide.addText(playbook?.name || 'Digital Playbook', {
-        x: 0.5, y: 2.2, w: '90%', fontSize: 32, color: '00316f', align: 'center', bold: true,
-      });
-      coverSlide.addText(selectedWorkspace?.workspaceName || '', {
-        x: 0, y: 3.2, w: '100%', fontSize: 14, color: '888888', align: 'center',
-      });
-      coverSlide.addShape(pptx.ShapeType.line, {
-        x: 5.5, y: 3.8, w: 2.5, h: 0, line: { color: 'C3E11D', width: 3 },
-      });
-      coverSlide.addText('Powered by ChangeAI', {
-        x: 0, y: 4.2, w: '100%', fontSize: 9, color: 'AAAAAA', align: 'center',
-      });
-
-      // Stage slides
-      for (const stage of playbook?.stages || []) {
-        const slide = pptx.addSlide();
-        slide.addText(stage.stage || '', {
-          x: 0.5, y: 0.3, w: '90%', fontSize: 24, color: '00316f', bold: true,
-        });
-
-        let yPos = 1.0;
-        const allContent = [
-          ...(stage.nodeData || []),
-          ...(stage.nodes || []).flatMap((n) => [
-            { heading: n.heading, description: '', isNode: true },
-            ...(n.nodeData || []),
-          ]),
-        ];
-
-        for (const nd of allContent) {
-          if (nd.isNode) {
-            slide.addText(nd.heading || '', {
-              x: 0.5, y: yPos, w: '90%', fontSize: 16, color: '333333', bold: true,
-            });
-            yPos += 0.4;
-          } else {
-            if (nd.heading) {
-              slide.addText(nd.heading, {
-                x: 0.7, y: yPos, w: '85%', fontSize: 13, color: '444444', bold: true,
-              });
-              yPos += 0.35;
-            }
-            if (nd.description) {
-              const text = stripHtml(nd.description);
-              if (text) {
-                slide.addText(text.substring(0, 500), {
-                  x: 0.7, y: yPos, w: '85%', fontSize: 10, color: '555555', breakLine: true,
-                });
-                yPos += 0.6;
-              }
-            }
-          }
-          if (yPos > 6.5) break;
-        }
-      }
-
-      pptx.writeFile({ fileName: `${playbook?.name || 'playbook'}.pptx` });
-    } catch (err) {
-      import.meta.env.DEV && console.error('PPTX export error:', err);
-      alert('PowerPoint export failed: ' + err.message);
-    }
-  };
-
-  // ── EXPORT: Excel ──
-  const exportExcel = async () => {
-    setExportOpen(false);
-    try {
-      const ExcelJS = (await import('exceljs')).default;
-      const workbook = new ExcelJS.Workbook();
-
-      for (const stage of playbook?.stages || []) {
-        const sheetName = (stage.stage || 'Sheet').substring(0, 31);
-        const sheet = workbook.addWorksheet(sheetName);
-        sheet.columns = [
-          { header: 'Section', key: 'section', width: 30 },
-          { header: 'Heading', key: 'heading', width: 30 },
-          { header: 'Content', key: 'content', width: 80 },
-        ];
-
-        // Style header
-        sheet.getRow(1).font = { bold: true, size: 12 };
-        sheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF00316F' } };
-        sheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
-
-        for (const nd of stage.nodeData || []) {
-          sheet.addRow({
-            section: stage.stage,
-            heading: nd.heading || '',
-            content: stripHtml(nd.description),
-          });
-        }
-
-        for (const node of stage.nodes || []) {
-          for (const nd of node.nodeData || []) {
-            sheet.addRow({
-              section: node.heading || '',
-              heading: nd.heading || '',
-              content: stripHtml(nd.description),
-            });
-          }
-        }
-      }
-
-      const buffer = await workbook.xlsx.writeBuffer();
-      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${playbook?.name || 'playbook'}.xlsx`;
-      link.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      import.meta.env.DEV && console.error('Excel export error:', err);
-      alert('Excel export failed: ' + err.message);
+      import.meta.env.DEV && console.error(`${type} export error:`, err);
+      alert(`${type.toUpperCase()} export failed: ${err.message}`);
     }
   };
 
@@ -556,10 +270,10 @@ function PlaybookEditor() {
             </button>
             {exportOpen && (
               <div className="playbook-export-dropdown">
-                <button onClick={exportPdf}>PDF</button>
-                <button onClick={exportWord}>Word (.docx)</button>
-                <button onClick={exportPptx}>PowerPoint (.pptx)</button>
-                <button onClick={exportExcel}>Excel (.xlsx)</button>
+                <button onClick={() => handleExport('pdf')}>PDF</button>
+                <button onClick={() => handleExport('docx')}>Word (.docx)</button>
+                <button onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</button>
+                <button onClick={() => handleExport('xlsx')}>Excel (.xlsx)</button>
               </div>
             )}
           </div>
