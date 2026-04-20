@@ -27,7 +27,7 @@ function App() {
 
   return (
     <>
-      <LoadingBar style={{ backgroundColor: '#C3E11D', height: '3px' }} />
+      <LoadingBar className="app-loading-bar" />
       <Toast />
       <Routess />
     </>

@@ -1,0 +1,194 @@
+// ─── AskAi ───────────────────────────────────────────────
+.ask-ai-popup {
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 9999;
+}
+
+// ─── Shared close icon (Dots, MultiUser, Search) ────────
+.chat-close-icon {
+  background: lightgray;
+  padding: 7px;
+  border-radius: 30px;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 30px;
+}
+
+.chat-search-count {
+  font-size: 14px;
+}
+
+// ─── Help / Bookmark ─────────────────────────────────────
+.bookmark-content {
+  margin: 2% 4%;
+}
+
+// ─── Settings / Comments ─────────────────────────────────
+.comments-row--spaced {
+  justify-content: space-between;
+}
+
+// ─── TonePopup (chat) ───────────────────────────────────
+.chat-tone-inspire-btn {
+  color: rgba(0, 102, 255, 1);
+  font-weight: 400;
+}
+
+.chat-tone-ask-ai-dropdown {
+  min-width: 100%;
+  padding: 5px 5px;
+  border-radius: 10px;
+}
+
+.chat-tone-ask-ai-input-wrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  align-items: center;
+  padding: 5px;
+}
+
+.chat-tone-ask-ai-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.chat-tone-ask-ai-send {
+  color: rgba(0, 102, 255, 1);
+}
+
+// ─── Header (chat) ──────────────────────────────────────
+.chat-header-improve-btn {
+  color: rgba(0, 102, 255, 1);
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// ─── Header (chat) icon states ──────────────────────────
+.chat-header-icon--active {
+  color: white;
+}
+
+.chat-header-icon--inactive {
+  color: black;
+}
+
+// ─── ChatMenu ────────────────────────────────────────────
+.chat-menu-white-bg {
+  background-color: white;
+}
+
+.chat-menu-sidebar-item {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+// ─── Chat Header (from missing chatHeader.module.scss) ───
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.chat-header__hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chat-header__logo-filename {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.chat-header__image {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+}
+
+.chat-header__input {
+  border: none;
+  outline: none;
+  font-size: 1.4rem;
+  font-weight: 500;
+  background: transparent;
+}
+
+.chat-header__nav-container {
+  display: flex;
+  align-items: center;
+}
+
+.chat-header__nav-link {
+  font-size: 2.2rem;
+  padding: 0.6rem;
+  cursor: pointer;
+  color: #555;
+  transition: 0.2s ease;
+}
+
+.chat-header__nav-link--active {
+  background-color: #0a0a0a;
+  color: #f9f9f9;
+  border-radius: 0.8rem;
+}
+
+// ─── Search/Dots/MultiUser dropdown ─────────────────────
+.chat-dropdown-content {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 35px 0px rgba(0, 0, 0, 0.05);
+}
+
+.chat-sub-search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #eee;
+    border-radius: 0.8rem;
+    outline: none;
+    font-size: 1.3rem;
+  }
+}
+
+.chat-sub-search-body {
+  padding: 0.5rem 0;
+}
+
+.chat-sub-search-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #eee;
+  border-radius: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
+.chat-sub-search-icons {
+  font-size: 1.6rem;
+  color: #555;
+  cursor: pointer;
+}

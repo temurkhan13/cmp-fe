@@ -4,7 +4,7 @@ import { FiMoreVertical } from 'react-icons/fi';
 import { useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
 import { truncateText } from '../../../utils/helperFunction';
-import './styles/DashboardCard.css';
+import './styles/dashboard-card.scss';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { IoIosChatboxes } from 'react-icons/io';
@@ -114,18 +114,15 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
         </div>
 
         {data.status === 'completed' ? (
-          <div
-            style={{ backgroundColor: 'rgba(34,197,94,0.1)', color: '#15803d' }}
-            className="card-badge"
-          >
+          <div className="card-badge card-badge--green">
             Completed
           </div>
         ) : data.status === 'in-progress' ? (
-          <div style={{ backgroundColor: 'rgba(59,130,246,0.1)', color: '#2563eb' }} className="card-badge">
+          <div className="card-badge card-badge--blue">
             In Progress
           </div>
         ) : data.status === 'pending' ? (
-          <div style={{ backgroundColor: 'rgba(234,179,8,0.1)', color: '#a16207' }} className="card-badge">
+          <div className="card-badge card-badge--yellow">
             Pending
           </div>
         ) : (

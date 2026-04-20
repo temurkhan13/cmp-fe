@@ -1,4 +1,5 @@
 import Components from '../../components';
+import '../../components/assessment/assessment.scss';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

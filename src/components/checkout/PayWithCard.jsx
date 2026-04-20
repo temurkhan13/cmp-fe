@@ -1,4 +1,5 @@
 import { Formik, Form } from 'formik';
+import './checkout.scss';
 import Components from '../../components';
 import data from '../../data';
 import { Link } from 'react-router-dom';

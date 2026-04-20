@@ -147,47 +147,33 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
     <>
       <div className="task-list-container">
         {/* Progress Ring */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
-          padding: '1rem 1.5rem',
-          margin: '0.5rem 1rem',
-          background: '#fafff0',
-          borderRadius: '12px',
-          border: '1px solid rgba(195,225,29,0.2)',
-        }}>
-          <svg width="64" height="64" viewBox="0 0 64 64" style={{ flexShrink: 0 }}>
+        <div className="task-progress-ring">
+          <svg width="64" height="64" viewBox="0 0 64 64" className="task-progress-ring__svg">
             <circle cx="32" cy="32" r="28" fill="none" stroke="#e5e7eb" strokeWidth="4" />
             <circle cx="32" cy="32" r="28" fill="none" stroke="#C3E11D" strokeWidth="4"
               strokeLinecap="round"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               transform="rotate(-90 32 32)"
-              style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+              className="task-progress-ring__transition"
             />
             <text x="32" y="36" textAnchor="middle" fontSize="14" fontWeight="600" fill="#111">
               {progressPercent}%
             </text>
           </svg>
           <div>
-            <div style={{ fontSize: '1.3rem', fontWeight: 600, color: '#111' }}>
+            <div className="task-progress-ring__completed">
               {completedCount}/{totalAssessments} Completed
             </div>
-            <div style={{ fontSize: '1.1rem', color: '#6b7280' }}>
+            <div className="task-progress-ring__status">
               {inProgressCount > 0 ? `${inProgressCount} in progress` : 'Select a report to begin'}
             </div>
           </div>
         </div>
 
         <div
-          className="progress-bar"
+          className="progress-bar task-select-report"
           onClick={generateAllReports}
-          style={{
-            fontSize: '1.4rem',
-            fontWeight: '500',
-            textAlign: 'center',
-          }}
         >
           Select a Report
         </div>
@@ -219,17 +205,12 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                     </span>
                     {!currentReport.finalReportURL && (
                       <span
-                        className={`task-progress ${
+                        className={`task-progress task-badge ${
                           !currentReport.finalReportURL ? 'hover-show' : ''
                         }`}
                         style={{
-                          color: taskColors.text,
-                          backgroundColor: taskColors.background,
-                          borderRadius: '1rem',
-                          paddingLeft: '0.8rem',
-                          paddingRight: '0.8rem',
-                          fontSize: '1.2rem',
-                          fontWeight: '500',
+                          '--task-color': taskColors.text,
+                          '--task-bg': taskColors.background,
                         }}
                       >
                         {currentReport.finalReportURL
@@ -277,18 +258,10 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                       const display = getStatusDisplay(status);
                       return (
                         <span
-                          className="task-progress hover-show"
+                          className="task-progress hover-show task-status-badge"
                           style={{
-                            color: display.color,
-                            backgroundColor: display.bg,
-                            borderRadius: '9999px',
-                            paddingLeft: '0.8rem',
-                            paddingRight: '0.8rem',
-                            padding: '2px 10px',
-                            fontSize: '1.2rem',
-                            fontWeight: '600',
-                            position: 'absolute',
-                            right: '0',
+                            '--task-color': display.color,
+                            '--task-bg': display.bg,
                           }}
                         >
                           {display.label}

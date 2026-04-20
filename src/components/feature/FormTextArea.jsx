@@ -16,7 +16,6 @@ const FormTextArea = ({ label, ...props }) => {
         {...field}
         {...props}
         autoComplete="off"
-        style={{ border: meta.touched && meta.error && '1px solid red' }}
       />
       <ErrorMessage component="div" name={field.name} className="form-error" />
     </div>

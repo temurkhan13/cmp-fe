@@ -144,7 +144,7 @@ const PersonalInfo = () => {
         <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}>
           {!avatar && `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase()}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="settings-avatar-info">
           <input
             type="file"
             ref={fileInputRef}
@@ -246,10 +246,10 @@ const PersonalInfo = () => {
         )}
       </form>
 
-      <hr style={{ margin: '2rem 0' }} />
+      <hr className="settings-divider" />
       <div className="danger-zone">
-        <h3 style={{ color: '#c00', fontSize: '1.8rem', marginBottom: '0.5rem' }}>Danger Zone</h3>
-        <p style={{ fontSize: '1.3rem', color: '#666', marginBottom: '1rem' }}>Once you delete your account, there is no going back. Please be certain.</p>
+        <h3 className="settings-danger-title">Danger Zone</h3>
+        <p className="settings-danger-desc">Once you delete your account, there is no going back. Please be certain.</p>
         <button
           type="button"
           className="delete-account-button"

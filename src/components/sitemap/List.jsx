@@ -11,6 +11,7 @@ import { timeAgo } from './helper.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import ConfirmModal from '../common/ConfirmModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
+import './sitemap.scss';
 
 function List() {
   let navigate = useNavigate();
@@ -36,7 +37,7 @@ function List() {
       },
     });
 
-    return response.json(); // parses JSON response into native JavaScript objects
+    return response.json();
   }
 
   const renameSitemap = async (id, newName) => {
@@ -65,87 +66,48 @@ function List() {
       ? sitemaps?.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
       : [];
   }, [sitemaps]);
+
   const onInit = async () => {
     setLoading(true);
     let res = await getData(selectedWorkspace?.id);
-
     if (res?.length > 0) {
       setSitemaps(res);
     }
-
     setLoading(false);
   };
 
   useEffect(() => {
     onInit();
   }, []);
+
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '80vh',
-        padding: '2rem 3rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="sitemap-list-page">
       <div className="selected-workspace-name">
         <p>
           Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
         </p>
       </div>
       <>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <div style={{ marginBottom: '0.5rem' }}>
+        <div className="sitemap-list-container">
+          <div className="sitemap-list-search-wrapper">
             <input
               type="text"
               placeholder="Search sitemaps..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                maxWidth: '300px',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '1.2rem',
-                outline: 'none',
-              }}
+              className="sitemap-list-search"
             />
           </div>
-          <section className="generate" style={{ marginTop: '1rem' }}>
-            <div
-              // className="left-buttons"
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
+          <section className="generate generate--spaced">
+            <div className="sitemap-list-header">
               <p className="assistant-heading">
                 <FaFolderTree />
                 Sitemaps
               </p>
               <div className="center-buttons">
                 <button
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                  className="assiss-btn"
-                  onClick={() => {
-                    navigate('/sitemap/new');
-                  }}
+                  className="assiss-btn assiss-btn--flex"
+                  onClick={() => navigate('/sitemap/new')}
                 >
                   Create Sitemap
                   <BiPlus />
@@ -154,171 +116,75 @@ function List() {
             </div>
           </section>
           {loading ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                flexWrap: 'wrap',
-                width: '100%',
-                margin: '16px 0',
-              }}
-            >
+            <div className="sitemap-list-loading">
               <Loading />
             </div>
           ) : (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                flexWrap: 'wrap',
-                width: '100%',
-                margin: '1.25rem 0',
-              }}
-            >
+            <div className="sitemap-list-grid">
               {recentModifiedSiteMap
                 ?.filter(({ name }) => {
                   if (!searchQuery.trim()) return true;
                   return (name || '').toLowerCase().includes(searchQuery.toLowerCase());
                 })
-                ?.map(({ _id, name, updatedAt }) => {
-                  return (
-                    <div
-                      key={`${_id}-recent`}
-                      style={{
-                        width: '100%',
-                        maxWidth: '350px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        backgroundColor: '#f9f9f9',
-                        border: '1px solid #ddd',
-                        padding: '2rem',
-                        borderRadius: '1rem',
-                        margin: '0 1rem 1rem 0',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => {
-                        if (editingId !== _id) navigate(`/sitemap/${_id}`);
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '1rem',
-                        }}
-                      >
-                        <FaFolderTree size={18} />
-                        {editingId === _id ? (
-                          <input
-                            autoFocus
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
-                            onBlur={() => renameSitemap(_id, editName)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') renameSitemap(_id, editName);
-                              if (e.key === 'Escape') setEditingId(null);
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                            style={{
-                              fontSize: '1.5rem',
-                              fontWeight: '500',
-                              border: '1px solid #C3E11D',
-                              borderRadius: '6px',
-                              padding: '4px 8px',
-                              outline: 'none',
-                              width: '100%',
+                ?.map(({ _id, name, updatedAt }) => (
+                  <div
+                    key={`${_id}-recent`}
+                    className="sitemap-card"
+                    onClick={() => {
+                      if (editingId !== _id) navigate(`/sitemap/${_id}`);
+                    }}
+                  >
+                    <div className="sitemap-card__header">
+                      <FaFolderTree size={18} />
+                      {editingId === _id ? (
+                        <input
+                          autoFocus
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          onBlur={() => renameSitemap(_id, editName)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') renameSitemap(_id, editName);
+                            if (e.key === 'Escape') setEditingId(null);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="sitemap-card__rename-input"
+                        />
+                      ) : (
+                        <>
+                          <span className="sitemap-card__name">{name}</span>
+                          <BiEdit
+                            size={16}
+                            className="sitemap-card__icon-faded"
+                            title="Rename"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingId(_id);
+                              setEditName(name);
                             }}
                           />
-                        ) : (
-                          <>
-                            <span
-                              style={{
-                                fontSize: '1.5rem',
-                                fontWeight: '500',
-                                flex: 1,
-                              }}
-                            >
-                              {name}
-                            </span>
-                            <BiEdit
-                              size={16}
-                              style={{ opacity: 0.4 }}
-                              title="Rename"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingId(_id);
-                                setEditName(name);
-                              }}
-                            />
-                            <FiTrash2
-                              size={16}
-                              style={{ opacity: 0.4, color: '#c00' }}
-                              title="Delete"
-                              onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: _id }); }}
-                            />
-                          </>
-                        )}
-                      </div>
-
-                      {updatedAt ? (
-                        <span
-                          style={{
-                            fontSize: '1.2rem',
-                            color: 'rgba(10, 10, 10, 0.46)',
-                          }}
-                        >
-                          Modified {timeAgo(updatedAt)}
-                        </span>
-                      ) : null}
+                          <FiTrash2
+                            size={16}
+                            className="sitemap-card__icon-delete"
+                            title="Delete"
+                            onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: _id }); }}
+                          />
+                        </>
+                      )}
                     </div>
-                  );
-                })}
+                    {updatedAt ? (
+                      <span className="sitemap-card__date">
+                        Modified {timeAgo(updatedAt)}
+                      </span>
+                    ) : null}
+                  </div>
+                ))}
             </div>
           )}
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              flexWrap: 'wrap',
-              width: '100%',
-              margin: '16px 0',
-            }}
-          ></div>
+          <div className="sitemap-list-empty"></div>
         </div>
       </>
 
-      <style>
-        {`
-        .selected-workspace-name {
-          position: absolute;
-          top: 2rem;
-          left: 3rem;
-        }
-        .selected-workspace-name p {
-          font-size: 1.5rem;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .selected-workspace-name .workspace-badge {
-          background-color: #C3E11D;
-          color: #0B1444;
-          padding: 0.25rem 0.75rem;
-          border-radius: 7px;
-          font-size: 1.3rem;
-          font-weight: 700;
-        }`}
-      </style>
       <ConfirmModal
         isOpen={deleteConfirm.open}
         title="Move to Trash"

@@ -43,7 +43,7 @@ const VerifyEmail = () => {
 
   return (
     <Components.Feature.Container className="auth signIn">
-      <header style={{ marginBottom: '10%' }}>
+      <header className="auth-header--spaced">
         <Components.Feature.Heading className="primary mb_primary">
           Verify your Email
         </Components.Feature.Heading>
@@ -87,47 +87,23 @@ const VerifyEmail = () => {
                   {error}
                 </div>
               )*/}{' '}
-              <p
-                style={{
-                  fontFamily: 'Poppins',
-                  fontWeight: '400',
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  letterSpacing: '0.24px',
-                  color: 'rgba(10, 10, 10, 0.68)',
-                }}
-              >
+              <p className="auth-resend-text">
                 Didn&apos;t receive a code?{' '}
                 {canResend ? (
                   <span
-                    style={{
-                      fontFamily: 'Poppins',
-                      fontWeight: '600',
-                      fontSize: '16px',
-                      lineHeight: '20px',
-                      letterSpacing: '0.12px',
-                      color: 'rgba(11, 20, 68, 1)',
-                      cursor: 'pointer',
-                    }}
+                    className="auth-resend-link"
                     onClick={handleResend}
                   >
                     Resend
                   </span>
                 ) : (
-                  <span
-                    style={{
-                      fontFamily: 'Poppins',
-                      fontWeight: '500',
-                      fontSize: '14px',
-                      color: 'rgba(10, 10, 10, 0.4)',
-                    }}
-                  >
+                  <span className="auth-resend-countdown">
                     Resend in {countdown}s
                   </span>
                 )}
               </p>
               {resendMessage && (
-                <p style={{ fontSize: '14px', color: resendMessage.includes('success') ? 'green' : 'red', marginBottom: '0.5rem' }}>
+                <p className={resendMessage.includes('success') ? 'auth-resend-message--success' : 'auth-resend-message--error'}>
                   {resendMessage}
                 </p>
               )}

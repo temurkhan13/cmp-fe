@@ -254,7 +254,7 @@ const AssessmentComments = ({ comments }) => {
 
               <div className="reply-wrapper">
                 <div className="user-image">
-                  <RxAvatar style={{ fontSize: '3.5rem' }} />
+                  <RxAvatar className="assessment-avatar-icon" />
                 </div>
                 <div className="reply-box">
                   <div className="input-wrapper">

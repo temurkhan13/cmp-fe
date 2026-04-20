@@ -54,7 +54,7 @@ const verification = () => {
                 label=""
                 place="Enter your email"
               />
-              {error && <div style={{ color: 'red' }}>{error}</div>}
+              {error && <div className="auth-error">{error}</div>}
 
               <Components.Feature.Button className="primary" type="submit">
                 Continue
@@ -68,11 +68,7 @@ const verification = () => {
           Already have an account?
           <Link
             to="/log-in"
-            style={{
-              textDecoration: 'none',
-              fontWeight: 'bold',
-              color: '#0B1444',
-            }}
+            className="auth-login-link"
           >
             <span /> Log In
           </Link>

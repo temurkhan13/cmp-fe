@@ -37,14 +37,11 @@ function Edge({ id, sourceX, sourceY, targetX, targetY }) {
       <EdgeLabelRenderer className="edge-renderer">
         {!isRootOrChildEdge && (
           <MdDelete
+            className="sitemap-edge-delete nodrag nopan delete"
             style={{
-              position: 'absolute',
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              pointerEvents: 'all',
-              cursor: 'pointer',
             }}
             size={20}
-            className="nodrag nopan delete"
             onClick={() => {
               setEdges((es) => es.filter((e) => e.id !== id));
             }}

@@ -24,9 +24,8 @@ const TonePopup = ({
         <div className="navbar">
           <div className="dropdown">
             <button
-              className="dropbtn"
+              className="dropbtn chat-tone-inspire-btn"
               onClick={() => setShowAskAi(true)}
-              style={{ color: 'rgba(0, 102, 255, 1)', fontWeight: 400 }}
             >
               <RiMagicFill /> Inspire me
             </button>
@@ -143,40 +142,12 @@ const TonePopup = ({
         </div>
       ) : (
         <div className="navbar">
-          <div
-            className="dropdown"
-            style={{
-              minWidth: '100%',
-              padding: '5px 5px',
-              borderRadius: '10px',
-            }}
-          >
-            <button
-              className="dropbtn"
-              style={{
-                width: '400px',
-                display: 'flex',
-                textAlign: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px solid lightgray',
-                outline: 'none',
-                padding: '10px',
-                fontFamily: 'inherit',
-                margin: '4px',
-                background: 'white',
-                borderRadius: '5px',
-              }}
-            >
-              <RiMagicFill style={{ color: 'rgba(0, 102, 255, 1)' }} />
+          <div className="dropdown chat-tone-ask-ai-dropdown">
+            <button className="dropbtn chat-tone-ask-ai-input-wrapper">
+              <RiMagicFill className="chat-tone-ask-ai-send" />
               <input
                 type="text"
-                style={{
-                  border: 'none',
-                  outline: 'none',
-                  flex: 1,
-                  margin: '0 10px',
-                }}
+                className="chat-tone-ask-ai-input"
                 placeholder="Ask AI to edit or generate..."
               />
               <FaLocationArrow />

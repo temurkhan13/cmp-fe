@@ -12,6 +12,8 @@ import { MdInsertLink } from 'react-icons/md';
 import { IoMdTrash } from 'react-icons/io';
 import { BsThreeDots } from 'react-icons/bs';
 
+import './custom-dropdown.scss';
+
 const CustomDropdown = ({ activeIcon, handleIconClick }) => {
   const [isMoveToModalOpen, setMoveToModalOpen] = useState(false);
   const [isMoveToTrashModalOpen, setMoveToTrashModalOpen] = useState(false);
@@ -110,42 +112,36 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
   return (
     <Dropdown
       title={<BsThreeDots fontSize={20} />}
-      className={activeIcon === 'dots' ? 'active' : ''}
+      className={`${activeIcon === 'dots' ? 'active custom-dropdown-btn-active' : 'custom-dropdown-btn'}`}
       onClick={() => handleIconClick('dots')}
       icon={
         <BsThreeDots
-          style={{
-            color: activeIcon === 'dots' ? 'white' : 'black',
-            fontSize: '2.8rem',
-          }}
+          className={activeIcon === 'dots' ? 'custom-dropdown-dots-icon-active' : 'custom-dropdown-dots-icon'}
         />
       }
-      style={
-        activeIcon === 'dots' ? styles.dropdownBtnActive : styles.dropdownBtn
-      }
     >
-      <Dropdown.Item style={{ borderRadius: '0.5rem' }}>
+      <Dropdown.Item className="custom-dropdown-item-rounded">
         <HiAdjustmentsHorizontal
-          style={{ marginRight: '0.5rem', fontSize: '1.5rem' }}
+          className="custom-dropdown-icon-right"
         />
         Customization
         <MdOutlineKeyboardArrowRight
-          style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
+          className="custom-dropdown-arrow-right"
         />
         <Dropdown.Submenu>
           <Dropdown.Item>
             Change Tone
             <MdOutlineKeyboardArrowRight
-              style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
+              className="custom-dropdown-arrow-right"
             />
             <Dropdown.Submenu>
               <Dropdown.Item>
                 Normal
                 <IoIosCheckmark
-                  style={{ marginLeft: 'auto', fontSize: '2rem' }}
+                  className="custom-dropdown-checkmark"
                 />
               </Dropdown.Item>
-              <hr style={styles.straightLine} />
+              <hr className="custom-dropdown-straight-line" />
               <Dropdown.Item>Professional</Dropdown.Item>
               <Dropdown.Item>Casual</Dropdown.Item>
               <Dropdown.Item>Relax</Dropdown.Item>
@@ -156,16 +152,16 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
           <Dropdown.Item>
             Response Length
             <MdOutlineKeyboardArrowRight
-              style={{ marginLeft: 'auto', fontSize: '1.6rem' }}
+              className="custom-dropdown-arrow-right"
             />
             <Dropdown.Submenu>
               <Dropdown.Item>
                 Auto
                 <IoIosCheckmark
-                  style={{ marginLeft: 'auto', fontSize: '2rem' }}
+                  className="custom-dropdown-checkmark"
                 />
               </Dropdown.Item>
-              <hr style={styles.straightLine} />
+              <hr className="custom-dropdown-straight-line" />
               <Dropdown.Item>Small</Dropdown.Item>
               <Dropdown.Item>Medium</Dropdown.Item>
               <Dropdown.Item>Comprehensive</Dropdown.Item>
@@ -173,11 +169,11 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
           </Dropdown.Item>
         </Dropdown.Submenu>
       </Dropdown.Item>
-      {/*<hr style={styles.straightLine} />*/}
+      {/*<hr className="custom-dropdown-straight-line" />*/}
       {/*<Dropdown.Item>*/}
-        {/*<button style={styles.clickBtn} onClick={handleOpenMoveToModal}>*/}
+        {/*<button className="custom-dropdown-click-btn" onClick={handleOpenMoveToModal}>*/}
         {/*  <RiFolderTransferFill*/}
-        {/*    style={{ marginRight: '0.5rem', fontSize: '1.5rem' }}*/}
+        {/*    className="custom-dropdown-icon-right"*/}
         {/*  />*/}
         {/*  Move to*/}
         {/*</button>*/}
@@ -192,13 +188,13 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
       {/*  />*/}
       {/*</Dropdown.Item>*/}
       {/*<Dropdown.Item>*/}
-      {/*  <MdInsertLink style={{ marginRight: '0.5rem', fontSize: '1.5rem' }} />*/}
+      {/*  <MdInsertLink className="custom-dropdown-icon-right" />*/}
       {/*  Copy link*/}
       {/*</Dropdown.Item>*/}
-      {/*<hr style={styles.straightLine} />*/}
+      {/*<hr className="custom-dropdown-straight-line" />*/}
       <Dropdown.Item>
-        <button style={styles.clickBtn} onClick={handleOpenMoveToTrashModal}>
-          <IoMdTrash style={{ marginRight: '0.5rem', fontSize: '1.5rem' }} />
+        <button className="custom-dropdown-click-btn" onClick={handleOpenMoveToTrashModal}>
+          <IoMdTrash className="custom-dropdown-icon-right" />
           Move to trash
         </button>
         <CustomModal
@@ -220,39 +216,6 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
       </Dropdown.Item>
     </Dropdown>
   );
-};
-
-const styles = {
-  dropdownBtnActive: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '0.8rem',
-    padding: '0.8rem',
-    cursor: 'pointer',
-    border: 'none',
-  },
-  dropdownBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.8rem',
-    justifyContent: 'center',
-    border: 'none',
-    borderRadius: '0.8rem',
-    cursor: 'pointer',
-    fontSize: '2rem',
-    transition: 'opacity 0.2s ease-in-out',
-  },
-  clickBtn: {
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  straightLine: {
-    borderTop: '0.0625rem solid lightgray',
-  },
 };
 
 CustomDropdown.propTypes = {

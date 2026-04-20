@@ -40,12 +40,6 @@ const VerifyCode = ({
         autoComplete="off"
         value={value}
         onChange={handleChange}
-        style={{
-          border:
-            meta.touched && meta.error
-              ? '1px solid rgba(255, 0, 0, 0.589)'
-              : undefined,
-        }}
       />
       <ErrorMessage component="div" name={field.name} className="form-error" />
     </div>

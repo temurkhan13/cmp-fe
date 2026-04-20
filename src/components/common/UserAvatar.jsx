@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './common.scss';
 
 const COLORS = [
   '#C3E11D', '#47beba', '#f59e0b', '#8b5cf6',
@@ -37,50 +38,40 @@ const UserAvatar = ({
   const initials = getInitials(name);
   const bg = getColor(name);
 
-  const containerStyle = {
-    width: size,
-    height: size,
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    flexShrink: 0,
-    backgroundColor: showImage ? 'transparent' : bg,
-    ...style,
-  };
-
   if (showImage) {
     return (
-      <div className={className || undefined} style={containerStyle}>
+      <div
+        className={`user-avatar ${className}`}
+        style={{
+          '--ua-size': `${size}px`,
+          backgroundColor: 'transparent',
+          ...style,
+        }}
+      >
         <img
           src={src}
           alt={name || 'avatar'}
-          className={imgClassName || undefined}
+          className={`user-avatar__img ${imgClassName}`}
           onError={() => setImgFailed(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            borderRadius: '50%',
-            margin: '0',
-          }}
         />
       </div>
     );
   }
 
   return (
-    <div className={className || undefined} style={containerStyle}>
+    <div
+      className={`user-avatar ${className}`}
+      style={{
+        '--ua-size': `${size}px`,
+        backgroundColor: bg,
+        ...style,
+      }}
+    >
       <span
-        className={initialsClassName || undefined}
+        className={`user-avatar__initials ${initialsClassName}`}
         style={{
-          color: '#fff',
-          fontSize: size * 0.38,
-          fontWeight: 600,
-          fontFamily: 'Poppins, sans-serif',
-          lineHeight: 1,
-          userSelect: 'none',
+          '--ua-font': `${size * 0.38}px`,
+          fontSize: `${size * 0.38}px`,
           ...initialsStyle,
         }}
       >

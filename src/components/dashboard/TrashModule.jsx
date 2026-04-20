@@ -175,7 +175,7 @@ const TrashModule = () => {
         {isLoading ? (
           <SkeletonCard count={4} />
         ) : error ? (
-          <p style={{ color: '#dc2626', fontSize: '1.3rem' }}>{error}</p>
+          <p className="trash-error">{error}</p>
         ) : items.length > 0 ? (
           <div className="trash-grid">
             {items.map((item) => (
@@ -200,78 +200,6 @@ const TrashModule = () => {
         />
       )}
 
-      <style>{`
-        .trash-container {
-          display: flex;
-          flex-direction: column;
-          padding: 1rem 3rem;
-        }
-        .tabs {
-          display: flex;
-          gap: 1.5rem;
-        }
-        .tab {
-          padding: 0.75rem 1.5rem;
-          cursor: pointer;
-          background: none;
-          border: none;
-          outline: none;
-          font-size: 1.6rem;
-          font-weight: 500;
-          color: #6b7280;
-          border-bottom: 2px solid transparent;
-          transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-          border-radius: 6px 6px 0 0;
-        }
-        .tab:hover {
-          color: #111;
-          background: rgba(0,0,0,0.03);
-        }
-        .tab.active {
-          color: #111;
-          font-weight: 600;
-          border-bottom: 2px solid #C3E11D;
-        }
-        .trash-content {
-          margin-top: 1.5rem;
-        }
-        .trash-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 1rem;
-        }
-        .trash-card-item .dropdown-menu {
-          width: 190px;
-        }
-        .trash-card-item .dropdown-item {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 1.3rem;
-        }
-        .trash-card-item .trash-delete-btn {
-          color: #dc2626;
-        }
-        .trash-empty {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 4rem 2rem;
-          color: #666;
-          text-align: center;
-        }
-        .trash-empty__title {
-          font-size: 1.5rem;
-          font-weight: 600;
-          margin: 1rem 0 0.25rem;
-        }
-        .trash-empty__desc {
-          font-size: 1.2rem;
-          line-height: 1.6;
-          max-width: 400px;
-        }
-      `}</style>
     </div>
   );
 };

@@ -88,7 +88,7 @@ const Pricing = () => {
             <ul className="pricing-features">
               {plan.features.map((feature, i) => (
                 <li key={i} className="pricing-feature-item">
-                  <FaCheck style={{ color: '#C3E11D', flexShrink: 0 }} />
+                  <FaCheck className="pricing-check-icon" />
                   {feature}
                 </li>
               ))}

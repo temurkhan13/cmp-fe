@@ -4,6 +4,8 @@ import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { RxCross2 } from 'react-icons/rx';
 
+import './custom-dropdown.scss';
+
 const SearchDropdown = ({ title, items, visible, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,39 +46,37 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
   if (!visible) return null;
 
   return (
-    <div style={styles.searchDropdown}>
-      <div style={styles.searchHeader}>
-        <p style={styles.searchTitle}>{title}</p>
-        <button style={styles.closeButton} onClick={onClose}>
-          <RxCross2 style={styles.crossIcon} />
+    <div className="custom-dropdown-search">
+      <div className="custom-dropdown-search-header">
+        <p className="custom-dropdown-search-title">{title}</p>
+        <button className="custom-dropdown-close-button" onClick={onClose}>
+          <RxCross2 className="custom-dropdown-cross-icon" />
         </button>
       </div>
-      <hr
-        style={{ color: 'lightgray', marginTop: '1rem', marginBottom: '1rem' }}
-      />
-      <div style={styles.searchInput}>
-        <CiSearch style={styles.icon} />
+      <hr className="custom-dropdown-search-hr" />
+      <div className="custom-dropdown-search-input">
+        <CiSearch className="custom-dropdown-search-icon" />
         <input
           type="text"
           placeholder="Find any word"
           value={searchTerm}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          style={styles.input}
+          className="custom-dropdown-input"
         />
-        <span style={styles.span}>
+        <span className="custom-dropdown-search-count">
           {currentIndex + 1}/{filteredItems.length}
         </span>
-        <span style={{}}>|</span>
-        <div style={styles.navButtons}>
+        <span>|</span>
+        <div className="custom-dropdown-nav-buttons">
           <button
-            style={styles.navButton}
+            className="custom-dropdown-nav-button"
             onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}
           >
             <FaChevronUp />
           </button>
           <button
-            style={styles.navButton}
+            className="custom-dropdown-nav-button"
             onClick={() =>
               setCurrentIndex(
                 Math.min(currentIndex + 1, filteredItems.length - 1)
@@ -88,14 +88,14 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
         </div>
       </div>
       {searchTerm && ( // Only show the list when there is a search term
-        <ul style={styles.ul}>
+        <ul className="custom-dropdown-search-list">
           {filteredItems.map((item, index) => (
             <li
               key={index}
-              style={
+              className={
                 index === currentIndex
-                  ? { ...styles.li, ...styles.highlight }
-                  : styles.li
+                  ? 'custom-dropdown-search-list-item--highlighted'
+                  : 'custom-dropdown-search-list-item'
               }
             >
               {item}
@@ -105,94 +105,6 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
       )}
     </div>
   );
-};
-
-// Styles object using rem units
-const styles = {
-  searchDropdown: {
-    border: '0.0625rem solid #f1f1f1',
-    borderRadius: '1rem',
-    width: '35rem',
-    padding: '1.5rem',
-    position: 'absolute',
-    top: '8rem',
-    right: '6rem',
-    backgroundColor: 'white',
-    zIndex: 1000,
-    boxShadow: '0px 4px 35px 0px #0000000D',
-  },
-  searchHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  searchTitle: {
-    fontSize: '1.8rem',
-    fontWeight: 600,
-  },
-  closeButton: {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '1.2rem',
-  },
-  searchInput: {
-    display: 'flex',
-    alignItems: 'center',
-    border: '1px solid gray',
-    borderRadius: '1rem',
-    marginTop: '1rem',
-  },
-  icon: {
-    position: 'absolute',
-    left: '2rem',
-    fontSize: '2rem',
-    marginRight: '3rem',
-  },
-  crossIcon: {
-    fontSize: '2.5rem',
-    color: 'rgba(0, 0, 0, 0.6)',
-    backgroundColor: '#f1f1f1',
-    borderRadius: '50%',
-    padding: '0.3rem',
-    marginLeft: '0.3125rem',
-  },
-  input: {
-    flex: 1,
-    padding: '0.3125rem 0.3125rem 0.3125rem 1.5rem',
-    marginLeft: '1.5rem',
-    border: 'none',
-    outline: 'none',
-    height: '4rem',
-  },
-  span: {
-    whiteSpace: 'nowrap',
-    margin: '0 1rem',
-    fontSize: '1.1rem',
-  },
-  navButtons: {
-    display: 'flex',
-    gap: '1rem',
-    margin: '0 1rem 0rem 1rem',
-  },
-  navButton: {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    margin: 0,
-  },
-  ul: {
-    listStyleType: 'none',
-    padding: 0,
-    margin: 0,
-  },
-  li: {
-    padding: '0.3125rem',
-  },
-  highlight: {
-    backgroundColor: '#eee',
-  },
 };
 
 SearchDropdown.propTypes = {

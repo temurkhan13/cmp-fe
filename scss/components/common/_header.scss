@@ -4,16 +4,19 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid $border_color--tertiary;
-  & > div {
+
+  &>div {
     display: flex;
     align-items: center;
     gap: 1.2rem;
   }
-  & > section {
+
+  &>section {
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    & > div {
+
+    &>div {
       border: 1px solid $border_color--tertiary;
       padding: 0.6rem;
       border-radius: 1.2rem;
@@ -21,7 +24,8 @@
       align-items: center;
       justify-content: center;
       gap: 0.6rem;
-      & > span {
+
+      &>span {
         padding: 1rem;
         border-radius: 0.9rem;
         display: flex;
@@ -35,13 +39,14 @@
           color: $bg_light;
         }
 
-        & > * {
+        &>* {
           // color: white;
           font-size: 2.6rem;
         }
       }
     }
-    & > img {
+
+    &>img {
       width: 4.8rem;
       height: 4.8rem;
       border-radius: 50%;
@@ -49,7 +54,7 @@
   }
 }
 
-.topbar > section > div .shareBtn {
+.topbar>section>div .shareBtn {
   padding: 1rem 2rem;
   border-radius: 0.9rem;
   display: flex;
@@ -60,13 +65,14 @@
   gap: 5px;
 }
 
-.topbar > section > div .shareBtn > * {
+.topbar>section>div .shareBtn>* {
   color: $color_Primary;
   font-size: 1.6rem;
 }
 
 .topbar .selected-workspace-name {
   position: relative;
+
   p {
     font-size: 1.5rem;
     font-weight: 600;
@@ -74,6 +80,7 @@
     align-items: center;
     gap: 0.5rem;
   }
+
   .workspace-badge {
     background-color: #C3E11D;
     color: #0B1444;
@@ -84,12 +91,83 @@
   }
 }
 
+// Standalone workspace name (used outside .topbar context — AiAssistant, sitemap, etc.)
+.selected-workspace-name {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+
+  @media (max-width: 600px) {
+    top: 1.25rem;
+    left: 5rem;
+  }
+
+  &.chatpage-header {
+    top: 0;
+  }
+
+  p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .workspace-badge {
+    background-color: #C3E11D;
+    color: #0B1444;
+    padding: 0.25rem 0.75rem;
+    border-radius: 7px;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+}
+
+// Shared profile avatar styles
+.initials-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: $color_parentColor;
+  color: $color_BlueDark;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ProfileImage {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .initials-placeholder {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .ProfileImage {
+    height: 3rem;
+    width: 3rem;
+  }
+}
+
 .improve-response {
   font-size: 1.5rem;
   font-weight: 500;
   border: none;
   background-color: $color_parentColor;
 }
+
 // <div className="assessmentList">
 // <header>
 //   <Components.Feature.Text className="main--bold">

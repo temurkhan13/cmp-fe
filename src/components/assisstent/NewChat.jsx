@@ -13,6 +13,7 @@ import {
 } from 'react-icons/tb';
 import { BsThreeDots } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
+import './assisstent.scss';
 import { RxDashboard } from 'react-icons/rx';
 import Spinner from '../dashboard/Spinner/Spinner';
 
@@ -186,9 +187,8 @@ const NewChat = () => {
 
   return (
     <div
-      className={`newChat ${sidebarCollapsed ? 'collapsed' : ''}`}
+      className={`newChat ${sidebarCollapsed ? 'collapsed' : ''} asst-newchat-scroll`}
       ref={chatContainerRef}
-      style={{ overflowY: 'auto', height: 'calc(100vh - 121px)' }}
     >
       <div
         className={`sidebar-header ${sidebarCollapsed ? 'header-collapsed' : ''
@@ -196,7 +196,7 @@ const NewChat = () => {
       >
         <div
           onClick={handleAddChat}
-          style={{ cursor: 'pointer' }}
+
           className={`sidebar-header-title ${sidebarCollapsed ? 'header-collapsed-title' : ''
             }`}
         >
@@ -214,12 +214,12 @@ const NewChat = () => {
         {!sidebarCollapsed ? (
           <TbLayoutSidebarLeftCollapseFilled
             onClick={toggleSidebar}
-            style={{ cursor: 'pointer' }}
+            className="sidebar-toggle-icon"
           />
         ) : (
           <TbLayoutSidebarLeftExpandFilled
             onClick={toggleSidebar}
-            style={{ cursor: 'pointer' }}
+            className="sidebar-toggle-icon"
           />
         )}
       </div>
@@ -228,7 +228,7 @@ const NewChat = () => {
           <div
             className="explore-projects"
             onClick={toggleDropdown}
-            style={{ cursor: 'pointer' }}
+
           >
             <p>
               <RxDashboard size={20} />
@@ -238,7 +238,7 @@ const NewChat = () => {
               <div
                 className="explore-projects"
                 onClick={toggleDropdown}
-                style={{ cursor: 'pointer' }}
+
               >
                 {isDropdownOpen && (
                   <div className="projects-dropdown">
@@ -265,28 +265,21 @@ const NewChat = () => {
       )}
       {!sidebarCollapsed && (
         <>
-          <div style={{ padding: '0 1rem', marginBottom: '0.5rem' }}>
+          <div className="asst-search-wrapper">
             <input
               type="text"
               placeholder="Search chats..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '1.2rem',
-                outline: 'none',
-              }}
+              className="asst-search-input"
             />
           </div>
           {chatsLoading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem 0' }}>
+            <div className="asst-loading-center">
               <Spinner />
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', padding: '1rem' }}>
+            <div className="asst-chat-list">
               {Array.isArray(showableChats) &&
                 showableChats
                   .filter((chat) => {
@@ -301,24 +294,10 @@ const NewChat = () => {
                       onClick={() => handleChatSelect(chat._id || chat.id)}
                       onMouseEnter={() => setHoveredChatIndex(index)}
                       onMouseLeave={() => setHoveredChatIndex(null)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '1rem',
-                        justifyContent: 'space-between',
-                        fontSize: '1.5rem !important',
-                        borderRadius: '1rem',
-                        backgroundColor:
-                          currentChatId === (chat._id || chat.id) ? '#c3e11d' : 'transparent',
-                      }}
-                      className="chat-item-section"
+                      className={`chat-item-section asst-chat-item ${currentChatId === (chat._id || chat.id) ? 'asst-chat-item--active' : ''}`}
                     >
                       <Components.Feature.Text
-                        className="middium--light"
-                        style={{
-                          cursor: 'pointer',
-                          color: currentChatId === (chat._id || chat.id) ? '#000' : 'inherit',
-                        }}
+                        className={`middium--light asst-chat-text ${currentChatId === (chat._id || chat.id) ? 'asst-chat-text--active' : ''}`}
                       >
                         {truncateText(capitalizeFirstWord(chat.chatTitle || chat.chat_title || chat.title || 'Untitled'), 25)}
                       </Components.Feature.Text>
@@ -328,7 +307,7 @@ const NewChat = () => {
                             e.stopPropagation();
                             openModal(index, chat._id || chat.id, e);
                           }}
-                          style={{ cursor: 'pointer', fontSize: '1.5rem' }}
+                          className="asst-dots-icon"
                         />
                       )}
 

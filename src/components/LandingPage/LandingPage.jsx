@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import './landingpage.css';
+import './landing-page.scss';
 import Loader from '../../components/common/Loader';
 
 // Lazy load Home

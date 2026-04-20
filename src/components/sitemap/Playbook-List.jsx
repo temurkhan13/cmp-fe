@@ -11,46 +11,20 @@ import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import { timeAgo } from './helper.js';
 import ConfirmModal from '../common/ConfirmModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
+import './sitemap.scss';
 
 const PLAYBOOK_TEMPLATES = [
-  {
-    name: 'ERP Migration Playbook',
-    description: 'Complete change management playbook for ERP system migration covering Discovery, Design, Deploy, Adopt, and Run phases.',
-    icon: '🔄',
-  },
-  {
-    name: 'Digital Transformation Playbook',
-    description: 'Strategic playbook for organization-wide digital transformation with stakeholder analysis, communication planning, and adoption tracking.',
-    icon: '🚀',
-  },
-  {
-    name: 'Merger & Acquisition Integration',
-    description: 'Post-merger integration playbook covering culture alignment, systems consolidation, communication strategy, and change readiness.',
-    icon: '🤝',
-  },
-  {
-    name: 'Agile Transformation Playbook',
-    description: 'Guide for transitioning from waterfall to agile methodology including team coaching, process redesign, and tooling adoption.',
-    icon: '⚡',
-  },
-  {
-    name: 'Cloud Migration Playbook',
-    description: 'Change management framework for cloud infrastructure migration covering training, risk mitigation, and phased rollout.',
-    icon: '☁️',
-  },
-  {
-    name: 'Organizational Restructure',
-    description: 'Playbook for managing organizational restructuring with focus on employee communication, role transitions, and morale.',
-    icon: '🏗️',
-  },
+  { name: 'ERP Migration Playbook', description: 'Complete change management playbook for ERP system migration covering Discovery, Design, Deploy, Adopt, and Run phases.', icon: '🔄' },
+  { name: 'Digital Transformation Playbook', description: 'Strategic playbook for organization-wide digital transformation with stakeholder analysis, communication planning, and adoption tracking.', icon: '🚀' },
+  { name: 'Merger & Acquisition Integration', description: 'Post-merger integration playbook covering culture alignment, systems consolidation, communication strategy, and change readiness.', icon: '🤝' },
+  { name: 'Agile Transformation Playbook', description: 'Guide for transitioning from waterfall to agile methodology including team coaching, process redesign, and tooling adoption.', icon: '⚡' },
+  { name: 'Cloud Migration Playbook', description: 'Change management framework for cloud infrastructure migration covering training, risk mitigation, and phased rollout.', icon: '☁️' },
+  { name: 'Organizational Restructure', description: 'Playbook for managing organizational restructuring with focus on employee communication, role transitions, and morale.', icon: '🏗️' },
 ];
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  };
+  return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
 }
 
 const ITEMS_PER_PAGE = 9;
@@ -74,14 +48,10 @@ function PlaybookList() {
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
   const [moveToTrash] = useMoveToTrashMutation();
 
-  // Fetch playbooks from digital playbook endpoint
   const fetchPlaybooks = async (requestedPage = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${config.apiURL}/dpb/sitemap?page=${requestedPage}&limit=${ITEMS_PER_PAGE}`,
-        { headers: getAuthHeaders() }
-      );
+      const res = await fetch(`${config.apiURL}/dpb/sitemap?page=${requestedPage}&limit=${ITEMS_PER_PAGE}`, { headers: getAuthHeaders() });
       if (res.ok) {
         const data = await res.json();
         if (data.results && Array.isArray(data.results)) {
@@ -103,16 +73,13 @@ function PlaybookList() {
     }
   };
 
-  useEffect(() => {
-    fetchPlaybooks(1);
-  }, []);
+  useEffect(() => { fetchPlaybooks(1); }, []);
 
   const sortedPlaybooks = useMemo(() => {
     return playbooks.length > 0
-      ? [...playbooks].sort(
-        (a, b) =>
-          new Date(b.updated_at || b.updatedAt || b.created_at || b.createdAt) -
-          new Date(a.updated_at || a.updatedAt || a.created_at || a.createdAt)
+      ? [...playbooks].sort((a, b) =>
+        new Date(b.updated_at || b.updatedAt || b.created_at || b.createdAt) -
+        new Date(a.updated_at || a.updatedAt || a.created_at || a.createdAt)
       )
       : [];
   }, [playbooks]);
@@ -158,12 +125,10 @@ function PlaybookList() {
         headers: getAuthHeaders(),
         body: JSON.stringify({ name: newName }),
       });
-      setPlaybooks((prev) =>
-        prev.map((p) => {
-          const pid = p._id || p.id;
-          return pid === id ? { ...p, name: newName } : p;
-        })
-      );
+      setPlaybooks((prev) => prev.map((p) => {
+        const pid = p._id || p.id;
+        return pid === id ? { ...p, name: newName } : p;
+      }));
     } catch (err) {
       import.meta.env.DEV && console.error('Rename error:', err);
     } finally {
@@ -183,69 +148,30 @@ function PlaybookList() {
   };
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '80vh',
-        padding: '2rem 3rem',
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="playbook-list-page">
       <div className="selected-workspace-name">
         <p>
           Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
         </p>
       </div>
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div style={{ marginBottom: '0.5rem' }}>
+      <div className="sitemap-list-container">
+        <div className="sitemap-list-search-wrapper">
           <input
             type="text"
             placeholder="Search playbooks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              maxWidth: '300px',
-              padding: '8px 12px',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              fontSize: '1.2rem',
-              outline: 'none',
-            }}
+            className="sitemap-list-search"
           />
         </div>
-        <section className="generate" style={{ marginTop: '1rem' }}>
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
+        <section className="generate generate--spaced">
+          <div className="sitemap-list-header">
             <p className="assistant-heading">
               <BsFilePlayFill />
               Digital Playbooks
             </p>
             <div className="center-buttons">
-              <button
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}
-                className="assiss-btn"
-                onClick={() => setShowCreate(true)}
-              >
+              <button className="assiss-btn assiss-btn--flex" onClick={() => setShowCreate(true)}>
                 Create Playbook
                 <BiPlus />
               </button>
@@ -253,86 +179,36 @@ function PlaybookList() {
           </div>
         </section>
 
-        {/* Create Playbook Form */}
         {showCreate && (
-          <div
-            style={{
-              margin: '1rem 3rem',
-              padding: '1.5rem',
-              background: '#fff',
-              border: '1px solid #ddd',
-              borderRadius: '1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-            }}
-          >
-            {/* Template Selection */}
-            <p style={{ margin: 0, fontWeight: '600', fontSize: '1rem' }}>
-              Start from a template or create custom:
-            </p>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.8rem',
-                marginBottom: '0.5rem',
-              }}
-            >
+          <div className="playbook-create-form">
+            <p className="playbook-create-form__label">Start from a template or create custom:</p>
+            <div className="playbook-templates">
               {PLAYBOOK_TEMPLATES.map((tpl) => (
                 <button
                   key={tpl.name}
-                  onClick={() => {
-                    setCreateName(tpl.name);
-                    setCreateMessage(tpl.description);
-                  }}
-                  style={{
-                    padding: '10px 14px',
-                    border: createName === tpl.name ? '2px solid #C3E11D' : '1px solid #ddd',
-                    borderRadius: '10px',
-                    background: createName === tpl.name ? '#fafff0' : '#f9f9f9',
-                    cursor: 'pointer',
-                    fontSize: '0.9rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    transition: 'all 0.2s',
-                  }}
+                  onClick={() => { setCreateName(tpl.name); setCreateMessage(tpl.description); }}
+                  className={`playbook-template-btn ${createName === tpl.name ? 'playbook-template-btn--selected' : ''}`}
                 >
                   <span>{tpl.icon}</span>
                   <span>{tpl.name}</span>
                 </button>
               ))}
             </div>
-
             <input
               autoFocus
               placeholder="Playbook name (e.g. Digital Transformation Playbook)"
               value={createName}
               onChange={(e) => setCreateName(e.target.value)}
-              style={{
-                padding: '10px 14px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                outline: 'none',
-              }}
+              className="playbook-create-input"
             />
             <textarea
               placeholder="Describe what this playbook covers (optional — AI will generate content based on this)"
               value={createMessage}
               onChange={(e) => setCreateMessage(e.target.value)}
               rows={3}
-              style={{
-                padding: '10px 14px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '0.95rem',
-                outline: 'none',
-                resize: 'vertical',
-              }}
+              className="playbook-create-textarea"
             />
-            <div style={{ display: 'flex', gap: '0.8rem' }}>
+            <div className="playbook-create-actions">
               <button
                 className="assiss-btn"
                 onClick={createPlaybook}
@@ -342,18 +218,8 @@ function PlaybookList() {
                 {creating ? 'Creating...' : 'Create'}
               </button>
               <button
-                style={{
-                  padding: '8px 16px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  background: '#fff',
-                  cursor: 'pointer',
-                }}
-                onClick={() => {
-                  setShowCreate(false);
-                  setCreateName('');
-                  setCreateMessage('');
-                }}
+                className="playbook-cancel-btn"
+                onClick={() => { setShowCreate(false); setCreateName(''); setCreateMessage(''); }}
               >
                 Cancel
               </button>
@@ -362,45 +228,17 @@ function PlaybookList() {
         )}
 
         {loading ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              width: '100%',
-              margin: '16px 0',
-            }}
-          >
+          <div className="sitemap-list-loading">
             <Loading />
           </div>
         ) : sortedPlaybooks.length === 0 ? (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '4rem 2rem',
-              color: '#888',
-            }}
-          >
-            <BsFilePlayFill size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
-            <p style={{ fontSize: '1.2rem', margin: 0 }}>No playbooks yet</p>
-            <p style={{ fontSize: '0.95rem', margin: '0.5rem 0' }}>
-              Create your first digital playbook to get started
-            </p>
+          <div className="playbook-empty">
+            <BsFilePlayFill size={48} className="playbook-empty__icon" />
+            <p className="playbook-empty__title">No playbooks yet</p>
+            <p className="playbook-empty__desc">Create your first digital playbook to get started</p>
           </div>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '1rem',
-              width: '100%',
-              padding: '1rem 0',
-              marginTop: '1rem'
-            }}
-          >
+          <div className="playbook-grid">
             {sortedPlaybooks
               .filter((pb) => {
                 if (!searchQuery.trim()) return true;
@@ -412,31 +250,10 @@ function PlaybookList() {
                 return (
                   <div
                     key={pbId}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem',
-                      backgroundColor: '#fff',
-                      border: '1px solid rgba(0,0,0,0.06)',
-                      padding: '2rem',
-                      borderRadius: '12px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)'; }}
-                    onClick={() => {
-                      if (editingId !== pbId) navigate(`/playbook/${pbId}`);
-                    }}
+                    className="playbook-card"
+                    onClick={() => { if (editingId !== pbId) navigate(`/playbook/${pbId}`); }}
                   >
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '1rem',
-                      }}
-                    >
+                    <div className="sitemap-card__header">
                       <BsFilePlayFill size={18} />
                       {editingId === pbId ? (
                         <input
@@ -449,56 +266,28 @@ function PlaybookList() {
                             if (e.key === 'Escape') setEditingId(null);
                           }}
                           onClick={(e) => e.stopPropagation()}
-                          style={{
-                            fontSize: '1.5rem',
-                            fontWeight: '500',
-                            border: '1px solid #C3E11D',
-                            borderRadius: '6px',
-                            padding: '4px 8px',
-                            outline: 'none',
-                            width: '100%',
-                          }}
+                          className="sitemap-card__rename-input"
                         />
                       ) : (
                         <>
-                          <span
-                            style={{
-                              fontSize: '1.5rem',
-                              fontWeight: '500',
-                              flex: 1,
-                            }}
-                          >
-                            {pb.name}
-                          </span>
+                          <span className="sitemap-card__name">{pb.name}</span>
                           <BiEdit
                             size={16}
-                            style={{ opacity: 0.4 }}
+                            className="sitemap-card__icon-faded"
                             title="Rename"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingId(pbId);
-                              setEditName(pb.name);
-                            }}
+                            onClick={(e) => { e.stopPropagation(); setEditingId(pbId); setEditName(pb.name); }}
                           />
                           <FiTrash2
                             size={16}
-                            style={{ opacity: 0.4, color: '#c00' }}
+                            className="sitemap-card__icon-delete"
                             title="Delete"
                             onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: pbId }); }}
                           />
                         </>
                       )}
                     </div>
-
                     {pbUpdated && (
-                      <span
-                        style={{
-                          fontSize: '1.2rem',
-                          color: 'rgba(10, 10, 10, 0.46)',
-                        }}
-                      >
-                        Modified {timeAgo(pbUpdated)}
-                      </span>
+                      <span className="sitemap-card__date">Modified {timeAgo(pbUpdated)}</span>
                     )}
                   </div>
                 );
@@ -506,34 +295,15 @@ function PlaybookList() {
           </div>
         )}
 
-        {/* Pagination Controls */}
         {!loading && totalPages > 1 && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              margin: '1.5rem 3rem 0',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="playbook-pagination">
             <button
               disabled={page <= 1}
               onClick={() => fetchPlaybooks(page - 1)}
-              style={{
-                padding: '8px 14px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                background: page <= 1 ? '#f5f5f5' : '#fff',
-                cursor: page <= 1 ? 'not-allowed' : 'pointer',
-                opacity: page <= 1 ? 0.5 : 1,
-                fontSize: '0.95rem',
-              }}
+              className={`playbook-page-btn ${page <= 1 ? 'playbook-page-btn--disabled' : ''}`}
             >
               Previous
             </button>
-
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
               .reduce((acc, p, idx, arr) => {
@@ -543,74 +313,31 @@ function PlaybookList() {
               }, [])
               .map((item, idx) =>
                 item === '...' ? (
-                  <span key={`ellipsis-${idx}`} style={{ padding: '0 4px', color: '#999' }}>
-                    ...
-                  </span>
+                  <span key={`ellipsis-${idx}`} className="playbook-pagination__ellipsis">...</span>
                 ) : (
                   <button
                     key={item}
                     onClick={() => fetchPlaybooks(item)}
-                    style={{
-                      padding: '8px 14px',
-                      border: item === page ? '2px solid #C3E11D' : '1px solid #ddd',
-                      borderRadius: '8px',
-                      background: item === page ? '#fafff0' : '#fff',
-                      fontWeight: item === page ? '600' : '400',
-                      cursor: item === page ? 'default' : 'pointer',
-                      fontSize: '0.95rem',
-                    }}
+                    className={`playbook-page-btn ${item === page ? 'playbook-page-btn--active' : ''}`}
                   >
                     {item}
                   </button>
                 )
               )}
-
             <button
               disabled={page >= totalPages}
               onClick={() => fetchPlaybooks(page + 1)}
-              style={{
-                padding: '8px 14px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                background: page >= totalPages ? '#f5f5f5' : '#fff',
-                cursor: page >= totalPages ? 'not-allowed' : 'pointer',
-                opacity: page >= totalPages ? 0.5 : 1,
-                fontSize: '0.95rem',
-              }}
+              className={`playbook-page-btn ${page >= totalPages ? 'playbook-page-btn--disabled' : ''}`}
             >
               Next
             </button>
-
-            <span style={{ marginLeft: '1rem', fontSize: '0.9rem', color: '#888' }}>
+            <span className="playbook-pagination__count">
               {totalResults} playbook{totalResults !== 1 ? 's' : ''}
             </span>
           </div>
         )}
       </div>
 
-      <style>
-        {`
-        .selected-workspace-name {
-          position: absolute;
-          top: 2rem;
-          left: 3rem;
-        }
-        .selected-workspace-name p {
-          font-size: 1.5rem;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .selected-workspace-name .workspace-badge {
-          background-color: #C3E11D;
-          color: #0B1444;
-          padding: 0.25rem 0.75rem;
-          border-radius: 7px;
-          font-size: 1.3rem;
-          font-weight: 700;
-        }`}
-      </style>
       <ConfirmModal
         isOpen={deleteConfirm.open}
         title="Move to Trash"

@@ -137,7 +137,7 @@ const SignIn = () => {
               {apiError && <p className="error-message">{apiError}</p>}
               <section className="signIn_remember mb_Tertiary">
                 <label
-                  style={{ display: 'flex', gap: '1rem' }}
+                  className="auth-remember-label"
                   htmlFor="checkbox"
                 >
                   <input id="checkbox" type="checkbox" />
@@ -173,49 +173,6 @@ const SignIn = () => {
         </Components.Feature.Text>
       </center>
 
-      {/* Custom styles */}
-      <style>
-        {`
-          .error-message {
-            color: #cc0000;
-            font-weight: 500;
-            font-size: 13px;
-            margin-bottom: 8px;
-            margin-top: 4px;
-            position: relative;
-          }
-          .forgot-password-link {
-            color: #1e90ff;
-            text-decoration: none;
-          }
-          .forgot-password-link:hover {
-            text-decoration: underline;
-          }
-          .sign-up-link {
-            color: #1e90ff;
-            text-decoration: none;
-            font-weight: bold;
-          }
-          .sign-up-link:hover {
-            text-decoration: underline;
-          }
-          .password-input-wrapper {
-            position: relative;
-          }
-          .password-toggle-icon {
-            position: absolute;
-            top: 70%;
-            right: 10px;
-            cursor: pointer;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: #555;
-          }
-          .password-toggle-icon:hover {
-            color: #1e90ff;
-          }
-        `}
-      </style>
     </Components.Feature.Container>
   );
 };

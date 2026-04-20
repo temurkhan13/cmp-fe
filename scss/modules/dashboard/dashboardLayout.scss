@@ -222,20 +222,40 @@ body {
   font-weight: 600;
   opacity: 0;
   transition: all 0.5s ease;
+  display: none;
 
   .logo_content {
     display: flex;
     align-items: center;
-    /* Vertical alignment */
+  }
+
+  .logo_image img {
+    border-radius: 10px;
   }
 
   .logo_text {
     margin-left: 10px;
-    /* Adjust as needed */
+  }
+
+  .logo-text__title {
+    font-size: 20px;
+    color: black;
+  }
+
+  .logo-text__subtitle {
+    font-size: 10px;
+    color: gray;
   }
 }
 
-.sidebar.open .logo_details .icon,
+.sidebar.open .logo_details .logo_name {
+  display: block;
+}
+
+.sidebar.open .logo_details .icon {
+  opacity: 1;
+}
+
 .sidebar.open .logo_details .logo_name {
   opacity: 1;
 }
@@ -257,7 +277,7 @@ body {
 }
 
 .sidebar i {
-  color: var(--color-white);
+  // color: var(--color-white);
   height: 60px;
   line-height: 60px;
   min-width: 50px;
@@ -492,6 +512,16 @@ body {
   width: calc(100% - 250px);
 }
 
+.nav-item-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-item-icon {
+  color: gray;
+}
+
 .upgrade-plan {
   position: absolute;
   bottom: 1rem;
@@ -504,10 +534,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem 3rem;
+    padding: 1rem;
     color: #00316f;
+    font-weight: 500;
     border: none;
-    // width: 2rem;
+    width: 100%;
+    margin-right: 3rem;
+    background-color: #f0f0f0;
     border-radius: 1.5rem;
     font-size: 1.8rem;
 
@@ -520,6 +553,67 @@ body {
       font-size: 1.8rem;
     }
   }
+
+  .upgrade-button__content {
+    display: flex;
+    align-items: center;
+  }
+
+  .upgrade-button__text {
+    display: none;
+    align-items: center;
+  }
+
+  .upgrade-button__description {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+}
+
+.sidebar.open .upgrade-plan {
+  .upgrade-button {
+    padding: 1.5rem 3rem;
+    margin-right: 2.5rem;
+  }
+
+  .upgrade-button__text {
+    display: flex;
+  }
+}
+
+// Navlist link styles
+.navlist a {
+  color: #4b5563 !important;
+  text-decoration: none !important;
+}
+
+.navlist a:visited {
+  color: #4b5563 !important;
+}
+
+.navlist a:hover {
+  color: #1f2937 !important;
+}
+
+.navlist a:hover .link_namee {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+}
+
+.navlist .active-link {
+  color: #0B1444 !important;
+  font-weight: 600;
+}
+
+.navlist .active-link .link_namee {
+  background: rgba(195, 225, 29, 0.15);
+  border-radius: 8px;
+}
+
+.link_namee {
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
 }
 
 // ── Responsive: Sidebar overlay + hamburger ──

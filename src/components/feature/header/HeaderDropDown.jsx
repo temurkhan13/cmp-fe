@@ -21,12 +21,12 @@ const HeaderDropDown = () => {
   };
 
   const headerTitle = (
-    <div style={styles.headerTitle}>
+    <div className="header-dropdown__title">
       <img src={assets.common.icon} alt="icon" />
       {isOpen ? (
-        <RiArrowDownSLine size={20} style={{ marginBottom: '0.15rem' }} />
+        <RiArrowDownSLine size={20} className="header-dropdown__arrow-icon" />
       ) : (
-        <RiArrowUpSLine size={20} style={{ marginBottom: '0.15rem' }} />
+        <RiArrowUpSLine size={20} className="header-dropdown__arrow-icon" />
       )}
     </div>
   );
@@ -37,31 +37,15 @@ const HeaderDropDown = () => {
         onClick={toggleDropdown}
         position="right"
         title={headerTitle}
-        style={styles.dropdownButtonActive}
+        className="header-dropdown__button"
       >
         <Dropdown.Item onClick={handleGoToDashboardClick}>
           Go to Dashboard
-          {showIcon && <BsArrowReturnLeft style={{ marginLeft: 'auto' }} />}
+          {showIcon && <BsArrowReturnLeft className="header-dropdown__return-icon" />}
         </Dropdown.Item>
       </Dropdown>
     </div>
   );
-};
-
-const styles = {
-  headerTitle: {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    gap: '0.5rem',
-  },
-  dropdownButtonActive: {
-    border: '0.1rem solid lightgray',
-    borderRadius: '1.5rem',
-    background: 'white',
-    padding: '2.4rem 1rem',
-    boxShadow: 'none',
-  },
 };
 
 export default HeaderDropDown;

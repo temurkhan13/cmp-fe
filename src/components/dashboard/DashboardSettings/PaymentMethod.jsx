@@ -160,7 +160,7 @@ const DeleteModal = ({ paymentDetails, onClose }) => (
           <RxCross2 size={18} />
         </button>
       </div>
-      <hr style={{ marginBottom: '2rem' }} />
+      <hr className="settings-divider--sm" />
       <p>
         You&apos;re about to delete{' '}
         {paymentDetails

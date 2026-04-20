@@ -57,7 +57,6 @@ const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
       className={`formInputWithDropDown ${
         meta.touched && meta.error ? 'is-invalid' : ''
       }`}
-      style={{ position: 'relative' }}
     >
       <section data-aos="fade-up" data-aos-duration={`600`}>
         <label
@@ -70,9 +69,7 @@ const FormInputWithDropDown = ({ label, place, data, className, ...props }) => {
         </label>
 
         <div
-          style={{
-            border: meta.touched && meta.error ? '1px solid red' : undefined,
-          }}
+          className={meta.touched && meta.error ? 'form-input-error-border' : ''}
         >
           <input
             placeholder={place}

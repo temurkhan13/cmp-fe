@@ -103,63 +103,21 @@ const Node = ({ data }) => {
   }, [data.nodeData]);
 
   return (
-    <div
-      className="node"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        gap: '12px',
-      }}
-    >
-      <div
-        style={{
-          border: '1px solid rgba(10, 10, 10, 1)',
-          background: 'white',
-          borderRadius: 5,
-          width: '250px',
-          minHeight: '200px',
-          //   position:'relative'
-        }}
-      >
+    <div className="node node-wrapper">
+      <div className="node-container">
         {!data.isRoot ? (
           <Handle
             type="target"
             position={Position.Top}
-            style={{ background: '#555' }}
+            className="node-handle-target"
           />
         ) : null}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            flexDirection: 'column',
-          }}
-        >
-          <div
-            className="custom-drag-handle"
-            style={{
-              width: '100%',
-              textAlign: 'start',
-              borderTopLeftRadius: 4,
-              borderTopRightRadius: 4,
-              background: 'black',
-              padding: '5px',
-            }}
-          >
+        <div className="node-inner">
+          <div className="custom-drag-handle node-header">
             {!hideLabelInput ? (
               <input
                 ref={inputRef}
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  outline: 'none',
-                  borderRadius: '6px',
-                  padding: '5px',
-                  background: 'black',
-                  color: 'white',
-                }}
+                className="node-label-input"
                 value={localLabel}
                 onChange={(e) => setLocalLabel(e.target.value)}
                 onBlur={handleHeadingChangeBlur}
@@ -167,13 +125,7 @@ const Node = ({ data }) => {
               ></input>
             ) : (
               <span
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '800',
-                  color: '#FFFFFF',
-                  textAlign: 'start',
-                  wordWrap: 'break-word',
-                }}
+                className="node-label-text"
                 onClick={() => {
                   setHideLabelInput(false);
                   setTimeout(() => {
@@ -189,18 +141,14 @@ const Node = ({ data }) => {
           </div>
 
           <ul
-            style={{
-              width: '100%',
-              height: '100%',
-              padding: '10px',
-            }}
+            className="node-items-list"
             onMouseEnter={(e) => {
               e.stopPropagation();
             }}
           >
             {nodeData?.map((data, index) => (
               <li
-                style={{ listStyleType: 'none', marginBottom: '10px' }}
+                className="node-item-li"
                 key={data?.id}
                 draggable
                 onMouseEnter={(e) => {
@@ -241,19 +189,7 @@ const Node = ({ data }) => {
 
           <div className="button-wrapper">
             <div
-              style={{
-                cursor: 'pointer',
-                width: '95%',
-                height: '36px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '6px',
-                gap: '12px',
-                padding: '10px',
-
-                background: 'rgba(0, 0, 0, 0.05)',
-              }}
+              className="node-add-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 addNodeChild();
@@ -264,18 +200,7 @@ const Node = ({ data }) => {
             {/* <div style={{ position: 'absolute', top:'100' }}> */}
             {data.nodeData.length === 0 && data.showGenerateAIButton && (
               <button
-                style={{
-                  width: '95%',
-                  background: isLoading ? '#a8c016' : '#C3E11B',
-                  border: 'none',
-                  padding: '5px',
-                  borderRadius: '6px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  marginTop: '5px',
-                  cursor: isLoading ? 'wait' : 'pointer',
-                  opacity: isLoading ? 0.7 : 1,
-                }}
+                className={`node-generate-btn ${isLoading ? 'node-generate-btn--loading' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (data.nodeData.length === 0 && !data.isRoot) {
@@ -309,7 +234,7 @@ const Node = ({ data }) => {
             </BiPlusCircle> */}
           </div>
 
-          <Handle type="source" position={Position.Bottom} style={{}} />
+          <Handle type="source" position={Position.Bottom} />
         </div>
       </div>
     </div>

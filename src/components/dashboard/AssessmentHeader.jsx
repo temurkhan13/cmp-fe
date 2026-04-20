@@ -177,9 +177,8 @@ const Header = () => {
                 'https://avatar.iran.liara.run/public/boy?username=Ash'
               }
               alt="profile"
-              className="ProfileImage"
+              className="ProfileImage topbar-profile-img"
               onClick={toggleProfileDropdown}
-              style={{ cursor: 'pointer' }}
               onError={(e) =>
                 (e.target.src =
                   'https://avatar.iran.liara.run/public/boy?username=Ash')
@@ -209,113 +208,6 @@ const Header = () => {
         </Modal>
       )}
 
-      <style>{`
-        .header {
-          display: flex;
-          justify-content: end;
-          padding: 1% 2%;
-          box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
-        }
-
-        .ProfileBar {
-          display: flex;
-          align-items: center;
-          position: relative;
-        }
-
-        .bellWrapper {
-          position: relative;
-          cursor: pointer;
-        }
-
-        .BellIcon {
-          height: 3rem;
-          width: 3rem;
-          color: gray;
-          margin-right: 1rem;
-          transition: color 0.3s ease;
-        }
-
-        .BellIcon:hover {
-          color: #007bff;
-        }
-
-        .notificationDot {
-          position: absolute;
-          top: 0;
-          right: 0.7rem;
-          width: 1.2rem;
-          height: 1.2rem;
-          background-color: red;
-          border-radius: 50%;
-          border: 2px solid white;
-        }
-
-        .ProfileImage {
-          height: 4rem;
-          width: 4rem;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-
-        .dropdownMenu {
-          position: absolute;
-          top: 5rem;
-          right: 0;
-          background-color: #fff;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          padding: 0.5rem;
-          z-index: 1001;
-          width: 18rem;
-        }
-
-        .dropdownItem {
-          display: flex;
-          align-items: center;
-          padding: 1rem;
-          cursor: pointer;
-          font-size: 1.4rem;
-          border-radius: 5px;
-          transition: background-color 0.3s ease;
-        }
-
-        .dropdownItem:hover {
-          background-color: #f0f0f0;
-        }
-
-        .dropdownIcon {
-          margin-right: 1rem;
-          font-size: 1.8rem;
-        }
-
-        .initials-placeholder {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #C3E11D;
-          color: #0B1444;
-          font-size: 18px;
-          font-weight: bold;
-          text-align: center;
-          margin-right: 8px;
-          cursor: pointer;
-        }
-
-        .header-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0);
-          z-index: 0;
-        }
-      `}</style>
     </header>
   );
 };

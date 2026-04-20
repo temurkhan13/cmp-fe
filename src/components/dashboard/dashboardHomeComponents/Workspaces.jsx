@@ -174,9 +174,8 @@ const Workspaces = ({
         {workspaces?.map((workspace, index) => (
           <div key={workspace.id || index} className="icon-container">
             <BsThreeDotsVertical
-              style={{ cursor: 'pointer' }}
               size={18}
-              className="three-dots-vertical"
+              className="three-dots-vertical cursor-pointer"
               onClick={() => toggleDropdown(index)}
             />
             {openDropdown === index && (
@@ -491,7 +490,7 @@ const Workspaces = ({
 @media (max-width: 600px) {
   .icons {
     padding: 5px 1rem;
-    justify-content: center;
+    // justify-content: center;
   }
   .icon-container {
     padding: 1rem;
@@ -571,12 +570,7 @@ const ModalSections = ({
           </div>
         </div>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
+        <div className="confirm-modal-actions">
           <button
             className="modal-buttons link_chat"
             onClick={() => handleWorkspaceSwitch(selectedWorkspace)}

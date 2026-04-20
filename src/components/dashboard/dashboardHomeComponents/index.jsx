@@ -28,7 +28,7 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { BsFilePlayFill } from 'react-icons/bs';
 
-import './styles/DashboardHome.css';
+import './styles/dashboard-home.scss';
 import { SkeletonCard, SkeletonStatCards } from '../../common/Skeleton';
 
 const SectionGrid = ({ title, items, itemType, onRemove }) => {
@@ -216,7 +216,7 @@ const DashboardHomeComp = () => {
     return (
       <div className="dashboard">
         <SkeletonStatCards />
-        <div style={{ padding: '1rem 2.5rem' }}>
+        <div className="dashboard-home-padding">
           <SkeletonCard count={3} />
           <SkeletonCard count={3} />
         </div>
@@ -254,7 +254,7 @@ const DashboardHomeComp = () => {
       />
 
       <section className="folder-details">
-        <div style={{ padding: '0.25rem' }}>
+        <div className="dashboard-home-padding--sm">
           {/* Rendering SectionGrid Components Conditionally */}
           {folderData?.[0]?.chats?.length > 0 ? (
             <SectionGrid

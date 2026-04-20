@@ -75,7 +75,7 @@ const PaymentModal = ({ onClose, details }) => {
           <AiOutlineClose />
         </button>
         <h2 className="modal-title">Add Card Details</h2>
-        <hr style={{ marginBottom: '2rem' }} />
+        <hr className="settings-divider--sm" />
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Card Holder Name</label>

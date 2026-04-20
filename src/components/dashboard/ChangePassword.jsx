@@ -141,70 +141,9 @@ const ChangePassword = ({ onChangePassword }) => {
         {loading ? 'Updating...' : 'Update Password'}
       </button>
       {successMessage && (
-        <p style={{ color: 'green', fontSize: '1.3rem', marginTop: '0.5rem' }}>{successMessage}</p>
+        <p className="change-password-success">{successMessage}</p>
       )}
 
-      <style>{`
-        .change-password {
-          // max-width: 40rem;
-          margin: auto;
-          // margin-top:2rem;
-          // padding: 2rem;
-          // border: 0.1rem solid #ddd;
-          border-radius: 0.8rem;
-          // background-color: #f9f9f9;
-          // box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
-          
-        }
-        .input-group {
-          position: relative;
-          margin-top: 1rem;
-          width: 48%;
-        }
-        .new-password-fields {
-          display: flex;
-          gap: 2rem;
-        }
-        .reset-password-input {
-          width: 100%;
-          padding: 1rem;
-          border: 0.1rem solid #ddd;
-          border-radius: 1rem;
-          outline: none;
-          text-align: left;
-        }
-          .reset-password-input::placeholder {
-          font-size: 1.5rem;
-          text-align: left;
-          }
-        .field-label {
-          font-size: 1.4rem;
-        }
-        .icon {
-          position: absolute;
-          right: 1rem;
-          top: 50%;
-          cursor: pointer;
-          font-size: 1.5rem;
-          color: gray;
-        }
-        .error {
-          color: red;
-          font-size: 1.2rem;
-          margin-top: 0.5rem;
-        }
-        .update-button {
-          background-color: #c3e11d;
-          color: #0b1444;
-          font-size: 1.4rem;
-          font-weight: 500;
-          padding: 1rem 2rem;
-          border: none;
-          border-radius: 0.8rem;
-          cursor: pointer;
-          margin-top: 1.5rem;
-        }
-      `}</style>
     </form>
   );
 };

@@ -40,12 +40,7 @@ const Settings = () => {
           </div>
         </div>
 
-        <div
-          className="row"
-          style={{
-            justifyContent: 'space-between',
-          }}
-        >
+        <div className="row comments-row--spaced">
           <img src={UserImg} alt="userImage" />
           <div className="inputContianer">
             <input type="text" placeholder="Reply" />

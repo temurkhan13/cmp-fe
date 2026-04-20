@@ -25,11 +25,7 @@ const Help = () => {
       </div>
       <hr />
 
-      <div
-        style={{
-          margin: '2% 4%',
-        }}
-      >
+      <div className="bookmark-content">
         <p>Today</p>
         {Rowdata.map(({ name, text, saveBy }, index) => {
           return (
