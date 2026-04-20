@@ -1,0 +1,711 @@
+// Variables and mixins auto-injected by Vite additionalData
+
+// ─── NoData ──────────────────────────────────────────────
+.sitemap-nodata {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sitemap-nodata__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sitemap-nodata__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(10, 10, 10, 1);
+}
+
+.sitemap-nodata__create-btn {
+  @include btn-primary;
+  width: 100%;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.sitemap-nodata__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.sitemap-nodata__heading {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(10, 10, 10, 1);
+}
+
+.sitemap-nodata__desc {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(10, 10, 10, 0.46);
+  text-align: center;
+}
+
+// ─── Node ────────────────────────────────────────────────
+.node-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.node-container {
+  border: 1px solid rgba(10, 10, 10, 1);
+  background: white;
+  border-radius: 5px;
+  width: 250px;
+  min-height: 200px;
+}
+
+.node-handle-target {
+  background: #555;
+}
+
+.node-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.node-header {
+  width: 100%;
+  text-align: start;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background: black;
+  padding: 5px;
+}
+
+.node-label-input {
+  border: none;
+  width: 100%;
+  outline: none;
+  border-radius: 6px;
+  padding: 5px;
+  background: black;
+  color: white;
+}
+
+.node-label-text {
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-align: start;
+  word-wrap: break-word;
+}
+
+.node-items-list {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.node-item-li {
+  list-style-type: none;
+  margin-bottom: 10px;
+}
+
+.node-add-btn {
+  cursor: pointer;
+  width: 95%;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.node-generate-btn {
+  @include btn-primary;
+  width: 95%;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 5px;
+
+  &--loading {
+    background: #a8c016;
+    cursor: wait;
+    opacity: 0.7;
+  }
+}
+
+// ─── NodeItem ────────────────────────────────────────────
+.node-item {
+  position: relative;
+  padding: 5px;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.node-item--editing {
+  background: rgba(0, 102, 255, 0.21);
+}
+
+.node-item__toolbar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.node-item__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.node-item__heading {
+  color: rgba(10, 10, 10, 1);
+  font-weight: 500;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+.node-item__desc {
+  color: rgba(10, 10, 10, 0.68);
+  font-weight: 400;
+  font-size: 12px;
+  word-wrap: break-word;
+}
+
+.node-item__textarea {
+  border: none;
+  width: 100%;
+  outline: none;
+  border-radius: 6px;
+  padding: 5px;
+  background: rgba(0, 102, 255, 0.21);
+}
+
+.node-item__textarea--desc {
+  margin-top: 5px;
+  color: rgba(0, 102, 255, 1);
+  height: 100px;
+}
+
+// ─── ContextMenu ─────────────────────────────────────────
+.ctx-menu {
+  position: absolute;
+  top: -15px;
+  left: 50px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 999;
+  background-color: white;
+  color: rgba(10, 10, 10, 0.68);
+  font-weight: 500;
+  font-size: 12px;
+  border: 1px solid rgba(10, 10, 10, 0.1);
+}
+
+.ctx-menu__row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.ctx-menu__action {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ctx-menu__action--delete {
+  color: #c00;
+}
+
+.ctx-menu__color-wrapper {
+  position: relative;
+}
+
+.ctx-menu__color-swatch {
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.ctx-menu__color-popover {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0;
+}
+
+// ─── List & Playbook-List shared ─────────────────────────
+.sitemap-list-page {
+  width: 100%;
+  height: 80vh;
+  padding: 2rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 600px) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.sitemap-list-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sitemap-list-search-wrapper {
+  margin-bottom: 0.5rem;
+}
+
+.sitemap-list-search {
+  @include form-input;
+  max-width: 300px;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+}
+
+.sitemap-list-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sitemap-list-loading,
+.sitemap-list-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 1.25rem 0;
+}
+
+.sitemap-list-loading {
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.sitemap-card {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 0 1rem 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.sitemap-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sitemap-card__rename-input {
+  font-size: 1.5rem;
+  font-weight: 500;
+  border: 1px solid #C3E11D;
+  border-radius: 6px;
+  padding: 4px 8px;
+  outline: none;
+  width: 100%;
+}
+
+.sitemap-card__name {
+  font-size: 1.5rem;
+  font-weight: 500;
+  flex: 1;
+}
+
+.sitemap-card__icon-faded {
+  opacity: 0.4;
+}
+
+.sitemap-card__icon-delete {
+  opacity: 0.4;
+  color: #c00;
+}
+
+.sitemap-card__date {
+  font-size: 1.2rem;
+  color: rgba(10, 10, 10, 0.46);
+}
+
+.sitemap-list-empty {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 16px 0;
+}
+
+// ─── Playbook-List extras ────────────────────────────────
+.playbook-list-page {
+  width: 100%;
+  height: 80vh;
+  padding: 2rem 3rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  @media (max-width: 600px) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.playbook-create-form {
+  margin: 1rem 3rem;
+  padding: 1.5rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.playbook-create-form__label {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.playbook-templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.playbook-template-btn {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #f9f9f9;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+
+  &--selected {
+    border: 2px solid #C3E11D;
+    background: #fafff0;
+  }
+}
+
+.playbook-create-input {
+  @include form-input;
+  padding: 10px 14px;
+  font-size: 1rem;
+}
+
+.playbook-create-textarea {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  resize: vertical;
+}
+
+.playbook-create-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.playbook-cancel-btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.playbook-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #888;
+}
+
+.playbook-empty__icon {
+  opacity: 0.3;
+  margin-bottom: 1rem;
+}
+
+.playbook-empty__title {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.playbook-empty__desc {
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+
+.playbook-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 0;
+  margin-top: 1rem;
+}
+
+.playbook-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// ─── Pagination ──────────────────────────────────────────
+.playbook-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 3rem 0;
+  flex-wrap: wrap;
+}
+
+.playbook-page-btn {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+
+  &--active {
+    border: 2px solid #C3E11D;
+    background: #fafff0;
+    font-weight: 600;
+    cursor: default;
+  }
+
+  &--disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.playbook-pagination__ellipsis {
+  padding: 0 4px;
+  color: #999;
+}
+
+.playbook-pagination__count {
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+// ─── SitemapLayoutFlow ───────────────────────────────────
+.flow-panel-row {
+  display: flex;
+  gap: 8px;
+}
+
+.flow-layout-btn {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.flow-convert-btn {
+  @include btn-primary;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+
+  &--loading {
+    background: #a8c016;
+    cursor: wait;
+    opacity: 0.7;
+  }
+}
+
+.flow-right-panel {
+  display: flex;
+  gap: 10px;
+}
+
+.flow-prompt-box {
+  width: 525px;
+  height: 370px;
+  border: 1px solid rgba(10, 10, 10, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 6px;
+  background: white;
+}
+
+.flow-prompt-header {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flow-prompt-title {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Poppins';
+}
+
+.flow-prompt-body {
+  width: 100%;
+  height: 80%;
+  position: relative;
+}
+
+.flow-keywords-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid rgba(10, 10, 10, 0.1);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  min-height: 34px;
+  align-items: center;
+}
+
+.flow-keyword-tag {
+  background: #C3E11D;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.flow-keyword-remove {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.flow-keyword-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 80px;
+  font-size: 13px;
+}
+
+.flow-prompt-textarea {
+  width: 100%;
+  outline: none;
+  resize: none;
+  border-radius: 6px;
+  height: calc(85% - 42px);
+  padding: 10px;
+  border: 1px solid rgba(10, 10, 10, 0.1);
+}
+
+.flow-generate-btn {
+  @include btn-primary;
+  width: 100%;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.flow-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  background: white;
+  border: 1px solid lightgray;
+  border-radius: 6px;
+  padding: 0 5px;
+  height: 150px;
+}
+
+.flow-sidebar-logo-btn {
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.flow-sidebar-logo-img {
+  width: 100%;
+  height: 100%;
+}
+
+.flow-loading-panel {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ─── Edge ────────────────────────────────────────────────
+.sitemap-edge-delete {
+  position: absolute;
+  pointer-events: all;
+  cursor: pointer;
+}

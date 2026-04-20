@@ -73,9 +73,8 @@ const AssessmentMedia = ({ images = [], documents = [], links = [] }) => {
                 {documents.map((doc, i) => (
                   <div
                     key={i}
-                    className="md-list-item"
+                    className={`md-list-item ${doc.url ? 'md-list-item--clickable' : 'md-list-item--default'}`}
                     onClick={() => doc.url && window.open(doc.url, '_blank')}
-                    style={{ cursor: doc.url ? 'pointer' : 'default' }}
                   >
                     <div className="md-list-icon md-list-icon--doc"><FiFile size={18} /></div>
                     <div className="md-list-info">
@@ -99,9 +98,8 @@ const AssessmentMedia = ({ images = [], documents = [], links = [] }) => {
                 {links.map((link, i) => (
                   <div
                     key={i}
-                    className="md-list-item"
+                    className="md-list-item md-list-item--clickable"
                     onClick={() => link.url && window.open(link.url, '_blank')}
-                    style={{ cursor: 'pointer' }}
                   >
                     <div className="md-list-icon md-list-icon--link"><FiLink size={18} /></div>
                     <div className="md-list-info">

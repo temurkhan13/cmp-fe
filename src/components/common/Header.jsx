@@ -72,7 +72,7 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
     <div className="topbar">
       <div>
         <Components.Feature.HeaderDropDown />
-        <div className="selected-workspace-name">
+        <div className="selected-workspace-name chatpage-header">
           <p>
             Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
           </p>
@@ -80,14 +80,8 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
         {(siteMapId && location.pathname === '/sitemap/new') ||
         location.pathname === `/sitemap/${siteMapId}` ? (
           <div>
-            <div
-              style={{
-                margin: '16px 0',
-                display: 'flex',
-                justifyContent: 'end',
-              }}
-            >
-              <div style={{}}>
+            <div className="topbar-sitemap-actions">
+              <div>
                 {/* <a
                   style={{
                     width: '100%',
@@ -157,9 +151,8 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
               'https://avatar.iran.liara.run/public/boy?username=Ash'
             }
             alt="profile"
-            className="ProfileImage"
+            className="ProfileImage topbar-profile-img"
             onClick={toggleProfileDropdown}
-            style={{ cursor: 'pointer' }}
             onError={(e) =>
               (e.target.src =
                 'https://avatar.iran.liara.run/public/boy?username=Ash')
@@ -186,27 +179,6 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
           />
         </Modal>
       )}
-      <style>{`
-        .topbar .initials-placeholder {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #C3E11D;
-          color: #0B1444;
-          font-size: 18px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-        .topbar .ProfileImage {
-          width: 4rem;
-          height: 4rem;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-      `}</style>
     </div>
   );
 };

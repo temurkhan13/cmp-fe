@@ -4,7 +4,7 @@ import Home from './Home';
 import User from './User';
 import Settings from './Settings';
 import Help from './Help';
-import '../../style/chat/ChatMenu.scss';
+import './chat-menu.scss';
 import { MdOutlineMoreTime } from 'react-icons/md';
 import { MdPermMedia } from 'react-icons/md';
 import { BiSolidCommentMinus } from 'react-icons/bi';
@@ -47,18 +47,10 @@ const ChatMenu = () => {
             transition={{ duration: 0.5 }}
             className="menu-content"
           >
-            <div style={{ backgroundColor: 'white' }}>
+            <div className="chat-menu-white-bg">
               <IoMdClose
                 onClick={() => setActiveMenu(null)}
-                style={{
-                  position: 'absolute',
-                  top: 5,
-                  right: 3,
-                  fontSize: '20px',
-                  backgroundColor: 'lightgray',
-                  borderRadius: '10px',
-                  color: 'gray',
-                }}
+                className="chat-close-icon"
               />
               <div className="content">{renderActiveMenu()}</div>
             </div>

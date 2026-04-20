@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 
+import './custom-modal.scss';
+
 const ShareModal = ({ members, onClose }) => {
   const dispatch = useDispatch();
 
@@ -117,55 +119,48 @@ const ShareModal = ({ members, onClose }) => {
 
   return (
     <>
-      <div style={styles.ShareModalOverlay} onClick={onClose}>
-        <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-          <div style={styles.header}>
-            <h3 style={styles.shareHeading}>Share "AI Assistant Test File"</h3>
-            <div style={styles.closeLinkBtn}>
-              <button style={styles.copyLinkBtn}>
+      <div className="custom-modal-share-overlay" onClick={onClose}>
+        <div className="custom-modal-share-dialog" onClick={(e) => e.stopPropagation()}>
+          <div className="custom-modal-share-header">
+            <h3 className="custom-modal-share-heading">Share "AI Assistant Test File"</h3>
+            <div className="custom-modal-close-link-btn">
+              <button className="custom-modal-copy-link-btn">
                 <IoMdLink size={18} /> Copy Link
               </button>
-              <span style={styles.closeButton} onClick={onClose}>
-                <RxCross2
-                  style={{
-                    background: '#f1f1f1',
-                    borderRadius: '50%',
-                    fontSize: '1.8rem',
-                    padding: '0.2rem',
-                  }}
-                />
+              <span className="custom-modal-share-close-button" onClick={onClose}>
+                <RxCross2 className="custom-modal-share-cross-icon" />
               </span>
             </div>
           </div>
-          <hr style={styles.straightLine} />
-          <div style={styles.inputContainer}>
-            <div style={styles.inputGroup}>
+          <hr className="custom-modal-straight-line" />
+          <div className="custom-modal-input-container">
+            <div className="custom-modal-input-group">
               <input
-                style={styles.input}
+                className="custom-modal-share-input"
                 type="text"
                 placeholder="Add people by email or name"
                 value={inputValue}
                 onChange={handleInputChange}
               />
               <select
-                style={styles.select}
+                className="custom-modal-select"
                 value={role}
                 onChange={handleRoleSelectChange}
               >
-                <option value="edit" style={styles.rolesOption}>
+                <option value="edit" className="custom-modal-roles-option">
                   Can Edit
                 </option>
-                <option value="view" style={styles.rolesOption}>
+                <option value="view" className="custom-modal-roles-option">
                   Can View
                 </option>
               </select>
             </div>
             {suggestedUsers.length > 0 && (
-              <ul style={styles.suggestionList}>
+              <ul className="custom-modal-suggestion-list">
                 {suggestedUsers.map((user) => (
                   <li
                     key={user.userId}
-                    style={styles.suggestionItem}
+                    className="custom-modal-suggestion-item"
                     onClick={() => handleUserSelect(user)}
                   >
                     {user.name} ({user.email})
@@ -175,28 +170,28 @@ const ShareModal = ({ members, onClose }) => {
             )}
             <button
               disabled={isInviteButtonDisabled}
+              className="custom-modal-invite-btn"
               style={{
-                ...styles.inviteBtn,
-                backgroundColor: isInviteButtonDisabled ? '#f1f1f1' : '#C3E11D',
-                color: isInviteButtonDisabled ? '#666' : '#0B1444',
-                cursor: isInviteButtonDisabled ? 'not-allowed' : 'pointer',
+                '--invite-btn-bg': isInviteButtonDisabled ? '#f1f1f1' : '#C3E11D',
+                '--invite-btn-color': isInviteButtonDisabled ? '#666' : '#0B1444',
+                '--invite-btn-cursor': isInviteButtonDisabled ? 'not-allowed' : 'pointer',
               }}
               onClick={handleSendInvite}
             >
               Send Invite
             </button>
           </div>
-          <hr style={styles.straightLine} />
+          <hr className="custom-modal-straight-line" />
 
-          <ul style={styles.members}>
+          <ul className="custom-modal-members">
             {userRoles.map((user) => (
-              <li key={user.userId} style={styles.member}>
-                <div style={styles.memberInfo}>
+              <li key={user.userId} className="custom-modal-member">
+                <div className="custom-modal-member-info">
                   <FaUserCircle size={30} />
-                  <span style={styles.memberName}>{user.name}</span>
+                  <span className="custom-modal-member-name">{user.name}</span>
                 </div>
                 <select
-                  style={styles.select}
+                  className="custom-modal-select"
                   value={user.role}
                   onChange={(e) =>
                     handleRoleChange(user.userId, e.target.value)
@@ -210,169 +205,13 @@ const ShareModal = ({ members, onClose }) => {
           </ul>
 
           {/* Add the new button here */}
-          <button style={styles.applyBtn} onClick={handleApplyChanges}>
+          <button className="custom-modal-apply-btn" onClick={handleApplyChanges}>
             Apply Changes
           </button>
         </div>
       </div>
     </>
   );
-};
-
-const styles = {
-  ShareModalOverlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modal: {
-    background: '#fff',
-    borderRadius: '0.5rem',
-    padding: '2rem',
-    boxShadow: '0 0.125rem 0.625rem rgba(0,0,0,0.1)',
-    zIndex: 1000,
-    position: 'relative',
-  },
-  shareHeading: {
-    fontSize: '1.7rem',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1rem',
-  },
-  inputContainer: {
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    gap: '1rem',
-    position: 'relative',
-  },
-  inputGroup: {
-    display: 'flex',
-    marginBottom: '1rem',
-    marginTop: '1rem',
-    border: '0.0625rem solid #ccc',
-    paddingLeft: '1rem',
-    paddingRight: '1rem',
-    borderRadius: '0.8rem',
-    position: 'relative',
-  },
-  input: {
-    flex: 1,
-    padding: '1rem',
-    borderRadius: '0.25rem',
-    marginRight: '0.5rem',
-    width: '30rem',
-    border: 'none',
-    outline: 'none',
-  },
-  select: {
-    borderRadius: '0.25rem',
-    padding: '0.5rem',
-    fontSize: '1.4rem',
-    border: 'none',
-    outline: 'none',
-  },
-  rolesOption: {
-    fontSize: '1.4rem',
-    color: '#333',
-    outline: 'none',
-    border: 'none',
-  },
-  inviteBtn: {
-    border: 'none',
-    outline: 'none',
-    padding: '1rem',
-    borderRadius: '0.8rem',
-  },
-  applyBtn: {
-    position: 'relative',
-    // bottom: '0rem',
-    // right: '0rem',
-    left: '40rem',
-    top: '1rem',
-    border: 'none',
-    outline: 'none',
-    padding: '0.75rem 1.5rem',
-    borderRadius: '0.8rem',
-    backgroundColor: '#C3E11D',
-    color: '#0B1444',
-    cursor: 'pointer',
-    fontSize: '1.4rem',
-    fontWeight: '500',
-  },
-  members: {
-    listStyleType: 'none',
-    padding: '0',
-  },
-  member: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '0.5rem 0',
-  },
-  memberInfo: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  memberName: {
-    marginLeft: '0.5rem',
-    fontSize: '1.4rem',
-    color: 'black',
-  },
-  closeButton: {
-    cursor: 'pointer',
-  },
-  straightLine: {
-    borderTop: '0.0625rem solid lightgray',
-  },
-  copyLinkBtn: {
-    border: 'none',
-    outline: 'none',
-    background: 'white',
-    color: 'blue',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    fontSize: '1.4rem',
-    fontWeight: '500',
-  },
-  closeLinkBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '2rem',
-    fontWeight: '500',
-    cursor: 'pointer',
-    gap: '1.5rem',
-  },
-  suggestionList: {
-    position: 'absolute',
-    top: '100%',
-    left: '0',
-    right: '0',
-    zIndex: '1000',
-    background: '#fff',
-    boxShadow: '0 0.125rem 0.625rem rgba(0,0,0,0.1)',
-    borderRadius: '0.5rem',
-    maxHeight: '15rem',
-    overflowY: 'auto',
-    border: '0.0625rem solid #ccc',
-  },
-  suggestionItem: {
-    padding: '0.5rem 1rem',
-    cursor: 'pointer',
-    borderBottom: '0.0625rem solid #eee',
-    fontSize: '1.4rem',
-    color: '#333',
-  },
 };
 
 ShareModal.propTypes = {

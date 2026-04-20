@@ -60,6 +60,10 @@ const PageHeader = ({ title }) => {
       <style>{`
         .page-header {
           padding: 1rem 3rem;
+
+          @media (max-width: 600px) {
+            padding: 1rem 1.5rem;
+          }
         }
         .page-header__title {
           font-size: 3rem;

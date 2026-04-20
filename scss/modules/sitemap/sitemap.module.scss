@@ -1,0 +1,27 @@
+.flow-container {
+  height: 90vh;
+  width: 100%;
+}
+
+.selected-workspace-name {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+
+  p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .workspace-badge {
+    background-color: $color_parentColor;
+    color: $color_BlueDark;
+    padding: 0.25rem 0.75rem;
+    border-radius: 7px;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+}

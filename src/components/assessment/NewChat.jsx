@@ -96,7 +96,7 @@ const NewChat = () => {
     const chatContainer = chatContainerRef.current;
     if (
       chatContainer.scrollHeight - chatContainer.scrollTop <=
-        chatContainer.clientHeight * 1.1 &&
+      chatContainer.clientHeight * 1.1 &&
       !loading
     ) {
       setLoading(true);
@@ -114,21 +114,18 @@ const NewChat = () => {
 
   return (
     <div
-      className={`newChat ${sidebarCollapsed ? 'collapsed' : ''}`}
+      className={`newChat ${sidebarCollapsed ? 'collapsed' : ''} newchat-hidden`}
       ref={chatContainerRef}
-      style={{ overflowY: 'auto', height: '80vh', display: 'none' }}
     >
       <div
-        className={`sidebar-header ${
-          sidebarCollapsed ? 'header-collapsed' : ''
-        }`}
+        className={`sidebar-header ${sidebarCollapsed ? 'header-collapsed' : ''
+          }`}
       >
         <div
           onClick={handleAddChat}
-          style={{ cursor: 'pointer' }}
-          className={`sidebar-header-title ${
-            sidebarCollapsed ? 'header-collapsed-title' : ''
-          }`}
+
+          className={`sidebar-header-title ${sidebarCollapsed ? 'header-collapsed-title' : ''
+            }`}
         >
           {!sidebarCollapsed && (
             <>
@@ -144,12 +141,12 @@ const NewChat = () => {
         {!sidebarCollapsed ? (
           <TbLayoutSidebarLeftCollapseFilled
             onClick={toggleSidebar}
-            style={{ cursor: 'pointer' }}
+            className="sidebar-toggle-icon"
           />
         ) : (
           <TbLayoutSidebarLeftExpandFilled
             onClick={toggleSidebar}
-            style={{ cursor: 'pointer' }}
+            className="sidebar-toggle-icon"
           />
         )}
       </div>
@@ -158,7 +155,7 @@ const NewChat = () => {
           <div
             className="explore-projects"
             onClick={toggleDropdown}
-            style={{ cursor: 'pointer' }}
+
           >
             <p>
               <RxDashboard size={20} />
@@ -168,7 +165,7 @@ const NewChat = () => {
               <div
                 className="explore-projects"
                 onClick={toggleDropdown}
-                style={{ cursor: 'pointer' }}
+
               >
                 {isDropdownOpen && (
                   <div className="projects-dropdown">
@@ -203,22 +200,10 @@ const NewChat = () => {
                 onClick={() => handleChatSelect(chat._id)}
                 onMouseEnter={() => setHoveredChatIndex(index)} // Set the hovered index on mouse enter
                 onMouseLeave={() => setHoveredChatIndex(null)} // Reset the hovered index on mouse leave
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '1rem',
-                  // margin: '0.5rem 0',
-                  justifyContent: 'space-between',
-                  fontSize: '1.5rem !important',
-                  color: 'black',
-                }}
-                className="chat-item-section"
+                className="chat-item-section newchat-chat-item"
               >
                 <Components.Feature.Text
-                  className="middium--light"
-                  style={{
-                    cursor: 'pointer',
-                  }}
+                  className="middium--light newchat-chat-text"
                 >
                   {chat.report[0].ReportTitle}
                 </Components.Feature.Text>
@@ -228,7 +213,7 @@ const NewChat = () => {
                       e.stopPropagation();
                       openModal(index, chat.chatId, e);
                     }}
-                    style={{ cursor: 'pointer', fontSize: '1.5rem' }}
+                    className="newchat-dots-icon"
                   />
                 )}
 

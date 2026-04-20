@@ -22,6 +22,9 @@
     &:focus {
       outline: none;
     }
+    &.is-invalid {
+      border: 1px solid $color_error;
+    }
   }
 
   & > div {

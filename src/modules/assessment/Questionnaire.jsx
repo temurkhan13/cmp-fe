@@ -152,7 +152,7 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
                 </button>
               </div>
               {submitError && (
-                <p style={{ color: '#dc2626', fontSize: '1.2rem', marginTop: '0.5rem' }}>
+                <p className={styles.submitError}>
                   {submitError}
                 </p>
               )}
@@ -163,7 +163,7 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
             <div className={styles.QuestionContainer}>
               <p>Organizational Change History</p>
               <p>{data.questionnaire.Questions[activeStep - 1].question}</p>
-              <div style={{ position: 'relative' }}>
+              <div className={styles.textareaWrapper}>
                 <textarea
                   name={`question-${data.questionnaire.Questions[activeStep - 1].id
                     }`}
@@ -173,37 +173,18 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
                     }`
                     ] || ''
                   }
+                  rows={7}
                   onChange={handleTextareaChange}
-                  className={styles.InputStyle}
-                  style={{ height: '150px' }}
+                  className={`${styles.InputStyle} ${styles.textareaInput}`}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    right: '10px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
+                <div className={styles.inspireContainer}>
                   <img
                     src={InpireMeIcon}
                     alt="Inspire Me"
                     onClick={handleInspireClick}
                   />
                   {loading && (
-                    <div
-                      style={{
-                        border: '2px solid rgba(0, 0, 0, 0.1)',
-                        borderTop: '2px solid #000',
-                        borderRadius: '50%',
-                        width: '16px',
-                        height: '16px',
-                        animation: 'spin 1s linear infinite',
-                        marginLeft: '8px',
-                      }}
-                    />
+                    <div className={styles.inspireSpinner} />
                   )}
                 </div>
               </div>

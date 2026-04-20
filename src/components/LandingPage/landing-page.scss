@@ -1,0 +1,187 @@
+#root {
+  max-width: 1580px;
+  margin: 0 auto;
+  font-family: Inter var, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
+    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
+    Noto Color Emoji;
+}
+
+.navbar-menu {
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+
+.navbar-menu.open {
+  max-height: 500px; /* Or a value that fits your content */
+  opacity: 1;
+}
+
+.text-gradient {
+  background: linear-gradient(
+    to right,
+    #47beba,
+    #c3e11d
+  ); /* Example gradient colors */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+/* Add this to your CSS file */
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  /* transform: scale(1.02); */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+}
+
+
+
+/* landingpage.css */
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+// @keyframes spin → defined globally in _animation.scss
+
+// ─── Legal pages (PrivacyPolicy & Terms) ────────────────
+.legal-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+.legal-page__title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.legal-page__date {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.legal-page__section {
+  margin-bottom: 2rem;
+}
+
+.legal-page__heading {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.legal-page__list {
+  padding-left: 2rem;
+  margin-top: 0.5rem;
+}
+
+.legal-page__contact {
+  margin-top: 0.5rem;
+}
+
+// ─── Layout ──────────────────────────────────────────────
+.landing-layout {
+  position: relative;
+  overflow: visible;
+}
+
+.landing-layout__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+// ─── Home ────────────────────────────────────────────────
+.landing-home {
+  max-width: 1580px;
+  margin: 0 auto;
+  background: radial-gradient(circle at 50% 0%, rgba(195, 225, 29, 0.08) 0%, transparent 50%), #f9f9f9;
+  overflow: visible;
+}
+
+// ─── Accordion ───────────────────────────────────────────
+.landing-accordion {
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.landing-accordion__header {
+  padding: 15px 25px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  font-size: 1.5rem;
+}
+
+.landing-accordion__arrow {
+  font-size: 18px;
+  position: absolute;
+  right: 15px;
+  transition: transform 0.3s ease-out;
+
+  &--open {
+    transform: rotate(90deg);
+  }
+
+  &--closed {
+    transform: rotate(0deg);
+  }
+}
+
+.landing-accordion__body {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+  font-size: 1.4rem;
+  line-height: 1.6;
+
+  &--open {
+    max-height: 500px;
+    opacity: 1;
+    padding: 15px 25px;
+  }
+
+  &--closed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 25px;
+  }
+}
+
+// ─── Pricing ─────────────────────────────────────────────
+.pricing-check-icon {
+  color: #C3E11D;
+  flex-shrink: 0;
+}

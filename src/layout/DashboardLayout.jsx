@@ -144,19 +144,17 @@ const DashboardLayout = ({ children }) => {
         <div className="logo_details">
           <div
             className="logo_name"
-            style={{ display: isOpen ? 'block' : 'none' }}
           >
             <div className="logo_content">
               <div className="logo_image">
                 <img
                   src={Sidebarlogo}
                   alt="logo"
-                  style={{ borderRadius: '10px' }}
                 />
               </div>
               <div className="logo_text">
-                <p style={{ fontSize: '20px', color: 'black' }}>ChangeAI</p>
-                <p style={{ fontSize: '10px', color: 'gray' }}>
+                <p className="logo-text__title">ChangeAI</p>
+                <p className="logo-text__subtitle">
                   By InnovationWorks
                 </p>
               </div>
@@ -174,13 +172,12 @@ const DashboardLayout = ({ children }) => {
             <Link
               to={path}
               key={path}
-              style={{ textDecoration: 'none', color: 'inherit' }}
               className={location.pathname === path ? 'active-link' : ''}
               onClick={handleNavClick}
             >
               <li className="link_namee">
-                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <i style={{ color: 'gray' }}>{Icon}</i>
+                <div className="nav-item-content">
+                  <i className="nav-item-icon">{Icon}</i>
                   <span className="link_name">{name}</span>
                 </div>
                 <span className="tooltip">{name}</span>
@@ -194,28 +191,15 @@ const DashboardLayout = ({ children }) => {
             <button
               className="upgrade-button"
               onClick={handlePlanRoute}
-              style={{
-                padding: isOpen ? '1.5rem 3rem' : '1rem',
-                marginRight: isOpen ? '2.5rem' : '3rem',
-                width: '100%',
-                backgroundColor: '#f0f0f0',
-                color: '#00316f',
-                fontWeight: '500',
-              }}
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span className="upgrade-button__content">
                 <GiArtificialHive className="upgrade-icon" />
-                <span
-                  style={{
-                    display: isOpen ? 'flex' : 'none',
-                    alignItems: 'center',
-                  }}
-                >
+                <span className="upgrade-button__text">
                   Upgrade Plan
                 </span>
               </span>
               {isOpen && (
-                <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
+                <p className="upgrade-button__description">
                   Get Change AI Starter Plan
                 </p>
               )}
@@ -232,35 +216,6 @@ const DashboardLayout = ({ children }) => {
       <SupportChat />
       <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
 
-      <style>{`
-        .navlist a {
-          color: #4b5563 !important;
-          text-decoration: none !important;
-        }
-        .navlist a:visited {
-          color: #4b5563 !important;
-        }
-        .navlist a:hover {
-          color: #1f2937 !important;
-        }
-        .navlist a:hover .link_namee {
-          background: rgba(0,0,0,0.04);
-          border-radius: 8px;
-        }
-        .navlist .active-link {
-          color: #0B1444 !important;
-          font-weight: 600;
-        }
-        .navlist .active-link .link_namee {
-          background: rgba(195,225,29,0.15);
-          border-radius: 8px;
-        }
-        .link_namee {
-          padding: 8px 12px;
-          border-radius: 8px;
-          transition: all 0.15s ease;
-        }
-      `}</style>
     </>
   );
 };

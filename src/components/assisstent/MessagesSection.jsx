@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import '@styles/chat/ChatMessage.scss';
+import '../assessment/chat-message.scss';
+import './assisstent.scss';
+import '../assessment/assessment.scss';
 import {
   FaCopy,
   FaThumbsUp,
@@ -625,11 +627,11 @@ const MessagesSection = ({ setCurrentChat }) => {
           type="file"
           id="file-input"
           onChange={handleFileChange}
-          style={{ display: 'none' }}
+          className="msg-file-input-hidden"
           multiple
         />
         {chatId && (isChatLoading || (isChatFetching && (!chat || (chat._id || chat.id) !== chatId))) ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <div className="asst-loading-center" style={{ height: '100%' }}>
             <ScaleLoader color="#00316E" />
           </div>
         ) : chatId && chat && chat.generalMessages.length > 0 ? (
@@ -661,7 +663,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                     }
                   >
                     {message && (message.sender || message.from) === 'user' ? (
-                      <div className="card user-card">
+                      <div className="card chat-card user-card">
                         <div className="user-avatar">
                           <UserAvatar
                             src={userProfilePhoto}
@@ -700,7 +702,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                             title="Copy"
                             onClick={() => handleCopyMessage(message.text)}
                           >
-                            <FaCopy style={{ cursor: 'pointer' }} />
+                            <FaCopy className="cursor-pointer" />
                             <span className="tooltip-assessment">Copy</span>
                           </div>
                           <div
@@ -776,7 +778,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                         </div>
                       </div>
                     ) : (
-                      <div className="card ai-card">
+                      <div className="card chat-card ai-card">
                         <div className="ai-avatar">
                           <UserAvatar
                             src={AiPic}
@@ -792,15 +794,10 @@ const MessagesSection = ({ setCurrentChat }) => {
                             </div>
                           )}
                           {message.comments && message.comments.length > 0 && (
-                            <div style={{ marginTop: '0.5rem', borderTop: '1px solid #eee', paddingTop: '0.5rem' }}>
+                            <div className="asst-comment-section">
                               {message.comments.map((c, ci) => (
-                                <div key={ci} style={{
-                                  display: 'flex', alignItems: 'center', gap: '0.4rem',
-                                  padding: '0.3rem 0', fontSize: '0.85rem', color: '#666',
-                                  position: 'relative',
-                                  group: 'comment',
-                                }}>
-                                  <FaCommentAlt style={{ fontSize: '0.65rem', color: '#aaa' }} />
+                                <div key={ci} className="asst-comment-item">
+                                  <FaCommentAlt className="asst-comment-icon" />
                                   {editingCommentId === (c._id || c.id) ? (
                                     <input
                                       autoFocus
@@ -820,18 +817,18 @@ const MessagesSection = ({ setCurrentChat }) => {
                                         if (e.key === 'Escape') setEditingCommentId(null);
                                       }}
                                       onBlur={() => setEditingCommentId(null)}
-                                      style={{ border: '1px solid #ddd', borderRadius: '4px', padding: '2px 6px', fontSize: '0.85rem', flex: 1 }}
+                                      className="asst-comment-input"
                                     />
                                   ) : (
                                     <>
-                                      <span style={{ fontWeight: 600, color: '#555' }}>{c.userName || c.user_name || 'You'}:</span>
-                                      <span style={{ flex: 1 }}>{c.text}</span>
+                                      <span className="asst-comment-user">{c.userName || c.user_name || 'You'}:</span>
+                                      <span className="asst-comment-text">{c.text}</span>
                                       <span
-                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#007bff', marginLeft: '0.5rem' }}
+                                        className="asst-comment-action asst-comment-action--edit"
                                         onClick={() => setEditingCommentId(c._id || c.id)}
                                       >Edit</span>
                                       <span
-                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#c00', marginLeft: '0.3rem' }}
+                                        className="asst-comment-action asst-comment-action--delete"
                                         onClick={async () => {
                                           const token = localStorage.getItem('token');
                                           const msgId = c.messageId || c.message_id || message._id;
@@ -843,23 +840,23 @@ const MessagesSection = ({ setCurrentChat }) => {
                                         }}
                                       >Delete</span>
                                       <span
-                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#28a745', marginLeft: '0.3rem' }}
+                                        className="asst-comment-action asst-comment-action--save"
                                         onClick={() => setReplyingCommentId(c._id || c.id)}
                                       >Reply</span>
                                     </>
                                   )}
                                   {c.replies && c.replies.length > 0 && (
-                                    <div style={{ marginLeft: '1.5rem', borderLeft: '2px solid #eee', paddingLeft: '0.5rem', marginTop: '0.2rem' }}>
+                                    <div className="asst-reply-section">
                                       {c.replies.map((r, ri) => (
-                                        <div key={ri} style={{ fontSize: '0.8rem', color: '#777', padding: '0.15rem 0' }}>
-                                          <span style={{ fontWeight: 600, color: '#555' }}>{r.userName || r.user_name || 'User'}:</span>{' '}
+                                        <div key={ri} className="asst-reply-item">
+                                          <span className="asst-comment-user">{r.userName || r.user_name || 'User'}:</span>{' '}
                                           <span>{r.text}</span>
                                         </div>
                                       ))}
                                     </div>
                                   )}
                                   {replyingCommentId === (c._id || c.id) && (
-                                    <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.3rem', marginLeft: '1.5rem', width: '100%' }}>
+                                    <div className="asst-reply-input-row">
                                       <input
                                         autoFocus
                                         placeholder="Write a reply... (Enter to send)"
@@ -883,10 +880,10 @@ const MessagesSection = ({ setCurrentChat }) => {
                                           }
                                           if (e.key === 'Escape') setReplyingCommentId(null);
                                         }}
-                                        style={{ border: '1px solid #ddd', borderRadius: '4px', padding: '4px 8px', fontSize: '0.85rem', flex: 1 }}
+                                        className="asst-reply-input"
                                       />
                                       <span
-                                        style={{ cursor: 'pointer', fontSize: '0.75rem', color: '#999', alignSelf: 'center' }}
+                                        className="asst-reply-cancel"
                                         onClick={() => setReplyingCommentId(null)}
                                       >Cancel</span>
                                     </div>
@@ -902,7 +899,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                             title="Copy"
                             onClick={() => handleCopyMessage(message.text)}
                           >
-                            <FaCopy style={{ cursor: 'pointer' }} />
+                            <FaCopy className="cursor-pointer" />
                             <span className="tooltip-assessment">Copy</span>
                           </div>
                           <div
@@ -947,7 +944,7 @@ const MessagesSection = ({ setCurrentChat }) => {
                             <FaCommentAlt
                               data-message-id={message._id}
                               onClick={handleCommentClick}
-                              style={{ cursor: 'pointer' }}
+                              className="cursor-pointer"
                             />
                             <span className="tooltip-assessment">Comment</span>
                           </div>
@@ -995,19 +992,13 @@ const MessagesSection = ({ setCurrentChat }) => {
                 onDragOver={handleDragOver}
               >
                 <div className="file-upload-icon">
-                  <FaFile style={{ fontSize: '5rem', color: '#0066FFAD' }} />
+                  <FaFile className="asst-file-icon" />
                 </div>
 
                 <div className="file-upload-text">Upload Your File</div>
                 <div className="file-upload-info">
                   <label htmlFor="file-input">
-                    <span
-                      style={{
-                        color: 'rgba(0, 102, 255, 1)',
-                        textDecoration: 'none',
-                        cursor: 'pointer',
-                      }}
-                    >
+                    <span className="asst-comment-action--edit">
                       Click to upload
                     </span>{' '}
                     or drag and drop
@@ -1035,7 +1026,7 @@ const MessagesSection = ({ setCurrentChat }) => {
       </div>
 
       {error && (
-        <div className="error" style={{ color: 'red' }}>
+        <div className="error msg-error">
           {error}
         </div>
       )}
@@ -1065,36 +1056,17 @@ const MessagesSection = ({ setCurrentChat }) => {
             </button>
           </div>
         )}
-        <div className="input-container" style={{ position: 'relative' }}>
-          <div
-            style={{
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+        <div className="input-container msg-input-relative">
+          <div className="msg-inspire-wrapper">
             {!loading ? (
               <img
                 src={InpireMeIcon}
                 alt="Inspire Me"
                 onClick={handleInspireClick}
-                style={{
-                  width: '16px',
-                  height: '16px',
-                }}
+                className="msg-inspire-icon"
               />
             ) : (
-              <div
-                style={{
-                  border: '2px solid #c3e11d10',
-                  borderTop: '2px solid #c3e11d',
-                  borderRadius: '50%',
-                  width: '16px',
-                  height: '16px',
-                  animation: 'spin 1s linear infinite',
-                  marginLeft: '8px',
-                }}
-              />
+              <div className="msg-inspire-spinner" />
             )}
           </div>
 
@@ -1105,33 +1077,18 @@ const MessagesSection = ({ setCurrentChat }) => {
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleSendMessage(); // Send message on Enter
+                handleSendMessage();
               }
             }}
             onInput={(e) => {
-              e.target.style.height = 'auto'; // Reset height
-              e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height
+              e.target.style.height = 'auto';
+              e.target.style.height = `${e.target.scrollHeight}px`;
             }}
-            style={{
-              resize: 'none',
-              overflowY: 'auto',
-              height: 'auto',
-              maxHeight: '150px', // Set maximum height before scroll
-              width: '100%', // Full width of the container
-              border: 'none',
-              borderRadius: '10px',
-              padding: '1rem',
-              fontSize: '14px',
-              fontFamily: 'Arial, sans-serif',
-              boxSizing: 'border-box',
-              outline: 'none',
-              boxShadow: 'none !important',
-              marginLeft: '0.5rem'
-            }}
-            rows={1} // Initial row
+            className="msg-textarea"
+            rows={1}
           />
-          <div className="icons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <div className="icons msg-icons-row">
+            <label htmlFor="file-input" className="msg-attach-label">
               <IoAttach size={32} color="#888" title="Attach file" />
             </label>
             <IoSend

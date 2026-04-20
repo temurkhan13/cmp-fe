@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import '../../styles/chat/ChatMessage.scss';
+import './chat-message.scss';
+import './assessment.scss';
 import { LuPencil } from 'react-icons/lu';
 import {
   FaCopy,
@@ -691,7 +692,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
           type="file"
           id="file-input"
           onChange={handleFileChange}
-          style={{ display: 'none' }}
+          className="msg-file-input-hidden"
           multiple
         />
 
@@ -713,7 +714,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 {/* User-uploaded file or standalone user message */}
                 {item.role === 'user' && (
                   <div className="chat-container-assisstant right">
-                    <div className="card user-card">
+                    <div className="card chat-card user-card">
                       <div className="user-avatar">
                         <UserAvatar
                           src={userProfilePhoto}
@@ -726,8 +727,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                       </div>
                       <div className="msg">
                         {item.file && (
-                          <div style={{ marginBottom: '0.5rem' }}>
-                            <a href={item.file} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+                          <div className="msg-file-link">
+                            <a href={item.file} target="_blank" rel="noopener noreferrer">
                               {item.fileName || 'Attached file'}
                             </a>
                           </div>
@@ -741,7 +742,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 {/* AI message */}
                 {item.role === 'ai' && (
                   <div className="chat-container-assisstant left">
-                    <div className="card assistant-card">
+                    <div className="card chat-card assistant-card">
                       <div className="ai-avatar">
                         <UserAvatar
                           src={AiPic}
@@ -760,10 +761,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           onClick={() => { handleCopyMessage(item.question); setCopy((prev) => ({ ...prev, [item._id || item.id || index]: true })); }}
                         >
                           <FaCopy
-                            style={{
-                              cursor: 'pointer',
-                              color: copy[item._id || item.id || index] ? '#C3E11D' : '',
-                            }}
+                            className={copy[item._id || item.id || index] ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Copy</span>
                         </div>
@@ -773,11 +771,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           onClick={() => handleLikeClick(item)}
                         >
                           <FaThumbsUp
-                            style={
-                              reactions[item._id || item.id || index] === 'like'
-                                ? { color: '#C3E11D' }
-                                : { color: '' }
-                            }
+                            className={reactions[item._id || item.id || index] === 'like' ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Like</span>
                         </div>
@@ -787,17 +781,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           onClick={() => handleDislikeMessage(item)}
                         >
                           <FaThumbsDown
-                            style={
-                              reactions[item._id || item.id || index] === 'dislike' ? { color: '#C3E11D' } : {}
-                            }
+                            className={reactions[item._id || item.id || index] === 'dislike' ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Dislike</span>
                         </div>
                         <div className="message-icon-wrapper" title="Bookmark" onClick={() => handleAddBookmark(item)}>
                           <FaBookmark
-                            style={
-                              bookmark[item._id || item.id || index] ? { color: '#C3E11D' } : {}
-                            }
+                            className={bookmark[item._id || item.id || index] ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Bookmark</span>
                         </div>
@@ -808,7 +798,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 {/* Q&A format from backend (no role field) — AI question on left */}
                 {!item.role && item.question && (
                   <div className="chat-container-assisstant left">
-                    <div className="card assistant-card">
+                    <div className="card chat-card assistant-card">
                       <div className="ai-avatar">
                         <UserAvatar
                           src={AiPic}
@@ -827,10 +817,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           onClick={() => { handleCopyMessage(item.question); setCopy((prev) => ({ ...prev, [item._id || item.id || index]: true })); }}
                         >
                           <FaCopy
-                            style={{
-                              cursor: 'pointer',
-                              color: copy[item._id || item.id || index] ? '#C3E11D' : '',
-                            }}
+                            className={copy[item._id || item.id || index] ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Copy</span>
                         </div>
@@ -840,11 +827,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           onClick={() => handleLikeClick(item)}
                         >
                           <FaThumbsUp
-                            style={
-                              reactions[item._id || item.id || index] === 'like'
-                                ? { color: '#C3E11D' }
-                                : { color: '' }
-                            }
+                            className={reactions[item._id || item.id || index] === 'like' ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Like</span>
                         </div>
@@ -854,17 +837,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           onClick={() => handleDislikeMessage(item)}
                         >
                           <FaThumbsDown
-                            style={
-                              reactions[item._id || item.id || index] === 'dislike' ? { color: '#C3E11D' } : {}
-                            }
+                            className={reactions[item._id || item.id || index] === 'dislike' ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Dislike</span>
                         </div>
                         <div className="message-icon-wrapper" title="Bookmark" onClick={() => handleAddBookmark(item)}>
                           <FaBookmark
-                            style={
-                              bookmark[item._id || item.id || index] ? { color: '#C3E11D' } : {}
-                            }
+                            className={bookmark[item._id || item.id || index] ? 'msg-icon-active' : ''}
                           />
                           <span className="tooltip-assessment">Bookmark</span>
                         </div>
@@ -875,7 +854,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 {/* Q&A format — user answer on right */}
                 {!item.role && item.status === 'answered' && (
                   <div className="chat-container-assisstant right">
-                    <div className="card user-card">
+                    <div className="card chat-card user-card">
                       <div className="user-avatar">
                         <UserAvatar
                           src={userProfilePhoto}
@@ -910,7 +889,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 {assessmentDescriptions[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle || 'Change Vision/Case for Change'] || 'Select an assessment to begin.'}
               </p>
               {assessmentPhases[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle] && (
-                <span style={{ fontSize: '1.1rem', color: '#888', marginBottom: '1rem', display: 'inline-block', padding: '4px 12px', background: '#f0f0f0', borderRadius: '20px' }}>
+                <span className="msg-phase-badge">
                   Phase: {assessmentPhases[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle]}
                 </span>
               )}
@@ -922,15 +901,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                       'Change Vision/Case for Change'
                   )
                 }
-                style={{
-                  backgroundColor: 'rgba(195, 225, 29, 1)',
-                  padding: '1rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '1.5rem',
-                  fontWeight: '500',
-                }}
+                className="msg-start-btn"
               >
                 Start Assessment
               </button>
@@ -940,28 +911,17 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       </div>
 
       {error && (
-        <div className="error" style={{ color: 'red' }}>
+        <div className="error msg-error">
           {error}
         </div>
       )}
       {/* Progress indicator — rendered just above input */}
       {showInputField && (
         <>
-          <div style={{ position: 'relative', width: '70%' }}>
+          <div className="msg-report-wrapper">
             <button
               onClick={handleSingleReport}
-              style={{
-                backgroundColor: 'rgba(195, 225, 29, 1)',
-                padding: '1rem',
-                borderRadius: '10px',
-                border: 'none',
-                outline: 'none',
-                fontSize: '1.5rem',
-                fontWeight: '500',
-                display: showReportButton ? 'flex' : 'none',
-                marginBottom: '1rem',
-                margin: '0 0 1rem auto',
-              }}
+              className={`msg-view-report-btn ${showReportButton ? 'msg-view-report-btn--visible' : 'msg-view-report-btn--hidden'}`}
             >
               View Report
             </button>
@@ -969,40 +929,28 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
           <div className="Message_container">
             {/* Progress bar */}
             {chat.length > 0 && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '8px 16px', marginBottom: '4px' }}>
-                <div style={{ flex: 1, height: '8px', background: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{
-                    width: showReportButton ? '100%' : `${Math.min(((chat.filter(c => c.answer || c.status === 'answered').length) / 7) * 100, 95)}%`,
-                    height: '100%',
-                    background: showReportButton ? '#28a745' : '#C3E11D',
-                    borderRadius: '4px',
-                    transition: 'width 0.5s ease',
-                    minWidth: '5%',
-                  }} />
+              <div className="msg-progress-row">
+                <div className="msg-progress-track">
+                  <div
+                    className="msg-progress-bar"
+                    style={{
+                      width: showReportButton ? '100%' : `${Math.min(((chat.filter(c => c.answer || c.status === 'answered').length) / 7) * 100, 95)}%`,
+                      background: showReportButton ? '#28a745' : '#C3E11D',
+                    }}
+                  />
                 </div>
-                <span style={{ fontSize: '1.2rem', color: showReportButton ? '#28a745' : '#555', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                <span className={`msg-progress-label ${showReportButton ? 'msg-progress-label--complete' : 'msg-progress-label--active'}`}>
                   {showReportButton ? 'Complete' : `Question ${chat.filter(c => c.answer || c.status === 'answered').length + 1}`}
                 </span>
               </div>
             )}
             {chat.length <= 1 && (
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', padding: '0 8px', marginBottom: '8px' }}>
+              <div className="msg-suggestions">
                 {['Help me get started', 'What should I consider?', 'Give me an example', 'Summarise best practices'].map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => setFirstPrompt(suggestion)}
-                    style={{
-                      padding: '6px 12px',
-                      borderRadius: '16px',
-                      border: '1px solid #ddd',
-                      background: 'white',
-                      fontSize: '12px',
-                      cursor: 'pointer',
-                      color: '#333',
-                      transition: 'all 0.2s',
-                    }}
-                    onMouseEnter={(e) => { e.target.style.background = '#f5f5f5'; e.target.style.borderColor = '#C3E11D'; }}
-                    onMouseLeave={(e) => { e.target.style.background = 'white'; e.target.style.borderColor = '#ddd'; }}
+                    className="msg-suggestion-btn"
                   >
                     {suggestion}
                   </button>
@@ -1033,27 +981,17 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 </button>
               </div>
             )}
-            <div className="input-container" style={{ position: 'relative' }}>
-              <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <div className="input-container msg-input-relative">
+              <div className="msg-inspire-wrapper">
                 {!loading ? (
                   <img
                     src={InpireMeIcon}
                     alt="Inspire Me"
                     onClick={handleInspireClick}
-                    style={{ width: '16px', height: '16px' }}
+                    className="msg-inspire-icon"
                   />
                 ) : (
-                  <div
-                    style={{
-                      border: '2px solid #c3e11d10',
-                      borderTop: '2px solid #c3e11d',
-                      borderRadius: '50%',
-                      width: '16px',
-                      height: '16px',
-                      animation: 'spin 1s linear infinite',
-                      marginLeft: '8px',
-                    }}
-                  />
+                  <div className="msg-inspire-spinner" />
                 )}
               </div>
               <textarea
@@ -1070,26 +1008,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                   e.target.style.height = 'auto';
                   e.target.style.height = `${e.target.scrollHeight}px`;
                 }}
-                style={{
-                  resize: 'none',
-                  overflowY: 'auto',
-                  height: 'auto',
-                  maxHeight: '150px',
-                  width: '100%',
-                  border: 'none',
-                  borderRadius: '10px',
-                  padding: '1rem',
-                  fontSize: '14px',
-                  fontFamily: 'Arial, sans-serif',
-                  boxSizing: 'border-box',
-                  outline: 'none',
-                  boxShadow: 'none',
-                  marginLeft: '0.5rem',
-                }}
+                className="msg-textarea"
                 rows={1}
               />
-              <div className="icons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <label htmlFor="file-input" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              <div className="icons msg-icons-row">
+                <label htmlFor="file-input" className="msg-attach-label">
                   <IoAttach size={32} color="#888" title="Attach file" />
                 </label>
                 <IoSend
@@ -1133,174 +1056,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
               }
             />
           )} */}
-      <style>{`
-            .header{
-      display: flex;
-      }
-    .msg {
-      margin: 1rem 0;
-      font-size: 1rem;
-      text-align: left;
-      line-height: 1.75;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-    /* Markdown content styles — scoped to rendered chat message content */
-    .chat-message .msg > :first-child { margin-top: 0; }
-    .chat-message .msg > :last-child { margin-bottom: 0; }
-    .chat-message .msg > * + * { margin-top: 0.9rem; }
-    .chat-message .msg p {
-      margin: 0.9rem 0;
-      line-height: 1.75;
-    }
-    .chat-message .msg h1,
-    .chat-message .msg h2,
-    .chat-message .msg h3,
-    .chat-message .msg h4,
-    .chat-message .msg h5,
-    .chat-message .msg h6 {
-      font-weight: 600;
-      line-height: 1.35;
-      margin: 1.75rem 0 0.85rem;
-      color: #0B1444;
-    }
-    .chat-message .msg h1 { font-size: 1.6rem; }
-    .chat-message .msg h2 { font-size: 1.4rem; }
-    .chat-message .msg h3 { font-size: 1.2rem; }
-    .chat-message .msg h4 { font-size: 1.1rem; }
-    .chat-message .msg h5,
-    .chat-message .msg h6 { font-size: 1rem; }
-    .chat-message .msg ul,
-    .chat-message .msg ol {
-      margin: 0.9rem 0;
-      padding-left: 1.75rem;
-    }
-    .chat-message .msg li {
-      margin: 0.5rem 0;
-      line-height: 1.75;
-    }
-    .chat-message .msg li > p { margin: 0.5rem 0; }
-    .chat-message .msg li + li { margin-top: 0.5rem; }
-    .chat-message .msg ul ul,
-    .chat-message .msg ul ol,
-    .chat-message .msg ol ul,
-    .chat-message .msg ol ol { margin: 0.5rem 0; }
-    .chat-message .msg strong,
-    .chat-message .msg b { font-weight: 600; }
-    .chat-message .msg em,
-    .chat-message .msg i { font-style: italic; }
-    .chat-message .msg a {
-      color: #0B1444;
-      text-decoration: underline;
-      word-break: break-word;
-    }
-    .chat-message .msg a:hover { color: #1e2a5c; }
-    .chat-message .msg code {
-      background: rgba(0, 0, 0, 0.06);
-      padding: 0.15rem 0.35rem;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.9em;
-    }
-    .chat-message .msg pre {
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 0.9rem 1rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 1.1rem 0;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-    .chat-message .msg pre code {
-      background: transparent;
-      color: inherit;
-      padding: 0;
-      border-radius: 0;
-      font-size: inherit;
-    }
-    .chat-message .msg blockquote {
-      border-left: 3px solid #C3E11D;
-      padding: 0.5rem 1rem;
-      margin: 1.1rem 0;
-      color: #555;
-      background: rgba(195, 225, 29, 0.06);
-      border-radius: 0 6px 6px 0;
-    }
-    .chat-message .msg blockquote > p { margin: 0.5rem 0; }
-    .chat-message .msg hr {
-      border: none;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      margin: 1.5rem 0;
-    }
-    .chat-message .msg table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 1.1rem 0;
-      font-size: 12px;
-      display: block;
-      overflow-x: auto;
-    }
-    .chat-message .msg th,
-    .chat-message .msg td {
-      border: 1px solid #e5e7eb;
-      padding: 0.5rem 0.75rem;
-      text-align: left;
-    }
-    .chat-message .msg th {
-      background: #f5f5f5;
-      font-weight: 600;
-    }
-    .chat-message .msg tr:nth-child(even) td { background: #fafafa; }
-    .chat-message .msg img {
-      max-width: 100%;
-      border-radius: 6px;
-      margin: 0.5rem 0;
-    }
-      .initials-placeholder {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background-color: #C3E11D;
-          color: #0B1444;
-          font-size: 18px;
-          font-weight: bold;
-          text-align: center;
-          margin-right: 8px;
-          cursor: pointer;
-        }
-    .message-action-icons {
-      display: flex;
-      // gap: 0.5rem;
-    }
-    .message-icon-wrapper {
-      position: relative;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .message-icon-wrapper:hover .tooltip-assessment {
-         opacity: 1;
-      visibility: visible;
-      transform: translateY(-5px);
-    }
-    .tooltip-assessment {
-   position: absolute;
-      top: -2.5rem;
-      left: 50%;
-      background-color: black;
-      color: #fff;
-      padding: 0.5rem 0.6rem;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-      `}</style>
     </div>
   );
 };

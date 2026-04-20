@@ -67,15 +67,8 @@ const TonePopup = ({
             onClick={handleClickInsideDropdown}
           >
             <button
-              className="dropbtn"
+              className="dropbtn tone-popup-inspire-btn"
               onClick={handleAskAiToggle}
-              style={{
-                color: 'rgba(0, 102, 255, 1)',
-                fontWeight: 400,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}
             >
               <RiMagicFill /> Inspire Me
             </button>
@@ -237,11 +230,7 @@ const TonePopup = ({
             className="dropdown"
             ref={dropdownRef}
             onClick={handleClickInsideDropdown}
-            style={{
-              minWidth: '100%',
-              padding: '5px 5px',
-              borderRadius: '10px',
-            }}
+            className="tone-popup-ask-ai-dropdown"
           ></div>
         </div>
       )}

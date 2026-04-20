@@ -5,6 +5,7 @@ import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { HexColorPicker } from 'react-colorful';
 import useOutsideClick from '../../hooks/useOutsideClick';
+import './sitemap.scss';
 
 function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown, closeAllMenus }) {
   const { id, heading, description, color: rawColor, isEditing } = nodeData ?? {};
@@ -15,7 +16,6 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDe
   const close = useCallback(() => setShowContextMenu(false), []);
   useOutsideClick(contextMenuRef, close);
 
-  // Close on Escape key
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') close(); };
     if (showContextMenu) {
@@ -23,119 +23,57 @@ function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDe
       return () => document.removeEventListener('keydown', handleEsc);
     }
   }, [showContextMenu, close]);
+
   return (
     <div
-      onClick={(e) => {
-        close();
-      }}
+      onClick={() => close()}
       onContextMenu={(e) => {
         e.preventDefault();
         setShowContextMenu(true);
       }}
-      style={{
-        position: 'relative',
-        background: isEditing ? 'rgba(0, 102, 255, 0.21)' : color,
-        padding: '5px',
-        width: '100%',
-        borderRadius: '6px',
-        cursor: 'pointer',
-      }}
+      className={`node-item ${isEditing ? 'node-item--editing' : ''}`}
+      style={{ background: isEditing ? undefined : color }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          marginBottom: '5px',
-          cursor: 'pointer',
-        }}
-      >
+      <div className="node-item__toolbar">
         {isEditing ? (
           <BiCheckCircle
             color="green"
             size={15}
-            onClick={() =>
-              updateNodeDataWithPropertyName(id, 'isEditing', false)
-            }
-          ></BiCheckCircle>
+            onClick={() => updateNodeDataWithPropertyName(id, 'isEditing', false)}
+          />
         ) : (
           <BiEdit
             color="rgba(0, 102, 255, 1)"
             size={15}
-            onClick={() =>
-              updateNodeDataWithPropertyName(id, 'isEditing', true)
-            }
-          ></BiEdit>
+            onClick={() => updateNodeDataWithPropertyName(id, 'isEditing', true)}
+          />
         )}
       </div>
       {!isEditing ? (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span
-            style={{
-              color: 'rgba(10, 10, 10, 1)',
-              fontWeight: '500',
-              fontSize: '14px',
-              wordWrap: 'break-word',
-            }}
-          >
-            {heading}
-          </span>
-          <span
-            style={{
-              color: 'rgba(10, 10, 10, 0.68)',
-              fontWeight: '400',
-              fontSize: '12px',
-              wordWrap: 'break-word',
-            }}
-          >
-            {description}
-          </span>
+        <div className="node-item__content">
+          <span className="node-item__heading">{heading}</span>
+          <span className="node-item__desc">{description}</span>
         </div>
       ) : (
         <div>
           <textarea
-            style={{
-              border: 'none',
-              width: '100%',
-              outline: 'none',
-              borderRadius: '6px',
-              padding: '5px',
-              background: 'rgba(0, 102, 255, 0.21)',
-            }}
+            className="node-item__textarea"
             value={heading}
             onKeyDown={(e) =>
-              e.key === 'Enter' &&
-              updateNodeDataWithPropertyName(id, 'isEditing', false)
+              e.key === 'Enter' && updateNodeDataWithPropertyName(id, 'isEditing', false)
             }
-            onChange={(e) =>
-              updateNodeDataWithPropertyName(id, 'heading', e.target.value)
-            }
+            onChange={(e) => updateNodeDataWithPropertyName(id, 'heading', e.target.value)}
             placeholder="Section name"
-          ></textarea>
+          />
           <textarea
-            style={{
-              border: 'none',
-              marginTop: '5px',
-              width: '100%',
-              outline: 'none',
-              borderRadius: '6px',
-              padding: '5px',
-              background: 'rgba(0, 102, 255, 0.21)',
-              color: 'rgba(0, 102, 255, 1)',
-              height: '100px',
-            }}
+            className="node-item__textarea node-item__textarea--desc"
             onKeyDown={(e) => {
-              e.key === 'Enter' &&
-                updateNodeDataWithPropertyName(id, 'isEditing', false);
+              e.key === 'Enter' && updateNodeDataWithPropertyName(id, 'isEditing', false);
             }}
             value={description}
-            onChange={(e) =>
-              updateNodeDataWithPropertyName(id, 'description', e.target.value)
-            }
+            onChange={(e) => updateNodeDataWithPropertyName(id, 'description', e.target.value)}
             placeholder="Add description"
-          ></textarea>
+          />
         </div>
       )}
       {showContextMenu ? (
@@ -165,111 +103,61 @@ const ContextMenu = ({
   onMoveDown,
   onClose,
 }) => {
-  const { id, heading, description, color: nodeColor, isEditing } = nodeData;
+  const { id, heading, description, color: nodeColor } = nodeData;
 
   const [color, setColor] = useState(nodeColor || '#f0f0f0');
   const popover = useRef();
   const [isOpen, toggle] = useState(false);
+
   return (
     <div
-      onDrag={(e) => {
-        e.stopPropagation();
-      }}
-      style={{
-        position: 'absolute',
-        top: '-15px',
-        left: '50px',
-        background: 'rgba(0, 0, 0, 0.05)',
-        padding: '5px 10px',
-        borderRadius: '5px',
-        zIndex: '999',
-        backgroundColor: 'white',
-        color: 'rgba(10, 10, 10, 0.68)',
-        fontWeight: '500',
-        fontSize: '12px',
-        border: '1px solid rgba(10, 10, 10, 0.1)',
-      }}
+      onDrag={(e) => e.stopPropagation()}
+      className="ctx-menu"
     >
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
+      <div className="ctx-menu__row">
         <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '5px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
+          className="ctx-menu__action"
           onClick={(e) => {
             e.stopPropagation();
             addNodeChild(heading, description, nodeColor || '#f0f0f0', false, id);
             if (onClose) onClose();
           }}
         >
-          <BiCopy></BiCopy>
+          <BiCopy />
           <span>Duplicate</span>
         </div>
         <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '5px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
+          className="ctx-menu__action"
           onClick={(e) => {
             e.stopPropagation();
             if (onMoveUp) onMoveUp(id);
             if (onClose) onClose();
           }}
         >
-          <BsArrowUp></BsArrowUp>
+          <BsArrowUp />
           <span>Up</span>
         </div>
         <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '5px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
+          className="ctx-menu__action"
           onClick={(e) => {
             e.stopPropagation();
             if (onMoveDown) onMoveDown(id);
             if (onClose) onClose();
           }}
         >
-          <BsArrowDown></BsArrowDown>
+          <BsArrowDown />
           <span>Down</span>
         </div>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <div style={{ position: 'relative' }}>
+        <div onClick={(e) => e.stopPropagation()}>
+          <div className="ctx-menu__color-wrapper">
             <div
-              style={{
-                backgroundColor: color,
-                width: '31px',
-                height: '31px',
-                borderRadius: '50%',
-                border: '1px solid black',
-                cursor: 'pointer',
-              }}
+              className="ctx-menu__color-swatch"
+              style={{ backgroundColor: color }}
               onClick={() => toggle(!isOpen)}
             />
-
             {isOpen && (
               <div
-                style={{
-                  position: 'absolute',
-                  top: 'calc(100% - 2px)',
-                  left: 0,
-                }}
+                className="ctx-menu__color-popover"
                 ref={popover}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -285,15 +173,7 @@ const ContextMenu = ({
           </div>
         </div>
         <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '5px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: '#c00',
-          }}
+          className="ctx-menu__action ctx-menu__action--delete"
           onClick={(e) => {
             e.stopPropagation();
             if (onDelete) onDelete(id);
@@ -319,6 +199,7 @@ ContextMenu.propTypes = {
   updateNodeDataWithPropertyName: PropTypes.func.isRequired,
   addNodeChild: PropTypes.func.isRequired,
 };
+
 NodeItem.propTypes = {
   nodeData: PropTypes.object.isRequired,
   updateNodeDataWithPropertyName: PropTypes.func.isRequired,

@@ -29,11 +29,7 @@ const DropDownList = (props) => {
               onClick={() => props.onAssessmentClick(el)}
             >
               <Components.Feature.Text
-                style={{
-                  color: props.link ? '#0066FF' : undefined,
-                  textDecoration: props.link ? 'underline' : undefined,
-                }}
-                className="secondry--dark"
+                className={`secondry--dark ${props.link ? 'dropdown-list-link' : ''}`}
               >
                 {el}
               </Components.Feature.Text>

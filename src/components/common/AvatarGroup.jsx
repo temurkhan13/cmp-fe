@@ -1,3 +1,5 @@
+import './common.scss';
+
 const COLORS = [
   '#C3E11D', '#47beba', '#f59e0b', '#8b5cf6',
   '#ef4444', '#3b82f6', '#ec4899', '#14b8a6',
@@ -19,21 +21,12 @@ const Avatar = ({ user, index, size = 32, style = {} }) => {
   return (
     <div
       title={`${user?.firstName || user?.first_name || ''} ${user?.lastName || user?.last_name || ''}`.trim() || user?.email || 'User'}
+      className="avatar-item"
       style={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
+        '--avatar-size': `${size}px`,
+        '--avatar-font': `${size * 0.38}px`,
         background: photo ? `url(${photo}) center/cover` : bg,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         color: photo ? 'transparent' : '#fff',
-        fontSize: size * 0.38,
-        fontWeight: 600,
-        border: '2px solid #fff',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        flexShrink: 0,
-        fontFamily: 'Poppins, sans-serif',
         ...style,
       }}
     >
@@ -49,7 +42,7 @@ const AvatarGroup = ({ users = [], max = 3, size = 32 }) => {
   const remaining = users.length - max;
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div className="avatar-group">
       {visible.map((user, i) => (
         <Avatar
           key={user?.id || user?._id || i}
@@ -61,21 +54,12 @@ const AvatarGroup = ({ users = [], max = 3, size = 32 }) => {
       ))}
       {remaining > 0 && (
         <div
+          className="avatar-remaining"
           style={{
-            width: size,
-            height: size,
-            borderRadius: '50%',
-            background: '#f3f4f6',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: size * 0.34,
-            fontWeight: 600,
-            color: '#6b7280',
-            border: '2px solid #fff',
+            '--avatar-size': `${size}px`,
+            '--avatar-remaining-font': `${size * 0.34}px`,
             marginLeft: -(size * 0.3),
             zIndex: 0,
-            fontFamily: 'Poppins, sans-serif',
           }}
         >
           +{remaining}

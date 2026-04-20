@@ -606,16 +606,10 @@ const SitemapLayoutFlow = ({ id }) => {
       // defaultzoom={0.2} // Default initial zoom level
     >
       <Panel position="top-left">
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="flow-panel-row">
           <button
             onClick={() => onLayout('TB')}
-            style={{
-              background: 'white',
-              padding: '10px',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-            }}
+            className="flow-layout-btn"
           >
             Layout
           </button>
@@ -647,16 +641,7 @@ const SitemapLayoutFlow = ({ id }) => {
                   setConvertingPlaybook(false);
                 }
               }}
-              style={{
-                background: convertingPlaybook ? '#a8c016' : '#C3E11D',
-                padding: '10px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                border: 'none',
-                cursor: convertingPlaybook ? 'wait' : 'pointer',
-                opacity: convertingPlaybook ? 0.7 : 1,
-              }}
+              className={`flow-convert-btn ${convertingPlaybook ? 'flow-convert-btn--loading' : ''}`}
             >
               {convertingPlaybook ? 'Converting...' : 'Convert to Playbook'}
             </button>
@@ -665,77 +650,25 @@ const SitemapLayoutFlow = ({ id }) => {
       </Panel>
       {!id ? (
         <Panel position="top-right">
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div className="flow-right-panel">
             {isPromptVisible ? (
-              <div
-                style={{
-                  width: '525px',
-                  height: '370px',
-                  border: '1px solid rgba(10, 10, 10, 0.1)',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  padding: '10px',
-                  borderRadius: '6px',
-                  background: 'white',
-                }}
-              >
-                <div
-                  style={{
-                    width: '100%',
-                    height: '20%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                  }}
-                >
+              <div className="flow-prompt-box">
+                <div className="flow-prompt-header">
                   <img src={assets.common.icon} alt="icon" />
-                  <span
-                    style={{
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                      fontFamily: 'Poppins',
-                    }}
-                  >
+                  <span className="flow-prompt-title">
                     Change AI
                   </span>
                 </div>
-                <div
-                  style={{
-                    width: '100%',
-                    height: '80%',
-                    position: 'relative',
-                  }}
-                >
-                  <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '4px',
-                    padding: '6px',
-                    border: '1px solid rgba(10, 10, 10, 0.1)',
-                    borderRadius: '6px',
-                    marginBottom: '6px',
-                    minHeight: '34px',
-                    alignItems: 'center',
-                  }}>
+                <div className="flow-prompt-body">
+                  <div className="flow-keywords-box">
                     {keywords.map((kw, i) => (
-                      <span key={i} style={{
-                        background: '#C3E11D',
-                        padding: '2px 8px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: '500',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}>
+                      <span key={i} className="flow-keyword-tag">
                         {kw}
-                        <span style={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => setKeywords(keywords.filter((_, idx) => idx !== i))}>x</span>
+                        <span className="flow-keyword-remove" onClick={() => setKeywords(keywords.filter((_, idx) => idx !== i))}>x</span>
                       </span>
                     ))}
                     <input
-                      style={{ border: 'none', outline: 'none', flex: 1, minWidth: '80px', fontSize: '13px' }}
+                      className="flow-keyword-input"
                       placeholder={keywords.length === 0 ? 'Add keywords (press Enter)' : ''}
                       value={keywordInput}
                       onChange={(e) => setKeywordInput(e.target.value)}
@@ -753,15 +686,7 @@ const SitemapLayoutFlow = ({ id }) => {
                     />
                   </div>
                   <textarea
-                    style={{
-                      width: '100%',
-                      outline: 'none',
-                      resize: 'none',
-                      borderRadius: '6px',
-                      height: 'calc(85% - 42px)',
-                      padding: '10px',
-                      border: '1px solid rgba(10, 10, 10, 0.1)',
-                    }}
+                    className="flow-prompt-textarea"
                     placeholder="Describe the change management process — key phases, objectives, stakeholders, and outcomes."
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={(e) =>
@@ -769,16 +694,7 @@ const SitemapLayoutFlow = ({ id }) => {
                     }
                   ></textarea>
                   <button
-                    style={{
-                      width: '100%',
-                      background: '#C3E11B',
-                      border: 'none',
-                      padding: '5px',
-                      borderRadius: '6px',
-                      fontSize: '16px',
-                      fontWeight: '500',
-                      marginTop: '5px',
-                    }}
+                    className="flow-generate-btn"
                     disabled={isLoading}
                     onKeyDown={(e) =>
                       e.key === 'Enter' && onInit('Playbook Introduction')
@@ -790,27 +706,9 @@ const SitemapLayoutFlow = ({ id }) => {
                 </div>
               </div>
             ) : null}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                gap: '10px',
-                background: 'white',
-                border: '1px solid lightgray',
-                borderRadius: '6px',
-                padding: '0 5px',
-                height: '150px',
-              }}
-            >
+            <div className="flow-sidebar-panel">
               <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  marginTop: '10px',
-                  cursor: 'pointer',
-                }}
+                className="flow-sidebar-logo-btn"
                 onClick={() => {
                   if (nodes.length > 0) {
                     return;
@@ -821,7 +719,7 @@ const SitemapLayoutFlow = ({ id }) => {
                 <img
                   src={assets.common.icon}
                   alt="logo"
-                  style={{ width: '100%', height: '100p%' }}
+                  className="flow-sidebar-logo-img"
                 />
               </div>
               <div>
@@ -869,16 +767,7 @@ const SitemapLayoutFlow = ({ id }) => {
       ) : null}
       {isLoading ? (
         <Panel position="center">
-          <div
-            style={{
-              height: '90vh',
-              // width: '1600px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              // backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            }}
-          >
+          <div className="flow-loading-panel">
             <Loading />
           </div>
         </Panel>

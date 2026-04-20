@@ -1,48 +1,20 @@
 import { BiFolder } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
+import './sitemap.scss';
 
 function NoData() {
   let navigate = useNavigate();
 
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <span
-          style={{
-            fontSize: '28px',
-            fontWeight: '600',
-            color: 'rgba(10, 10, 10, 1)',
-          }}
-        >
+    <div className="sitemap-nodata">
+      <div className="sitemap-nodata__header">
+        <span className="sitemap-nodata__title">
           Digital Playbook
         </span>
-        <div style={{}}>
+        <div>
           <button
-            style={{
-              width: '100%',
-              background: '#C3E11B',
-              border: 'none',
-              padding: '5px',
-              borderRadius: '6px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              marginTop: '5px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
+            className="sitemap-nodata__create-btn"
             onClick={() => {
               navigate('/sitemap/new');
             }}
@@ -52,33 +24,12 @@ function NoData() {
           </button>
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: 'auto',
-        }}
-      >
+      <div className="sitemap-nodata__content">
         <BiFolder size={100} />
-        <span
-          style={{
-            fontSize: '18px',
-            fontweight: '500',
-            color: 'rgba(10, 10, 10, 1)',
-          }}
-        >
+        <span className="sitemap-nodata__heading">
           No recent activity here
         </span>
-        <span
-          style={{
-            fontSize: '16px',
-            fontweight: '400',
-            color: 'rgba(10, 10, 10, 0.46)',
-            textAlign: 'center',
-          }}
-        >
+        <span className="sitemap-nodata__desc">
           Organize your folders and files, and see <br></br>them show up here.
         </span>
       </div>

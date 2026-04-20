@@ -1,0 +1,721 @@
+// Variables and mixins auto-injected by Vite additionalData
+
+// Assessment UI styles (moved from global chain)
+@import '../../../scss/components/ui/assessmentChat/newChat';
+@import '../../../scss/components/ui/assessmentChat/assessment';
+@import '../../../scss/components/ui/assessmentChat/messageSection';
+
+// ─── MessagesSection ─────────────────────────────────────
+.msg-file-input-hidden {
+  display: none;
+}
+
+.msg-file-link {
+  margin-bottom: 0.5rem;
+}
+
+.msg-file-link a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.msg-phase-badge {
+  font-size: 1.1rem;
+  color: #888;
+  margin-bottom: 1rem;
+  display: inline-block;
+  padding: 4px 12px;
+  background: #f0f0f0;
+  border-radius: 20px;
+}
+
+.msg-start-btn {
+  @include btn-primary;
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+.msg-error {
+  color: red;
+}
+
+.msg-report-wrapper {
+  position: relative;
+  width: 70%;
+}
+
+.msg-view-report-btn {
+  @include btn-primary;
+  padding: 1rem;
+  font-size: 1.5rem;
+  margin: 0 0 1rem auto;
+}
+
+.msg-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 8px 16px;
+  margin-bottom: 4px;
+}
+
+.msg-progress-track {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.msg-progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  min-width: 5%;
+}
+
+.msg-progress-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.msg-suggestions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.msg-suggestion-btn {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 12px;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+    border-color: #C3E11D;
+  }
+}
+
+.msg-input-relative {
+  position: relative;
+}
+
+.msg-inspire-wrapper {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.msg-inspire-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.msg-inspire-spinner {
+  @include spinner(16px, #c3e11d);
+  border-color: #c3e11d10;
+  border-top-color: #c3e11d;
+  margin-left: 8px;
+}
+
+.msg-textarea {
+  resize: none;
+  overflow-y: auto;
+  height: auto;
+  max-height: 150px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  outline: none;
+  box-shadow: none;
+  margin-left: 0.5rem;
+}
+
+.msg-icons-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.msg-attach-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+// @keyframes msgSpin → replaced by shared-spin in _animation.scss
+
+.msg-icon-active {
+  color: #C3E11D;
+}
+
+.msg-view-report-btn--hidden {
+  display: none;
+}
+
+.msg-view-report-btn--visible {
+  display: flex;
+}
+
+.msg-progress-label--complete {
+  color: #28a745;
+}
+
+.msg-progress-label--active {
+  color: #555;
+}
+
+// ─── MessagesSection <style> tag content ─────────────────
+.msg {
+  margin: 1rem 0;
+  font-size: 1rem;
+  text-align: left;
+  line-height: 1.75;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chat-message .msg > :first-child { margin-top: 0; }
+.chat-message .msg > :last-child { margin-bottom: 0; }
+.chat-message .msg > * + * { margin-top: 0.9rem; }
+
+.chat-message .msg p {
+  margin: 0.9rem 0;
+  line-height: 1.75;
+}
+
+.chat-message .msg h1,
+.chat-message .msg h2,
+.chat-message .msg h3,
+.chat-message .msg h4,
+.chat-message .msg h5,
+.chat-message .msg h6 {
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 1.75rem 0 0.85rem;
+  color: #0B1444;
+}
+
+.chat-message .msg h1 { font-size: 1.6rem; }
+.chat-message .msg h2 { font-size: 1.4rem; }
+.chat-message .msg h3 { font-size: 1.2rem; }
+.chat-message .msg h4 { font-size: 1.1rem; }
+.chat-message .msg h5,
+.chat-message .msg h6 { font-size: 1rem; }
+
+.chat-message .msg ul,
+.chat-message .msg ol {
+  margin: 0.9rem 0;
+  padding-left: 1.75rem;
+}
+
+.chat-message .msg li {
+  margin: 0.5rem 0;
+  line-height: 1.75;
+}
+
+.chat-message .msg li > p { margin: 0.5rem 0; }
+.chat-message .msg li + li { margin-top: 0.5rem; }
+
+.chat-message .msg ul ul,
+.chat-message .msg ul ol,
+.chat-message .msg ol ul,
+.chat-message .msg ol ol { margin: 0.5rem 0; }
+
+.chat-message .msg strong,
+.chat-message .msg b { font-weight: 600; }
+
+.chat-message .msg em,
+.chat-message .msg i { font-style: italic; }
+
+.chat-message .msg a {
+  color: #0B1444;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.chat-message .msg a:hover { color: #1e2a5c; }
+
+.chat-message .msg code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.chat-message .msg pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.1rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.chat-message .msg pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+.chat-message .msg blockquote {
+  border-left: 3px solid #C3E11D;
+  padding: 0.5rem 1rem;
+  margin: 1.1rem 0;
+  color: #555;
+  background: rgba(195, 225, 29, 0.06);
+  border-radius: 0 6px 6px 0;
+}
+
+.chat-message .msg blockquote > p { margin: 0.5rem 0; }
+
+.chat-message .msg hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+.chat-message .msg table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.1rem 0;
+  font-size: 12px;
+  display: block;
+  overflow-x: auto;
+}
+
+.chat-message .msg th,
+.chat-message .msg td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.chat-message .msg th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.chat-message .msg tr:nth-child(even) td { background: #fafafa; }
+
+.chat-message .msg img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+}
+
+.message-action-icons {
+  display: flex;
+}
+
+.message-icon-wrapper {
+  position: relative;
+  cursor: pointer;
+  font-size: 1.2rem;
+
+  &:hover .tooltip-assessment {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-5px);
+  }
+}
+
+.tooltip-assessment {
+  position: absolute;
+  top: -2.5rem;
+  left: 50%;
+  background-color: black;
+  color: #fff;
+  padding: 0.5rem 0.6rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+// ─── NewChat ─────────────────────────────────────────────
+.newchat-hidden {
+  overflow-y: auto;
+  height: 80vh;
+  display: none;
+}
+
+.newchat-chat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.newchat-chat-text {
+  cursor: pointer;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.newchat-dots-icon {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+// ─── EditModal ───────────────────────────────────────────
+.edit-overlay {
+  @include modal-backdrop;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.modalContainer {
+  @include modal-dialog;
+  width: 50%;
+  max-height: 98vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.saperator {
+  margin-top: 1rem;
+  color: #f1f1f1;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.edit-modal-close-icon {
+  font-size: 2rem;
+}
+
+.edit-modal-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
+// .section → already defined in DashboardHome.css
+
+.label {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.logoPreview {
+  width: 12rem;
+  height: 12rem;
+  margin-top: 1rem;
+  display: flex;
+  border-radius: 1rem;
+  border: 1px solid lightgray;
+}
+
+.file-upload {
+  margin-top: 1.5rem;
+}
+
+.note {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+
+  span {
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+}
+
+.colorPicker {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  button {
+    border: none;
+    outline: none;
+    font-size: 1.4rem;
+    background-color: transparent;
+    display: flex;
+    color: blue;
+  }
+}
+
+.color-container {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-size: 1.3rem;
+
+  &:hover .color-picker {
+    display: block;
+  }
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.color-picker {
+  width: 228px;
+  height: 128px;
+  display: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.documentTypes {
+  display: flex;
+  justify-content: space-around;
+}
+
+.mockup {
+  background: #f1f1f1;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+.docType {
+  padding: 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+
+  &.selected {
+    border: 1px solid #0066FF;
+    border-radius: 1.5rem;
+  }
+}
+
+.update-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+// ─── AssessmentTasks ─────────────────────────────────────
+.task-progress-ring {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 1rem;
+  background: #fafff0;
+  border-radius: 12px;
+  border: 1px solid rgba(195, 225, 29, 0.2);
+}
+
+.task-progress-ring__svg {
+  flex-shrink: 0;
+}
+
+.task-progress-ring__transition {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.task-progress-ring__completed {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.task-progress-ring__status {
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+.task-select-report {
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.task-badge {
+  color: var(--task-color);
+  background-color: var(--task-bg);
+  border-radius: 1rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.task-status-badge {
+  color: var(--task-color);
+  background-color: var(--task-bg);
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  position: absolute;
+  right: 0;
+}
+
+// ─── AssessmentComments ──────────────────────────────────
+.assessment-avatar-icon {
+  font-size: 3.5rem;
+}
+
+// ─── AssessmentMedia / Media ─────────────────────────────
+.md-list-item--clickable {
+  cursor: pointer;
+}
+
+.md-list-item--default {
+  cursor: default;
+}
+
+// ─── Comments (assistant) ────────────────────────────────
+.cm-avatar-img--sized,
+.cm-avatar-initials--sized {
+  width: var(--cm-avatar-size);
+  height: var(--cm-avatar-size);
+}
+
+.cm-avatar-initials--sized {
+  font-size: var(--cm-avatar-font);
+}
+
+// ─── Editor ──────────────────────────────────────────────
+.editor-container {
+  width: 870px;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.editor-btn {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.editor-btn--save {
+  border: 1px solid #15803d;
+  background: #f0fdf4;
+  font-weight: 500;
+}
+
+.editor-btn--regen {
+  border: 1px solid #C3E11D;
+  background: #fafff0;
+  font-weight: 500;
+}
+
+.editor-btn--playbook {
+  border: 1px solid #00316f;
+  background: #f0f5ff;
+  font-weight: 500;
+  color: #00316f;
+}
+
+.updateButton {
+  @include btn-primary;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  display: flex;
+  transition: 0.1s ease-in-out;
+}
+
+// ─── Styles moved from scss/modules/assessment/ (removed from global chain) ───
+.assessmentChat {
+  & > section {
+    padding: 1.4rem 2.4rem;
+    display: flex;
+    gap: 2.8rem;
+    & > * {
+      &:first-child {
+        width: 55rem;
+        max-width: 25rem;
+      }
+      &:nth-child(2) {
+        width: 100%;
+        overflow-y: auto;
+      }
+    }
+  }
+}
+
+.messages-Section {
+  .assessmentPopupContainer {
+    width: 426px;
+    height: 147px;
+    display: flex;
+    margin: 0 auto;
+    min-height: 70vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    p:nth-child(1) {
+      font-family: Poppins, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 28px;
+      letter-spacing: 0.12px;
+      color: rgba(10, 10, 10, 1);
+    }
+
+    p:nth-child(2) {
+      margin: 4% 0;
+      font-family: Poppins, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.24px;
+      color: rgba(10, 10, 10, 1);
+    }
+
+    button {
+      @include btn-primary;
+      font-family: Poppins, sans-serif;
+      font-size: 14px;
+      line-height: 23px;
+      letter-spacing: 0.1px;
+      text-align: center;
+      width: 157px;
+      height: 43px;
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+  }
+}

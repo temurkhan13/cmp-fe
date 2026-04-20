@@ -8,7 +8,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import NotificationBar from '../../common/NotificationBar';
 import { BiSolidFolderOpen } from 'react-icons/bi';
 
-import './styles/Folder.css';
+import './styles/folder.scss';
 
 const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
   const [addFolder] = useAddFolderMutation();
@@ -111,18 +111,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
             >
               {({ errors, touched }) => (
                 <Form className="modal-form-content">
-                  <div className="form-field">
+                  <div className={`form-field ${touched.projectName && errors.projectName ? "error-field" : ""}`}>
                     <label className="modal-label">Project Name</label>
                     <div className="input-container">
                       <Field
                         type="text"
                         name="projectName"
                         placeholder="Enter project name"
-                        className={`workspace-input ${
-                          touched.projectName && errors.projectName
-                            ? 'error-border'
-                            : ''
-                        }`}
+                        className={`workspace-input ${touched.projectName && errors.projectName
+                          ? 'error-border'
+                          : ''
+                          }`}
                       />
                       <ErrorMessage
                         name="projectName"
@@ -132,18 +131,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     </div>
                   </div>
 
-                  <div className="form-field">
+                  <div className={`form-field ${touched.companyName && errors.companyName ? "error-field" : ""}`}>
                     <label className="modal-label">Company Name</label>
                     <div className="input-container">
                       <Field
                         type="text"
                         name="companyName"
                         placeholder="Enter Company Name"
-                        className={`workspace-input ${
-                          touched.companyName && errors.companyName
-                            ? 'error-border'
-                            : ''
-                        }`}
+                        className={`workspace-input ${touched.companyName && errors.companyName
+                          ? 'error-border'
+                          : ''
+                          }`}
                       />
                       <ErrorMessage
                         name="companyName"
@@ -153,18 +151,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     </div>
                   </div>
 
-                  <div className="form-field">
+                  <div className={`form-field ${touched.companySize && errors.companySize ? "error-field" : ""}`}>
                     <label className="modal-label">Company Size</label>
                     <div className="input-container">
                       <Field
                         type="text"
                         name="companySize"
                         placeholder="Enter company size"
-                        className={`workspace-input ${
-                          touched.companySize && errors.companySize
-                            ? 'error-border'
-                            : ''
-                        }`}
+                        className={`workspace-input ${touched.companySize && errors.companySize
+                          ? 'error-border'
+                          : ''
+                          }`}
                       />
                       <ErrorMessage
                         name="companySize"
@@ -174,18 +171,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     </div>
                   </div>
 
-                  <div className="form-field">
+                  <div className={`form-field ${touched.jobTitle && errors.jobTitle ? "error-field" : ""}`}>
                     <label className="modal-label">Job Title</label>
                     <div className="input-container">
                       <Field
                         type="text"
                         name="jobTitle"
                         placeholder="Enter job title"
-                        className={`workspace-input ${
-                          touched.jobTitle && errors.jobTitle
-                            ? 'error-border'
-                            : ''
-                        }`}
+                        className={`workspace-input ${touched.jobTitle && errors.jobTitle
+                          ? 'error-border'
+                          : ''
+                          }`}
                       />
                       <ErrorMessage
                         name="jobTitle"
@@ -195,18 +191,17 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     </div>
                   </div>
 
-                  <div className="form-field">
+                  <div className={`form-field ${touched.industry && errors.industry ? "error-field" : ""}`}>
                     <label className="modal-label">Industry</label>
                     <div className="input-container">
                       <Field
                         type="text"
                         name="industry"
                         placeholder="Enter Industry"
-                        className={`workspace-input ${
-                          touched.industry && errors.industry
-                            ? 'error-border'
-                            : ''
-                        }`}
+                        className={`workspace-input ${touched.industry && errors.industry
+                          ? 'error-border'
+                          : ''
+                          }`}
                       />
                       <ErrorMessage
                         name="industry"

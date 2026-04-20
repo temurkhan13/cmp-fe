@@ -53,7 +53,7 @@ const SetNewPassword = () => {
                 label="Confirm Password"
                 place="Confirm password"
               />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
+              {error && <p className="auth-error">{error}</p>}
               <Components.Feature.Button
                 className="primary"
                 type="submit"

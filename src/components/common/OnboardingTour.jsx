@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import './common.scss';
 
 const TOUR_STEPS = [
   {
@@ -50,7 +51,6 @@ const OnboardingTour = () => {
   useEffect(() => {
     const completed = localStorage.getItem(STORAGE_KEY);
     if (!completed) {
-      // Delay start to let page render
       const timer = setTimeout(() => setIsActive(true), 1500);
       return () => clearTimeout(timer);
     }
@@ -96,68 +96,52 @@ const OnboardingTour = () => {
   const step = TOUR_STEPS[currentStep];
   const isLast = currentStep === TOUR_STEPS.length - 1;
 
-  // Calculate tooltip position
-  let tooltipStyle = {};
+  // Calculate tooltip position as CSS custom properties
+  let tooltipVars = {};
   const padding = 12;
   switch (step.position) {
     case 'right':
-      tooltipStyle = {
-        top: targetRect.top + targetRect.height / 2,
-        left: targetRect.right + padding,
-        transform: 'translateY(-50%)',
+      tooltipVars = {
+        '--tt-top': `${targetRect.top + targetRect.height / 2}px`,
+        '--tt-left': `${targetRect.right + padding}px`,
+        '--tt-transform': 'translateY(-50%)',
       };
       break;
     case 'bottom':
-      tooltipStyle = {
-        top: targetRect.bottom + padding,
-        left: targetRect.left + targetRect.width / 2,
-        transform: 'translateX(-50%)',
+      tooltipVars = {
+        '--tt-top': `${targetRect.bottom + padding}px`,
+        '--tt-left': `${targetRect.left + targetRect.width / 2}px`,
+        '--tt-transform': 'translateX(-50%)',
       };
       break;
     case 'top':
-      tooltipStyle = {
-        bottom: window.innerHeight - targetRect.top + padding,
-        left: targetRect.left + targetRect.width / 2,
-        transform: 'translateX(-50%)',
+      tooltipVars = {
+        '--tt-bottom': `${window.innerHeight - targetRect.top + padding}px`,
+        '--tt-left': `${targetRect.left + targetRect.width / 2}px`,
+        '--tt-transform': 'translateX(-50%)',
       };
       break;
     default:
-      tooltipStyle = {
-        top: targetRect.bottom + padding,
-        left: targetRect.left,
+      tooltipVars = {
+        '--tt-top': `${targetRect.bottom + padding}px`,
+        '--tt-left': `${targetRect.left}px`,
       };
   }
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.5)',
-          zIndex: 10000,
-          pointerEvents: 'auto',
-        }}
-        onClick={handleSkip}
-      />
+      <div className="onboarding-overlay" onClick={handleSkip} />
 
-      {/* Spotlight on target */}
       <div
+        className="onboarding-spotlight"
         style={{
-          position: 'fixed',
-          top: targetRect.top - 4,
-          left: targetRect.left - 4,
-          width: targetRect.width + 8,
-          height: targetRect.height + 8,
-          borderRadius: '8px',
-          boxShadow: '0 0 0 9999px rgba(0,0,0,0.5)',
-          zIndex: 10001,
-          pointerEvents: 'none',
+          '--spot-top': `${targetRect.top - 4}px`,
+          '--spot-left': `${targetRect.left - 4}px`,
+          '--spot-w': `${targetRect.width + 8}px`,
+          '--spot-h': `${targetRect.height + 8}px`,
         }}
       />
 
-      {/* Tooltip */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
@@ -165,74 +149,36 @@ const OnboardingTour = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2 }}
+          className="onboarding-tooltip"
           style={{
-            position: 'fixed',
-            ...tooltipStyle,
-            zIndex: 10002,
-            background: '#fff',
-            borderRadius: '12px',
-            padding: '20px 24px',
-            width: '300px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-            fontFamily: 'Poppins, sans-serif',
+            top: tooltipVars['--tt-top'],
+            left: tooltipVars['--tt-left'],
+            bottom: tooltipVars['--tt-bottom'],
+            transform: tooltipVars['--tt-transform'],
           }}
         >
-          {/* Step counter */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 500 }}>
+          <div className="onboarding-tooltip-header">
+            <span className="onboarding-tooltip-counter">
               {currentStep + 1} of {TOUR_STEPS.length}
             </span>
-            <button
-              onClick={handleSkip}
-              style={{
-                background: 'none',
-                border: 'none',
-                fontSize: '12px',
-                color: '#9ca3af',
-                cursor: 'pointer',
-                padding: '2px 6px',
-              }}
-            >
+            <button onClick={handleSkip} className="onboarding-tooltip-skip">
               Skip tour
             </button>
           </div>
 
-          <h4 style={{ fontSize: '16px', fontWeight: 600, color: '#111', marginBottom: '6px' }}>
-            {step.title}
-          </h4>
-          <p style={{ fontSize: '13px', color: '#6b7280', lineHeight: 1.5, marginBottom: '16px' }}>
-            {step.content}
-          </p>
+          <h4 className="onboarding-tooltip-title">{step.title}</h4>
+          <p className="onboarding-tooltip-content">{step.content}</p>
 
-          {/* Progress dots + Next button */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', gap: '4px' }}>
+          <div className="onboarding-tooltip-footer">
+            <div className="onboarding-tooltip-dots">
               {TOUR_STEPS.map((_, i) => (
                 <div
                   key={i}
-                  style={{
-                    width: i === currentStep ? '16px' : '6px',
-                    height: '6px',
-                    borderRadius: '3px',
-                    background: i === currentStep ? '#C3E11D' : '#e5e7eb',
-                    transition: 'all 0.2s ease',
-                  }}
+                  className={`onboarding-tooltip-dot ${i === currentStep ? 'onboarding-tooltip-dot--active' : 'onboarding-tooltip-dot--inactive'}`}
                 />
               ))}
             </div>
-            <button
-              onClick={handleNext}
-              style={{
-                background: '#C3E11D',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '8px 20px',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                color: '#111',
-              }}
-            >
+            <button onClick={handleNext} className="onboarding-tooltip-next-btn">
               {isLast ? 'Get Started' : 'Next'}
             </button>
           </div>

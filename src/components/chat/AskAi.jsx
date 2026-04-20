@@ -1,16 +1,9 @@
 import { RxMagicWand } from 'react-icons/rx';
+import './chat.scss';
 
 const AskAi = () => {
   return (
-    <div
-      className="PopupBox"
-      style={{
-        backgroundColor: 'white',
-        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-        borderRadius: '5px',
-        zIndex: 9999,
-      }}
-    >
+    <div className="PopupBox ask-ai-popup">
       <div className="navabr">
         <div className="dropdown">
           <button className="dropbtn">

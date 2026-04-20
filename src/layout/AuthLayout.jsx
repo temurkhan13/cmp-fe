@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import assets from '../assets';
+import '../modules/auth/auth-styles.scss';
 
 const AuthLayout = () => {
   const divStyle = {

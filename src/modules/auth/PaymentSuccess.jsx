@@ -102,63 +102,6 @@ const PaymentSuccess = () => {
         </div>
       )}
 
-      <style>{`
-        .paymentSuccess {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 70vh;
-        }
-
-        .paymentSuccess__card {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          max-width: 48rem;
-          padding: 4rem 3rem;
-          border: 1px solid #e0e0e0;
-          border-radius: 1.2rem;
-          background: #fff;
-        }
-
-        .paymentSuccess__icon {
-          width: 8rem;
-          height: 8rem;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 2rem;
-        }
-
-        .paymentSuccess__icon--success {
-          background: #dcfce7;
-        }
-
-        .paymentSuccess__icon--error {
-          background: #fee2e2;
-        }
-
-        .paymentSuccess__spinner {
-          width: 4.8rem;
-          height: 4.8rem;
-          border: 4px solid #e0e0e0;
-          border-top-color: #0b1444;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-          margin-bottom: 2rem;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        .paymentSuccess__card .btn--primary {
-          margin-top: 1rem;
-          max-width: 28rem;
-        }
-      `}</style>
     </div>
   );
 };

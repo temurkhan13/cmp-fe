@@ -1,0 +1,421 @@
+// CustomModal styles
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.002);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.custom-modal-dialog {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
+}
+
+.custom-modal-header {
+  font-size: 1.125rem;
+  margin-bottom: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-modal-heading {
+  color: black;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.custom-modal-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.custom-modal-cross-icon {
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: lightgray;
+  border-radius: 50%;
+  padding: 0.2rem;
+  margin-left: 0.3125rem;
+}
+
+.custom-modal-straight-line {
+  border-top: 0.0625rem solid lightgray;
+}
+
+.custom-modal-body {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #0a0a0aad;
+}
+
+.custom-modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-modal-button {
+  padding: 0.8rem 1.5rem;
+  width: 48%;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.custom-modal-cancel-button {
+  background-color: transparent;
+  border: 0.1rem solid #0b1444;
+  color: #0b1444;
+  font-weight: 500;
+  outline: none;
+}
+
+.custom-modal-proceed-button {
+  background-color: #c3e11d;
+  color: #0b1444;
+  font-weight: 500;
+  border: none;
+  outline: none;
+}
+
+// MoveToModal styles
+.custom-modal-move-container {
+  padding: 1rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #e0e0e0;
+}
+
+.custom-modal-search-container {
+  display: flex;
+  align-items: center;
+  border: 0.15rem solid lightgray;
+  border-radius: 1rem;
+  padding: 0.7rem 4rem 0.7rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.custom-modal-search-icon {
+  margin-right: 0.3rem;
+  font-size: 2rem;
+  color: black;
+}
+
+.custom-modal-search-input {
+  outline: none;
+  border: none;
+  padding: 0.5rem;
+  flex: 1;
+}
+
+.custom-modal-folder {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.custom-modal-move-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  display: flex;
+  color: black;
+}
+
+.custom-modal-icon-container {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.custom-modal-folder-icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.custom-modal-arrow-icon {
+  margin-right: 0.5rem;
+}
+
+.custom-modal-folder-text {
+  flex: 1;
+  font-size: 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+}
+
+.custom-modal-check-icon {
+  margin-left: 0.5rem;
+}
+
+.custom-modal-subfolder-container {
+  padding-left: 1.25rem;
+}
+
+.custom-modal-no-folder {
+  color: grey;
+  display: flex;
+  font-size: 1.2rem;
+  padding-left: 1.75rem;
+}
+
+.custom-modal-folder-btn {
+  margin: 1rem 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: blue;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  font-weight: 550;
+}
+
+.custom-modal-new-folder-input {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 0.15rem solid lightgray;
+  border-radius: 0.7rem;
+  width: 100%;
+  outline: none;
+}
+
+// NewChatSidebarModal styles
+.custom-modal-newchat-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+.custom-modal-dropdown-menu {
+  z-index: 1000;
+  position: absolute;
+  top: var(--dropdown-top);
+  left: var(--dropdown-left);
+  width: 18rem;
+  border-radius: 0.6rem;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  padding: 1rem;
+}
+
+.custom-modal-dropdown-item {
+  cursor: pointer;
+  font-size: 1.4rem;
+  padding: 0.8rem 1.2rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: lightgray;
+    border-radius: 0.8rem;
+  }
+}
+
+.custom-modal-newchat-icon {
+  margin-right: 0.8rem;
+  color: gray;
+}
+
+// ShareModal styles
+.custom-modal-share-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-modal-share-dialog {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  position: relative;
+}
+
+.custom-modal-share-heading {
+  font-size: 1.7rem;
+}
+
+.custom-modal-share-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.custom-modal-close-link-btn {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 500;
+  cursor: pointer;
+  gap: 1.5rem;
+}
+
+.custom-modal-copy-link-btn {
+  border: none;
+  outline: none;
+  background: white;
+  color: blue;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.custom-modal-share-close-button {
+  cursor: pointer;
+}
+
+.custom-modal-share-cross-icon {
+  background: #f1f1f1;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  padding: 0.2rem;
+}
+
+.custom-modal-input-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.custom-modal-input-group {
+  display: flex;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  border: 0.0625rem solid #ccc;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.8rem;
+  position: relative;
+}
+
+.custom-modal-share-input {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-right: 0.5rem;
+  width: 30rem;
+  border: none;
+  outline: none;
+}
+
+.custom-modal-select {
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 1.4rem;
+  border: none;
+  outline: none;
+}
+
+.custom-modal-roles-option {
+  font-size: 1.4rem;
+  color: #333;
+  outline: none;
+  border: none;
+}
+
+.custom-modal-invite-btn {
+  border: none;
+  outline: none;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  background-color: var(--invite-btn-bg, #f1f1f1);
+  color: var(--invite-btn-color, #666);
+  cursor: var(--invite-btn-cursor, not-allowed);
+}
+
+.custom-modal-apply-btn {
+  position: relative;
+  left: 40rem;
+  top: 1rem;
+  border: none;
+  outline: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.8rem;
+  background-color: #c3e11d;
+  color: #0b1444;
+  cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.custom-modal-members {
+  list-style-type: none;
+  padding: 0;
+}
+
+.custom-modal-member {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.custom-modal-member-info {
+  display: flex;
+  align-items: center;
+}
+
+.custom-modal-member-name {
+  margin-left: 0.5rem;
+  font-size: 1.4rem;
+  color: black;
+}
+
+.custom-modal-suggestion-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  max-height: 15rem;
+  overflow-y: auto;
+  border: 0.0625rem solid #ccc;
+}
+
+.custom-modal-suggestion-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-bottom: 0.0625rem solid #eee;
+  font-size: 1.4rem;
+  color: #333;
+}

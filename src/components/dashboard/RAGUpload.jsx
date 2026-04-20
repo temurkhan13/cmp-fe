@@ -93,7 +93,7 @@ const RAGUpload = () => {
           type="file"
           multiple
           accept=".pdf,.docx,.doc,.txt,.csv,.xlsx,.pptx"
-          style={{ display: 'none' }}
+          className="rag-hidden-input"
           onChange={(e) => handleFiles(e.target.files)}
         />
       </div>
@@ -107,7 +107,7 @@ const RAGUpload = () => {
               <span className="file-size">{formatSize(file.size)}</span>
               <FiTrash2
                 size={16}
-                style={{ cursor: 'pointer', color: '#c00' }}
+                className="rag-delete-icon"
                 onClick={() => removeFile(i)}
               />
             </div>
@@ -123,9 +123,9 @@ const RAGUpload = () => {
       )}
 
       {files.length === 0 && results.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#9ca3af' }}>
-          <p style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>No documents uploaded yet</p>
-          <p style={{ fontSize: '1.2rem' }}>Upload files to train your AI Assistant with custom knowledge.</p>
+        <div className="rag-empty-state">
+          <p className="rag-empty-state__title">No documents uploaded yet</p>
+          <p className="rag-empty-state__desc">Upload files to train your AI Assistant with custom knowledge.</p>
         </div>
       )}
 
@@ -133,7 +133,7 @@ const RAGUpload = () => {
         <div className="results">
           {results.map((r, i) => (
             <div key={i} className={`result-item ${r.status}`}>
-              {r.status === 'success' ? <FiCheck color="green" /> : <span style={{ color: '#c00' }}>!</span>}
+              {r.status === 'success' ? <FiCheck color="green" /> : <span className="rag-error-icon">!</span>}
               <span>{r.name}</span>
               <span className="result-status">
                 {r.status === 'success' ? 'Processed & indexed' : r.message}

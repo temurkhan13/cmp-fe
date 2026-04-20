@@ -141,7 +141,7 @@ const SignUp = () => {
                 </span>
               </div>
 
-              {error && <p style={{ color: 'red' }}>{error}</p>}
+              {error && <p className="auth-error">{error}</p>}
               <Components.Feature.Button
                 className="primary"
                 type="submit"
@@ -158,33 +158,12 @@ const SignUp = () => {
           Already have an account?
           <Link
             to="/log-in"
-            style={{
-              textDecoration: 'none',
-              fontWeight: 'bold',
-              color: '#0B1444',
-            }}
+            className="auth-login-link"
           >
             <span> Log In</span>
           </Link>
         </Components.Feature.Text>
       </center>
-      <style>{`
-        .password-input-wrapper {
-          position: relative;
-        }
-        .password-toggle-icon {
-          position: absolute;
-          top: 70%;
-          right: 10px;
-          cursor: pointer;
-          transform: translateY(-50%);
-          font-size: 1.2rem;
-          color: #555;
-        }
-        .password-toggle-icon:hover {
-          color: #1e90ff;
-        }
-      `}</style>
     </Components.Feature.Container>
   );
 };

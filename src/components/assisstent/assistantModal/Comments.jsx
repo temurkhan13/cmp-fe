@@ -146,9 +146,9 @@ const Comments = ({ comments }) => {
 
   const Avatar = ({ name, size = 32 }) => (
     photoPath ? (
-      <img src={photoPath} alt="" className="cm-avatar-img" style={{ width: size, height: size }} />
+      <img src={photoPath} alt="" className="cm-avatar-img cm-avatar-img--sized" style={{ '--cm-avatar-size': `${size}px` }} />
     ) : (
-      <span className="cm-avatar-initials" style={{ width: size, height: size, fontSize: size * 0.4 }}>
+      <span className="cm-avatar-initials cm-avatar-initials--sized" style={{ '--cm-avatar-size': `${size}px`, '--cm-avatar-font': `${size * 0.4}px` }}>
         {getInitials(name)}
       </span>
     )

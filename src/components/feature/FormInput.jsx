@@ -23,12 +23,6 @@ const FormInput = ({ label, place, className, ...props }) => {
         {...props}
         autoComplete="off"
         onChangeCapture={(e) => setValue(e.target.value)}
-        style={{
-          border:
-            meta.touched && meta.error
-              ? '1px solid rgba(255, 0, 0, 0.589)'
-              : undefined,
-        }}
       />
       <ErrorMessage component="div" name={field.name} className="form-error" />
     </div>

@@ -34,18 +34,18 @@ const HelpCenterComp = () => {
       content: (
         <div>
           <p>The Dashboard is your central hub for accessing key insights and navigating through ChangeAI.</p>
-          <h4 style={{ marginTop: '1rem' }}>Quick Stats</h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+          <h4 className="help-section-subtitle">Quick Stats</h4>
+          <ul className="help-section-list">
             <li>View metrics for Workspaces, Projects, AI Assistants, Assessments, and Digital Playbooks</li>
             <li>Monitor your current plan and usage at a glance</li>
           </ul>
-          <h4 style={{ marginTop: '1rem' }}>Workspace Management</h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+          <h4 className="help-section-subtitle">Workspace Management</h4>
+          <ul className="help-section-list">
             <li>Create and delete workspaces with a single click</li>
             <li>Keep workspaces organised and relevant to your current goals</li>
           </ul>
-          <h4 style={{ marginTop: '1rem' }}>Recent Activity</h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+          <h4 className="help-section-subtitle">Recent Activity</h4>
+          <ul className="help-section-list">
             <li>Access recent chats directly from the dashboard</li>
             <li>Quickly pick up where you left off without navigating through multiple sections</li>
           </ul>
@@ -59,19 +59,19 @@ const HelpCenterComp = () => {
       content: (
         <div>
           <p>The AI Assistant is your smart, AI-powered chatbot for change management support.</p>
-          <h4 style={{ marginTop: '1rem' }}>Real-Time Assistance</h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+          <h4 className="help-section-subtitle">Real-Time Assistance</h4>
+          <ul className="help-section-list">
             <li>Get instant, AI-powered responses to change management questions</li>
             <li>Upload documents for contextual analysis and guidance</li>
           </ul>
-          <h4 style={{ marginTop: '1rem' }}>Quick Actions</h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+          <h4 className="help-section-subtitle">Quick Actions</h4>
+          <ul className="help-section-list">
             <li><strong>Change Tone:</strong> Adjust message tone for different audiences</li>
             <li><strong>Comment & Bookmark:</strong> Annotate and save key conversations</li>
             <li><strong>Inspire Me:</strong> Get AI-generated suggestions and prompts</li>
           </ul>
-          <h4 style={{ marginTop: '1rem' }}>Chat Management</h4>
-          <ul style={{ paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+          <h4 className="help-section-subtitle">Chat Management</h4>
+          <ul className="help-section-list">
             <li>Switch between projects within the chat</li>
             <li>Access recent conversations from the left panel</li>
             <li>Search and filter your chat history</li>
@@ -148,28 +148,28 @@ const HelpCenterComp = () => {
       id: 'dashboard',
       title: 'Dashboard',
       content: (
-        <div className="help-Heading">Stay in Control, All in One Place</div>
+        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>Stay in Control, All in One Place</div>
       ),
     },
     {
       id: 'assistant',
       title: 'AI Assistant',
       content: (
-        <div className="help-Heading">Your Smart Guide for Seamless Change</div>
+        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>Your Smart Guide for Seamless Change</div>
       ),
     },
     {
       id: 'assessment',
       title: 'AI Assessment',
       content: (
-        <div className="help-Heading">Insightful Reports Made Effortless</div>
+        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>Insightful Reports Made Effortless</div>
       ),
     },
     {
       id: 'playbook',
       title: 'Digital Playbook',
       content: (
-        <div className="help-Heading">
+        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>
           Visualize and Build Your Digital Roadmap
         </div>
       ),
@@ -198,14 +198,7 @@ const HelpCenterComp = () => {
             }`}
             onClick={() => handleOptionClick(index)}
           >
-            <span
-              style={{
-                marginLeft: '0.5rem',
-                marginRight: '0.5rem',
-                color: 'gray',
-                fontSize: '1.8rem',
-              }}
-            >
+            <span className="sidebar-option-icon">
               {option.icon}
             </span>
             <a href={option.href}>{option.name}</a>
@@ -243,139 +236,6 @@ const HelpCenterComp = () => {
           </section>
         ))}
       </div>
-      <style>{`
-        .helpcenter-wrapper {
-          display: flex;
-          align-items: flex-start;
-          position: relative;
-          font-size:1.5rem;
-          width: 100%;
-        }
-        .help-Heading {
-          padding: 5rem;
-          width: 100%;
-          font-size: 3.5rem;
-          font-weight: 600;
-          text-align: center;
-          margin-bottom: 2rem;
-          color: white;
-          border-radius: 2rem;
-          background-image: url(${headingss});
-          background-repeat: no-repeat;
-          background-size: cover;
-        }
-        .helpcenter-sidebar {
-          position: fixed;
-          top: 50%;
-          right: 0;
-          width: 25rem;
-          height: 80vh;
-          overflow-y: auto;
-          z-index: 1000;
-          display: flex;
-          border-radius: 1rem;
-          flex-direction: column;
-          transition: transform 0.3s ease;
-          transform: translateY(-50%) translateX(84%);
-          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        }
-        .helpcenter-sidebar.open {
-          transform: translateY(-50%) translateX(0);
-        }
-        .sidebar-toggle {
-          position: absolute;
-          top: 1rem;
-          left: 1.3rem;
-          background: none;
-          border: none;
-          cursor: pointer;
-          font-size: 1.7rem;
-          z-index: 1001;
-        }
-        .sidebar-option {
-          display: flex;
-          align-items: center;
-          padding-left: 1rem;
-          width: 100%;
-          transition: all 0.2s ease-in-out;
-          padding: 1rem 0.8rem;
-          border-radius: 0.8rem;
-          span {
-            display: flex;
-          }
-        }
-        .sidebar-option:hover {
-          background-color: #ccc;
-          color: #0B1444;
-          cursor: pointer;
-        }
-        .sidebar-option.first {
-          margin-top: 4rem;
-        }
-        .sidebar-option.last {
-          margin-bottom: 3rem;
-        }
-        .sidebar-option a {
-          text-decoration: none;
-          font-size: 1.4rem;
-          color: #0B1444;
-          margin-left: 0.5rem;
-        }
-        .section-content {
-          margin-right: 25rem; 
-          text-align: justify;
-          margin-left: 2rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem;
-          flex-grow: 1;
-          overflow-y: auto;
-          transition: margin-right 0.3s ease;
-        }
-        .section-content.sidebar-closed {
-          margin-right: 6rem; 
-        }
-        .content-section {
-          display: none;
-          opacity: 0;
-          transition: opacity 0.5s ease-in-out;
-        }
-        .content-section.active {
-          display: block;
-          opacity: 1;
-        }
-          .content-heading {
-          display: none;
-          opacity: 0;
-          transition: opacity 0.5s ease-in-out;
-        }
-        .content-heading.active {
-          display: block;
-          margin-top: 10px;
-          opacity: 1;
-          width: 100%;
-          font-size: 3.5rem;
-          font-weight: 600;
-          text-align: center;
-          color: white;
-          border-radius: 2rem;
-          background-image: url(${heading});
-          background-repeat: no-repeat;
-          background-size: cover;
-        }
-        .helpcenter-sidebar::-webkit-scrollbar {
-          width: 8px;
-        }
-        .helpcenter-sidebar::-webkit-scrollbar-thumb {
-          background: #888;
-          border-radius: 10px;
-        }
-        .helpcenter-sidebar::-webkit-scrollbar-thumb:hover {
-          background: #555;
-        }
-      `}</style>
     </div>
   );
 };

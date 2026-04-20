@@ -16,6 +16,9 @@
       border-radius: 0.8rem;
       display: flex;
       align-items: center;
+      &.form-input-error-border {
+        border: 1px solid red;
+      }
       & > input {
         width: 100%;
         background-color: transparent;

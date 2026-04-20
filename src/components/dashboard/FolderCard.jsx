@@ -14,6 +14,7 @@ import MoveToModal from '../customModal/MoveToModal';
 import PropTypes from 'prop-types';
 import useManagerChat from '@hooks/useManagerChat';
 import { downloadFolderAsZip } from '@utils/ExportAs';
+import './dashboard-inline.scss';
 
 const FolderCard = ({ folder }) => {
   if (!folder) return null;
@@ -91,63 +92,62 @@ const FolderCard = ({ folder }) => {
   ];
 
   return (
-    <div style={styles.folder}>
+    <div className="folder-card">
       <img src={assets.dashboard.FolderIcon} alt="FolderIcon" />
       <div>
-        <p style={styles.folderHeading}>{name}</p>
-        <p style={styles.folderSubheading}>Modified 2 days ago</p>
+        <p className="folder-card__heading">{name}</p>
+        <p className="folder-card__subheading">Modified 2 days ago</p>
       </div>
-      <div style={styles.folderItems}>
-        <p style={styles.item}>{id} Items</p>
-        <div ref={dropdownRef} style={{ position: 'relative' }}>
+      <div className="folder-card__items">
+        <p className="folder-card__item-count">{id} Items</p>
+        <div ref={dropdownRef} className="folder-card__dots-wrapper">
           <BsThreeDots
             onClick={() => setShowDropdown(!showDropdown)}
-            style={{ cursor: 'pointer', fontSize: '2rem' }}
+            className="folder-card__dots-icon"
           />
           {showDropdown && (
-            <div style={styles.dropdown}>
+            <div className="folder-card__dropdown">
               <p
-                style={styles.dropdownItem}
+                className="folder-card__dropdown-item"
                 onClick={() => handleItemClick('Move To Folder')}
               >
-                <FaFolderPlus style={styles.dropdownIcon} /> Move To Folder
+                <FaFolderPlus className="folder-card__dropdown-icon" /> Move To Folder
               </p>
               <p
-                style={styles.dropdownItem}
+                className="folder-card__dropdown-item"
                 onClick={() => handleItemClick('Duplicate')}
               >
-                <FaCopy style={styles.dropdownIcon} /> Duplicate
+                <FaCopy className="folder-card__dropdown-icon" /> Duplicate
               </p>
               <p
-                style={styles.dropdownItem}
+                className="folder-card__dropdown-item"
                 onClick={() => handleItemClick('Rename')}
               >
-                <FaEdit style={styles.dropdownIcon} /> Rename
+                <FaEdit className="folder-card__dropdown-icon" /> Rename
               </p>
               <p
-                style={styles.dropdownItem}
+                className="folder-card__dropdown-item"
                 onClick={() => handleItemClick('Downloads')}
               >
-                <FaDownload style={styles.dropdownIcon} /> Download As Zip
+                <FaDownload className="folder-card__dropdown-icon" /> Download As Zip
               </p>
               <p
-                style={styles.dropdownItem}
+                className="folder-card__dropdown-item"
                 onClick={() => handleItemClick('Copy Link')}
               >
-                <FaLink style={styles.dropdownIcon} /> Copy Link
+                <FaLink className="folder-card__dropdown-icon" /> Copy Link
               </p>
               <p
-                style={styles.dropdownItem}
+                className="folder-card__dropdown-item"
                 onClick={() => handleItemClick('Move to trash')}
               >
-                <FaTrash style={styles.dropdownIcon} /> Move to trash
+                <FaTrash className="folder-card__dropdown-icon" /> Move to trash
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Modals */}
       <CustomModal
         isOpen={isMoveToTrashModalOpen}
         onClose={() => setMoveToTrashModalOpen(false)}
@@ -177,75 +177,6 @@ const FolderCard = ({ folder }) => {
   );
 };
 
-const styles = {
-  folder: {
-    backgroundColor: 'rgba(249, 249, 249, 1)',
-    borderRadius: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '10px',
-    gap: '15px',
-    marginBottom: '10px',
-  },
-  folderHeading: {
-    fontFamily: 'Poppins, sans-serif',
-    fontWeight: '500',
-    fontSize: '16px',
-    lineHeight: '24px',
-    letterSpacing: '0.12px',
-    color: 'rgba(10, 10, 10, 1)',
-    margin: '0',
-  },
-  folderSubheading: {
-    fontFamily: 'Poppins, sans-serif',
-    fontWeight: '400',
-    fontSize: '12px',
-    lineHeight: '18px',
-    letterSpacing: '0.24px',
-    color: 'rgba(10, 10, 10, 0.46)',
-    margin: '0',
-  },
-  folderItems: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  item: {
-    fontFamily: 'Mono, monospace',
-    fontWeight: '400',
-    fontSize: '14px',
-    lineHeight: '18.23px',
-    letterSpacing: '0.24px',
-    color: 'rgba(10, 10, 10, 0.46)',
-    marginRight: '10px',
-  },
-  dropdown: {
-    position: 'absolute',
-    top: '100%',
-    right: '0',
-    backgroundColor: 'white',
-    boxShadow: '0px 8px 16px rgba(10, 10, 10, 0.1)',
-    borderRadius: '8px',
-    zIndex: '100',
-    minWidth: '190px',
-    padding: '8px 0',
-  },
-  dropdownItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '8px 16px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-    fontFamily: 'Poppins, sans-serif',
-    fontSize: '14px',
-    color: 'rgba(10, 10, 10, 0.8)',
-  },
-  dropdownIcon: {
-    marginRight: '8px',
-  },
-};
-
-// Prop types validation
 FolderCard.propTypes = {
   folder: PropTypes.shape({
     id: PropTypes.number.isRequired,

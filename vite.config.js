@@ -6,10 +6,16 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./scss/utils/_variables.scss"; @import "./scss/utils/_shared-mixins.scss";`,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@components': '/src/components',
-      '@styles': '/src/styles',
       '@layout': '/src/layout',
       '@assets': '/src/assets',
       '@data': '/src/data',
@@ -17,7 +23,6 @@ export default defineConfig({
       '@modules': '/src/modules',
       '@api': '/src/api',
       '@utils': '/src/utils',
-      '@store': '/src/store',
     },
   },
   build: {

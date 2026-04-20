@@ -28,7 +28,19 @@ html {
   @include respond(laptop) {
     font-size: 50%;
   }
-  @include respond(monitor) {
+  @include respond(big-desktop) {
     font-size: 55%;
   }
+}
+
+// Global loading bar
+.app-loading-bar {
+  background-color: $color_parentColor;
+  height: 3px;
+}
+
+// Global loading spinner wrapper
+.app-loading-spinner {
+  display: flex;
+  justify-content: center;
 }

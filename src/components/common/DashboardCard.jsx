@@ -5,6 +5,7 @@ import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
 import { FaBookmark } from 'react-icons/fa';
 import { MdOutlineDelete } from 'react-icons/md';
 import CustomModal from '../customModal/CustomModal';
+import './common.scss';
 
 const DashboardCard = ({ chat }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,22 +42,22 @@ const DashboardCard = ({ chat }) => {
 
   return (
     <>
-      <div className="card">
-        <div className="card-header">
-          <p className="chat-title">{chat.chatTitle}</p>
-          <div className="menu" ref={menuRef} onClick={toggleDropdown}>
-            <BiDotsVerticalRounded style={{ fontSize: '1.5rem', color: 'black', cursor: 'pointer' }} />
+      <div className="common-card">
+        <div className="common-card-header">
+          <p className="common-card-title">{chat.chatTitle}</p>
+          <div className="common-card-menu" ref={menuRef} onClick={toggleDropdown}>
+            <BiDotsVerticalRounded className="common-card-menu-icon" />
             {isDropdownOpen && (
-              <div className="dropdown" ref={dropdownRef}>
+              <div className="common-card-dropdown" ref={dropdownRef}>
                 <button onClick={handleMoveToTrash}>
-                  <MdOutlineDelete style={{ marginRight: '0.5rem' }} /> Move to Trash
+                  <MdOutlineDelete className="common-card-menu-delete-icon" /> Move to Trash
                 </button>
               </div>
             )}
           </div>
         </div>
-        <div className="card-body">
-          <p className="chat-content">{chat.text}</p>
+        <div className="common-card-body">
+          <p className="common-card-content">{chat.text}</p>
         </div>
         {/*<div className="card-footer">*/}
         {/*  <AiOutlineLike style={{ fontSize: '1.3rem', color: 'black', cursor: 'pointer' }} />*/}
@@ -83,76 +84,6 @@ const DashboardCard = ({ chat }) => {
         proceedText="Move to Trash"
       />
 
-      <style>{`
-        .card {
-          width: 22rem;
-          border: 1px solid #ccc;
-          border-radius: 1rem;
-          background-color: #fff;
-          padding: 1.5rem;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          margin-bottom: 1rem;
-        }
-
-        .card-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .chat-title {
-          font-weight: 600;
-          font-size: 1.2rem;
-        }
-
-        .menu {
-          position: relative;
-        }
-
-        .dropdown {
-          position: absolute;
-          top: 25px;
-          right: 0;
-          background-color: white;
-          border: 1px solid #ccc;
-          border-radius: 0.5rem;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          z-index: 10;
-        }
-
-        .dropdown button {
-          padding: 0.5rem 1rem;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-        }
-
-        .dropdown button:hover {
-          background-color: #f5f5f5;
-        }
-
-        .card-body {
-          margin-top: 1rem;
-          font-size: 1rem;
-          color: #333;
-        }
-
-        .card-footer {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 1.5rem;
-        }
-
-        .chat-content {
-          color: #666;
-          font-size: 1rem;
-        }
-      `}</style>
     </>
   );
 };

@@ -163,7 +163,7 @@ const MyAssessmentComp = () => {
           />
         </div>
 
-        <section className="generate" style={{ marginTop: '2rem' }}>
+        <section className="generate generate--spaced">
           <div className="container">
             <div className="left-buttons">
               <p className="assistant-heading">
@@ -172,8 +172,7 @@ const MyAssessmentComp = () => {
             </div>
             <div className="">
               <button
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                className="assiss-btn"
+                className="assiss-btn assiss-btn--flex"
                 onClick={() => {
                   dispatch(setCurrentChatId(null));
                   navigate('/assessment/chat');
@@ -209,14 +208,7 @@ const MyAssessmentComp = () => {
                 ))}
               </div>
             ) : (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  width: '300px',
-                  margin: '0 auto',
-                }}
-              >
+              <div className="ai-assistant-nodata">
                 <NoData message="No Data Available" />
               </div>
             ))}
@@ -225,11 +217,6 @@ const MyAssessmentComp = () => {
 
       {/* Component Styles */}
       <style>{`
-        .selected-workspace-name {
-          position: absolute;
-          top: 2rem;
-          left: 3rem;
-        }
         .selected-workspace-name p {
           font-size: 1.5rem;
           font-weight: 600;

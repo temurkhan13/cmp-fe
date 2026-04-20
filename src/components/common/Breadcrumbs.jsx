@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
+import './common.scss';
 
 const routeLabels = {
   'dashboard': 'Dashboard',
@@ -40,27 +41,14 @@ const Breadcrumbs = () => {
   });
 
   return (
-    <nav style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '4px',
-      padding: '0.75rem 2rem',
-      fontSize: '1.3rem',
-      color: '#6b7280',
-      fontFamily: 'Poppins, sans-serif',
-    }}>
+    <nav className="breadcrumbs-nav">
       {crumbs.map((crumb, i) => (
-        <span key={crumb.path} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          {i > 0 && <FiChevronRight size={14} style={{ color: '#d1d5db' }} />}
+        <span key={crumb.path} className="breadcrumbs-segment">
+          {i > 0 && <FiChevronRight size={14} className="breadcrumbs-separator" />}
           {crumb.isLast ? (
-            <span style={{ color: '#111', fontWeight: 500 }}>{crumb.label}</span>
+            <span className="breadcrumbs-current">{crumb.label}</span>
           ) : (
-            <Link
-              to={crumb.path}
-              style={{ color: '#6b7280', textDecoration: 'none' }}
-              onMouseOver={(e) => e.target.style.color = '#111'}
-              onMouseOut={(e) => e.target.style.color = '#6b7280'}
-            >
+            <Link to={crumb.path} className="breadcrumbs-link">
               {crumb.label}
             </Link>
           )}

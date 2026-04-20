@@ -9,6 +9,8 @@ import { MdKeyboardArrowRight, MdKeyboardArrowDown } from 'react-icons/md';
 
 import NoDataAvailable from '../../components/common/NoDataAvailable';
 
+import './custom-modal.scss';
+
 const MoveToModal = ({ folders }) => {
   const [openFolders, setOpenFolders] = useState({});
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -87,32 +89,32 @@ const MoveToModal = ({ folders }) => {
 
       return (
         <div key={folderName}>
-          <div style={styles.folder}>
+          <div className="custom-modal-folder">
             <div
               onClick={() => handleIconClick(folderName)}
-              style={styles.iconContainer}
+              className="custom-modal-icon-container"
             >
               {isOpen ? (
-                <MdKeyboardArrowDown style={styles.arrowIcon} />
+                <MdKeyboardArrowDown className="custom-modal-arrow-icon" />
               ) : (
-                <MdKeyboardArrowRight style={styles.arrowIcon} />
+                <MdKeyboardArrowRight className="custom-modal-arrow-icon" />
               )}
-              <FaRegFolderOpen style={styles.icon} />
+              <FaRegFolderOpen className="custom-modal-folder-icon" />
             </div>
             <div
-              style={styles.folderText}
+              className="custom-modal-folder-text"
               onClick={() => handleTextClick(folderName)}
             >
               {folder.name}
-              {isSelected && <IoMdCheckmark style={styles.checkIcon} />}
+              {isSelected && <IoMdCheckmark className="custom-modal-check-icon" />}
             </div>
           </div>
           {isOpen && folder.subfolders && (
-            <div style={styles.subfolderContainer}>
+            <div className="custom-modal-subfolder-container">
               {folder.subfolders.length > 0 ? (
                 renderFolders(folder.subfolders, folderName)
               ) : (
-                <div style={styles.noFolder}>No items</div>
+                <div className="custom-modal-no-folder">No items</div>
               )}
             </div>
           )}
@@ -125,139 +127,44 @@ const MoveToModal = ({ folders }) => {
 
   return (
     <>
-      <div style={styles.searchContainer}>
-        <CiSearch
-          style={{ marginRight: '0.3rem', fontSize: '2rem', color: 'black' }}
-        />
+      <div className="custom-modal-search-container">
+        <CiSearch className="custom-modal-search-icon" />
         <input
           placeholder="Move file to"
           type="text"
           value={searchTerm}
           onChange={handleSearchChange}
-          style={styles.input}
+          className="custom-modal-search-input"
         />
       </div>
-      <hr style={styles.straightLine} />
-      <div style={styles.title}>Suggested</div>
-      <div style={styles.container}>
+      <hr className="custom-modal-straight-line" />
+      <div className="custom-modal-move-title">Suggested</div>
+      <div className="custom-modal-move-container">
         {filteredFolders.length > 0 ? (
           renderFolders(filteredFolders)
         ) : (
           <NoDataAvailable message="No folders available" />
         )}
       </div>
-      <hr style={styles.straightLine} />
+      <hr className="custom-modal-straight-line" />
       {isCreatingFolder ? (
         <input
           type="text"
           value={newFolderName}
           onChange={handleNewFolderChange}
           onKeyDown={handleNewFolderSubmit}
-          style={styles.newFolderInput}
+          className="custom-modal-new-folder-input"
           placeholder="Enter folder name"
         />
       ) : (
-        <button style={styles.folderBtn} onClick={handleNewFolderClick}>
+        <button className="custom-modal-folder-btn" onClick={handleNewFolderClick}>
           <GoPlus size={18} />
           New Folder
         </button>
       )}
-      <hr style={styles.straightLine} />
+      <hr className="custom-modal-straight-line" />
     </>
   );
-};
-
-const styles = {
-  container: {
-    padding: '1rem',
-    maxHeight: '50vh',
-    overflowY: 'auto',
-    scrollbarWidth: 'thin',
-    scrollbarColor: '#888 #e0e0e0',
-  },
-  searchContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    border: '0.15rem solid lightgray',
-    borderRadius: '1rem',
-    padding: '0.7rem 4rem 0.7rem 1rem',
-    marginBottom: '1rem',
-  },
-  input: {
-    outline: 'none',
-    border: 'none',
-    padding: '0.5rem',
-    flex: 1,
-  },
-  folder: {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    padding: '0.5rem 0',
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: '500',
-    margin: '1rem 0 1rem 0',
-    display: 'flex',
-    color: 'black',
-  },
-  iconContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    marginRight: '0.5rem',
-  },
-  icon: {
-    marginRight: '0.5rem',
-    fontSize: '1.5rem',
-  },
-  arrowIcon: {
-    marginRight: '0.5rem',
-  },
-  folderText: {
-    flex: 1,
-    fontSize: '1.3rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    color: 'black',
-  },
-  checkIcon: {
-    marginLeft: '0.5rem',
-  },
-  subfolderContainer: {
-    paddingLeft: '1.25rem',
-  },
-  noFolder: {
-    color: 'grey',
-    display: 'flex',
-    fontSize: '1.2rem',
-    paddingLeft: '1.75rem',
-  },
-  folderBtn: {
-    margin: '1rem 0',
-    border: 'none',
-    outline: 'none',
-    backgroundColor: 'transparent',
-    color: 'blue',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.7rem',
-    fontWeight: '550',
-  },
-  straightLine: {
-    borderTop: '0.0625rem solid lightgray',
-  },
-  newFolderInput: {
-    margin: '1rem 0',
-    padding: '0.5rem',
-    border: '0.15rem solid lightgray',
-    borderRadius: '0.7rem',
-    width: '100%',
-    outline: 'none',
-  },
 };
 
 MoveToModal.propTypes = {

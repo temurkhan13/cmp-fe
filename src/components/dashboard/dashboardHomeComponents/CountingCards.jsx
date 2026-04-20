@@ -16,7 +16,7 @@ const CountingCards = ({ activeWorkspace, totalWorkspaces, totalProjects }) => {
           <div
             className="counts"
             style={{
-              fontSize: `${String(card.count).length > 3 ? '2.5rem' : '3rem'}`,
+              '--count-font': String(card.count).length > 3 ? '2.5rem' : '3rem',
             }}
           >
             {card.count || 0}

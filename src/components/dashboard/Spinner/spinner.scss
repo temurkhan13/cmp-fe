@@ -10,9 +10,5 @@
     margin: auto; /* Center the spinner */
   }
   
-  /* Animation keyframes */
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  // @keyframes spin → defined globally in _animation.scss
   

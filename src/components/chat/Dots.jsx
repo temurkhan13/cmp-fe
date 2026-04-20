@@ -2,42 +2,30 @@ import { IoIosArrowUp } from 'react-icons/io';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoMdClose } from 'react-icons/io';
 import { IoSearchOutline } from 'react-icons/io5';
-import styles from '../../style/chat/chatHeader.module.scss';
+import './chat.scss';
 import PropTypes from 'prop-types';
 
 const Dots = ({ closeButton }) => {
   return (
-    <div className={styles.dropdownContent}>
-      <div className={styles.subSearchBar}>
+    <div className="chat-dropdown-content">
+      <div className="chat-sub-search-bar">
         <input type="text" placeholder="Search" />
         <IoMdClose
           onClick={closeButton}
-          style={{
-            background: 'lightgray',
-            padding: '7px',
-            borderRadius: '30px',
-            position: 'absolute',
-            top: 5,
-            right: 10,
-            fontSize: '30px',
-          }}
+          className="chat-close-icon"
         />
       </div>
       <hr />
-      <div className={styles.subSearchBabody}>
-        <div className={styles.subSearchBabodyInput}>
-          <IoSearchOutline className={styles.subSearchBaICons} />
+      <div className="chat-sub-search-body">
+        <div className="chat-sub-search-input">
+          <IoSearchOutline className="chat-sub-search-icons" />
           <input type="text" placeholder="Find any word" />
-          <span
-            style={{
-              fontSize: '14px',
-            }}
-          >
+          <span className="chat-search-count">
             1/4
           </span>
-          <span className={styles.subSearchBaICons}></span>
-          <IoIosArrowUp className={styles.subSearchBaICons} />
-          <IoIosArrowDown className={styles.subSearchBaICons} />
+          <span className="chat-sub-search-icons"></span>
+          <IoIosArrowUp className="chat-sub-search-icons" />
+          <IoIosArrowDown className="chat-sub-search-icons" />
         </div>
       </div>
     </div>

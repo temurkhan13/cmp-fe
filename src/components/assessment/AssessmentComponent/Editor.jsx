@@ -110,40 +110,36 @@ const Editor = ({
   );
 
   return (
-    <div style={{ width: '870px' }}>
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div className="editor-container">
+      <div className="editor-toolbar">
         <button
           onClick={() => {
             const currentContent = editor.current?.value || editor.current?.getEditorValue?.() || '';
             handleContentUpdate(currentContent);
           }}
           disabled={saveStatus === 'saving'}
+          className="editor-btn editor-btn--save"
           style={{
-            padding: '6px 14px',
-            border: '1px solid #15803d',
-            borderRadius: '6px',
-            background: saveStatus === 'saved' ? '#dcfce7' : saveStatus === 'error' ? '#fee2e2' : '#f0fdf4',
-            cursor: saveStatus === 'saving' ? 'not-allowed' : 'pointer',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            color: saveStatus === 'error' ? '#dc2626' : '#15803d',
+            background: saveStatus === 'saved' ? '#dcfce7' : saveStatus === 'error' ? '#fee2e2' : undefined,
+            cursor: saveStatus === 'saving' ? 'not-allowed' : undefined,
+            color: saveStatus === 'error' ? '#dc2626' : undefined,
           }}
         >
           {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save Failed' : 'Save'}
         </button>
-        <button onClick={() => handleExport('pdf')} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
+        <button onClick={() => handleExport('pdf')} className="editor-btn">
           PDF
         </button>
-        <button onClick={() => handleExport('docx')} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
+        <button onClick={() => handleExport('docx')} className="editor-btn">
           Word
         </button>
-        <button onClick={() => handleExport('pptx')} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
+        <button onClick={() => handleExport('pptx')} className="editor-btn">
           PowerPoint
         </button>
-        <button onClick={() => handleExport('xlsx')} style={{ padding: '6px 14px', border: '1px solid #ddd', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.85rem' }}>
+        <button onClick={() => handleExport('xlsx')} className="editor-btn">
           Excel
         </button>
-        <button onClick={() => setShowRegenConfirm(true)} style={{ padding: '6px 14px', border: '1px solid #C3E11D', borderRadius: '6px', background: '#fafff0', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500 }}>
+        <button onClick={() => setShowRegenConfirm(true)} className="editor-btn editor-btn--regen">
           Re-generate
         </button>
         <button onClick={async () => {
@@ -165,7 +161,7 @@ const Editor = ({
               if (id) window.location.href = `/playbook/${id}`;
             }
           } catch (e) { import.meta.env.DEV && console.error('Create playbook error:', e); }
-        }} style={{ padding: '6px 14px', border: '1px solid #00316f', borderRadius: '6px', background: '#f0f5ff', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, color: '#00316f' }}>
+        }} className="editor-btn editor-btn--playbook">
           Create Playbook
         </button>
       </div>

@@ -37,12 +37,7 @@ const FolderStructure = () => {
     <section className={styles.assistant}>
       <div className={styles.heading}>
         <p>Folders</p>
-        <p
-          style={{
-            fontWeight: 'normal',
-            fontSize: '14px',
-          }}
-        >
+        <p className="folder-structure__see-all">
           See All (23)
         </p>
       </div>
@@ -53,17 +48,10 @@ const FolderStructure = () => {
             <img
               src={FolderIcon}
               alt=""
-              style={{
-                width: '65px',
-                height: '55px',
-              }}
+              className="folder-structure__icon"
             />
             <p>{name}</p>
-            <p
-              style={{
-                color: 'rgba(0, 102, 255, 1)',
-              }}
-            >
+            <p className="folder-structure__file-count">
               2 files
             </p>
           </div>

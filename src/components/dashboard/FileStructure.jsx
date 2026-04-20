@@ -14,7 +14,7 @@ import {
 import NotificationBar from '../common/NotificationBar';
 import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
-import './styles/FileStructure.css';
+import './styles/file-structure.scss';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import InputModal from '../common/InputModal';
@@ -127,7 +127,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
             <span className="icon">
               <BsThreeDotsVertical
                 size={18}
-                style={{ position: 'absolute', top: '0', right: '0' }}
+                className="file-structure-close-btn"
                 onClick={() => toggleDropdown(folder)}
               />
               {openDropdown === folder && (

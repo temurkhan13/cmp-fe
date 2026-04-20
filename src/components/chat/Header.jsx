@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 // styling
-import styles from '../../style/chat/chatHeader.module.scss';
+import './chat.scss';
 
 // react-icons
 import { IoSearchOutline } from 'react-icons/io5';
@@ -46,14 +46,14 @@ const Header = () => {
   ];
 
   return (
-    <header className={styles.ChatHeader}>
-      <div className={styles.hero}>
+    <header className="chat-header">
+      <div className="chat-header__hero">
         <nav>
-          <div className={styles.LogoWithFileName}>
-            <img src={Sidebar} alt="Logo" className={styles.ChatImage} />
+          <div className="chat-header__logo-filename">
+            <img src={Sidebar} alt="Logo" className="chat-header__image" />
             <input
               type="text"
-              className={styles.ChatInput}
+              className="chat-header__input"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
@@ -62,16 +62,9 @@ const Header = () => {
           <ul>
             {IconMap.map(({ icon: Icon, name, component }) => (
               <li key={name}>
-                <div className={styles.NavLinkContainer}>
+                <div className="chat-header__nav-container">
                   <Icon
-                    className={
-                      activeComponent === name
-                        ? styles.ActiveNavlink
-                        : styles.NavLinks
-                    }
-                    style={{
-                      color: activeComponent === name ? 'white' : 'black',
-                    }}
+                    className={`chat-header__nav-link ${activeComponent === name ? 'chat-header__nav-link--active chat-header-icon--active' : 'chat-header-icon--inactive'}`}
                     onClick={() => handleToggleComponent(name)}
                   />
                   {activeComponent === name && component}
@@ -80,7 +73,7 @@ const Header = () => {
             ))}
 
             {/*<li>*/}
-            {/*  <button className={styles.share}>*/}
+            {/*  <button className="chat-header__share">*/}
             {/*    <RiUserSharedLine />*/}
             {/*    <span>Share</span>*/}
             {/*  </button>*/}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import 'react-color-palette/css';
 import { ColorPicker, useColor } from 'react-color-palette';
+import '../assessment.scss';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { RxCross2 } from 'react-icons/rx';
@@ -35,9 +36,9 @@ const EditModal = ({ isOpen, onClose }) => {
     <div className="edit-overlay">
       <div className="modalContainer">
         <button className="closeButton" onClick={onClose}>
-          <RxCross2 style={{ fontSize: '2rem' }} />
+          <RxCross2 className="edit-modal-close-icon" />
         </button>
-        <p className="title" style={{ fontSize: '1.7rem', fontWeight: 'bold' }}>
+        <p className="title edit-modal-title">
           Choose your branding
         </p>
         <hr className="saperator" />
@@ -72,23 +73,10 @@ const EditModal = ({ isOpen, onClose }) => {
                 className="color-container"
                 onMouseEnter={() => setCurrentColor(colorObj.id)}
                 onMouseLeave={() => setCurrentColor(null)}
-                style={{
-                  marginBottom: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: 'fit-content',
-                  fontSize: '1.3rem',
-                }}
               >
                 <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    backgroundColor: colorObj.color,
-                    display: 'inline-block',
-                    marginRight: '10px',
-                  }}
+                  className="color-swatch"
+                  style={{ backgroundColor: colorObj.color }}
                 ></div>
                 <span>{colorObj.color.replace('#', '')}</span>
                 {currentColor === colorObj.id && (
@@ -151,139 +139,6 @@ const EditModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <style>{`
-  .edit-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  .modalContainer {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    width: 50%;
-    max-height: 98vh;
-    overflow-y: auto;
-    position: relative;
-  }
-  .saperator {
-    margin-top: 1rem;
-    color: #f1f1f1;
-  }
-  .closeButton {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  .title {
-    /* font-size: 5rem; */
-  }
-  .section {
-    margin-top: 2rem;
-    /* margin-bottom: 20px; */
-  }
-  .label {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-  }
-  .logoPreview {
-    width: 12rem;
-    height: 12rem;
-    margin-top: 1rem;
-    /* background-size: cover; */
-    display: flex;
-    border-radius: 1rem;
-    border: 1px solid lightgray; 
-  }
-  .file-upload {
-    margin-top: 1.5rem;
-  }
-  .note {
-    margin-top: 0.8rem;
-    margin-bottom:0.8rem;
-    font-size: 1.3rem;
-  }
-  .note span {
-    font-size: 1.3rem;
-    font-weight: 600;
-  }
-  .colorPicker {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .colorPicker button {
-    border: none;
-    outline: none;
-    font-size: 1.4rem;
-    background-color: transparent;
-    display: flex;
-    color: blue;
-  }
-  .documentTypes {
-    display: flex;
-    justify-content: space-around;
-  }
-  .mockup {
-    /* width: 14rem; */
-    /* height: 15rem; */
-    background: #f1f1f1;
-    border-radius: 1rem;
-    margin-bottom: 1rem;
-  }
-  .docType {
-    padding: 1rem;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-  }
-  .docType.selected {
-    border: 1px solid #0066FF;
-    border-radius: 1.5rem;
-  }
-  .update-btn {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 2rem;
-  }
-  .updateButton {
-    background: #C3E11D;
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 1rem;
-    font-size: 1.5rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    color: #0B1444;
-    transition:0.1s ease-in-out
-  }
-  .color-container:hover .color-picker {
-    display: block;
-  }
-  .color-picker {
-   width: 228px;
-    height: 128px;
-    display: none;
-    position: absolute;
-    z-index: 1;
-  }
-`}</style>
       </div>
     </div>
   );

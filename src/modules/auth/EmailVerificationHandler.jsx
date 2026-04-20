@@ -176,7 +176,7 @@ const EmailVerificationHandler = () => {
         }}
       >
         <h1>Please check your email.</h1>
-        <p style={{ fontSize: '1.2rem' }}>
+        <p className="auth-verification-subtitle">
           We&apos;ve sent a code to your entered email.
         </p>
         <div className="verification-inputs">
@@ -195,13 +195,13 @@ const EmailVerificationHandler = () => {
             />
           ))}
         </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {error && <div className="auth-error">{error}</div>}
 
-        <p style={{ fontSize: '1.3rem' }}>
+        <p className="auth-verification-subtitle--lg">
           <span> </span>
           Didn&apos;t get a code?
           <span
-            style={{ textDecoration: 'underline', cursor: 'pointer' }}
+            className="auth-resend-action"
             onClick={handleResendCode}
           >
             Click to resend.
@@ -213,60 +213,6 @@ const EmailVerificationHandler = () => {
           Submit
         </button>
       </Modal>
-      <style>{`
-
-  .email-verification-bar {
-    width: 100%;
-    max-width: 37.5rem; 
-    position: fixed;
-    top: 0%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #C3E11D;
-    padding: 1rem;
-    border-bottom-right-radius: 1rem; 
-    border-bottom-left-radius: 1rem; 
-    color: black;
-    text-align: center;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); 
-    z-index: 1000;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-  }
-    .email-verify-btn{
-    padding: 0.5rem 1rem;
-    border: 1px solid black;
-    border-radius: 5px;
-    background-color:#C3E11D;
-    }
-  .verification-inputs {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem 0;
-  }
-  input {
-    width: 5rem;
-    height: 5rem;
-    font-size: 3rem;
-    text-align: center;
-    border: 0.0625rem solid lightgray;
-    border-radius: 0.5rem;
-    outline: none;
-  }
-  .code-submit-btn {
-    padding: 0.5rem 3rem;
-    border: none;
-    outline: none;
-    font-size: 1.8rem;
-    border-radius: 1rem; 
-    background-color: #c3e11d;
-    color: #0b1444;
-  }
-`}</style>
     </>
   );
 };

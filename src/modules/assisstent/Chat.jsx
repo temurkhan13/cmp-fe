@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import Components from '../../components';
+import '../../components/assessment/assessment.scss';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import {
   setSelectedWorkspace,

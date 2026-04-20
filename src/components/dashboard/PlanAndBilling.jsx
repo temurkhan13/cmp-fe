@@ -5,6 +5,7 @@ import apiClient from '../../api/axios';
 import config from '../../config/config';
 import Components from '..';
 import toast from 'react-hot-toast';
+import './dashboard-inline.scss';
 
 const PLAN_FEATURES = {
   Starter: [
@@ -92,37 +93,18 @@ const PlanAndBilling = () => {
     <div className="billing-page">
 
       {/* Current Plan */}
-      <div style={{
-        background: '#fff',
-        borderRadius: '12px',
-        padding: '2rem',
-        margin: '0 2rem 2rem',
-        border: '1px solid rgba(0,0,0,0.06)',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="billing-current-plan">
+        <div className="billing-current-plan__row">
           <div>
-            <p style={{ fontSize: '1.3rem', color: '#6b7280' }}>Current Plan</p>
-            <h3 style={{ fontSize: '2rem', fontWeight: 600 }}>{currentPlanName}</h3>
+            <p className="billing-current-plan__label">Current Plan</p>
+            <h3 className="billing-current-plan__name">{currentPlanName}</h3>
           </div>
-          <span style={{
-            background: 'rgba(34,197,94,0.1)',
-            color: '#15803d',
-            padding: '4px 12px',
-            borderRadius: '9999px',
-            fontSize: '1.2rem',
-            fontWeight: 600,
-          }}>Active</span>
+          <span className="billing-active-badge">Active</span>
         </div>
       </div>
 
       {/* Plans Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '1.5rem',
-        margin: '0 2rem 2rem',
-      }}>
+      <div className="billing-plans-grid">
         {(plans.length > 0 ? plans : [
           { id: 'free', name: 'Starter', price: 0 },
           { id: 'pro', name: 'Professional', price: 49 },
@@ -133,45 +115,21 @@ const PlanAndBilling = () => {
           const features = PLAN_FEATURES[plan.name] || [];
 
           return (
-            <div key={plan.id} style={{
-              background: isHighlighted ? 'linear-gradient(135deg, #fefff0, #fff)' : '#fff',
-              border: isHighlighted ? '2px solid #C3E11D' : '1px solid rgba(0,0,0,0.08)',
-              borderRadius: '16px',
-              padding: '2rem',
-              position: 'relative',
-              transition: 'all 0.2s ease',
-            }}>
+            <div key={plan.id} className={`billing-plan-card ${isHighlighted ? 'billing-plan-card--highlighted' : ''}`}>
               {isHighlighted && (
-                <div style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: '#C3E11D',
-                  padding: '4px 16px',
-                  borderRadius: '9999px',
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                }}>Most Popular</div>
+                <div className="billing-plan-card__popular-badge">Most Popular</div>
               )}
-              <h3 style={{ fontSize: '1.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>{plan.name}</h3>
-              <div style={{ marginBottom: '1.5rem' }}>
-                <span style={{ fontSize: '2.8rem', fontWeight: 700 }}>
+              <h3 className="billing-plan-card__title">{plan.name}</h3>
+              <div className="billing-plan-card__price-section">
+                <span className="billing-plan-card__price">
                   {plan.price === 0 ? 'Free' : `£${plan.price}`}
                 </span>
-                {plan.price > 0 && <span style={{ fontSize: '1.3rem', color: '#6b7280' }}>/month</span>}
+                {plan.price > 0 && <span className="billing-plan-card__period">/month</span>}
               </div>
-              <ul style={{ listStyle: 'none', padding: 0, marginBottom: '1.5rem' }}>
+              <ul className="billing-plan-card__features">
                 {features.map((f, i) => (
-                  <li key={i} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '1.25rem',
-                    marginBottom: '0.5rem',
-                    color: '#374151',
-                  }}>
-                    <FaCheck style={{ color: '#C3E11D', flexShrink: 0 }} size={12} />
+                  <li key={i} className="billing-plan-card__feature">
+                    <FaCheck className="billing-plan-card__check-icon" size={12} />
                     {f}
                   </li>
                 ))}
@@ -179,18 +137,7 @@ const PlanAndBilling = () => {
               <button
                 disabled={isCurrent || checkoutLoading === plan.id}
                 onClick={() => !isCurrent && handleSubscribe(plan.id)}
-                style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: isCurrent ? '#e5e7eb' : isHighlighted ? '#C3E11D' : '#f0f0f0',
-                  fontWeight: 600,
-                  fontSize: '1.3rem',
-                  cursor: isCurrent ? 'default' : 'pointer',
-                  color: '#111',
-                  transition: 'all 0.2s ease',
-                }}
+                className={`billing-plan-card__btn ${isCurrent ? 'billing-plan-card__btn--current' : isHighlighted ? 'billing-plan-card__btn--highlighted' : 'billing-plan-card__btn--default'}`}
               >
                 {checkoutLoading === plan.id ? 'Redirecting...' : isCurrent ? 'Current Plan' : plan.price === 0 ? 'Downgrade' : 'Upgrade'}
               </button>
@@ -198,13 +145,6 @@ const PlanAndBilling = () => {
           );
         })}
       </div>
-
-      <style>{`
-        .billing-page {
-          padding: 1rem;
-          font-size: 1.4rem;
-        }
-      `}</style>
     </div>
   );
 };

@@ -23,6 +23,7 @@ import {
 } from '../../redux/slices/folderSlice.js';
 import { IoIosChatboxes } from 'react-icons/io';
 import PageHeader from '../../components/common/PageHeader';
+import './ai-assistant.scss';
 
 const AiAssistant = () => {
   const navigate = useNavigate();
@@ -170,7 +171,7 @@ const AiAssistant = () => {
         onFolderUpdate={handleDataUpdated}
       />
 
-      <section className="generate" style={{ marginTop: '2rem' }}>
+      <section className="generate generate--spaced">
         <div className="container">
           <div className="left-buttons">
             <p className="assistant-heading">
@@ -181,8 +182,7 @@ const AiAssistant = () => {
 
           <div className="center-buttons">
             <button
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-              className="assiss-btn"
+              className="assiss-btn assiss-btn--flex"
               onClick={() => {
                 dispatch(setCurrentChatId(null));
                 navigate('/assistant/chat');
@@ -198,7 +198,7 @@ const AiAssistant = () => {
       <div className="section assistant-section">
         <div className="workspace-header"></div>
         {folderData?.[0]?.chats.length > 0 ? (
-          <div className="grid">
+          <div className="assistant-grid">
             {folderData?.[0]?.chats?.map((item) => (
               <DashboardCard
                 key={item.id}
@@ -212,113 +212,12 @@ const AiAssistant = () => {
             ))}
           </div>
         ) : (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '300px',
-              margin: '0 auto',
-            }}
-          >
+          <div className="ai-assistant-nodata">
             <NoData message="No Data Available" />
           </div>
         )}
       </div>
 
-      <style>{`
-      .selected-workspace-name {
-        position: absolute;
-        top: 2rem;
-        left: 3rem;
-      }
-      .selected-workspace-name p {
-        font-size: 1.5rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-      .selected-workspace-name .workspace-badge {
-        background-color: #C3E11D;
-        color: #0B1444;
-        padding: 0.25rem 0.75rem;
-        border-radius: 7px;
-        font-size: 1.3rem;
-        font-weight: 700;
-      }
-        .grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          grid-gap: 1rem;
-          justify-items: center;
-          align-items: start;
-          padding: 15px;
-        }
-
-        .section {
-          margin-top: 2rem;
-        }
-
-        .assistant-section {
-          margin-top: 0 !important;
-        }
-
-        .userName, .fileName {
-          font-size: 1.125rem;
-          font-weight: bold;
-        }
-
-        .chatContent {
-          font-size: 1.2rem;
-          margin: 0.5rem 0;
-        }
-
-        .footer {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .fileDetails {
-          margin-bottom: 3rem;
-        }
-        
-        .folderName {
-          color: #0066ff;
-          font-size: 1.1rem;
-          margin-left: 0.5rem;
-        }
-          .dropdown-menuu {
-  position: absolute;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  width: 100%;
-  margin-top: 5px;
-  right: 0rem;
-  top: 2rem;
-}
-
-.dropdown-itemm {
-  padding: 8px 5px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  font-weight: normal;
-  text-align: center;
-  font-size: 10px;
-  color: black
-}
-
-.dropdown-itemm:hover {
-  background-color: #f5f5f5;
-}
-
-.icon-container {
-  position: relative; /* Required for dropdown positioning */
-}
-      `}</style>
     </DashboardLayout>
   );
 };

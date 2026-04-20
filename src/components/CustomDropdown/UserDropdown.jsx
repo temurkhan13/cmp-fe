@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 import NoDataAvailable from '../common/NoDataAvailable';
 
+import './custom-dropdown.scss';
+
 const UserDropdown = ({ activeIcon, handleIconClick }) => {
   const { users, currentChat } = useSelectedChat();
 
@@ -29,31 +31,31 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
 
     return (
       <>
-        <Dropdown.Item style={styles.dropdownItem}>
-          <MdPerson style={styles.icon} />
+        <Dropdown.Item className="custom-dropdown-user-item">
+          <MdPerson className="custom-dropdown-user-icon" />
           <div>
-            <div style={styles.userName}>{owner?.name || 'Owner'}</div>
-            <div style={styles.userRole}>owner</div>
+            <div className="custom-dropdown-user-name">{owner?.name || 'Owner'}</div>
+            <div className="custom-dropdown-user-role">owner</div>
           </div>
         </Dropdown.Item>
-        <hr style={{ color: 'lightgray' }} />
+        <hr className="custom-dropdown-user-hr" />
         {nonOwnerUsers.length === 0 ? (
-          <Dropdown.Item style={styles.dropdownItem}>
+          <Dropdown.Item className="custom-dropdown-user-item">
             <NoDataAvailable message="No User Available" />
           </Dropdown.Item>
         ) : (
           nonOwnerUsers.map((user) => {
             const userDetails = userDetailsMap[user.userId];
             return (
-              <Dropdown.Item key={user.userId} style={styles.dropdownItem}>
+              <Dropdown.Item key={user.userId} className="custom-dropdown-user-item">
                 <img
                   src={userDetails.image}
                   alt={userDetails.name}
-                  style={styles.userImage}
+                  className="custom-dropdown-user-image"
                 />
                 <div>
-                  <div style={styles.userName}>{userDetails.name}</div>
-                  <div style={styles.userRole}>{user.role}</div>
+                  <div className="custom-dropdown-user-name">{userDetails.name}</div>
+                  <div className="custom-dropdown-user-role">{user.role}</div>
                 </div>
               </Dropdown.Item>
             );
@@ -66,64 +68,12 @@ const UserDropdown = ({ activeIcon, handleIconClick }) => {
   return (
     <Dropdown
       title={<MdPeople fontSize={22} />}
-      className={activeIcon === 'people' ? 'active' : ''}
+      className={activeIcon === 'people' ? 'active custom-dropdown-user-btn-active' : 'custom-dropdown-user-btn'}
       onClick={() => handleIconClick('people')}
-      style={
-        activeIcon === 'people'
-          ? styles.dropdownButtonActive
-          : styles.dropdownBtn
-      }
     >
       {renderDropdownItems()}
     </Dropdown>
   );
-};
-
-const styles = {
-  dropdownButtonActive: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '0.8rem',
-    padding: '0.7rem',
-    cursor: 'pointer',
-    border: 'none',
-  },
-  dropdownBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.7rem',
-    justifyContent: 'center',
-    border: 'none',
-    borderRadius: '0.8rem',
-    cursor: 'pointer',
-    fontSize: '2rem',
-    transition: 'opacity 0.2s ease-in-out',
-  },
-  dropdownItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.8rem',
-    // borderRadius: '1rem',
-  },
-  userImage: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    marginRight: '0.8rem',
-  },
-  userName: {
-    fontSize: '1.5rem',
-    fontWeight: '500',
-  },
-  userRole: {
-    fontSize: '1rem',
-    color: 'gray',
-  },
-  icon: {
-    marginRight: '0.8rem',
-    fontSize: '1.5rem',
-  },
 };
 
 UserDropdown.propTypes = {
