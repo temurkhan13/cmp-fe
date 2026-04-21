@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import '../assessment/chat-message.scss';
-import './assisstent.scss';
+import './assistant.scss';
 import '../assessment/assessment.scss';
 import {
   FaCopy,
@@ -66,7 +66,7 @@ import {
 
 import * as FaIcons from 'react-icons/fa';
 // import { v4 as uuidv4 } from 'uuid';
-import { deleteBookmark, setChats } from '../../redux/slices/chatSlice';
+import { setChats } from '../../redux/slices/chatSlice';
 import { getChatsAsync } from '../../redux/slices/workspaceSlice';
 import {
   selectWorkspace,
@@ -235,51 +235,6 @@ const MessagesSection = ({ setCurrentChat }) => {
     setAskAI(false);
     setPopupVisible(false);
   };
-  // const handleSendMessage = async () => {
-  // e.preventDefault();
-  // if (!workspaceId) {
-  //   alert('Please select a workspace');
-  //   return;
-  // }
-  // try {
-  //   addMessage({
-  //     workspaceId: workspaceId,
-  //     folderId: folderId._id,
-  //     chatId: chatId ? chatId : 'newChat',
-  //     message: text,
-  //     files: file,
-  //   }).unwrap();
-  //.then((response);
-
-  // setChatContent('');
-  //   } catch (error) {
-  //   }
-  // };
-
-  // Memoize HandleAskAi function
-
-  // // Memoize applyFixedText function
-  // const applyFixedText = useCallback(
-  //   (newText) => {
-  //     const updatedChat = chat.map((message) => {
-  //       if (message.text) {
-  //         return {
-  //           ...message,
-  //           text: message.text.replace(selectedText, newText),
-  //         };
-  //       }
-  //       return message;
-  //     });
-  //    // setChat(updatedChat);
-  //    //  dispatch(updateMessage(workspaceId, folderId, chatId, messageId, message));
-  //
-  //     refetch()
-  //
-  //     setPopupVisible(false);
-  //   },
-  //   [chat, selectedText, dispatch, workspaceId, chatId]
-  // );
-
   const applyFixedText = useCallback(
     async (newText) => {
       try {
@@ -423,22 +378,6 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleAddBookmark = async (message) => {
-    // const bookmark = {
-    //   bookmarkId: 'bookmarkId3',
-    //   userId: 'userId4',
-    //   timestamp: '2024-07-12T12:40:00Z',
-    //   date: '2024-07-12',
-    //   messages: [
-    //     {
-    //       messageId: messageId,
-    //       sender: 'ChangeAI',
-    //       text: content,
-    //       savedBy: 'You',
-    //     },
-    //   ],
-    // };
-    //dispatch(addBookmark(bookmark));
-
     const bookmark =
       chat &&
       chat.bookmarks?.filter(
@@ -658,8 +597,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                   <div
                     className={
                       message && (message.sender || message.from) === 'user'
-                        ? 'chat-container-assisstant right'
-                        : 'chat-container-assisstant left'
+                        ? 'chat-container-assistant right'
+                        : 'chat-container-assistant left'
                     }
                   >
                     {message && (message.sender || message.from) === 'user' ? (

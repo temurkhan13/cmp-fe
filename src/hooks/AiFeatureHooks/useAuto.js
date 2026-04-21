@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import config from '../../config/config';
 import apiClient from '../../api/axios';
+import { getUserId } from '../../utils/getUserId';
 
 const useAuto = () => {
   const [error, setError] = useState(null);
@@ -11,7 +12,7 @@ const useAuto = () => {
       const response = await apiClient.post(
         config.apiURL + '/chat/auto/',
         {
-          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+          user_id: getUserId(),
           message: inputText,
         },
         {

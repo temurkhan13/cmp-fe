@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
 import config from '../../config/config';
+import { getUserId } from '../../utils/getUserId';
 
 const useChangeTone = () => {
   const [error, setError] = useState(null);
@@ -12,7 +13,7 @@ const useChangeTone = () => {
       const response = await apiClient.post(
         `${config.apiURL}/chat/change-tone`,
         {
-          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+          user_id: getUserId(),
           message: { selectedText },
           tone: tone,
         },

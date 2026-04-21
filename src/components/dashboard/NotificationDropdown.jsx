@@ -6,8 +6,6 @@ import AllNotifications from './AllNotifications';
 import UnreadNotifications from './UnreadNotifications';
 import RequestsNotifications from './RequestsNotifications';
 
-const notifications = [];
-
 const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
   const [activeTab, setActiveTab] = useState('All');
   const [hasUnread, setHasUnread] = useState(true);
@@ -29,7 +27,7 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'All':
-        return <AllNotifications notifications={notifications} />;
+        return <AllNotifications />;
       case 'Unread':
         return <UnreadNotifications />;
       case 'Requests':

@@ -7,7 +7,7 @@ import SideBarModal from '../../components/common/SideBarModal';
 import AssessmentTasks from './AssessmentComponent/AssessmentTasks';
 import AssessmentMedia from './AssessmentComponent/AssessmentMedia';
 import AssessmentComments from './AssessmentComponent/AssessmentComments';
-import ChatBookmark from '../assisstent/assistantModal/ChatBookmark';
+import ChatBookmark from '../assistant/assistantModal/ChatBookmark';
 import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
 
 import { IoIosChatboxes } from 'react-icons/io';

@@ -58,7 +58,7 @@ const Routess = () => {
           {data.routes.assessmentRoutesData.map((el) => (
             <Route path={el.path} element={<PageFade><el.element /></PageFade>} key={el.path} />
           ))}
-          {data.routes.assisstantRoutesData.map((el) => (
+          {data.routes.assistantRoutesData.map((el) => (
             <Route path={el.path} element={<PageFade><el.element /></PageFade>} key={el.path} />
           ))}
           {data.routes.dashboardRoutesData.map((el) => (
