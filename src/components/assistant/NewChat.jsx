@@ -13,7 +13,7 @@ import {
 } from 'react-icons/tb';
 import { BsThreeDots } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
-import './assisstent.scss';
+import './assistant.scss';
 import { RxDashboard } from 'react-icons/rx';
 import Spinner from '../dashboard/Spinner/Spinner';
 

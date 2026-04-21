@@ -11,8 +11,7 @@ import {
   FaSync,
   FaBookmark,
 } from 'react-icons/fa';
-import { IoAttach, IoChevronDown, IoChevronUp } from 'react-icons/io5';
-import { IoSend } from 'react-icons/io5';
+import { IoAttach, IoChevronDown, IoChevronUp, IoSend } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci';
 import AiPic from '../../assets/dashboard/sidebarLogo.png';
 import UserAvatar from '../common/UserAvatar';
@@ -713,7 +712,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
               >
                 {/* User-uploaded file or standalone user message */}
                 {item.role === 'user' && (
-                  <div className="chat-container-assisstant right">
+                  <div className="chat-container-assistant right">
                     <div className="card chat-card user-card">
                       <div className="user-avatar">
                         <UserAvatar
@@ -741,7 +740,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 )}
                 {/* AI message */}
                 {item.role === 'ai' && (
-                  <div className="chat-container-assisstant left">
+                  <div className="chat-container-assistant left">
                     <div className="card chat-card assistant-card">
                       <div className="ai-avatar">
                         <UserAvatar
@@ -797,7 +796,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 )}
                 {/* Q&A format from backend (no role field) — AI question on left */}
                 {!item.role && item.question && (
-                  <div className="chat-container-assisstant left">
+                  <div className="chat-container-assistant left">
                     <div className="card chat-card assistant-card">
                       <div className="ai-avatar">
                         <UserAvatar
@@ -853,7 +852,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 )}
                 {/* Q&A format — user answer on right */}
                 {!item.role && item.status === 'answered' && (
-                  <div className="chat-container-assisstant right">
+                  <div className="chat-container-assistant right">
                     <div className="card chat-card user-card">
                       <div className="user-avatar">
                         <UserAvatar

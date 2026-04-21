@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../config/config';
+import { forceLogout } from '../utils/forceLogout';
 
 const apiClient = axios.create({
   baseURL: config.apiURL,
@@ -34,18 +35,6 @@ const processQueue = (error, token = null) => {
     }
   });
   failedQueue = [];
-};
-
-const forceLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('user');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('accessToken');
-  const path = window.location.pathname;
-  if (path !== '/log-in' && path !== '/sign-up' && path !== '/' && !path.startsWith('/privacy') && !path.startsWith('/terms') && !path.startsWith('/forgot')) {
-    setTimeout(() => { window.location.href = '/log-in'; }, 0);
-  }
 };
 
 apiClient.interceptors.response.use(

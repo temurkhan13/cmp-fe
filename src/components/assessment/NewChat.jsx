@@ -15,10 +15,6 @@ import LoadingSpinner from '../../components/common/LoadingSpinner';
 import {
   selectAllAssessments,
   selectAllFolders,
-  selectCurrentAssessment,
-  selectCurrentFolder,
-  selectCurrentWorkspace,
-  selectFolderById,
 } from '../../redux/selectors/selectors';
 import {
   setCurrentAssessmentId,
@@ -36,17 +32,7 @@ const NewChat = () => {
   const [hoveredChatIndex, setHoveredChatIndex] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const currentWorkspace = useSelector(selectCurrentWorkspace);
-  const currentFolder = useSelector(selectCurrentFolder);
-  const currentChat = useSelector(selectCurrentAssessment);
-  // const selectedFolder = useSelector((state) =>
-  //   selectFolderById(state, currentFolder._id)
-  // );
   const chats = useSelector(selectAllAssessments);
-
-  const capitalizeFirstWord = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -71,8 +57,6 @@ const NewChat = () => {
     });
     setIsModalOpen(true);
   };
-  const folderId = useSelector(selectCurrentFolder);
-
   const handleChatSelect = (chatId) => {
     const currentUrl = window.location.pathname;
     const newUrl = currentUrl.replace(

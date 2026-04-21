@@ -1,5 +1,6 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import config from '../../config/config';
+import { forceLogout } from '../../utils/forceLogout';
 
 const baseURL = `${config.apiURL}/`;
 
@@ -16,18 +17,6 @@ const rawBaseQuery = fetchBaseQuery({
 
 let isRefreshing = false;
 let refreshPromise = null;
-
-const forceLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('user');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('accessToken');
-  const path = window.location.pathname;
-  if (path !== '/log-in' && path !== '/sign-up' && path !== '/' && !path.startsWith('/privacy') && !path.startsWith('/terms') && !path.startsWith('/forgot')) {
-    setTimeout(() => { window.location.href = '/log-in'; }, 0);
-  }
-};
 
 const baseQuery = async (args, api, extraOptions) => {
   let result = await rawBaseQuery(args, api, extraOptions);

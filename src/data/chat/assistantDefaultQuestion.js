@@ -1,4 +1,4 @@
-const assisstentDefaultQuestion = [
+const assistantDefaultQuestion = [
   {
     question: 'How do i manage resistance to change?',
     title: 'title1',
@@ -17,4 +17,4 @@ const assisstentDefaultQuestion = [
   },
 ];
 
-export default assisstentDefaultQuestion;
+export default assistantDefaultQuestion;

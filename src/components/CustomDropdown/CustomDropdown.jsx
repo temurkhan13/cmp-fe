@@ -5,11 +5,9 @@ import CustomModal from '../customModal/CustomModal';
 import MoveToModal from '../customModal/MoveToModal';
 
 import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import { IoIosCheckmark } from 'react-icons/io';
+import { MdOutlineKeyboardArrowRight, MdInsertLink } from 'react-icons/md';
+import { IoIosCheckmark, IoMdTrash } from 'react-icons/io';
 import { RiFolderTransferFill } from 'react-icons/ri';
-import { MdInsertLink } from 'react-icons/md';
-import { IoMdTrash } from 'react-icons/io';
 import { BsThreeDots } from 'react-icons/bs';
 
 import './custom-dropdown.scss';

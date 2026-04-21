@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
 import config from '../../config/config';
+import { getUserId } from '../../utils/getUserId';
 
 const useShorter = () => {
   const [error, setError] = useState(null);
@@ -11,7 +12,7 @@ const useShorter = () => {
       const response = await apiClient.post(
         `${config.apiURL}/chat/short-text`,
         {
-          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+          user_id: getUserId(),
           message: inputText,
         },
         {

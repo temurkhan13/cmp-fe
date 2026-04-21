@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
+import { getUserId } from '../../utils/getUserId';
 
 const useTranslation = () => {
   const [translationtext, setTranslationText] = useState('');
@@ -8,7 +9,7 @@ const useTranslation = () => {
   const Translation = async (inputText, language) => {
     try {
       const response = await apiClient.post('/chat/translate', {
-        user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+        user_id: getUserId(),
         message: inputText,
         language: language,
       });

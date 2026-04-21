@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
 import config from '../../config/config';
+import { getUserId } from '../../utils/getUserId';
 const useInspire = () => {
   const [loading, setLoading] = useState(false);
 
@@ -11,7 +12,7 @@ const useInspire = () => {
       const response = await apiClient.post(
         `${config.apiURL}/chat/inspire-me`,
         {
-          user_id: JSON.parse(localStorage.getItem('user'))?.id || localStorage.getItem('userId') || '',
+          user_id: getUserId(),
           message: text,
         },
         {

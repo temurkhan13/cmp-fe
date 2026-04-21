@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
-import { BiPlus, BiSearch } from 'react-icons/bi';
-import { FaUserPlus } from 'react-icons/fa6';
+import { BiPlus } from 'react-icons/bi';
 
 import Components from '@components';
 import assets from '../../assets';
-import UserDropdown from '../CustomDropdown/UserDropdown';
 import ShareModal from '../customModal/Sharemodal';
-import CustomDropdown from '../CustomDropdown/CustomDropdown';
-import SearchDropdown from '../CustomDropdown/SearchDropdown';
 import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
 import { Questionnaire } from '../../modules/assessment';
@@ -17,8 +13,6 @@ import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 // import UserProfilePic from '../../assets/chat/user.png';
-
-const searchUser = ['John', 'abigale', 'mosa'];
 
 const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
   const [activeIcon, setActiveIcon] = useState(null);

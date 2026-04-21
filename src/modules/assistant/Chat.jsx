@@ -24,7 +24,7 @@ import {
   AssistantSidebar,
   MessagesSection,
   NewChat,
-} from '../../components/assisstent/index.js';
+} from '../../components/assistant/index.js';
 import Modal from '../../components/common/Modal';
 import Questionnaire from '../../modules/assessment/Questionnaire';
 
