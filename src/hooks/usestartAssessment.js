@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import apiClient from '../api/axios';
-import config from '../config/config';
 import {
   fetchFolderData,
   resetFolderState,
-  selectSelectedFolder,
   setSelectedFolder,
   toggleFolderActivation,
 } from '../redux/slices/folderSlice.js';
@@ -19,22 +17,9 @@ import {
 const useStartAssessment = () => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
-  const businessInfo = useSelector((state) => state.businessInfo);
-  const [currentFolder, setCurrentFolder] = useState(null);
   const [isReportGenerated, setIsReportGenerated] = useState(false);
   const [report, setReport] = useState(null);
-
-  //const currentWorkspaceId = '66dc950e740af833ee34b3c5';// useSelector(selectCurrentWorkspace);
-  //const currentFolderId = '66dc950e740af833ee34b3c6';// useSelector(selectCurrentFolder)
-  const workspaceId = useSelector(
-    (state) => state.workspaces.currentWorkspaceId
-  );
   const currentWorkspace = useSelector(selectWorkspace);
-
-  // const folderId = useSelector((state) => state.workspaces.currentFolderId);
-  // const selectedWorkspace = useSelector(selectWorkspace);
-
-  const folderId = useSelector(selectSelectedFolder);
 
   const [isFetched, setIsFetched] = useState(false);
 
@@ -45,7 +30,6 @@ const useStartAssessment = () => {
         return;
       }
 
-      setCurrentFolder(folder);
       dispatch(setSelectedFolder(folder));
       dispatch(
         toggleFolderActivation({
@@ -105,39 +89,12 @@ const useStartAssessment = () => {
     fetchStats();
   }, [dispatch, isFetched, currentWorkspace, handleWorkspaceChange]);
 
-  const handleDataUpdated = useCallback(() => {
-    dispatch(fetchDashboardStats());
-  }, [dispatch]);
-
   const StartAssessment = async (name, folderId) => {
     try {
-      const businessInfoData = {
-        companyName: businessInfo.companyName,
-        companySize: businessInfo.companySize,
-        industry: businessInfo.industry,
-        jobTitle: businessInfo.jobTitle,
-        lastName: businessInfo.lastName,
-        firstName: businessInfo.firstName,
-        role: businessInfo.role,
-        webURL: businessInfo.websiteURL,
-      };
-      const token = localStorage.getItem('token');
-      const response = await apiClient.post(
-        `${config.apiURL}/workspace-assessment/`,
-        {
-          // message: message || '',
-          // history: [],
-          // generalInfo: `5 Comprehensive Pre-Assessment ${Questions}`,
-          // businessInfo: businessInfoData,
-          folderId,
-          name,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiClient.post('/workspace-assessment/', {
+        folderId,
+        name,
+      });
 
       // if (response.data || response.data.data.report.isGenerated) {
       //   setIsReportGenerated(true);

@@ -35,12 +35,13 @@ const AssessmentModal = ({ content, onClose }) => {
           overflow-y: hidden !important;
           background-color: white;
           width: fit-content !important;
+          position: relative
         }
         .closeButton {
           background-color: transparent;
           border: none;
           position: absolute;
-          right: 29.5rem;
+          right: 2rem;
           top: 15px;
           cursor: pointer;
           background-color: #f1f1f1;

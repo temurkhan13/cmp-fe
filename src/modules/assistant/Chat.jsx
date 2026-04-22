@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import Components from '../../components';
 import '../../components/assessment/assessment.scss';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import { FaImages } from 'react-icons/fa';
 import {
   setSelectedWorkspace,
   selectWorkspace,
@@ -34,10 +36,14 @@ const AiAssistantChat = () => {
   const userId =
     useSelector((state) => state.auth.user?.id) ||
     localStorage.getItem('userId');
-  const { data: workspaces, error } = useGetWorkspacesQuery(userId);
+  const { error } = useGetWorkspacesQuery(userId);
   const selectedWorkspace = useSelector(selectWorkspace);
   const allWorkspaces = useSelector(selectAllWorkspaces);
   const selectedFolder = useSelector((state) => state.folder.selectedFolder);
+
+  const isResponsive = useMediaQuery('(max-width: 1080px)');
+  const [showLeftSidebar, setShowLeftSidebar] = useState(false);
+  const [showRightSidebar, setShowRightSidebar] = useState(false);
 
   const [currentChat, setCurrentChat] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -82,7 +88,9 @@ const AiAssistantChat = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {}
+      } catch (err) {
+        console.error('Failed to fetch folder data:', err);
+      }
     },
     [dispatch, activeWorkspace]
   );
@@ -118,14 +126,27 @@ const AiAssistantChat = () => {
             dashboardStats.workspaces[0];
           handleWorkspaceChange(initialWorkspace);
         } else if (selectedWorkspace?.folders?.length > 0) {
-          const firstFolder =
-            selectedWorkspace.folders.find((folder) => folder.isActive) ||
-            selectedWorkspace.folders[0];
-          handleFolderSelection(firstFolder, selectedWorkspace.id);
+          // Respect persisted folder if it still belongs to the active workspace;
+          // otherwise fall back to the active/first folder
+          const persistedFolderId = selectedFolder?._id || selectedFolder?.id;
+          const persistedFolderBelongs =
+            persistedFolderId &&
+            selectedWorkspace.folders.some(
+              (f) => (f._id || f.id) === persistedFolderId
+            );
+
+          if (!persistedFolderBelongs) {
+            const firstFolder =
+              selectedWorkspace.folders.find((folder) => folder.isActive) ||
+              selectedWorkspace.folders[0];
+            handleFolderSelection(firstFolder, selectedWorkspace.id);
+          }
         }
 
         setIsFetched(true);
-      } catch {}
+      } catch (err) {
+        console.error('Failed to fetch dashboard stats:', err);
+      }
     };
 
     initializeWorkspaceAndFolder();
@@ -133,33 +154,71 @@ const AiAssistantChat = () => {
     dispatch,
     isFetched,
     selectedWorkspace,
+    selectedFolder,
     handleWorkspaceChange,
     handleFolderSelection,
   ]);
 
-  // Show error if no folders available in the selected workspace
+  // Lock body scroll when a responsive drawer is open
   useEffect(() => {
-    if (activeWorkspace?.folders?.length === 0) {
+    if (isResponsive && (showLeftSidebar || showRightSidebar)) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-  }, [activeWorkspace]);
-
-  const handleDataUpdated = useCallback(() => {
-    dispatch(fetchDashboardStats());
-  }, [dispatch]);
+    return () => { document.body.style.overflow = ''; };
+  }, [isResponsive, showLeftSidebar, showRightSidebar]);
 
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="assessmentChat">
+    <div className="assessmentChat assessmentChat--responsive">
       <Components.Common.Header
         activeWorkspace={selectedWorkspace}
         workspaces={allWorkspaces}
+        onMenuToggle={() => setShowLeftSidebar(true)}
       />
       <section>
-        <NewChat />
+        <NewChat
+          isOverlay={isResponsive}
+          isVisible={showLeftSidebar}
+          onClose={() => setShowLeftSidebar(false)}
+        />
+        {/* Backdrop for left sidebar */}
+        {isResponsive && showLeftSidebar && (
+          <div
+            className="sidebar-backdrop sidebar-backdrop--visible"
+            onClick={() => setShowLeftSidebar(false)}
+          />
+        )}
+
         <MessagesSection setCurrentChat={setCurrentChat} />
-        <AssistantSidebar currentChat={currentChat} />
+
+        <AssistantSidebar
+          currentChat={currentChat}
+          isOverlay={isResponsive}
+          isVisible={showRightSidebar}
+          onClose={() => setShowRightSidebar(false)}
+        />
+        {/* Backdrop for right sidebar */}
+        {isResponsive && showRightSidebar && (
+          <div
+            className="sidebar-backdrop sidebar-backdrop--visible"
+            onClick={() => setShowRightSidebar(false)}
+          />
+        )}
       </section>
+
+      {/* Floating button to open right sidebar on responsive */}
+      {isResponsive && (
+        <button
+          className="responsive-fab"
+          onClick={() => setShowRightSidebar(true)}
+          aria-label="Open sidebar panel"
+        >
+          <FaImages />
+        </button>
+      )}
 
       {showNotification && (
         <Components.Common.NotificationBar

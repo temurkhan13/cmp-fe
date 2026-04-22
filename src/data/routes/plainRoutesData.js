@@ -1,19 +1,19 @@
-import Module from '../../modules';
+import * as Auth from '../../modules/auth';
 const plainRoutesData = [
   {
     title: '',
     path: 'choose-plan',
-    element: Module.Auth.ChoosePlain,
+    element: Auth.ChoosePlain,
   },
   {
     title: '',
     path: 'check-out',
-    element: Module.Auth.CheckOut,
+    element: Auth.CheckOut,
   },
   {
     title: '',
     path: 'success',
-    element: Module.Auth.PaymentSuccess,
+    element: Auth.PaymentSuccess,
   },
 ];
 

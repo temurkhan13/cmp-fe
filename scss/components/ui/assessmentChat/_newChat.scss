@@ -191,3 +191,42 @@
     transparent
   );
 }
+
+// ─── NewChat overlay mode (responsive) ──────────────────
+.newChat--overlay {
+  display: block !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh !important;
+  width: 300px !important;
+  max-width: 300px !important;
+  z-index: 200;
+  background: #fff;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  border-radius: 0 !important;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+
+  &.newChat--visible {
+    transform: translateX(0);
+  }
+
+  @media (max-width: $dashboard_mobile) {
+    width: 85vw !important;
+    max-width: 85vw !important;
+  }
+
+  // Hide the inline collapse toggle in overlay mode
+  .sidebar-toggle-icon {
+    display: none;
+  }
+}
+
+// Hide left sidebar at responsive breakpoints (when not in overlay mode)
+@media (max-width: $dashboard_tablet) {
+  .newChat:not(.newChat--overlay) {
+    display: none;
+  }
+}

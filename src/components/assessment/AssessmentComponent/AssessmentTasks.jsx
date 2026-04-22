@@ -16,7 +16,7 @@ import { get } from 'jodit/esm/core/helpers';
 import { fetchWorkspaceAssessments } from '../../../redux/slices/folderSlice';
 import { selectCurrentFolder } from '../../../redux/selectors/selectors';
 
-const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
+const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelected }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -197,7 +197,10 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                   <div className="task-info">
                     <span
                       className="task-name"
-                      onClick={handleAssessmentSelect(assessment)}
+                      onClick={() => {
+                        handleAssessmentSelect(assessment);
+                        if (onTaskSelected) onTaskSelected();
+                      }}
                     >
                       {currentReport.ReportTitle
                         ? currentReport.subReport?.[0]?.ReportTitle || currentReport.ReportTitle
@@ -244,12 +247,11 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID }) => {
                     className="task-info"
                     onClick={() => {
                       if (matchedAssessment && matchedAssessment.status !== 'pending') {
-                        // Navigate to existing chat — the id useEffect in MessagesSection loads the data
                         navigate(`/assessment/chat/${matchedAssessment.id || matchedAssessment._id}`);
                       } else {
-                        // Start new assessment for pending ones
                         handleAssessmentSelect(assessment);
                       }
+                      if (onTaskSelected) onTaskSelected();
                     }}
                   >
                     <span className="task-name">{assessment}</span>

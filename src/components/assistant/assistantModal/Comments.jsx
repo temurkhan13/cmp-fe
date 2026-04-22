@@ -5,12 +5,6 @@ import { FaEllipsisV, FaCheck } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  updateComment,
-  removeComment,
-  addReply,
-  updateReply,
-} from '../../../redux/slices/workspaceSlice';
 import NoDataAvailable from '../../common/NoDataAvailable';
 
 import {

@@ -227,10 +227,9 @@ const TonePopup = ({
       ) : (
         <div className="navbar">
           <div
-            className="dropdown"
+            className="dropdown tone-popup-ask-ai-dropdown"
             ref={dropdownRef}
             onClick={handleClickInsideDropdown}
-            className="tone-popup-ask-ai-dropdown"
           ></div>
         </div>
       )}

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import apiClient from '../api/axios';
-import config from '../config/config';
 import { addContent } from '../redux/reducers/editorReducer';
 
 const useAssessmentReport = ({
@@ -24,8 +23,6 @@ const useAssessmentReport = ({
 
   const AssessmentReport = async (answer, subReportId, file) => {
     try {
-      const token = localStorage.getItem('token');
-
       // Select `questionId` based on whether `assessmentData` is populated
       const questionId = assessmentData.qa[assessmentData.qa.length - 1]._id;
 
@@ -37,20 +34,15 @@ const useAssessmentReport = ({
         formData.append('answer', answer || '');
         formData.append('file', file);
 
-        const res = await fetch(
-          `${config.apiURL}/workspace-assessment/${assessmentId}/answer`,
-          {
-            method: 'PATCH',
-            headers: { Authorization: `Bearer ${token}` },
-            body: formData,
-          }
+        const res = await apiClient.patch(
+          `/workspace-assessment/${assessmentId}/answer`,
+          formData,
         );
-        responseData = await res.json();
+        responseData = res.data;
       } else {
         const response = await apiClient.patch(
-          `${config.apiURL}/workspace-assessment/${assessmentId}/answer`,
+          `/workspace-assessment/${assessmentId}/answer`,
           { questionId, answer },
-          { headers: { Authorization: `Bearer ${token}` } }
         );
         responseData = response.data;
       }

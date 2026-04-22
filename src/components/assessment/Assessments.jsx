@@ -18,7 +18,7 @@ import {
 } from 'react-icons/fa';
 import { RiNewspaperLine } from 'react-icons/ri';
 
-const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData = [] }) => {
+const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData = [], isOverlay = false, isVisible = false, onClose }) => {
   const [activeIcon, setActiveIcon] = useState('question');
   const [comments, setComments] = useState([]);
   const { id: assessmentId } = useParams();
@@ -33,7 +33,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData
 
   return (
     <>
-      <section className="iconSection">
+      <section className={`iconSection ${isOverlay ? 'iconSection--overlay' : ''} ${isOverlay && isVisible ? 'iconSection--visible' : ''}`}>
         <div className="iconContainer">
           <span
             className={`iconButton ${activeIcon === 'question' ? 'active' : ''}`}
@@ -81,6 +81,10 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData
               tasks={[]}
               folderID={folderID}
               handleAssessmentSelect={handleAssessmentSelect}
+              onTaskSelected={() => {
+                setActiveIcon(null);
+                if (isOverlay && onClose) onClose();
+              }}
             />
           }
           onClose={() => setActiveIcon(null)}
@@ -123,75 +127,6 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData
         />
       )}
 
-      <style>{`
-        .iconSection {
-          display: flex;
-          flex-direction: column;
-        }
-        .iconContainer {
-          display: flex;
-          flex-direction: column;
-          border: 0.063rem solid lightgray;
-          border-radius: 1rem;
-          align-items: center;
-          width: 4rem;
-        }
-      .iconButton {
-  display: flex;
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
-  margin-top: 0.6rem;
-  margin-bottom: 0.6rem;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: white;
-  border-radius: 0.6rem;
-  transition: background-color 0.3s ease;
-  padding: 0.5rem;
-  position: relative;
-}
-        .icon {
-          font-size: 2rem;
-          color: gray;
-        }
-        .iconButton.active {
-          background-color: black;
-        }
-        .iconButton.active .icon {
-          color: white;
-        }
-.tooltip {
-          visibility: hidden;
-          background-color: black;
-          color: #fff;
-          text-align: center;
-          border-radius: 6px;
-          padding: 1rem;
-          font-size: 1.2rem;
-          position: absolute;
-          z-index: 1;
-          bottom: 0%;
-          right: 135%;
-          opacity: 0;
-          transition: opacity 0.5s;
-          white-space: nowrap;
-        }
-      .iconButton:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
-}
-   .tooltip::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 100%;
-          margin-top: -5px;
-          border-width: 5px;
-          border-style: solid;
-          border-color: transparent transparent transparent black;
-        }
-      `}</style>
     </>
   );
 };

@@ -2,19 +2,20 @@ import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 import { BiPlus } from 'react-icons/bi';
+import { TbMenu2 } from 'react-icons/tb';
 
 import Components from '@components';
 import assets from '../../assets';
 import ShareModal from '../customModal/Sharemodal';
 import Modal from '../../components/common/Modal';
 import ProfileDropdown from './Logout';
-import { Questionnaire } from '../../modules/assessment';
+import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 // import UserProfilePic from '../../assets/chat/user.png';
 
-const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
+const Header = ({ activeWorkspace, workspaces, siteMapId, onMenuToggle }) => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [activeWorkspaceName, SetActiveWorkspaceName] = useState([]);
@@ -65,6 +66,15 @@ const Header = ({ activeWorkspace, workspaces, siteMapId }) => {
   return (
     <div className="topbar">
       <div>
+        {onMenuToggle && (
+          <button
+            className="header-hamburger"
+            onClick={onMenuToggle}
+            aria-label="Toggle sidebar"
+          >
+            <TbMenu2 />
+          </button>
+        )}
         <Components.Feature.HeaderDropDown />
         <div className="selected-workspace-name chatpage-header">
           <p>
@@ -187,6 +197,7 @@ Header.propTypes = {
       workspaceName: PropTypes.string,
     })
   ),
+  onMenuToggle: PropTypes.func,
 };
 
 export default Header;

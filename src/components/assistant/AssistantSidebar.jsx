@@ -18,7 +18,7 @@ import {
   useGetChatLinksQuery,
 } from '../../redux/api/workspaceApi';
 
-const AssistantSidebar = (props) => {
+const AssistantSidebar = ({ isOverlay = false, isVisible = false, onClose, ...props }) => {
   const currentChat = props?.currentChat;
   const [bookmarksShow, setBookmarksShow] = useState([]);
 
@@ -117,37 +117,37 @@ const AssistantSidebar = (props) => {
 
   return (
     <>
-      <section className="iconSection">
-        <div className="iconContainer">
+      <section className={`asst-iconSection ${isOverlay ? 'asst-iconSection--overlay' : ''} ${isOverlay && isVisible ? 'asst-iconSection--visible' : ''}`}>
+        <div className="asst-iconContainer">
           {/* <span
-            className={`iconButton ${
+            className={`asst-iconButton ${
               isVersionHistoryModalOpen ? 'active' : ''
             }`}
             onClick={() => setIsVersionHistoryModalOpen(true)}
           >
-            <FaHistory className="icon" size={20} />
-            <span className="tooltip">Version History</span>
+            <FaHistory className="asst-icon" size={20} />
+            <span className="asst-tooltip">Version History</span>
           </span> */}
           <span
-            className={`iconButton ${isMediaModalOpen ? 'active' : ''}`}
+            className={`asst-iconButton ${isMediaModalOpen ? 'active' : ''}`}
             onClick={() => setIsMediaModalOpen(true)}
           >
-            <FaImages className="icon" size={20} />
-            <span className="tooltip">Media</span>
+            <FaImages className="asst-icon" size={20} />
+            <span className="asst-tooltip">Media</span>
           </span>
           <span
-            className={`iconButton ${isCommentsModalOpen ? 'active' : ''}`}
+            className={`asst-iconButton ${isCommentsModalOpen ? 'active' : ''}`}
             onClick={() => setIsCommentsModalOpen(true)}
           >
-            <IoIosChatboxes className="icon" size={22} />
-            <span className="tooltip">Comments</span>
+            <IoIosChatboxes className="asst-icon" size={22} />
+            <span className="asst-tooltip">Comments</span>
           </span>
           <span
-            className={`iconButton ${isBookmarkModalOpen ? 'active' : ''}`}
+            className={`asst-iconButton ${isBookmarkModalOpen ? 'active' : ''}`}
             onClick={() => setIsBookmarkModalOpen(true)}
           >
-            <FaBookmark className="icon" size={20} />
-            <span className="tooltip">Bookmark</span>
+            <FaBookmark className="asst-icon" size={20} />
+            <span className="asst-tooltip">Bookmark</span>
           </span>
         </div>
       </section>
@@ -191,83 +191,14 @@ const AssistantSidebar = (props) => {
         />
       )}
 
-      <style>{`
-        .iconSection {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .iconContainer {
-          padding-top: 1rem;
-          padding-bottom: 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          border: 1px solid lightgray;
-          border-radius: 10px;
-          align-items: center;
-          justify-content: center;
-          width: 5rem;
-        }
-        .iconButton {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          width: 3.5rem;
-          height: 3.5rem;
-          border-radius: 8px;
-          position: relative;
-        }
-        .iconButton:hover {
-          background: #d9d9d9;
-        }
-        .iconButton.active {
-          background: black;
-          transition: opacity 0.5s;
-        }
-        .iconButton.active .icon {
-          color: white;
-        }
-        .icon {
-          color: #595959;
-        }
-         .tooltip {
-          visibility: hidden;
-          background-color: black;
-          color: #fff;
-          text-align: center;
-          border-radius: 6px;
-          padding: 1rem;
-          font-size: 1.2rem;
-          position: absolute;
-          z-index: 1;
-          bottom: 0%; 
-          right: 135%;
-          opacity: 0;
-          transition: opacity 0.5s;
-          white-space: nowrap;
-        }
-        .iconButton:hover .tooltip {
-          visibility: visible;
-          opacity: 1;
-        }
-        .tooltip::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 100%;
-          margin-top: -5px;
-          border-width: 5px;
-          border-style: solid;
-          border-color: transparent transparent transparent black;
-        }
-      `}</style>
     </>
   );
 };
 
 AssistantSidebar.propTypes = {
+  isOverlay: PropTypes.bool,
+  isVisible: PropTypes.bool,
+  onClose: PropTypes.func,
   currentChat: PropTypes.shape({
     bookmarks: PropTypes.arrayOf(
       PropTypes.shape({

@@ -6,7 +6,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="container">
+    <div className="container hero-section">
       <img className="main-bg" src={MainBg} alt="ChangeAI platform illustration" />
       <img className="dotted-bg" src={DottedBg} alt="" role="presentation" />
       <div className="content">
@@ -25,19 +25,21 @@ const HeroSection = () => {
       <style>
         {`
       .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin: auto auto;
-    }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        margin: auto auto;
+      }
 
       .main-bg {
           position: absolute;
           z-index: 10;
           top: 0px;
           width: 95%;
+          height: 100%;
+          object-fit: contain;
       }
 
       .dotted-bg {
@@ -98,7 +100,6 @@ const HeroSection = () => {
               line-height: 50px;
           }
           .content{
-          margin-top: 50px;
           }
       }
 
@@ -109,10 +110,16 @@ const HeroSection = () => {
               letter-spacing: -0.02em;
           }
           .content{
-          margin-top: 100px;
           gap:50px;
           }
       }
+
+      @media (max-width: 600px) {
+        .content{
+          margin-top: -160px;
+        }
+      }
+
 
       .demo-button {
           display: flex;

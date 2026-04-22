@@ -20,7 +20,7 @@ import VersionHistory from '../assistant/assistantModal/VersionHistory';
 import Comments from '../assistant/assistantModal/Comments';
 import Loading from './Loading';
 import Edge from './Edge';
-import config from '../../config/config';
+import apiClient from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -69,7 +69,6 @@ const SitemapLayoutFlow = ({ id }) => {
   const [convertingPlaybook, setConvertingPlaybook] = useState(false);
 
   const userData = localStorage.getItem('user');
-  const authToken = localStorage.getItem('token');
 
   const selectedWorkspace = useSelector(selectWorkspace);
   const navigate = useNavigate();
@@ -240,50 +239,28 @@ const SitemapLayoutFlow = ({ id }) => {
       },
     ]);
   };
-  function getAuthHeaders() {
-    const token = localStorage.getItem('token');
-    return {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    };
-  }
   async function postData(url = '', data = {}) {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    const response = await apiClient.post(url, data);
+    return response.data;
   }
   async function patchData(url = '', data = {}) {
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    const response = await apiClient.patch(url, data);
+    return response.data;
   }
   async function getData(url = '') {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: getAuthHeaders(),
-    });
-    return response.json();
+    const response = await apiClient.get(url);
+    return response.data;
   }
   async function updateNodeOrNodeData(sitemapId, stageId, type, typeId, data) {
-    const response = await fetch(
-      `${config.apiURL}/dpb/${sitemapId}/stage/${stageId}/${type}/${typeId}`,
-      {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(data),
-      }
+    const response = await apiClient.patch(
+      `/dpb/${sitemapId}/stage/${stageId}/${type}/${typeId}`,
+      data,
     );
-    return response.json();
+    return response.data;
   }
   const getSitemap = async () => {
     if (!id || id === 'undefined') return;
-    const res = await getData(`${config.apiURL}/dpb/sitemap/${id}`);
+    const res = await getData(`/dpb/sitemap/${id}`);
 
     if (res) {
       let siteMapId = res.id;
@@ -401,15 +378,9 @@ const SitemapLayoutFlow = ({ id }) => {
       (folder) => folder?.isActive
     );
     if (!folderId?.id || !selectedWorkspace?.id || !sitemapId) return;
-    await fetch(
-      `${config.apiURL}/workspace/${selectedWorkspace.id}/folder/${folderId.id}/sitemap`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          sitemapId: sitemapId,
-        }),
-        headers: getAuthHeaders(),
-      }
+    await apiClient.post(
+      `/workspace/${selectedWorkspace.id}/folder/${folderId.id}/sitemap`,
+      { sitemapId },
     );
   };
   const onInit = async (
@@ -433,8 +404,8 @@ const SitemapLayoutFlow = ({ id }) => {
 
     let res =
       stage === 'Playbook Introduction'
-        ? await postData(`${config.apiURL}/dpb/sitemap`, payload)
-        : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
+        ? await postData(`/dpb/sitemap`, payload)
+        : await patchData(`/dpb/sitemap/${sitemapId}`, payload);
 
     if (stage === 'Playbook Introduction' && res) {
       await linkWorkSpaceAndSiteMap(res?.id);
@@ -505,8 +476,8 @@ const SitemapLayoutFlow = ({ id }) => {
 
     let res =
       stageLabel === 'Playbook Introduction'
-        ? await postData(`${config.apiURL}/dpb/sitemap`, payload)
-        : await patchData(`${config.apiURL}/dpb/sitemap/${sitemapId}`, payload);
+        ? await postData(`/dpb/sitemap`, payload)
+        : await patchData(`/dpb/sitemap/${sitemapId}`, payload);
 
     setIsLoading(false);
     setPromptVisible(false);
@@ -604,6 +575,14 @@ const SitemapLayoutFlow = ({ id }) => {
       minZoom={0.1} // Set a low minZoom for deeper zoom-out
       maxZoom={10} // Set a high maxZoom for more zoom-in levels
       // defaultzoom={0.2} // Default initial zoom level
+      panOnDrag
+      panOnScroll={false}
+      zoomOnPinch
+      zoomOnScroll
+      zoomOnDoubleClick={false}
+      selectionOnDrag={false}
+      preventScrolling
+      elementsSelectable={false}
     >
       <Panel position="top-left">
         <div className="flow-panel-row">
@@ -619,21 +598,9 @@ const SitemapLayoutFlow = ({ id }) => {
               onClick={async () => {
                 try {
                   setConvertingPlaybook(true);
-                  const authToken = localStorage.getItem('token');
-                  const res = await fetch(`${config.apiURL}/dpb/convert/${id}`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      Authorization: `Bearer ${authToken}`,
-                    },
-                  });
-                  if (res.ok) {
-                    const data = await res.json();
-                    const newId = data._id || data.id;
-                    if (newId) navigate(`/playbook/${newId}`);
-                  } else {
-                    alert('Failed to convert sitemap to playbook');
-                  }
+                  const res = await apiClient.post(`/dpb/convert/${id}`);
+                  const newId = res.data._id || res.data.id;
+                  if (newId) navigate(`/playbook/${newId}`);
                 } catch (err) {
                   import.meta.env.DEV && console.error('Convert error:', err);
                   alert('Failed to convert: ' + err.message);

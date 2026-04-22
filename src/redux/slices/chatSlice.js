@@ -1,16 +1,28 @@
 // src/redux/slices/chatSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
-import mockChat from '../../utils/mockWorkspace';
+import apiClient from '../../api/axios';
 
-const initialChatState = mockChat;
+export const getChatsAsync = createAsyncThunk(
+  'chat/getChats',
+  async ({ workspaceId, folderId }, thunkAPI) => {
+    try {
+      const response = await apiClient.get(
+        `/workspace/${workspaceId}/folder/${folderId}/chat`,
+      );
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 const initialState = {
   selectedChatId: '',
-  selectedWorkspaceId: 'workspaceId1',
-  selectedFolderId: 'folderId1',
-  chats: initialChatState,
+  selectedWorkspaceId: null,
+  selectedFolderId: null,
+  chats: [],
   loading: false,
   error: null,
 };

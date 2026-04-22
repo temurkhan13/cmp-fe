@@ -2,6 +2,20 @@
 // Imports
 @import "./mixins";
 
+// Global design tokens (used across all non-landing pages)
+:root {
+  --color-default: #004f83;
+  --color-second: #0067ac;
+  --color-white: #fff;
+  --color-body: #e4e9f7;
+  --color-light: #e0e0e0;
+  --color-black: #0a0a0a;
+  --color-gray: gray;
+  --border-radius-btn: 10px;
+  --border-radius-input: 10px;
+  --border-radius-card: 12px;
+}
+
 *,
 *::after,
 *::before {
@@ -11,10 +25,83 @@
   scroll-behavior: smooth;
 }
 
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+// Accessibility focus ring
+*:focus-visible {
+  outline: 2px solid #C3E11D;
+  outline-offset: 2px;
+}
+
 body {
   font-family: "Poppins";
   box-sizing: border-box;
   scroll-behavior: smooth;
+  min-height: 100vh;
+}
+
+// Standardized button radius
+.assiss-btn,
+.create-workspace-btn,
+.upgrade-button,
+.workspace-btn {
+  border-radius: var(--border-radius-btn) !important;
+}
+
+.assiss-btn {
+  background-color: #c3e11d;
+  color: #0b1444;
+  border: none;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  padding: 0.9rem 2rem;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.assiss-btn:hover {
+  box-shadow: 0 4px 12px rgba(195, 225, 29, 0.4);
+  transform: translateY(-1px);
+}
+
+.assiss-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .assiss-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 1.2rem;
+  }
+}
+
+// Standardized input/textarea radius + focus style
+.workspace-input,
+.workspace-description,
+.filter-input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  border-radius: var(--border-radius-input);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  border-color: #C3E11D;
+  box-shadow: 0 0 0 3px rgba(195, 225, 29, 0.12);
+  outline: none;
 }
 
 html {

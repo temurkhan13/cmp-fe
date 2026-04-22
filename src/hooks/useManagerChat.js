@@ -112,17 +112,6 @@ const useManagerChat = () => {
   const [useMockData, setUseMockData] = useState(true); // Manage mock data toggle
   const [useMockData2, setUseMockData2] = useState(false); // Manage mock data toggle
 
-  // Fetch initial data from the server
-  const fetchInitialData = async () => {
-    try {
-      const response = await apiClient.get('/initialData'); // Adjust endpoint as per your API
-      setData(response.data); // Update state with server data
-      setError(null);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
   // Function to move a chat to a different folder
   const moveChatToFolder = async (chatId, targetFolderId) => {
     try {

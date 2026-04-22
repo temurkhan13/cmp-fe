@@ -45,7 +45,7 @@ const NotificationBar = ({ message, type, duration = 5000, onClose }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          z-index: 1000;
+          z-index: 10100;
           font-size: 1.5rem;
           width: 300px;
           height:40px;

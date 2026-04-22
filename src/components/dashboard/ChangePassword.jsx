@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import config from '../../config/config';
+import apiClient from '../../api/axios';
 
 const ChangePassword = ({ onChangePassword }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -45,26 +45,14 @@ const ChangePassword = ({ onChangePassword }) => {
     setLoading(true);
     setSuccessMessage('');
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${config.apiURL}/auth/change-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-      if (res.ok) {
-        setSuccessMessage('Password updated successfully!');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-      } else {
-        const data = await res.json().catch(() => ({}));
-        setErrors({ currentPassword: data.message || 'Failed to update password.' });
-      }
-    } catch {
-      setErrors({ currentPassword: 'Network error. Please try again.' });
+      await apiClient.post('/auth/change-password', { currentPassword, newPassword });
+      setSuccessMessage('Password updated successfully!');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      const message = err.response?.data?.message || 'Failed to update password.';
+      setErrors({ currentPassword: message });
     } finally {
       setLoading(false);
     }

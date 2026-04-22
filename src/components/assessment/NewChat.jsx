@@ -21,7 +21,7 @@ import {
   setSelectedFolder,
 } from '../../redux/slices/workspacesSlice';
 
-const NewChat = () => {
+const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   const projects = useSelector(selectAllFolders);
 
   const [loading, setLoading] = useState(false);
@@ -65,6 +65,7 @@ const NewChat = () => {
     );
     window.history.replaceState(null, '', newUrl);
     dispatch(setCurrentAssessmentId(chatId));
+    if (isOverlay && onClose) onClose();
   };
 
   const handleAddChat = () => {
@@ -98,7 +99,7 @@ const NewChat = () => {
 
   return (
     <div
-      className={`newChat ${sidebarCollapsed ? 'collapsed' : ''} newchat-hidden`}
+      className={`newChat ${sidebarCollapsed && !isOverlay ? 'collapsed' : ''} newchat-hidden ${isOverlay ? 'newChat--overlay' : ''} ${isOverlay && isVisible ? 'newChat--visible' : ''}`}
       ref={chatContainerRef}
     >
       <div

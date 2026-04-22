@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
-import config from '../../../config/config.js';
+import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
 
 const PersonalInfo = () => {
@@ -266,17 +266,9 @@ const PersonalInfo = () => {
         cancelText="Cancel"
         onConfirm={async () => {
           try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${config.apiURL}/auth/delete-account`, {
-              method: 'DELETE',
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            if (res.ok) {
-              localStorage.clear();
-              window.location.href = '/log-in';
-            } else {
-              alert('Failed to delete account. Please try again.');
-            }
+            await apiClient.delete('/auth/delete-account');
+            localStorage.clear();
+            window.location.href = '/log-in';
           } catch {
             alert('Failed to delete account. Please try again.');
           }

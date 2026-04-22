@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 import { getUserId } from '../../utils/getUserId';
 
 const useSummarize = () => {
@@ -8,19 +7,10 @@ const useSummarize = () => {
 
   const summarize = async (inputText) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await apiClient.post(
-        `${config.apiURL}/chat/summarize`,
-        {
-          user_id: getUserId(),
-          message: inputText,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiClient.post('/chat/summarize', {
+        user_id: getUserId(),
+        message: inputText,
+      });
       setError(null);
       return response.data.message;
     } catch (error) {

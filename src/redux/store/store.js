@@ -64,7 +64,7 @@ const rtkQueryLoadingMiddleware = (store) => (next) => (action) => {
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['workspaces', 'auth'],
+  whitelist: ['workspaces', 'auth', 'folder'],
   // Note: workspaces slice is persisted but volatile IDs (currentChatId etc.)
   // are refreshed on mount via fetchDashboardStats
 };
@@ -81,7 +81,22 @@ const authTransform = createTransform(
   },
   { whitelist: ['auth'] }
 );
-persistConfig.transforms = [authTransform];
+
+// Persist only selectedFolder; reset data/volatile fields on rehydrate
+// so reload never shows stale folderData/assessments or a stuck spinner
+const folderTransform = createTransform(
+  (inboundState) => ({ selectedFolder: inboundState.selectedFolder }),
+  (outboundState) => ({
+    selectedFolder: outboundState?.selectedFolder ?? null,
+    folderData: null,
+    assessments: null,
+    loading: false,
+    error: null,
+  }),
+  { whitelist: ['folder'] }
+);
+
+persistConfig.transforms = [authTransform, folderTransform];
 
 // Persisted reducers
 // const persistedBusinessInfoReducer = persistReducer(

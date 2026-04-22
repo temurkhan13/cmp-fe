@@ -78,10 +78,10 @@ export const selectAllAssessments = createSelector(
 );
 
 export const selectCurrentAssessment = createSelector(
-  selectAllChats,
+  selectAllAssessments,
   (state) => state.workspaces.currentAssessmentId,
   (assessments, currentAssessmentId) => {
-    return assessments.find((chat) => chat._id === currentAssessmentId) || null;
+    return assessments.find((assessment) => assessment._id === currentAssessmentId) || null;
   }
 );
 

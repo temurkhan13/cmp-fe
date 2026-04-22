@@ -106,7 +106,7 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
             <IoIosChatboxes size={20} color="grey" />
           ) : data.type === 'assessment' ? (
             <RiNewspaperLine size={20} color="grey" />
-          ) : data.type === 'sitemaps' ? (
+          ) : data.type === 'sitemap' ? (
             <FaFolderTree size={20} color="grey" />
           ) : (
             <RiNewspaperLine size={20} color="grey" />

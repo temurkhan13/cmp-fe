@@ -27,12 +27,21 @@
   position: sticky;
   top: 0;
   z-index: 100;
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+    padding-left: 5rem;
+  }
 }
 
 .playbook-header-left {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+
+  & > svg {
+    min-width : 2rem;
+  }
 }
 
 .playbook-back-btn {
@@ -43,6 +52,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+
   &:hover {
     background: #f0f0f0;
   }
@@ -65,6 +75,11 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    margin-top: 1rem;
+  }
 }
 
 .playbook-export-wrap {
@@ -93,9 +108,11 @@
     font-size: 0.95rem;
     cursor: pointer;
     white-space: nowrap;
+
     &:hover {
       background: #f5f5f5;
     }
+
     &:not(:last-child) {
       border-bottom: 1px solid #eee;
     }
@@ -242,6 +259,7 @@
   background: #fff;
   cursor: pointer;
   font-size: 0.9rem;
+
   &:hover {
     background: #f5f5f5;
   }
@@ -377,6 +395,7 @@
 
   &.delete {
     color: #c00;
+
     &:hover {
       background: #fee;
       color: #900;

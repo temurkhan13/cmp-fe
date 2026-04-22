@@ -1,64 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import "../../utils/mixins";
 
-:root {
-  --color-default: #004f83;
-  --color-second: #0067ac;
-  --color-white: #fff;
-  --color-body: #e4e9f7;
-  --color-light: #e0e0e0;
-  --color-black: #0a0a0a;
-  --color-gray: gray;
-  --border-radius-btn: 10px;
-  --border-radius-input: 10px;
-  --border-radius-card: 12px;
-}
-
-/* Global focus indicator for accessibility */
-*:focus-visible {
-  outline: 2px solid #C3E11D;
-  outline-offset: 2px;
-}
-
-/* Standardize button styles across dashboard */
-.assiss-btn,
-.create-workspace-btn,
-.upgrade-button,
-.workspace-btn {
-  border-radius: var(--border-radius-btn) !important;
-}
-
-/* Standardize input field styles */
-.workspace-input,
-.workspace-description,
-.filter-input,
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea {
-  border-radius: var(--border-radius-input);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-textarea:focus {
-  border-color: #C3E11D;
-  box-shadow: 0 0 0 3px rgba(195, 225, 29, 0.12);
-  outline: none;
-}
-
-* {
-  padding: 0%;
-  margin: 0%;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-body {
-  min-height: 100vh;
-}
+// Global design tokens, universal reset, form styles, focus ring, and body
+// defaults moved to scss/utils/_base.scss so non-dashboard routes (e.g. the
+// chat pages) don't break when this layout isn't mounted.
 
 .SibebarIcons {
   position: absolute;

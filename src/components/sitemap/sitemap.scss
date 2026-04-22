@@ -295,71 +295,108 @@
   justify-content: space-between;
 }
 
-.sitemap-list-loading,
-.sitemap-list-grid {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-  margin: 1.25rem 0;
-}
-
 .sitemap-list-loading {
+  display: flex;
   justify-content: center;
+  width: 100%;
   margin: 16px 0;
 }
 
-.sitemap-card {
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
+.sitemap-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
   gap: 1rem;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 2rem;
-  border-radius: 1rem;
-  margin: 0 1rem 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  width: 100%;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  height: calc(80dvh - 189px);
+  overflow-y: auto;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(1, 1fr);
+    height: calc(80dvh - 165px);
+  }
 }
 
 .sitemap-card__header {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.sitemap-card__rename-input {
-  font-size: 1.5rem;
-  font-weight: 500;
-  border: 1px solid #C3E11D;
-  border-radius: 6px;
-  padding: 4px 8px;
-  outline: none;
-  width: 100%;
+  padding-right: 2rem;
 }
 
 .sitemap-card__name {
   font-size: 1.5rem;
   font-weight: 500;
   flex: 1;
-}
-
-.sitemap-card__icon-faded {
-  opacity: 0.4;
-}
-
-.sitemap-card__icon-delete {
-  opacity: 0.4;
-  color: #c00;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sitemap-card__date {
   font-size: 1.2rem;
   color: rgba(10, 10, 10, 0.46);
+}
+
+.sitemap-card__actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.sitemap-card__menu-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.sitemap-card__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.4rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sitemap-card__dropdown-item {
+  background: transparent;
+  border: none;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #222;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  &--danger {
+    color: #c00;
+  }
 }
 
 .sitemap-list-empty {
@@ -482,16 +519,27 @@
 
 .playbook-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
   gap: 1rem;
   width: 100%;
   padding: 1rem 0;
   margin-top: 1rem;
+  height: calc(80dvh - 189px);
+  overflow-y: auto;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(1, 1fr);
+    height: calc(80dvh - 165px);
+  }
 }
 
-.playbook-card {
+.playbook-card,
+.sitemap-card {
+  position: relative;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: 1rem;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -500,6 +548,7 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   transition: all 0.2s ease;
+  height: fit-content;
 
   &:hover {
     transform: translateY(-2px);
