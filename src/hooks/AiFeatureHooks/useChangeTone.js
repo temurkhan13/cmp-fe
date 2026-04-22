@@ -9,7 +9,7 @@ const useChangeTone = () => {
     try {
       const response = await apiClient.post('/chat/change-tone', {
         user_id: getUserId(),
-        message: { selectedText },
+        message: selectedText,
         tone: tone,
       });
       setError(null);
