@@ -49,11 +49,13 @@ import {
   useRemoveBookmarkMutation,
   useAddBookmarkMutation,
   useUpdateChatMutation,
+  useUpdateAssessmentQuestionMutation,
 } from '../../redux/api/workspaceApi';
 import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import { selectWorkspace, setCurrentSelectedTitle } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
+import useExplain from '../../hooks/AiFeatureHooks/useExplain';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
 import Editor from './AssessmentComponent/Editor.jsx';
@@ -73,6 +75,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const [fileUrl, setFileUrl] = useState('');
   const [assessmentId, setAssessmentId] = useState();
   const [selectedText, setSelectedText] = useState('');
+  const [editingQaId, setEditingQaId] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
   const [responseLength, setResponseLength] = useState('');
@@ -250,6 +253,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const { refetch } = useGetWorkspacesQuery(userId);
   const [firstPrompt, setFirstPrompt] = useState('');
   const { handleInspire } = useInspire();
+  const { Explain } = useExplain();
+  const [updateAssessmentQuestion] = useUpdateAssessmentQuestionMutation();
 
   const { error, chatWithdoc } = useChat();
   const [userProfilePhoto, setUserProfilePhoto] = useState(null);
@@ -413,51 +418,57 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       } else if (value === 'Summarize') {
         const responseSummary = await summarize(selectedText);
         applyFixedText(responseSummary);
+      } else if (value === 'Explain This') {
+        const responseExplain = await Explain(selectedText);
+        applyFixedText(responseExplain);
       }
     } finally {
       setLoading(false);
     }
   };
 
-  // replace selected text chat
-  const applyFixedText = (newText) => {
-    // updated
-    const updatedChat = chat.map((message) => {
-      if (message.content) {
-        return {
-          ...message,
-          content: message.content.replace(selectedText, newText),
-        };
-      }
-      return message;
-    });
-
-    setChat(updatedChat);
+  // Replace the AI question with the transformed text and persist.
+  // Full-text replacement (same as assistant/MessagesSection) — substring replace
+  // is unreliable because getSelection().toString() and the raw markdown diverge.
+  const applyFixedText = async (newText) => {
+    if (!editingQaId || !assessmentId || !newText) {
+      setPopupVisible(false);
+      return;
+    }
+    try {
+      await updateAssessmentQuestion({
+        assessmentId,
+        qaId: editingQaId,
+        question: newText,
+      }).unwrap();
+      const refreshed = await getAssessment(assessmentId);
+      if (refreshed?.qa) setChat(refreshed.qa);
+    } catch (error) {
+      if (import.meta.env.DEV) console.error('Failed to update question:', error);
+    }
     setPopupVisible(false);
   };
 
   const handleTextSelect = () => {
     const selection = window.getSelection();
-    const selectedText = selection.toString().trim();
+    const text = selection.toString().trim();
 
-    // Check if the selected text is within a ChangeAI or user message
-    const messageElements = document.querySelectorAll('.chat-message .card');
-
+    // Only allow selection inside AI-question .msg divs (tagged with data-qa-id).
+    // Answer divs are untagged because users can't edit their own answers.
+    const messageElements = document.querySelectorAll('.msg[data-qa-id]');
     let isValidSelection = false;
-    messageElements.forEach((element) => {
-      const contentElement = element.querySelector('.msg');
-      if (contentElement && contentElement.contains(selection.anchorNode)) {
-        const headingEl = element.querySelector('.Heading');
-        const messageRole = headingEl?.textContent || '';
-        if (messageRole === 'ChangeAI' || messageRole === 'You' || !headingEl) {
-          isValidSelection = true;
-        }
+    let qaId = null;
+    messageElements.forEach((el) => {
+      if (el.contains(selection.anchorNode) && el.contains(selection.focusNode)) {
+        isValidSelection = true;
+        qaId = el.getAttribute('data-qa-id');
       }
     });
 
-    if (isValidSelection) {
-      setSelectedText(selectedText);
-      setPopupVisible(!!selectedText);
+    if (isValidSelection && text) {
+      setSelectedText(text);
+      setEditingQaId(qaId);
+      setPopupVisible(true);
     } else {
       setPopupVisible(false);
     }
@@ -479,7 +490,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
 
   // handle Response length
   const handleResponseLengthChange = async (value) => {
-    setResponseLength(length);
+    setResponseLength(value);
 
     // if (value) {
     setLoading(true);
@@ -750,7 +761,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           imgClassName="avatar"
                         />
                       </div>
-                      <div className="msg">
+                      <div className="msg" data-qa-id={item._id || item.id}>
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
                       </div>
                       <div className="message-action-icons">
@@ -806,7 +817,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                           imgClassName="avatar"
                         />
                       </div>
-                      <div className="msg">
+                      <div className="msg" data-qa-id={item._id || item.id}>
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
                       </div>
                       <div className="message-action-icons">

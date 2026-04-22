@@ -568,6 +568,13 @@ export const workspaceApi = createApi({
       }),
       // invalidatesTags: ['Workspace'],
     }),
+    updateAssessmentQuestion: builder.mutation({
+      query: ({ assessmentId, qaId, question }) => ({
+        url: `workspace-assessment/${assessmentId}/qa/${qaId}`,
+        method: 'PATCH',
+        body: { question },
+      }),
+    }),
     editReport: builder.mutation({
       query: ({ assessmentId, title, content }) => ({
         url: `workspace-assessment/${assessmentId}/report`,
@@ -640,4 +647,5 @@ export const {
   useAddFeedbackMutation,
   useEditReportMutation,
   useDownloadReportMutation,
+  useUpdateAssessmentQuestionMutation,
 } = workspaceApi;
