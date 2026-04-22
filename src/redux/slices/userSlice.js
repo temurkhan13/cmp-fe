@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../api/axios';
-import config from '../../config/config.js';
 const initialState = {
   users: [],
   loading: false,
   error: null,
 };
 
-const baseURL = `${config.apiURL}/auth`; // Change this as per your API
+const baseURL = '/auth';
 
 
 // Async thunk action to handle user update
@@ -15,8 +14,6 @@ const updateUserAsync = createAsyncThunk(
   'user/updateUser',
   async ({ userId, updatedUserData, photoPath, removePhoto }, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token');
-
       const url = `${baseURL}/users/${userId}`;
 
       // If a new photo file is provided, upload it via FormData
@@ -27,12 +24,7 @@ const updateUserAsync = createAsyncThunk(
           if (value !== undefined) formData.append(key, value);
         });
 
-        const response = await apiClient.patch(url, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await apiClient.patch(url, formData);
         return response.data;
       }
 
@@ -42,9 +34,7 @@ const updateUserAsync = createAsyncThunk(
         payload.photoPath = '';
       }
 
-      const response = await apiClient.patch(url, payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient.patch(url, payload);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || 'Update failed');

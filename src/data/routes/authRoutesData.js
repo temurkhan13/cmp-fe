@@ -1,63 +1,44 @@
-import Module from '../../modules';
+import * as Auth from '../../modules/auth';
 const authRoutesData = [
-  // singIn
   {
     title: '',
     path: 'log-in',
-    element: Module.Auth.SignIn,
+    element: Auth.SignIn,
   },
-
-  // sign up
-  // 1. give email
   {
     title: '',
     path: 'sign-up',
-    element: Module.Auth.SignUp,
+    element: Auth.SignUp,
   },
-
-  // 2. business Info
   {
     title: '',
     path: 'business-info',
-    element: Module.Auth.BusinessInfo,
+    element: Auth.BusinessInfo,
   },
-
-  // 3. set password
   {
     title: '',
     path: 'set-password',
-    element: Module.Auth.SetPassword,
+    element: Auth.SetPassword,
   },
-
-  // 4. verification code
   {
     title: '',
     path: 'verify-email',
-    element: Module.Auth.VerifyEmail,
+    element: Auth.VerifyEmail,
   },
-
-  //
-  //
-  // Forgot-Password
-  // 1. Give Email
   {
     title: '',
     path: 'forgot-password/verification',
-    element: Module.Auth.Verification,
+    element: Auth.Verification,
   },
-
-  // 2. Pass Verfication Code
   {
     title: '',
     path: 'forgot-password/Code',
-    element: Module.Auth.VerificationCode,
+    element: Auth.VerificationCode,
   },
-
-  // Set new Password
   {
     title: '',
     path: 'forgot-password/set-new-password',
-    element: Module.Auth.SetNewPassword,
+    element: Auth.SetNewPassword,
   },
 ];
 

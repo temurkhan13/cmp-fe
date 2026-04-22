@@ -5,13 +5,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
-import data from '../../data';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import { RiNewspaperLine } from 'react-icons/ri';
 
 import {
   setSelectedWorkspace,
   selectWorkspace,
-  setCurrentAssessmentId,
-  setCurrentChatId,
   fetchDashboardStats,
   updateWorkspaceStatus,
   setCurrentSelectedTitle,
@@ -37,10 +36,14 @@ const Chat = () => {
     useSelector((state) => state.auth.user?.id) ||
     localStorage.getItem('userId');
 
-  const { data: workspaces, error, isLoading } = useGetWorkspacesQuery(userId);
+  const { error } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
+
+  const isResponsive = useMediaQuery('(max-width: 1080px)');
+  const [showLeftSidebar, setShowLeftSidebar] = useState(false);
+  const [showRightSidebar, setShowRightSidebar] = useState(false);
 
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [chatMedia, setChatMedia] = useState({ images: [], documents: [], links: [] });
@@ -61,11 +64,19 @@ const Chat = () => {
 
   // Memoize Active Workspace
   const activeWorkspace = useMemo(() => {
-    setCurrentFolder(selectWorkspace?.folders);
     return (
       selectedWorkspace?.folders?.find((folder) => folder.isActive) ||
       selectedWorkspace?.folders?.[0]
     );
+  }, [selectedWorkspace]);
+
+  useEffect(() => {
+    if (selectedWorkspace?.folders?.length > 0) {
+      const folder =
+        selectedWorkspace.folders.find((f) => f.isActive) ||
+        selectedWorkspace.folders[0];
+      setCurrentFolder(folder);
+    }
   }, [selectedWorkspace]);
 
   const [isFetched, setIsFetched] = useState(false);
@@ -89,7 +100,9 @@ const Chat = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {}
+      } catch (err) {
+        console.error('Failed to fetch folder data:', err);
+      }
     },
     [dispatch, activeWorkspace]
   );
@@ -133,8 +146,8 @@ const Chat = () => {
           handleFolderSelection(firstFolder, selectedWorkspace.id);
         }
         setIsFetched(true); // Mark as fetched after successful load
-      } catch {
-        // setError('Failed to fetch dashboard stats.');
+      } catch (err) {
+        console.error('Failed to fetch dashboard stats:', err);
       }
     };
 
@@ -152,22 +165,39 @@ const Chat = () => {
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
 
+  // Lock body scroll when a responsive drawer is open
+  useEffect(() => {
+    if (isResponsive && (showLeftSidebar || showRightSidebar)) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isResponsive, showLeftSidebar, showRightSidebar]);
+
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  const handleDataUpdated = useCallback(() => {
-    dispatch(fetchDashboardStats());
-  }, [dispatch]);
-
   return (
-    <div className="assessmentChat">
+    <div className="assessmentChat assessmentChat--responsive">
       <Components.Common.Header
         activeWorkspace={selectedWorkspace}
         workspaces={workspacess}
       />
       <section>
-        <NewChat data={data.chat.newChatDummyData} />
+        <NewChat
+          isOverlay={isResponsive}
+          isVisible={showLeftSidebar}
+          onClose={() => setShowLeftSidebar(false)}
+        />
+        {/* Backdrop for left sidebar */}
+        {isResponsive && showLeftSidebar && (
+          <div
+            className="sidebar-backdrop sidebar-backdrop--visible"
+            onClick={() => setShowLeftSidebar(false)}
+          />
+        )}
 
         <MessagesSection
           handleAssessmentSelect={handleAssessmentSelect}
@@ -181,8 +211,29 @@ const Chat = () => {
           handleAssessmentSelect={handleAssessmentSelect}
           chatMedia={chatMedia}
           bookmarkData={assessmentBookmarks}
+          isOverlay={isResponsive}
+          isVisible={showRightSidebar}
+          onClose={() => setShowRightSidebar(false)}
         />
+        {/* Backdrop for right sidebar */}
+        {isResponsive && showRightSidebar && (
+          <div
+            className="sidebar-backdrop sidebar-backdrop--visible"
+            onClick={() => setShowRightSidebar(false)}
+          />
+        )}
       </section>
+
+      {/* Floating button to open right sidebar on responsive */}
+      {isResponsive && (
+        <button
+          className="responsive-fab"
+          onClick={() => setShowRightSidebar(true)}
+          aria-label="Open assessments panel"
+        >
+          <RiNewspaperLine />
+        </button>
+      )}
     </div>
   );
 };

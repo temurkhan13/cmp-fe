@@ -4,7 +4,7 @@ import JoditEditor from 'jodit-react';
 import {
   useEditReportMutation,
 } from '../../../redux/api/workspaceApi';
-import appConfig from '../../../config/config';
+import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
@@ -144,22 +144,14 @@ const Editor = ({
         </button>
         <button onClick={async () => {
           try {
-            const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const res = await fetch(`${appConfig.apiURL}/dpb/sitemap`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-              body: JSON.stringify({
-                message: stripHtml(editor.current?.value || content || '').substring(0, 500),
-                sitemapName: title || 'Assessment Playbook',
-                userId: user.id || user._id,
-              }),
+            const res = await apiClient.post('/dpb/sitemap', {
+              message: stripHtml(editor.current?.value || content || '').substring(0, 500),
+              sitemapName: title || 'Assessment Playbook',
+              userId: user.id || user._id,
             });
-            if (res.ok) {
-              const data = await res.json();
-              const id = data._id || data.id;
-              if (id) window.location.href = `/playbook/${id}`;
-            }
+            const id = res.data._id || res.data.id;
+            if (id) window.location.href = `/playbook/${id}`;
           } catch (e) { import.meta.env.DEV && console.error('Create playbook error:', e); }
         }} className="editor-btn editor-btn--playbook">
           Create Playbook

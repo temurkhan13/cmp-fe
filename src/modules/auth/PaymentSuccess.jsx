@@ -71,7 +71,7 @@ const PaymentSuccess = () => {
           </Components.Feature.Text>
           <Components.Feature.Button
             className="primary"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => window.location.href = '/dashboard'}
           >
             Go to Dashboard
           </Components.Feature.Button>

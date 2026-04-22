@@ -15,7 +15,6 @@ import {
   useUpdateWorkspaceMutation,
 } from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
-import { updateWorkspace } from '../../../redux/slices/workspaceSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import InputModal from '../../common/InputModal';
 import ConfirmModal from '../../common/ConfirmModal';
@@ -217,60 +216,64 @@ const Workspaces = ({
       </div>
 
       {isModalOpen && selectedWorkspace && (
-        <div className="modal" ref={modalRef}>
-          <div className="modal-wrapper">
-            <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
-            <button
-              className="modal-closebtn"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <RxCross2 />
-            </button>
-          </div>
-          <div className="modal-content">
-            <ModalSections
-              selectedWorkspace={selectedWorkspace}
-              handleWorkspaceSwitch={handleWorkspaceSwitch}
-              moveToTrash={moveToTrash}
-              setIsModalOpen={setIsModalOpen}
-              showError={showError} // Pass error handler to modal
-              onWorkspaceUpdated={onWorkspaceUpdated}
-            />
+        <div className="workspace-modal-backdrop" onClick={() => setIsModalOpen(false)}>
+          <div className="modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-wrapper">
+              <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
+              <button
+                className="modal-closebtn"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <RxCross2 />
+              </button>
+            </div>
+            <div className="modal-content">
+              <ModalSections
+                selectedWorkspace={selectedWorkspace}
+                handleWorkspaceSwitch={handleWorkspaceSwitch}
+                moveToTrash={moveToTrash}
+                setIsModalOpen={setIsModalOpen}
+                showError={showError} // Pass error handler to modal
+                onWorkspaceUpdated={onWorkspaceUpdated}
+              />
+            </div>
           </div>
         </div>
       )}
 
       {isNewWorkspaceModalOpen && (
-        <div className="modal" ref={modalRef}>
-          <div className="modal-wrapper">
-            <h3 className="modal-heading">Create New Workspace</h3>
-            <button
-              className="modal-closebtn"
-              onClick={() => setIsNewWorkspaceModalOpen(false)}
-            >
-              <RxCross2 />
-            </button>
-          </div>
-          <div className="input-wrapper">
-            <input
-              type="text"
-              className="workspace-input"
-              value={newWorkspaceName}
-              onChange={(e) => setNewWorkspaceName(e.target.value)}
-              placeholder="Enter workspace name"
-            />
-            <textarea
-              className="workspace-description"
-              value={newWorkspaceDescription}
-              onChange={(e) => setNewWorkspaceDescription(e.target.value)}
-              placeholder="Enter workspace description"
-            />
-            <button
-              onClick={handleNewWorkspaceSubmit}
-              className="create-workspace-btn"
-            >
-              Create
-            </button>
+        <div className="workspace-modal-backdrop" onClick={() => setIsNewWorkspaceModalOpen(false)}>
+          <div className="modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-wrapper">
+              <h3 className="modal-heading">Create New Workspace</h3>
+              <button
+                className="modal-closebtn"
+                onClick={() => setIsNewWorkspaceModalOpen(false)}
+              >
+                <RxCross2 />
+              </button>
+            </div>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                className="workspace-input"
+                value={newWorkspaceName}
+                onChange={(e) => setNewWorkspaceName(e.target.value)}
+                placeholder="Enter workspace name"
+              />
+              <textarea
+                className="workspace-description"
+                value={newWorkspaceDescription}
+                onChange={(e) => setNewWorkspaceDescription(e.target.value)}
+                placeholder="Enter workspace description"
+              />
+              <button
+                onClick={handleNewWorkspaceSubmit}
+                className="create-workspace-btn"
+              >
+                Create
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -384,17 +387,25 @@ const Workspaces = ({
         .icon-label {
           font-size: 1.3rem;
         }
-        .modal {
+        .workspace-modal-backdrop {
           position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(4px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+        .modal {
           background-color: white;
           padding: 20px;
           box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
           border-radius: 1rem;
           width: 400px;
-          z-index: 999;
         }
         .modal-wrapper {
           display: flex;
@@ -520,6 +531,7 @@ const ModalSections = ({
   const [isRenaming, setIsRenaming] = useState(false);
   const [inputValue, setInputValue] = useState(selectedWorkspace.workspaceName);
   const [errorMessage, setErrorMessage] = useState('');
+  const [updateWorkspace] = useUpdateWorkspaceMutation();
 
   const handleSaveRename = async () => {
     if (inputValue.trim().length < 3) {
@@ -527,7 +539,7 @@ const ModalSections = ({
     }
     try {
       await updateWorkspace({
-        id: selectedWorkspace.id,
+        workspaceId: selectedWorkspace.id,
         workspaceName: inputValue,
       }).unwrap();
       setIsRenaming(false);

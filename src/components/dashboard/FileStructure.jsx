@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
 import CustomModal from '../customModal/CustomModal';
 import { truncateText } from '../../utils/helperFunction';
-import config from '../../config/config';
+import apiClient from '../../api/axios';
 import {
   useMoveToTrashMutation,
   useGetWorkspacesQuery,
@@ -201,12 +201,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
         defaultValue={renameModal.folder?.folderName || ''}
         placeholder="Enter project name"
         onConfirm={async (newName) => {
-          const token = localStorage.getItem('token');
-          await fetch(`${config.apiURL}/workspace/${workspace.id}/folder/${renameModal.folder.id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ folderName: newName }),
-          });
+          await apiClient.patch(`/workspace/${workspace.id}/folder/${renameModal.folder.id}`, { folderName: newName });
           onFolderUpdate();
           setRenameModal({ open: false, folder: null });
         }}

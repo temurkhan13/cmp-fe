@@ -1,6 +1,5 @@
 import { useState } from "react";
 import apiClient from '../api/axios';
-import config from '../config/config';
 import { getUserId } from '../utils/getUserId';
 
 const useAssessment = ({ workspaceId, folderId }) => {
@@ -8,18 +7,12 @@ const useAssessment = ({ workspaceId, folderId }) => {
 
   const Assessment = async (assessmentName) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await apiClient.post(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}/assessment`,
+        `/workspace/${workspaceId}/folder/${folderId}/assessment`,
         {
           user_id: getUserId(),
           assessmentName,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
 
       const question = response.data.report[0]?.subReport[0]?.questionAnswer[0]?.question;
@@ -27,27 +20,16 @@ const useAssessment = ({ workspaceId, folderId }) => {
       setError(null);
       return question;
     } catch (error) {
-      setError(error.response?.data?.message || error.message); // more detailed error handling
+      setError(error.response?.data?.message || error.message);
     }
   };
 
   const getAssessment = async (id) => {
-    const token = localStorage.getItem('token');
-    const response = await apiClient.get(
-      `${config.apiURL}/workspace-assessment/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await apiClient.get(`/workspace-assessment/${id}`);
     return response.data;
   }
-
-
 
   return { error, Assessment, getAssessment };
 };
 
 export default useAssessment;
-

@@ -163,6 +163,7 @@ const mediaStyles = `
     border-bottom: 2px solid transparent;
     font-size: 1.25rem;
     font-weight: 500;
+    font-family: 'Poppins';
     color: #888;
     cursor: pointer;
     transition: all 0.15s;

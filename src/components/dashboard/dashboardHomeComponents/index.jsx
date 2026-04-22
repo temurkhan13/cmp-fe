@@ -282,8 +282,8 @@ const DashboardHomeComp = () => {
             <SectionGrid
               title="Sitemaps"
               items={folderData[0].sitemaps}
-              itemType="sitemaps"
-              onRemove={(id) => handleRemoveItem(id, 'sitemaps')}
+              itemType="sitemap"
+              onRemove={(id) => handleRemoveItem(id, 'sitemap')}
             />
           ) : (
             <NoDataMessage title="Sitemaps" icon={<FaFolderTree />} />
@@ -293,8 +293,8 @@ const DashboardHomeComp = () => {
             <SectionGrid
               title="Digital PlayBook"
               items={folderData[0].sitemaps}
-              itemType="sitemaps"
-              onRemove={(id) => handleRemoveItem(id, 'sitemaps')}
+              itemType="sitemap"
+              onRemove={(id) => handleRemoveItem(id, 'sitemap')}
             />
           ) : (
             <NoDataMessage title="Digital PlayBook" icon={<BsFilePlayFill />} />

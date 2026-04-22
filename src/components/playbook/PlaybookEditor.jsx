@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
-import config from '../../config/config.js';
+import apiClient from '../../api/axios';
 import PlaybookSection from './PlaybookSection';
 import PlaybookCover from './PlaybookCover';
 import Loading from '../sitemap/Loading';
@@ -12,14 +12,6 @@ import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
 import ConfirmModal from '../common/ConfirmModal';
 import { exportDocument } from '@utils/exportDocument';
-
-function getAuthHeaders() {
-  const token = localStorage.getItem('token');
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  };
-}
 
 function PlaybookEditor() {
   const { id } = useParams();
@@ -52,11 +44,8 @@ function PlaybookEditor() {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
-        headers: getAuthHeaders(),
-      });
-      if (!res.ok) throw new Error('Failed to fetch playbook');
-      const data = await res.json();
+      const res = await apiClient.get(`/dpb/sitemap/${id}`);
+      const data = res.data;
       setPlaybook(data);
       if (data.accent_color) setAccentColor(data.accent_color);
       if (data.logo_url) setLogoUrl(data.logo_url);
@@ -75,13 +64,9 @@ function PlaybookEditor() {
   const updateNodeData = async (stageId, nodeId, nodeDataId, newDescription) => {
     setSaving(true);
     try {
-      await fetch(
-        `${config.apiURL}/dpb/${id}/stage/${stageId}/nodes/${nodeId}/nodeData/${nodeDataId}`,
-        {
-          method: 'PATCH',
-          headers: getAuthHeaders(),
-          body: JSON.stringify({ description: newDescription }),
-        }
+      await apiClient.patch(
+        `/dpb/${id}/stage/${stageId}/nodes/${nodeId}/nodeData/${nodeDataId}`,
+        { description: newDescription },
       );
     } catch (err) {
       import.meta.env.DEV && console.error('Save error:', err);
@@ -93,20 +78,15 @@ function PlaybookEditor() {
   // Inspire Me
   const inspireSection = async (heading, stageId, nodeId, nodeDataId) => {
     try {
-      const res = await fetch(`${config.apiURL}/dpb/inspire`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          heading,
-          playbookName: playbook?.name || '',
-          playbookId: id,
-          stageId,
-          nodeId,
-          nodeDataId,
-        }),
+      const res = await apiClient.post('/dpb/inspire', {
+        heading,
+        playbookName: playbook?.name || '',
+        playbookId: id,
+        stageId,
+        nodeId,
+        nodeDataId,
       });
-      if (!res.ok) throw new Error('Inspire failed');
-      const data = await res.json();
+      const data = res.data;
       return data.content || data.message || '';
     } catch (err) {
       import.meta.env.DEV && console.error('Inspire error:', err);
@@ -119,18 +99,12 @@ function PlaybookEditor() {
     if (!newStageName.trim()) return;
     setAddingStage(true);
     try {
-      const res = await fetch(`${config.apiURL}/dpb/sitemap/${id}`, {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          message: newStageName,
-          sitemapName: newStageName,
-        }),
+      await apiClient.patch(`/dpb/sitemap/${id}`, {
+        message: newStageName,
+        sitemapName: newStageName,
       });
-      if (res.ok) {
-        setNewStageName('');
-        await fetchPlaybook();
-      }
+      setNewStageName('');
+      await fetchPlaybook();
     } catch (err) {
       import.meta.env.DEV && console.error('Add stage error:', err);
     } finally {
@@ -141,10 +115,7 @@ function PlaybookEditor() {
   // Delete stage
   const deleteStage = async (stageId) => {
     try {
-      await fetch(`${config.apiURL}/dpb/${id}/stage/${stageId}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders(),
-      });
+      await apiClient.delete(`/dpb/${id}/stage/${stageId}`);
       await fetchPlaybook();
     } catch (err) {
       import.meta.env.DEV && console.error('Delete stage error:', err);
@@ -167,11 +138,7 @@ function PlaybookEditor() {
     // Save order to backend
     try {
       const stageOrder = reordered.map((s) => s.id || s._id);
-      await fetch(`${config.apiURL}/dpb/sitemap/simple-update/${id}`, {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ stageOrder }),
-      });
+      await apiClient.patch(`/dpb/sitemap/simple-update/${id}`, { stageOrder });
     } catch (err) {
       import.meta.env.DEV && console.error('Reorder error:', err);
       await fetchPlaybook();
@@ -181,11 +148,7 @@ function PlaybookEditor() {
   // Save branding
   const saveBranding = async () => {
     try {
-      await fetch(`${config.apiURL}/dpb/sitemap/simple-update/${id}`, {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ accent_color: accentColor, logo_url: logoUrl }),
-      });
+      await apiClient.patch(`/dpb/sitemap/simple-update/${id}`, { accent_color: accentColor, logo_url: logoUrl });
       setBrandingOpen(false);
     } catch (err) {
       import.meta.env.DEV && console.error('Branding save error:', err);

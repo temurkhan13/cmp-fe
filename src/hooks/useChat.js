@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import apiClient from '../api/axios';
-import config from '../config/config';
 import { getUserId } from '../utils/getUserId';
 
 const useChat = () => {
@@ -21,13 +20,7 @@ const useChat = () => {
         formData.append('pdfPath', file);
       }
 
-      const token = localStorage.getItem('token');
-      const response = await apiClient.post(`${config.apiURL}/chat/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient.post('/chat/', formData);
       setLoading(false);
       setError(null);
       return response.data.message;

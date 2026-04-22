@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../api/axios';
 import '../assessment/chat-message.scss';
 import './assistant.scss';
 import '../assessment/assessment.scss';
@@ -44,12 +45,6 @@ import {
 } from '../../redux/api/workspaceApi';
 import { FaUser } from 'react-icons/fa';
 
-// import {
-//   addMessage,
-//   updateMessage,
-//   addBookmark,
-// } from '../../redux/slices/workspaceSlice'; // Adjusted import
-
 import {
   useAddMessageMutation,
   useUpdateMessageMutation,
@@ -62,12 +57,8 @@ import {
   selectCurrentFolder,
   selectCurrentWorkspace,
 } from '../../redux/selectors/selectors';
-// import { addBookmark } from '../../../redux/slices/workspaceSlice';
-
 import * as FaIcons from 'react-icons/fa';
-// import { v4 as uuidv4 } from 'uuid';
-import { setChats } from '../../redux/slices/chatSlice';
-import { getChatsAsync } from '../../redux/slices/workspaceSlice';
+import { setChats, getChatsAsync } from '../../redux/slices/chatSlice';
 import {
   selectWorkspace,
   setCurrentChatId,
@@ -75,7 +66,6 @@ import {
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire.js';
 import useExplain from '../../hooks/AiFeatureHooks/useExplain.js';
-import config from '../../config/config.js';
 import UserAvatar from '../common/UserAvatar';
 
 const MessagesSection = ({ setCurrentChat }) => {
@@ -428,21 +418,15 @@ const MessagesSection = ({ setCurrentChat }) => {
 
       let data;
       if (file && file instanceof File) {
-        // Use direct fetch for file uploads — RTK Query FormData is unreliable
-        const token = localStorage.getItem('token');
         const formData = new FormData();
         formData.append('text', messageText);
         formData.append('pdfPath', file);
 
-        const response = await fetch(
-          `${config.apiURL}/workspace/${workspaceId}/folder/${currentFolderId}/chat/${currentChatId}/message`,
-          {
-            method: 'PATCH',
-            headers: { Authorization: `Bearer ${token}` },
-            body: formData,
-          }
+        const response = await apiClient.patch(
+          `/workspace/${workspaceId}/folder/${currentFolderId}/chat/${currentChatId}/message`,
+          formData,
         );
-        data = await response.json();
+        data = response.data;
       } else {
         // No file — use RTK Query as normal
         data = await addMessage({
@@ -743,13 +727,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       defaultValue={c.text}
                                       onKeyDown={async (e) => {
                                         if (e.key === 'Enter') {
-                                          const token = localStorage.getItem('token');
                                           const msgId = c.messageId || c.message_id || message._id;
-                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`, {
-                                            method: 'PATCH',
-                                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                                            body: JSON.stringify({ text: e.target.value }),
-                                          });
+                                          await apiClient.patch(`/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`, { text: e.target.value });
                                           setEditingCommentId(null);
                                           refetch();
                                         }
@@ -769,12 +748,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                       <span
                                         className="asst-comment-action asst-comment-action--delete"
                                         onClick={async () => {
-                                          const token = localStorage.getItem('token');
                                           const msgId = c.messageId || c.message_id || message._id;
-                                          await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`, {
-                                            method: 'DELETE',
-                                            headers: { Authorization: `Bearer ${token}` },
-                                          });
+                                          await apiClient.delete(`/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`);
                                           refetch();
                                         }}
                                       >Delete</span>
@@ -804,13 +779,8 @@ const MessagesSection = ({ setCurrentChat }) => {
                                             const val = e.target.value;
                                             e.target.disabled = true;
                                             try {
-                                              const token = localStorage.getItem('token');
                                               const msgId = c.messageId || c.message_id || message._id;
-                                              await fetch(`${config.apiURL}/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}/reply`, {
-                                                method: 'POST',
-                                                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                                                body: JSON.stringify({ text: val }),
-                                              });
+                                              await apiClient.post(`/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}/reply`, { text: val });
                                               setReplyingCommentId(null);
                                               refetch();
                                             } catch (err) {
@@ -975,11 +945,11 @@ const MessagesSection = ({ setCurrentChat }) => {
           <div className="file-preview-chip">
             <div className="file-preview-chip__icon">
               {file.type?.includes('pdf') ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
               ) : file.type?.includes('image') ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
               ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
               )}
             </div>
             <div className="file-preview-chip__info">

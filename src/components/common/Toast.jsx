@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 const Toast = () => (
   <Toaster
     position="top-right"
+    containerStyle={{ zIndex: 10100 }}
     toastOptions={{
       duration: 3000,
       style: {

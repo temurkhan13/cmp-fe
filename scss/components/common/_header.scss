@@ -47,8 +47,8 @@
     }
 
     &>img {
-      width: 4.8rem;
-      height: 4.8rem;
+      width: 4rem;
+      height: 4rem;
       border-radius: 50%;
     }
   }
@@ -98,12 +98,13 @@
   left: 3rem;
 
   @media (max-width: 600px) {
-    top: 1.25rem;
+    top: 1.75rem;
     left: 5rem;
   }
 
   &.chatpage-header {
     top: 0;
+    left: 0;
   }
 
   p {
@@ -166,6 +167,59 @@
   font-weight: 500;
   border: none;
   background-color: $color_parentColor;
+}
+
+// ─── Header hamburger (responsive only) ─────────────────
+.header-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2.4rem;
+  padding: 0.4rem;
+  border-radius: 0.6rem;
+  align-items: center;
+  justify-content: center;
+  color: $color_BlueDark;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  @media (max-width: $dashboard_tablet) {
+    display: flex;
+  }
+}
+
+// ─── Header responsive overrides ─────────────────────────
+@media (max-width: $dashboard_tablet) {
+  .topbar {
+    padding: 1rem 1.6rem;
+
+    .selected-workspace-name p {
+      max-width: 20rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (max-width: $dashboard_mobile) {
+  .topbar {
+    padding: 0.8rem 1.2rem;
+
+    .selected-workspace-name {
+      display: none;
+    }
+
+    // & > section > div {
+    //   .improve-response {
+    //     display: none;
+    //   }
+    // }
+  }
 }
 
 // <div className="assessmentList">

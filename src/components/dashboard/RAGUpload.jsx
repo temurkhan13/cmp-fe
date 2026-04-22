@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { FiUploadCloud, FiFile, FiTrash2, FiCheck } from 'react-icons/fi';
-import config from '../../config/config';
+import apiClient from '../../api/axios';
 
 const RAGUpload = () => {
   const [files, setFiles] = useState([]);
@@ -41,22 +41,11 @@ const RAGUpload = () => {
         formData.append('pdfPath', file);
         if (workspaceId) formData.append('workspaceId', workspaceId);
 
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${config.apiURL}/workspace/extract-text`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-
-        if (res.ok) {
-          uploadResults.push({ name: file.name, status: 'success' });
-        } else {
-          const errorData = await res.json().catch(() => ({}));
-          const message = errorData.error || 'Upload failed';
-          uploadResults.push({ name: file.name, status: 'error', message });
-        }
-      } catch {
-        uploadResults.push({ name: file.name, status: 'error', message: 'Upload failed. Please try again.' });
+        await apiClient.post('/workspace/extract-text', formData);
+        uploadResults.push({ name: file.name, status: 'success' });
+      } catch (err) {
+        const message = err.response?.data?.error || 'Upload failed. Please try again.';
+        uploadResults.push({ name: file.name, status: 'error', message });
       }
     }
 

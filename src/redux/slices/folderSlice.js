@@ -1,21 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 
 // Thunk to fetch folder data
 export const fetchFolderData = createAsyncThunk(
   'folder/fetchFolderData',
   async ({ workspaceId, folderId }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await apiClient.get(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
+        `/workspace/${workspaceId}/folder/${folderId}`,
       );
       return response.data;
     } catch (error) {
@@ -33,16 +25,9 @@ export const toggleFolderActivation = createAsyncThunk(
     }
 
     try {
-      const token = localStorage.getItem('token');
       const response = await apiClient.patch(
-        `${config.apiURL}/workspace/${workspaceId}/folder/${folderId}`,
+        `/workspace/${workspaceId}/folder/${folderId}`,
         { isActive },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
       );
 
       // Extract the `isReportGenerated` values from assessments.report list if available
@@ -72,15 +57,8 @@ export const fetchWorkspaceAssessments = createAsyncThunk(
         throw new Error('Folder ID is required.');
       }
 
-      const token = localStorage.getItem('token');
       const response = await apiClient.get(
-        `${config.apiURL}/workspace-assessment?folderId=${folderId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
+        `/workspace-assessment?folderId=${folderId}`,
       );
       return response.data;
     } catch (error) {

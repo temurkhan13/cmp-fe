@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { FaCheck } from 'react-icons/fa';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 import Components from '..';
 import toast from 'react-hot-toast';
 import './dashboard-inline.scss';
@@ -52,8 +51,8 @@ const PlanAndBilling = () => {
   const fetchData = async () => {
     try {
       const [plansRes, subsRes] = await Promise.allSettled([
-        apiClient.get(`${config.apiURL}/stripe/subscription`),
-        apiClient.get(`${config.apiURL}/auth/user-subscription`),
+        apiClient.get(`/stripe/subscription`),
+        apiClient.get(`/auth/user-subscription`),
       ]);
 
       if (plansRes.status === 'fulfilled') {
@@ -73,8 +72,7 @@ const PlanAndBilling = () => {
   const handleSubscribe = async (subscriptionId) => {
     setCheckoutLoading(subscriptionId);
     try {
-      const res = await apiClient.post(`${config.apiURL}/stripe/subscription`, { subscriptionId });
-      console.log(res)
+      const res = await apiClient.post(`/stripe/subscription`, { subscriptionId });
       if (res.data?.redirectToCheckoutURL) {
         window.location.href = res.data.redirectToCheckoutURL;
       } else {

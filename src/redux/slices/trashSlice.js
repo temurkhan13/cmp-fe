@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 
 const initialState = {
   trashItems: {
@@ -18,15 +17,7 @@ export const fetchTrashItemsAsync = createAsyncThunk(
   'trash/fetchTrashItems',
   async (_, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await apiClient.get(
-        `${config.apiURL}/workspace/user/trash`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiClient.get('/workspace/user/trash');
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -41,16 +32,9 @@ export const restoreFromTrashAsync = createAsyncThunk(
   'trash/restoreFromTrash',
   async ({ type, id }, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token');
-      const url = `${config.apiURL}/workspace/${type}/${id}/restoreFromTrash`;
       const response = await apiClient.patch(
-        url,
+        `/workspace/${type}/${id}/restoreFromTrash`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
       return response.data;
     } catch (error) {
@@ -66,13 +50,7 @@ export const deleteFromTrashAsync = createAsyncThunk(
   'trash/deleteFromTrash',
   async ({ type, id }, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token');
-      const url = `${config.apiURL}/workspace/${type}/${id}/deleteFromTrash`;
-      const response = await apiClient.delete(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient.delete(`/workspace/${type}/${id}/deleteFromTrash`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(

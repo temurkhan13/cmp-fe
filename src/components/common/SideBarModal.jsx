@@ -35,8 +35,7 @@ const SideBarModal = ({ title, bodyContent, onClose }) => {
         }
         .modal {
           position: absolute;
-          right: 10rem; /* Set the left offset to 10rem */
-        //   top:5rem;
+          right: 10rem;
           width: 35rem;
           height: 98vh;
           background: #fff;
@@ -45,6 +44,20 @@ const SideBarModal = ({ title, bodyContent, onClose }) => {
           border-radius: 8px;
           overflow-y: auto;
           box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 1080px) {
+          .modal {
+            right: 6rem;
+            width: 32rem;
+          }
+        }
+        @media (max-width: 600px) {
+          .modal {
+            right: 0;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+          }
         }
         .modal-header {
           display: flex;

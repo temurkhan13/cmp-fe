@@ -1,59 +1,44 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BiPlus, BiEdit } from 'react-icons/bi';
-import { FiTrash2 } from 'react-icons/fi';
+import { BiPlus } from 'react-icons/bi';
+import { FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import Loading from './Loading';
-import NoData from './NoData';
-import config from '../../config/config.js';
+import apiClient from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { timeAgo } from './helper.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import ConfirmModal from '../common/ConfirmModal';
+import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import './sitemap.scss';
+import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
+import '../dashboard/dashboardHomeComponents/styles/folder.scss';
+import '../../modules/dashboard/ai-assistant.scss';
 
 function List() {
   let navigate = useNavigate();
   const [sitemaps, setSitemaps] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [editName, setEditName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const selectedWorkspace = useSelector(selectWorkspace);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
+  const [renameModal, setRenameModal] = useState({ open: false, id: null, name: '' });
+  const [openMenuId, setOpenMenuId] = useState(null);
   const [moveToTrash] = useMoveToTrashMutation();
+  const menuRef = useRef(null);
 
-  async function getData(
-    workSpaceId,
-    url = `${config.apiURL}/workspace/user/sitemaps`
-  ) {
-    const authToken = localStorage.getItem('token');
-    const response = await fetch(`${url}?workspaceId=${workSpaceId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-
-    return response.json();
+  async function getData(workSpaceId) {
+    const response = await apiClient.get(`/workspace/user/sitemaps?workspaceId=${workSpaceId}`);
+    return response.data;
   }
 
   const renameSitemap = async (id, newName) => {
-    const authToken = localStorage.getItem('token');
-    await fetch(`${config.apiURL}/dpb/sitemap/simple-update/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ name: newName }),
-    });
+    await apiClient.patch(`/dpb/sitemap/simple-update/${id}`, { name: newName });
     setSitemaps((prev) =>
       prev.map((s) => (s._id === id ? { ...s, name: newName } : s))
     );
-    setEditingId(null);
+    setRenameModal({ open: false, id: null, name: '' });
   };
 
   const deleteSitemap = async (id) => {
@@ -79,6 +64,18 @@ function List() {
   useEffect(() => {
     onInit();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenuId(null);
+      }
+    };
+    if (openMenuId) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [openMenuId]);
 
   return (
     <div className="sitemap-list-page">
@@ -130,52 +127,56 @@ function List() {
                   <div
                     key={`${_id}-recent`}
                     className="sitemap-card"
-                    onClick={() => {
-                      if (editingId !== _id) navigate(`/sitemap/${_id}`);
-                    }}
+                    onClick={() => navigate(`/sitemap/${_id}`)}
                   >
                     <div className="sitemap-card__header">
                       <FaFolderTree size={18} />
-                      {editingId === _id ? (
-                        <input
-                          autoFocus
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                          onBlur={() => renameSitemap(_id, editName)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') renameSitemap(_id, editName);
-                            if (e.key === 'Escape') setEditingId(null);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          className="sitemap-card__rename-input"
-                        />
-                      ) : (
-                        <>
-                          <span className="sitemap-card__name">{name}</span>
-                          <BiEdit
-                            size={16}
-                            className="sitemap-card__icon-faded"
-                            title="Rename"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingId(_id);
-                              setEditName(name);
-                            }}
-                          />
-                          <FiTrash2
-                            size={16}
-                            className="sitemap-card__icon-delete"
-                            title="Delete"
-                            onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: _id }); }}
-                          />
-                        </>
-                      )}
+                      <span className="sitemap-card__name">{name}</span>
                     </div>
                     {updatedAt ? (
                       <span className="sitemap-card__date">
                         Modified {timeAgo(updatedAt)}
                       </span>
                     ) : null}
+                    <div
+                      className="sitemap-card__actions"
+                      ref={openMenuId === _id ? menuRef : null}
+                    >
+                      <button
+                        className="sitemap-card__menu-btn"
+                        title="More options"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenMenuId(openMenuId === _id ? null : _id);
+                        }}
+                      >
+                        <FiMoreVertical size={16} />
+                      </button>
+                      {openMenuId === _id && (
+                        <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="sitemap-card__dropdown-item"
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              setRenameModal({ open: true, id: _id, name });
+                            }}
+                          >
+                            <FiEdit2 size={14} />
+                            Rename
+                          </button>
+                          <button
+                            className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              setDeleteConfirm({ open: true, id: _id });
+                            }}
+                          >
+                            <FiTrash2 size={14} />
+                            Move to Trash
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
             </div>
@@ -184,6 +185,20 @@ function List() {
           <div className="sitemap-list-empty"></div>
         </div>
       </>
+
+      <InputModal
+        isOpen={renameModal.open}
+        title="Rename Sitemap"
+        description="Enter a new name for this sitemap."
+        confirmText="Rename"
+        cancelText="Cancel"
+        defaultValue={renameModal.name}
+        placeholder="Sitemap name"
+        onConfirm={async (newName) => {
+          await renameSitemap(renameModal.id, newName);
+        }}
+        onCancel={() => setRenameModal({ open: false, id: null, name: '' })}
+      />
 
       <ConfirmModal
         isOpen={deleteConfirm.open}

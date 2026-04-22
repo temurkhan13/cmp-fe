@@ -1,18 +1,9 @@
-.card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 2rem;
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+// Note: a bare `.card { ... }` rule lived here previously but was unused by
+// DashboardCard (which renders `.card-dashboard`). It was unintentionally
+// styling chat message bubbles (`className="card chat-card user-card"`)
+// whenever this stylesheet happened to be loaded via a prior dashboard visit,
+// causing the chat cards to look different on reload vs. navigation.
+// Removed; chat bubble layout now lives in chat-message.scss.
 
 .card-dashboard {
   display: flex;
@@ -44,11 +35,6 @@
   border-radius: 9999px;
   font-weight: 600;
   font-size: 1.2rem;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .info {

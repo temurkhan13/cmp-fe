@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { MdSupportAgent, MdSend, MdClose } from 'react-icons/md';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 import './common.scss';
 
 const SupportChat = () => {
@@ -35,7 +34,7 @@ const SupportChat = () => {
     setLoading(true);
 
     try {
-      const res = await apiClient.post(`${config.apiURL}/support/chat`, {
+      const res = await apiClient.post(`/support/chat`, {
         message: msg,
         history: messages.map((m) => ({ role: m.role, text: m.text })),
       });

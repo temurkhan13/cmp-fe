@@ -30,14 +30,14 @@ import {
   setCurrentChatId,
 } from '../../redux/slices/workspacesSlice';
 import { setChats } from '../../redux/slices/chatSlice';
-import { getChatsAsync } from '../../redux/slices/workspaceSlice';
+import { getChatsAsync } from '../../redux/slices/chatSlice';
 import {
   selectFolderData,
   selectSelectedFolder,
   setSelectedFolder,
 } from '../../redux/slices/folderSlice.js';
 
-const NewChat = () => {
+const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   const navigate = useNavigate();
   const projects = useSelector(selectAllFolders);
 
@@ -76,13 +76,19 @@ const NewChat = () => {
   useEffect(() => {
     const fId = selectedFolder?._id || selectedFolder?.id;
     const wId = currentWorkspace?.id;
-    if (!fId || !wId) return;
+    if (!fId || !wId) {
+      setChatsLoading(false);
+      return;
+    }
 
     // Ensure the selected folder belongs to the current workspace to avoid cross-workspace mismatches
     const folderBelongsToWorkspace = currentWorkspace.folders?.some(
       (f) => (f._id || f.id) === fId
     );
-    if (!folderBelongsToWorkspace) return;
+    if (!folderBelongsToWorkspace) {
+      setChatsLoading(false);
+      return;
+    }
 
     setChatsLoading(true);
     dispatch(
@@ -131,6 +137,7 @@ const NewChat = () => {
   const handleChatSelect = (chatId) => {
     dispatch(setCurrentChatId(chatId));
     navigate(`/assistant/chat/${chatId}`, { replace: true });
+    if (isOverlay && onClose) onClose();
   };
 
   const handleAddChat = () => {
@@ -187,7 +194,7 @@ const NewChat = () => {
 
   return (
     <div
-      className={`newChat ${sidebarCollapsed ? 'collapsed' : ''} asst-newchat-scroll`}
+      className={`newChat ${sidebarCollapsed && !isOverlay ? 'collapsed' : ''} asst-newchat-scroll ${isOverlay ? 'newChat--overlay' : ''} ${isOverlay && isVisible ? 'newChat--visible' : ''}`}
       ref={chatContainerRef}
     >
       <div

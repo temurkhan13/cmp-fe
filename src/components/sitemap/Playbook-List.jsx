@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BiPlus, BiEdit } from 'react-icons/bi';
-import { FiTrash2 } from 'react-icons/fi';
+import { BiPlus } from 'react-icons/bi';
+import { FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { BsFilePlayFill } from 'react-icons/bs';
 import Loading from './Loading';
-import config from '../../config/config.js';
+import apiClient from '../../api/axios';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import { timeAgo } from './helper.js';
 import ConfirmModal from '../common/ConfirmModal';
+import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import './sitemap.scss';
+import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
+import '../dashboard/dashboardHomeComponents/styles/folder.scss';
+import '../../modules/dashboard/ai-assistant.scss';
 
 const PLAYBOOK_TEMPLATES = [
   { name: 'ERP Migration Playbook', description: 'Complete change management playbook for ERP system migration covering Discovery, Design, Deploy, Adopt, and Run phases.', icon: '🔄' },
@@ -22,12 +26,7 @@ const PLAYBOOK_TEMPLATES = [
   { name: 'Organizational Restructure', description: 'Playbook for managing organizational restructuring with focus on employee communication, role transitions, and morale.', icon: '🏗️' },
 ];
 
-function getAuthHeaders() {
-  const token = localStorage.getItem('token');
-  return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
-}
-
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 15;
 
 function PlaybookList() {
   const navigate = useNavigate();
@@ -37,8 +36,6 @@ function PlaybookList() {
   const [showCreate, setShowCreate] = useState(false);
   const [createName, setCreateName] = useState('');
   const [createMessage, setCreateMessage] = useState('');
-  const [editingId, setEditingId] = useState(null);
-  const [editName, setEditName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -46,25 +43,26 @@ function PlaybookList() {
   const selectedWorkspace = useSelector(selectWorkspace);
   const selectedFolder = useSelector(selectSelectedFolder);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
+  const [renameModal, setRenameModal] = useState({ open: false, id: null, name: '' });
+  const [openMenuId, setOpenMenuId] = useState(null);
   const [moveToTrash] = useMoveToTrashMutation();
+  const menuRef = useRef(null);
 
   const fetchPlaybooks = async (requestedPage = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(`${config.apiURL}/dpb/sitemap?page=${requestedPage}&limit=${ITEMS_PER_PAGE}`, { headers: getAuthHeaders() });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.results && Array.isArray(data.results)) {
-          setPlaybooks(data.results);
-          setPage(data.page || requestedPage);
-          setTotalPages(data.totalPages || 1);
-          setTotalResults(data.totalResults || data.results.length);
-        } else if (Array.isArray(data)) {
-          setPlaybooks(data);
-          setPage(1);
-          setTotalPages(1);
-          setTotalResults(data.length);
-        }
+      const res = await apiClient.get(`/dpb/sitemap?page=${requestedPage}&limit=${ITEMS_PER_PAGE}`);
+      const data = res.data;
+      if (data.results && Array.isArray(data.results)) {
+        setPlaybooks(data.results);
+        setPage(data.page || requestedPage);
+        setTotalPages(data.totalPages || 1);
+        setTotalResults(data.totalResults || data.results.length);
+      } else if (Array.isArray(data)) {
+        setPlaybooks(data);
+        setPage(1);
+        setTotalPages(1);
+        setTotalResults(data.length);
       }
     } catch (err) {
       import.meta.env.DEV && console.error('Fetch playbooks error:', err);
@@ -89,18 +87,14 @@ function PlaybookList() {
     setCreating(true);
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const res = await fetch(`${config.apiURL}/dpb/sitemap`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          message: createMessage || createName,
-          sitemapName: createName,
-          userId: user.id || user._id,
-          folderId: selectedFolder?.id || selectedFolder?._id,
-        }),
+      const res = await apiClient.post('/dpb/sitemap', {
+        message: createMessage || createName,
+        sitemapName: createName,
+        userId: user.id || user._id,
+        folderId: selectedFolder?.id || selectedFolder?._id,
       });
-      if (res.ok) {
-        const newPlaybook = await res.json();
+      const newPlaybook = res.data;
+      if (newPlaybook) {
         const playbookId = newPlaybook._id || newPlaybook.id;
         if (playbookId) {
           navigate(`/playbook/${playbookId}`);
@@ -120,11 +114,7 @@ function PlaybookList() {
 
   const renamePlaybook = async (id, newName) => {
     try {
-      await fetch(`${config.apiURL}/dpb/sitemap/simple-update/${id}`, {
-        method: 'PATCH',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ name: newName }),
-      });
+      await apiClient.patch(`/dpb/sitemap/simple-update/${id}`, { name: newName });
       setPlaybooks((prev) => prev.map((p) => {
         const pid = p._id || p.id;
         return pid === id ? { ...p, name: newName } : p;
@@ -132,9 +122,21 @@ function PlaybookList() {
     } catch (err) {
       import.meta.env.DEV && console.error('Rename error:', err);
     } finally {
-      setEditingId(null);
+      setRenameModal({ open: false, id: null, name: '' });
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenuId(null);
+      }
+    };
+    if (openMenuId) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [openMenuId]);
 
   const deletePlaybook = async (id) => {
     try {
@@ -251,44 +253,54 @@ function PlaybookList() {
                   <div
                     key={pbId}
                     className="playbook-card"
-                    onClick={() => { if (editingId !== pbId) navigate(`/playbook/${pbId}`); }}
+                    onClick={() => navigate(`/playbook/${pbId}`)}
                   >
                     <div className="sitemap-card__header">
                       <BsFilePlayFill size={18} />
-                      {editingId === pbId ? (
-                        <input
-                          autoFocus
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                          onBlur={() => renamePlaybook(pbId, editName)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') renamePlaybook(pbId, editName);
-                            if (e.key === 'Escape') setEditingId(null);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          className="sitemap-card__rename-input"
-                        />
-                      ) : (
-                        <>
-                          <span className="sitemap-card__name">{pb.name}</span>
-                          <BiEdit
-                            size={16}
-                            className="sitemap-card__icon-faded"
-                            title="Rename"
-                            onClick={(e) => { e.stopPropagation(); setEditingId(pbId); setEditName(pb.name); }}
-                          />
-                          <FiTrash2
-                            size={16}
-                            className="sitemap-card__icon-delete"
-                            title="Delete"
-                            onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ open: true, id: pbId }); }}
-                          />
-                        </>
-                      )}
+                      <span className="sitemap-card__name">{pb.name}</span>
                     </div>
                     {pbUpdated && (
                       <span className="sitemap-card__date">Modified {timeAgo(pbUpdated)}</span>
                     )}
+                    <div
+                      className="sitemap-card__actions"
+                      ref={openMenuId === pbId ? menuRef : null}
+                    >
+                      <button
+                        className="sitemap-card__menu-btn"
+                        title="More options"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenMenuId(openMenuId === pbId ? null : pbId);
+                        }}
+                      >
+                        <FiMoreVertical size={16} />
+                      </button>
+                      {openMenuId === pbId && (
+                        <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="sitemap-card__dropdown-item"
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              setRenameModal({ open: true, id: pbId, name: pb.name });
+                            }}
+                          >
+                            <FiEdit2 size={14} />
+                            Rename
+                          </button>
+                          <button
+                            className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              setDeleteConfirm({ open: true, id: pbId });
+                            }}
+                          >
+                            <FiTrash2 size={14} />
+                            Move to Trash
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -337,6 +349,20 @@ function PlaybookList() {
           </div>
         )}
       </div>
+
+      <InputModal
+        isOpen={renameModal.open}
+        title="Rename Playbook"
+        description="Enter a new name for this playbook."
+        confirmText="Rename"
+        cancelText="Cancel"
+        defaultValue={renameModal.name}
+        placeholder="Playbook name"
+        onConfirm={async (newName) => {
+          await renamePlaybook(renameModal.id, newName);
+        }}
+        onCancel={() => setRenameModal({ open: false, id: null, name: '' })}
+      />
 
       <ConfirmModal
         isOpen={deleteConfirm.open}

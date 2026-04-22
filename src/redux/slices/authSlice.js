@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 
 // Define initial state
 const initialState = {
@@ -12,7 +11,7 @@ const initialState = {
   error: null,
 };
 
-const baseURL = `${config.apiURL}/auth`; // Change this as per your API
+const baseURL = '/auth';
 
 // Async thunk action to handle Google OAuth login
 export const googleOAuthLoginAsync = createAsyncThunk(
@@ -24,15 +23,7 @@ export const googleOAuthLoginAsync = createAsyncThunk(
       localStorage.setItem('refreshToken', refreshToken);
 
       // Hit the API with the access token
-      const response = await apiClient.post(
-        `${config.apiURL}/auth/get-user-from-token`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await apiClient.post('/auth/get-user-from-token', {});
 
       const user = response.data;
       // Save user in localStorage
@@ -75,13 +66,7 @@ export const getUserAsync = createAsyncThunk(
   'auth/getUser',
   async (userId, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await apiClient.get(`${baseURL}/users/${userId}`, config);
+      const response = await apiClient.get(`${baseURL}/users/${userId}`);
       const user = response.data;
       // Store token and user in localStorage
       localStorage.setItem('user', JSON.stringify(user));
@@ -126,19 +111,9 @@ export const codeVerifyAsync = createAsyncThunk(
   'auth/verification',
   async (value, thunkAPI) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const response = await apiClient.post(
         `${baseURL}/verification`,
-        {
-          verificationCode: value.code,
-        },
-        config
+        { verificationCode: value.code },
       );
 
       return response.data;
@@ -152,19 +127,10 @@ export const codeVerifyAsync = createAsyncThunk(
 export const resentVerificationCodeAsync = createAsyncThunk(
   'auth/email/send-verification',
   async (_, thunkAPI) => {
-    // Destructure the first argument to ignore it
-    const token = localStorage.getItem('token');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     try {
       const response = await apiClient.post(
         `${baseURL}/email/send-verification`,
         {},
-        config
       );
       return response.data;
     } catch (error) {
@@ -180,19 +146,10 @@ export const resentVerificationCodeAsync = createAsyncThunk(
 export const forgetPasswordGetCodeAsync = createAsyncThunk(
   'auth/forgot/password',
   async (email, thunkAPI) => {
-    // Destructure the first argument to ignore it
-    const token = localStorage.getItem('token');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
     try {
       const response = await apiClient.post(
         `${baseURL}/forgot/password`,
         { email },
-        config
       );
       return response.data;
     } catch (error) {
@@ -207,18 +164,10 @@ export const forgetPasswordGetCodeAsync = createAsyncThunk(
 export const ResetforgetPasswordWithCodeAsync = createAsyncThunk(
   'auth/reset/password',
   async ({ email, OTP, newPassword }, thunkAPI) => {
-    // No auth token needed for password reset (user is not logged in)
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
     try {
       const response = await apiClient.post(
         `${baseURL}/reset/password`,
         { email, OTP, newPassword },
-        config
       );
       return response.data;
     } catch (error) {

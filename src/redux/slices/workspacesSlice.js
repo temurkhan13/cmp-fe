@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../../api/axios';
-import config from '../../config/config';
 import { workspaceApi } from '../api/workspaceApi'; // Import the workspaceApi
 
 // Thunk for updating workspace activation status
@@ -8,16 +7,9 @@ export const updateWorkspaceStatus = createAsyncThunk(
   'workspaces/updateWorkspaceStatus',
   async ({ workspaceId, isActive }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await apiClient.patch(
-        `${config.apiURL}/workspace/${workspaceId}`,
+        `/workspace/${workspaceId}`,
         { isActive },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
       );
       return response.data;
     } catch (error) {
@@ -31,16 +23,7 @@ export const fetchDashboardStats = createAsyncThunk(
   'workspaces/fetchDashboardStats',
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await apiClient.get(
-        `${config.apiURL}/workspace/user/dashboard-stats`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await apiClient.get('/workspace/user/dashboard-stats');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -99,13 +82,41 @@ const workspacesSlice = createSlice({
       .addCase(fetchDashboardStats.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.dashboardStats = payload;
-        // Only set workspace if none is currently selected
         if (!state.selectedWorkspace && payload.workspaces && payload.workspaces.length > 0) {
           const activeWorkspace =
             payload.workspaces.find((workspace) => workspace.isActive) ||
             (payload.results && payload.results[0]);
           state.selectedWorkspace = activeWorkspace;
           state.currentWorkspaceId = activeWorkspace?.id;
+        } else if (state.selectedWorkspace && Array.isArray(payload.workspaces)) {
+          // dashboardStats is the source of truth for folder lists (the
+          // getWorkspaces endpoint doesn't populate them). If the stats
+          // response includes folders for our selected workspace and our
+          // current copy lacks them, sync them in.
+          const fromStats = payload.workspaces.find(
+            (ws) => ws.id === state.currentWorkspaceId
+          );
+          const hasIncomingFolders =
+            Array.isArray(fromStats?.folders) && fromStats.folders.length > 0;
+          const currentFolders = state.selectedWorkspace.folders;
+          const needsHeal =
+            !Array.isArray(currentFolders) || currentFolders.length === 0;
+          if (hasIncomingFolders && needsHeal) {
+            state.selectedWorkspace = {
+              ...state.selectedWorkspace,
+              folders: fromStats.folders,
+            };
+            // Also heal the workspace in the list so selectors see the folders.
+            const listIndex = state.workspaces.findIndex(
+              (ws) => ws.id === state.currentWorkspaceId
+            );
+            if (listIndex !== -1) {
+              state.workspaces[listIndex] = {
+                ...state.workspaces[listIndex],
+                folders: fromStats.folders,
+              };
+            }
+          }
         }
       })
       .addCase(fetchDashboardStats.rejected, (state, { payload }) => {
@@ -129,8 +140,23 @@ const workspacesSlice = createSlice({
     builder.addMatcher(
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
-        // Always update the workspaces list with fresh data
-        state.workspaces = payload.results;
+        // The getWorkspaces endpoint returns workspace metadata but does NOT
+        // populate `folders` — folders come from fetchDashboardStats. When
+        // merging the fresh list, preserve existing folders for each workspace
+        // so we don't wipe out previously-hydrated folder data.
+        const previousWorkspaces = state.workspaces || [];
+        const mergeFolders = (incoming) => {
+          if (Array.isArray(incoming.folders) && incoming.folders.length > 0) {
+            return incoming;
+          }
+          const existing = previousWorkspaces.find((w) => w.id === incoming.id);
+          if (Array.isArray(existing?.folders) && existing.folders.length > 0) {
+            return { ...incoming, folders: existing.folders };
+          }
+          return incoming;
+        };
+
+        state.workspaces = payload.results.map(mergeFolders);
 
         // Only set workspace/folder selection if none is currently selected
         // (e.g., first visit or after logout). On page reload, redux-persist
@@ -138,8 +164,8 @@ const workspacesSlice = createSlice({
         // the backend's isActive flag, which may point to a different workspace.
         if (!state.selectedWorkspace) {
           const activeWorkspace =
-            payload.results.find((workspace) => workspace.isActive) ||
-            payload.results[0];
+            state.workspaces.find((workspace) => workspace.isActive) ||
+            state.workspaces[0];
           if (activeWorkspace) {
             state.selectedWorkspace = activeWorkspace;
             state.currentWorkspaceId = activeWorkspace?.id;
@@ -153,13 +179,19 @@ const workspacesSlice = createSlice({
           }
         } else {
           // Workspace already selected (persisted) — refresh its data from
-          // the API response so folders/metadata stay up-to-date without
-          // changing which workspace is selected.
-          const refreshed = payload.results.find(
+          // the API response, preserving existing folders if the response
+          // doesn't include them.
+          const refreshed = state.workspaces.find(
             (ws) => ws.id === state.currentWorkspaceId
           );
           if (refreshed) {
-            state.selectedWorkspace = refreshed;
+            const incomingFolders = refreshed.folders;
+            const existingFolders = state.selectedWorkspace.folders;
+            const finalFolders =
+              Array.isArray(incomingFolders) && incomingFolders.length > 0
+                ? incomingFolders
+                : (Array.isArray(existingFolders) ? existingFolders : []);
+            state.selectedWorkspace = { ...refreshed, folders: finalFolders };
           }
         }
       }

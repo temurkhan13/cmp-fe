@@ -58,7 +58,6 @@ const FAQs = () => {
             width: 80%;
             margin-left: auto;
             margin-right: auto;
-            font-family: 'Arial', sans-serif;
           }
 
           .faq1 {
