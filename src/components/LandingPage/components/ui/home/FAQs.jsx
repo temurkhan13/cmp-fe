@@ -36,7 +36,7 @@ const FAQs = () => {
     <div className="faqs">
       <div className="faq1">
         <img src={faqsLogo} alt="FAQs Logo" />
-        <h2>Frequently Asked Questions</h2>
+        <h2 className="faqs-heading">Frequently Asked Questions</h2>
       </div>
       <div className="faq2">
         {accordianData.map((item, index) => (
@@ -50,40 +50,6 @@ const FAQs = () => {
           />
         ))}
       </div>
-      <style>
-        {`
-          .faqs {
-            margin: 50px;
-            font-size: 1.5rem;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-          }
-
-          .faq1 {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            font-size: 40px;
-            font-weight: 600;
-            margin-bottom: 30px;
-          }
-
-          .faq2 {
-            width: 100%;
-            margin: 20px 0px 20px 0px;
-            padding-bottom: 10px;
-          }
-
-          h2 {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: #333;
-          }
-        `}
-      </style>
     </div>
   );
 };

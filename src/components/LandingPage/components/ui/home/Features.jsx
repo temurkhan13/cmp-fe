@@ -55,43 +55,6 @@ const Features = () => {
           />
         ))}
       </div>
-      <style>{`
-        .features-container {
-          padding: 5rem 3.125rem;
-        }
-
-        .features-title {
-          font-weight: bold;
-          color: #00316f;
-          text-align: center;
-          margin: 0.9375rem 0;
-          font-size: clamp(2rem, 3vw, 3rem);
-        }
-
-        .features-grid {
-          display: grid;
-          gap: 2rem;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
-        /* Adjust grid layout for larger tablets and smaller desktops */
-        @media screen and (max-width: 75rem) {
-          .features-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-        }
-
-        /* Adjust grid layout and container padding for smaller screens (mobile) */
-        @media screen and (max-width: 48rem) {
-          .features-container {
-            padding: 1.875rem 1.25rem;
-          }
-
-          .features-grid {
-            grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column for mobile */
-          }
-        }
-      `}</style>
     </div>
   );
 };
