@@ -10,7 +10,7 @@ import {
   TbLayoutSidebarLeftCollapseFilled,
   TbLayoutSidebarLeftExpandFilled,
 } from 'react-icons/tb';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { LoadingSpinner } from '../../components/common/Loaders';
 
 import {
   selectAllAssessments,

@@ -3,7 +3,7 @@ import data from '../../data';
 import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
 import useRegister from '../../hooks/useRegister';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { LoadingSpinner } from '../../components/common/Loaders';
 
 const SetNewPassword = () => {
   const location = useLocation();
