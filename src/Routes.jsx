@@ -5,7 +5,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import Components from './components';
 import data from './data';
 import Layout from './components/LandingPage/services/Layout';
-import Loader from './components/common/Loader';
+import Loader from './components/common/Loaders';
 import PrivacyPolicy from './components/LandingPage/components/PrivacyPolicy';
 import Terms from './components/LandingPage/components/Terms';
 import NotFound from './components/common/NotFound';

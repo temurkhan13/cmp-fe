@@ -249,3 +249,53 @@
 //   />
 // </section>
 // </div>
+
+// ─── PageHeader (title + breadcrumbs) ────────────────────
+.page-header {
+  padding: 1rem 3rem;
+
+  @media (max-width: 600px) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.page-header__title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.page-header__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.25rem;
+  font-size: 1.3rem;
+  color: #6b7280;
+  font-family: Poppins, sans-serif;
+}
+
+.page-header__crumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-header__separator {
+  color: #d1d5db;
+}
+
+.page-header__crumb--active {
+  color: #111;
+  font-weight: 500;
+}
+
+.page-header__crumb-link {
+  color: #6b7280;
+  text-decoration: none;
+
+  &:hover {
+    color: #111;
+  }
+}

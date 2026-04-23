@@ -3,7 +3,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import NoData from '../../components/common/NoDataAvailable';
 import { useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { LoadingSpinner } from '../../components/common/Loaders';
 import {
   fetchDashboardStats,
   selectWorkspace,
