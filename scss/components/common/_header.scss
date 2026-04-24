@@ -169,7 +169,6 @@
   background-color: $color_parentColor;
 }
 
-// ─── Header hamburger (responsive only) ─────────────────
 .header-hamburger {
   display: none;
   background: none;
@@ -192,7 +191,6 @@
   }
 }
 
-// ─── Header responsive overrides ─────────────────────────
 @media (max-width: $dashboard_tablet) {
   .topbar {
     padding: 1rem 1.6rem;
@@ -222,35 +220,6 @@
   }
 }
 
-// <div className="assessmentList">
-// <header>
-//   <Components.Feature.Text className="main--bold">
-//     Assessments
-//   </Components.Feature.Text>
-//   <span onClick={handleToggleAssessmentList}>
-//     <RxCross2 />
-//   </span>
-// </header>
-// <section>
-//   <Components.Feature.DropDownList
-//     name="Q&A Assessments"
-//     data={data.chat.assessmentQnaData}
-//     onAssessmentClick={onAssessmentSelect}
-//   />
-//   <Components.Feature.DropDownList
-//     name="Survey"
-//     data={data.chat.serverData}
-//     link={true}
-//   />
-//   <Components.Feature.DropDownList
-//     name="Checks / FAQs"
-//     data={data.chat.faqData}
-//     link={true}
-//   />
-// </section>
-// </div>
-
-// ─── PageHeader (title + breadcrumbs) ────────────────────
 .page-header {
   padding: 1rem 3rem;
 
@@ -298,4 +267,38 @@
   &:hover {
     color: #111;
   }
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 6rem;
+  right: 5rem;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  margin-top: 0.5rem;
+  border-radius: 0.8rem;
+}
+
+.profile-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-size: 1.5rem;
+  margin: 0.5rem;
+}
+
+.profile-dropdown-item:hover {
+  background-color: #f0f0f0;
+  border-radius: 0.8rem;
+}
+
+.profile-dropdown-icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
 }

@@ -121,11 +121,8 @@ const AiAssistant = () => {
     fetchStats();
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
-  // <<<<<<< feature/assessmnet_design
   useEffect(() => {
-    // Check if folder data is available; if not, fetch it
     if (!folderData || folderData.length === 0) {
-      // Assuming selectedWorkspace and activeFolder are necessary
       if (selectedWorkspace && activeWorkspace) {
         dispatch(
           fetchFolderData({
@@ -134,18 +131,19 @@ const AiAssistant = () => {
           })
         ).catch(() => setError('Failed to load folder data.'));
       }
-      // =======
-      //   const handleRemoveChat = useCallback(async () => {
-      //     if (currentFolder) {
-      //       await dispatch(
-      //         fetchFolderData({
-      //           workspaceId: selectedWorkspace.id,
-      //           folderId: currentFolder.id,
-      //         })
-      //       ).unwrap();
-      // >>>>>>> main
     }
   }, [dispatch, folderData, selectedWorkspace, activeWorkspace]);
+
+  const handleRemoveChat = useCallback(async () => {
+    if (currentFolder) {
+      await dispatch(
+        fetchFolderData({
+          workspaceId: selectedWorkspace.id,
+          folderId: currentFolder.id,
+        })
+      ).unwrap();
+    }
+  }, [dispatch, selectedWorkspace, currentFolder]);
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -202,7 +200,7 @@ const AiAssistant = () => {
             {folderData?.[0]?.chats?.map((item) => (
               <DashboardCard
                 key={item.id}
-                data={{ ...item, type: 'chats' }}
+                data={{ ...item, type: 'chat' }}
                 onRemove={() => handleRemoveChat()}
                 onClick={() => {
                   dispatch(setCurrentChatId(item.id));

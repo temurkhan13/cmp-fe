@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import SideBarModal from '../../components/common/SideBarModal';
 
 import AssessmentTasks from './AssessmentComponent/AssessmentTasks';
-import AssessmentMedia from './AssessmentComponent/AssessmentMedia';
+import Media from '../chat/Media';
 import AssessmentComments from './AssessmentComponent/AssessmentComments';
 import ChatBookmark from '../assistant/assistantModal/ChatBookmark';
 import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
@@ -101,7 +101,7 @@ const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData
         <SideBarModal
           title="Media"
           bodyContent={
-            <AssessmentMedia
+            <Media
               images={images}
               documents={documents}
               links={links}

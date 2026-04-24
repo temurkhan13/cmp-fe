@@ -121,7 +121,7 @@
   cursor: pointer;
 }
 
-// SignIn & SignUp shared styles (extracted from <style> tags)
+// SignIn & SignUp shared styles
 .error-message {
   color: #cc0000;
   font-weight: 500;
@@ -168,7 +168,7 @@
   }
 }
 
-// EmailVerificationHandler styles (extracted from <style> tag)
+// EmailVerificationHandler styles
 .email-verification-bar {
   width: 100%;
   max-width: 37.5rem;
@@ -277,5 +277,3 @@
     margin-bottom: 2rem;
   }
 }
-
-// @keyframes spin → defined globally in _animation.scss

@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Components from '@components';
 import NewChatSidebarModal from '../customModal/NewChatSidebarModal';
 import InputModal from '../common/InputModal';
-import { useUpdateChatMutation } from '../../redux/api/workspaceApi';
+import ConfirmModal from '../common/ConfirmModal';
+import { useUpdateChatMutation, useRemoveChatMutation } from '../../redux/api/workspaceApi';
 import { truncateText } from '../../utils/helperFunction.js';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import {
@@ -48,7 +49,9 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   const chatContainerRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [renameChat, setRenameChat] = useState({ open: false, chatId: null, chatTitle: '', folderId: null });
+  const [trashConfirm, setTrashConfirm] = useState({ open: false, chatId: null, folderId: null });
   const [updateChatMutation] = useUpdateChatMutation();
+  const [removeChat] = useRemoveChatMutation();
   const dispatch = useDispatch();
   const [hoveredChatIndex, setHoveredChatIndex] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -144,6 +147,26 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
     dispatch(setCurrentChatId(null));
     // Navigate with unique state key to force re-render even on same path
     navigate('/assistant/chat', { state: { newChat: Date.now() } });
+  };
+
+  const handleConfirmTrash = async () => {
+    const { chatId, folderId } = trashConfirm;
+    try {
+      await removeChat({
+        workspaceId: currentWorkspace?.id,
+        folderId,
+        chatId,
+      }).unwrap();
+      const updated = (myChats || []).filter(c => (c._id || c.id) !== chatId);
+      dispatch(setChats(updated));
+      if (chatId === currentChatId) {
+        dispatch(setCurrentChatId(null));
+        navigate('/assistant/chat', { replace: true });
+      }
+    } catch (error) {
+      import.meta.env.DEV && console.error('Failed to move chat to trash:', error);
+    }
+    setTrashConfirm({ open: false, chatId: null, folderId: null });
   };
 
   const switchFolder = (folder) => {
@@ -326,13 +349,12 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
                             chatId={chat._id || chat.id}
                             workspaceId={currentWorkspace?.id}
                             folderId={chat.folder_id || selectedFolder?._id || selectedFolder?.id}
-                            onDeleted={(deletedId) => {
-                              const updated = (myChats || []).filter(c => (c._id || c.id) !== deletedId);
-                              dispatch(setChats(updated));
-                              if (deletedId === currentChatId) {
-                                dispatch(setCurrentChatId(null));
-                                navigate('/assistant/chat', { replace: true });
-                              }
+                            onRequestDelete={(requestedId) => {
+                              setTrashConfirm({
+                                open: true,
+                                chatId: requestedId,
+                                folderId: chat.folder_id || selectedFolder?._id || selectedFolder?.id,
+                              });
                             }}
                             onRename={() => {
                               setRenameChat({
@@ -378,6 +400,15 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
           setRenameChat({ open: false, chatId: null, chatTitle: '', folderId: null });
         }}
         onCancel={() => setRenameChat({ open: false, chatId: null, chatTitle: '', folderId: null })}
+      />
+      <ConfirmModal
+        isOpen={trashConfirm.open}
+        title="Move to Trash"
+        description="This chat will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={handleConfirmTrash}
+        onCancel={() => setTrashConfirm({ open: false, chatId: null, folderId: null })}
       />
     </div>
   );

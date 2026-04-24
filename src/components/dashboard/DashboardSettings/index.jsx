@@ -23,27 +23,30 @@ const SettingsTabs = () => {
 
   return (
     <div className='settings-page'>
-      {/* <div className="tabs">
+      {/* When reviving these tabs, use className="settings-tabs" on the wrapper,
+          and the active modifier "settings-tabs--active" instead of "active".
+          Parked styles live in dashboard-inline.scss. */}
+      {/* <div className="settings-tabs">
         <button
-          className={activeTab === 'personal-info' ? 'active' : ''}
+          className={activeTab === 'personal-info' ? 'settings-tabs--active' : ''}
           onClick={() => setActiveTab('personal-info')}
         >
           Personal Information
         </button> */}
       {/* <button
-          className={activeTab === 'payment-method' ? 'active' : ''}
+          className={activeTab === 'payment-method' ? 'settings-tabs--active' : ''}
           onClick={() => setActiveTab('payment-method')}
         >
           Payment Method
         </button> */}
       {/* <button
-          className={activeTab === 'change-password' ? 'active' : ''}
+          className={activeTab === 'change-password' ? 'settings-tabs--active' : ''}
           onClick={() => setActiveTab('change-password')}
         >
           Change Password
         </button> */}
       {/* <button
-          className={activeTab === 'notifications' ? 'active' : ''}
+          className={activeTab === 'notifications' ? 'settings-tabs--active' : ''}
           onClick={() => setActiveTab('notifications')}
         >
           Notifications
@@ -51,44 +54,6 @@ const SettingsTabs = () => {
       {/* </div>
       <div className="tab-content">{renderContent()}</div> */}
       <div><PersonalInfo /></div>
-      <style>{`
-      .settings-page {
-        padding: 1rem 3rem;
-      }
-      .setting-heading{
-      font-size: 2.25rem;
-      font-weight: bold;
-      margin:2rem 2rem;
-      }
-        .tabs {
-          display: flex;
-          gap: 1rem;
-          border-bottom: 1px solid rgba(0,0,0,0.06);
-          margin-bottom: 1rem;
-        }
-
-        .tabs button {
-          padding: 0.625rem 1rem;
-          background: none;
-          border: none;
-          cursor: pointer;
-          font-size: 1.5rem;
-          font-weight: 400;
-          color: #6b7280;
-          border-bottom: 2px solid transparent;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .tabs button:hover {
-          color: #111;
-        }
-
-        .tabs button.active {
-          color: #111;
-          font-weight: 600;
-          border-bottom: 2px solid #C3E11D;
-        }
-      `}</style>
     </div>
   );
 };

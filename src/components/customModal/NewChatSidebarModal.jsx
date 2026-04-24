@@ -4,12 +4,17 @@ import { useRemoveChatMutation } from '../../redux/api/workspaceApi';
 
 import './custom-modal.scss';
 
-const NewChatSidebarModal = ({ isOpen, closeModal, chatId, workspaceId, folderId, onDeleted, onRename, position }) => {
+const NewChatSidebarModal = ({ isOpen, closeModal, chatId, workspaceId, folderId, onDeleted, onRename, onRequestDelete, position }) => {
   const [removeChat] = useRemoveChatMutation();
 
   if (!isOpen) return null;
 
   const handleMoveToTrash = async () => {
+    if (onRequestDelete) {
+      onRequestDelete(chatId);
+      closeModal();
+      return;
+    }
     try {
       await removeChat({ workspaceId, folderId, chatId }).unwrap();
       if (onDeleted) onDeleted(chatId);
@@ -55,6 +60,7 @@ NewChatSidebarModal.propTypes = {
   folderId: PropTypes.string.isRequired,
   onDeleted: PropTypes.func,
   onRename: PropTypes.func.isRequired,
+  onRequestDelete: PropTypes.func,
   position: PropTypes.shape({
     top: PropTypes.number.isRequired,
     left: PropTypes.number.isRequired,

@@ -63,12 +63,12 @@ const RAGUpload = () => {
   return (
     <div className="rag-upload-container">
       <h2>Document Knowledge Base</h2>
-      <p className="subtitle">
+      <p className="rag-subtitle">
         Upload documents to train the AI Assistant. Supported formats: PDF, DOCX, TXT, CSV, XLSX, PPTX.
       </p>
 
       <div
-        className={`drop-zone ${dragActive ? 'active' : ''}`}
+        className={`rag-drop-zone ${dragActive ? 'active' : ''}`}
         onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
         onDragLeave={() => setDragActive(false)}
         onDrop={handleDrop}
@@ -76,7 +76,7 @@ const RAGUpload = () => {
       >
         <FiUploadCloud size={40} color={dragActive ? '#C3E11D' : '#999'} />
         <p>Drag & drop files here, or click to browse</p>
-        <span className="hint">Max 10MB per file</span>
+        <span className="rag-hint">Max 10MB per file</span>
         <input
           ref={inputRef}
           type="file"
@@ -88,12 +88,12 @@ const RAGUpload = () => {
       </div>
 
       {files.length > 0 && (
-        <div className="file-list">
+        <div className="rag-file-list">
           {files.map((file, i) => (
-            <div key={i} className="file-item">
+            <div key={i} className="rag-file-item">
               <FiFile size={18} />
-              <span className="file-name">{file.name}</span>
-              <span className="file-size">{formatSize(file.size)}</span>
+              <span className="rag-file-name">{file.name}</span>
+              <span className="rag-file-size">{formatSize(file.size)}</span>
               <FiTrash2
                 size={16}
                 className="rag-delete-icon"
@@ -102,7 +102,7 @@ const RAGUpload = () => {
             </div>
           ))}
           <button
-            className="upload-btn"
+            className="rag-upload-btn"
             onClick={handleUpload}
             disabled={uploading}
           >
@@ -119,125 +119,18 @@ const RAGUpload = () => {
       )}
 
       {results.length > 0 && (
-        <div className="results">
+        <div className="rag-results">
           {results.map((r, i) => (
-            <div key={i} className={`result-item ${r.status}`}>
+            <div key={i} className={`rag-result-item ${r.status}`}>
               {r.status === 'success' ? <FiCheck color="green" /> : <span className="rag-error-icon">!</span>}
               <span>{r.name}</span>
-              <span className="result-status">
+              <span className="rag-result-status">
                 {r.status === 'success' ? 'Processed & indexed' : r.message}
               </span>
             </div>
           ))}
         </div>
       )}
-
-      <style>{`
-        .rag-upload-container {
-          max-width: 700px;
-          margin: 2rem auto;
-          padding: 2rem;
-        }
-        .rag-upload-container h2 {
-          font-size: 2.4rem;
-          font-weight: bold;
-          margin-bottom: 0.5rem;
-        }
-        .subtitle {
-          font-size: 1.3rem;
-          color: #666;
-          margin-bottom: 2rem;
-        }
-        .drop-zone {
-          border: 2px dashed #ddd;
-          border-radius: 1rem;
-          padding: 3rem;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .drop-zone:hover, .drop-zone.active {
-          border-color: #C3E11D;
-          background: rgba(195,225,29,0.05);
-        }
-        .drop-zone:hover svg, .drop-zone.active svg {
-          animation: gentle-bounce 1s ease infinite;
-        }
-        @keyframes gentle-bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-4px); }
-        }
-        .drop-zone p {
-          font-size: 1.4rem;
-          margin-top: 1rem;
-          color: #333;
-        }
-        .hint {
-          font-size: 1.1rem;
-          color: #999;
-        }
-        .file-list {
-          margin-top: 1.5rem;
-        }
-        .file-item {
-          display: flex;
-          align-items: center;
-          gap: 0.8rem;
-          padding: 0.8rem 1rem;
-          border: 1px solid #eee;
-          border-radius: 0.6rem;
-          margin-bottom: 0.5rem;
-          font-size: 1.3rem;
-        }
-        .file-name {
-          flex: 1;
-          font-weight: 500;
-        }
-        .file-size {
-          color: #999;
-          font-size: 1.1rem;
-        }
-        .upload-btn {
-          margin-top: 1rem;
-          padding: 1rem 2rem;
-          background: #C3E11D;
-          border: none;
-          border-radius: 1rem;
-          font-size: 1.4rem;
-          font-weight: 600;
-          cursor: pointer;
-          width: 100%;
-        }
-        .upload-btn:disabled {
-          opacity: 0.6;
-          cursor: wait;
-        }
-        .results {
-          margin-top: 1.5rem;
-        }
-        .result-item {
-          display: flex;
-          align-items: center;
-          gap: 0.8rem;
-          padding: 0.8rem 1rem;
-          border-radius: 0.6rem;
-          margin-bottom: 0.5rem;
-          font-size: 1.3rem;
-        }
-        .result-item.success {
-          background: #f0fff0;
-          border: 1px solid #c3e11d;
-        }
-        .result-item.error {
-          background: #fff5f5;
-          border: 1px solid #fcc;
-        }
-        .result-status {
-          margin-left: auto;
-          font-size: 1.1rem;
-          color: #666;
-        }
-      `}</style>
     </div>
   );
 };

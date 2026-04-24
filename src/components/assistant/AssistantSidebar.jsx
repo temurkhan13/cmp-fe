@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { SideBarModal } from '../common';
 import PropTypes from 'prop-types';
 
-import Media from './assistantModal/Media';
+import Media from '../chat/Media';
 import Comments from './assistantModal/Comments';
 import ChatBookmark from './assistantModal/ChatBookmark';
 import VersionHistory from './assistantModal/VersionHistory';

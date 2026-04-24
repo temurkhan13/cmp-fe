@@ -3,25 +3,8 @@ import { FaCircleExclamation } from 'react-icons/fa6';
 
 const NoDataAvailable = ({ message }) => (
   <div className="no-data">
-    <FaCircleExclamation className="icon" />
+    <FaCircleExclamation className="no-data-icon" />
     <p>{message}</p>
-    <style>{`
-      .no-data {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-        width: 200px;
-        flex-direction: column;
-        color: gray;
-        font-size: 1.5rem;
-        padding: 2rem;
-      }
-      .icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-      }
-    `}</style>
   </div>
 );
 

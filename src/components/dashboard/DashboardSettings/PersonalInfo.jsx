@@ -38,11 +38,11 @@ const PersonalInfo = () => {
   useEffect(() => {
     setHasChanged(
       firstName !== currentUser?.firstName ||
-        lastName !== currentUser?.lastName ||
-        email !== currentUser?.email ||
-        companyName !== currentUser?.companyName ||
-        selectedFile !== null ||
-        photoDeleted
+      lastName !== currentUser?.lastName ||
+      email !== currentUser?.email ||
+      companyName !== currentUser?.companyName ||
+      selectedFile !== null ||
+      photoDeleted
     );
   }, [firstName, lastName, email, companyName, selectedFile, photoDeleted, currentUser]);
 
@@ -68,9 +68,8 @@ const PersonalInfo = () => {
   const generateInitialsImage = () => {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    const initials = `${firstName?.[0] || ''}${
-      lastName?.[0] || ''
-    }`.toUpperCase();
+    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''
+      }`.toUpperCase();
 
     canvas.width = 200;
     canvas.height = 200;
@@ -140,22 +139,22 @@ const PersonalInfo = () => {
       <h2>Personal Information</h2>
       <p>Update your personal and company details here.</p>
       <hr />
-      <div className="upload-section">
-        <div className="avatar" style={{ backgroundImage: `url(${avatar})` }}>
+      <div className="personal-info-upload-section">
+        <div className="personal-info-avatar" style={{ backgroundImage: `url(${avatar})` }}>
           {!avatar && `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase()}
         </div>
-        <div className="settings-avatar-info">
+        <div className='avatar-uploader'>
           <input
             type="file"
             ref={fileInputRef}
             onChange={handleImageUpload}
-            className="upload-input"
+            className="personal-info-upload-input"
             accept="image/png, image/jpeg, image/gif"
           />
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="upload-button"
+            className="personal-info-upload-btn"
           >
             Upload Image
           </button>
@@ -165,15 +164,15 @@ const PersonalInfo = () => {
           <button
             type="button"
             onClick={handleImageDelete}
-            className="delete-button"
+            className="personal-info-delete-btn"
           >
             Delete
           </button>
         )}
       </div>
-      <form className="info-form" onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="input-wrapper">
+      <form className="personal-info-form" onSubmit={handleSubmit}>
+        <div className="personal-info-form-row">
+          <div className="personal-info-input">
             <label>First Name</label>
             <input
               type="text"
@@ -181,13 +180,13 @@ const PersonalInfo = () => {
               placeholder="First name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className={errors.firstName ? 'input-error' : ''}
+              className={errors.firstName ? 'personal-info-input--error' : ''}
             />
             {errors.firstName && (
-              <small className="error">{errors.firstName}</small>
+              <small className="personal-info-error">{errors.firstName}</small>
             )}
           </div>
-          <div className="input-wrapper">
+          <div className="personal-info-input">
             <label>Last Name</label>
             <input
               type="text"
@@ -195,64 +194,65 @@ const PersonalInfo = () => {
               placeholder="Last name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className={errors.lastName ? 'input-error' : ''}
+              className={errors.lastName ? 'personal-info-input--error' : ''}
             />
             {errors.lastName && (
-              <small className="error">{errors.lastName}</small>
+              <small className="personal-info-error">{errors.lastName}</small>
             )}
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="input-wrapper">
+        <div className="personal-info-form-row">
+          <div className="personal-info-input">
             <label>Email</label>
             <input
               type="email"
               placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={errors.email ? 'input-error' : ''}
+              className={errors.email ? 'personal-info-input--error' : ''}
             />
-            {errors.email && <small className="error">{errors.email}</small>}
+            {errors.email && <small className="personal-info-error">{errors.email}</small>}
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="input-wrapper">
+        <div className="personal-info-form-row">
+          <div className="personal-info-input">
             <label>What is your company name?</label>
             <input
               type="text"
               placeholder="Company name"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className={errors.companyName ? 'input-error' : ''}
+              className={errors.companyName ? 'personal-info-input--error' : ''}
             />
             {errors.companyName && (
-              <small className="error">{errors.companyName}</small>
+              <small className="personal-info-error">{errors.companyName}</small>
             )}
           </div>
         </div>
 
         <button
           type="submit"
-          className="save-button"
+          className="personal-info-save-btn"
           disabled={!hasChanged || loading}
         >
           {loading ? 'Saving...' : 'Save Changes'}
         </button>
-        {errors.form && <small className="error">{errors.form}</small>}
+        {errors.form && <small className="personal-info-error">{errors.form}</small>}
         {successMessage && (
-          <div className="success-message">{successMessage}</div>
+          <div className="personal-info-success">{successMessage}</div>
         )}
       </form>
 
-      <hr className="settings-divider" />
-      <div className="danger-zone">
-        <h3 className="settings-danger-title">Danger Zone</h3>
-        <p className="settings-danger-desc">Once you delete your account, there is no going back. Please be certain.</p>
+      <hr className='settings-divider' />
+
+      <div className="personal-info-danger-zone">
+        <h3 className='settings-danger-title'>Danger Zone</h3>
+        <p className='settings-danger-desc'>Once you delete your account, there is no going back. Please be certain.</p>
         <button
           type="button"
-          className="delete-account-button"
+          className="personal-info-delete-account-btn"
           onClick={() => setShowDeleteConfirm(true)}
         >
           Delete Account
@@ -276,179 +276,6 @@ const PersonalInfo = () => {
         }}
         onCancel={() => setShowDeleteConfirm(false)}
       />
-      <style>{`
-        .personal-info {
-          margin: 0 auto;
-          border-radius: 0.8rem;
-        }
-
-        h2 {
-          margin-bottom: 1rem;
-          font-size: 2.4rem;
-          font-weight: bold;
-        }
-
-        p {
-          color: #777;
-          font-size: 1.3rem;
-        }
-
-        .upload-section {
-          display: flex;
-          align-items: center;
-          margin: 2rem 0;
-        }
-
-        .avatar {
-          width: 8rem;
-          height: 8rem;
-          border-radius: 50%;
-          background-color: #C3E11D;
-          background-size: cover;
-          background-position: center;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: bold;
-          color: #0B1444;
-          font-size: 1.8rem;
-          margin-right: 1.5rem;
-          position: relative;
-        }
-
-        .delete-button {
-          background: lightgray;
-          border: none;
-          color: black;
-          font-size: 1.5rem;
-          cursor: pointer;
-          border-radius: 1rem;
-          padding: 1rem;
-        }
-
-        .upload-input {
-          display: none;
-        }
-
-        .upload-button {
-          padding: 1rem 1.5rem;
-          border: 0.1rem solid #0B1444;
-          background: #fff;
-          cursor: pointer;
-          font-size: 1.4rem;
-          border-radius: 1rem;
-          color: #0B1444;
-          width: 15rem;
-        }
-
-        small {
-          margin-top: 1rem;
-          color: #999;
-          font-size: 1.2rem;
-        }
-
-        .info-form {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .form-row {
-          display: flex;
-          margin-bottom: 1.5rem;
-        }
-
-        .input-wrapper {
-          flex: 1;
-          position: relative;
-          margin-right: 1rem;
-        }
-
-        .input-wrapper:last-child {
-          margin-right: 0;
-        }
-
-        .input-wrapper label {
-          font-size: 1.4rem;
-          font-weight: 400;
-          margin-bottom: 0.5rem;
-          display: inline-block;
-          color: #000;
-        }
-
-        .input-wrapper input {
-          width: 100%;
-          padding: 1rem;
-          font-size: 1.4rem;
-          border: 1px solid #ddd;
-          border-radius: 10px;
-          outline: none;
-          margin-bottom: 0.5rem;
-          transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .input-wrapper input:focus {
-          border-color: #C3E11D;
-          box-shadow: 0 0 0 3px rgba(195,225,29,0.12);
-        }
-
-        .input-error {
-          border-color: red;
-        }
-
-        .error {
-          position: absolute;
-          bottom: -1.5rem;
-          left: 0;
-          font-size: 1rem;
-          color: red;
-        }
-
-        .success-message {
-          margin-top: 1rem;
-          color: green;
-          font-size: 1.4rem;
-        }
-
-        .save-button {
-          padding: 1rem 1.5rem;
-          background-color: #C3E11D;
-          border: none;
-          color: #000;
-          font-size: 1.5rem;
-          border-radius: 1rem;
-          cursor: pointer;
-          font-weight: 500;
-          width: 15rem;
-          transition: background-color 0.3s ease;
-        }
-
-        .save-button:hover {
-          background-color: #A6C41B;
-        }
-
-        .danger-zone {
-          padding: 1.5rem;
-          border: 1px solid #fcc;
-          border-radius: 0.8rem;
-          background: #fff5f5;
-        }
-
-        .delete-account-button {
-          padding: 1rem 2rem;
-          background-color: #c00;
-          border: none;
-          color: white;
-          font-size: 1.4rem;
-          border-radius: 1rem;
-          cursor: pointer;
-          font-weight: 500;
-          transition: background-color 0.3s ease;
-        }
-
-        .delete-account-button:hover {
-          background-color: #900;
-        }
-      `}</style>
     </div>
   );
 };

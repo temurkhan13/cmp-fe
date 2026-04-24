@@ -64,50 +64,6 @@ const CommentPopup = ({
           </button>
         </div>
       </div>
-      <style>{`
-        .cm-popup {
-          position: fixed;
-          top: 5rem;
-          background: #fff;
-          border-radius: 10px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-          padding: 1rem 1.2rem;
-          z-index: 100;
-          min-width: 280px;
-        }
-        .cm-popup-input-box {
-          display: flex;
-          align-items: center;
-          border: 1px solid #e0e0e0;
-          border-radius: 8px;
-          padding: 0.5rem 0.8rem;
-          background: #fafafa;
-          transition: border-color 0.2s;
-        }
-        .cm-popup-input-box:focus-within {
-          border-color: #C3E11D;
-        }
-        .cm-popup-input-box input {
-          flex: 1;
-          border: none;
-          outline: none;
-          font-size: 1.3rem;
-          background: transparent;
-        }
-        .cm-popup-send {
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: #999;
-          display: flex;
-          align-items: center;
-          padding: 0.3rem;
-          border-radius: 4px;
-          transition: color 0.2s;
-        }
-        .cm-popup-send:not(:disabled):hover { color: #0B1444; }
-        .cm-popup-send:disabled { cursor: default; opacity: 0.4; }
-      `}</style>
     </>
   );
 };

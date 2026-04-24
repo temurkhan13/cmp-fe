@@ -40,33 +40,33 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
   return (
     <>
       {isOpen && <div className="notificationOverlay" onClick={onClose}></div>}
-      <div className={`dropdown ${isOpen ? 'open' : ''}`}>
-        <div className="header">
-          <span className="title">Notifications</span>
-          <div className="settings-container">
+      <div className={`notifications-dropdown ${isOpen ? 'open' : ''}`}>
+        <div className="notifications-dropdown-header">
+          <span className="notifications-dropdown-title">Notifications</span>
+          <div className="notifications-settings-container">
             <IoMdSettings
-              className="settingsIcon"
+              className="notifications-settings-icon"
               onClick={handleSettingsClick}
             />
-            <div className="tooltip">Settings</div>
+            <div className="notifications-settings-tooltip">Settings</div>
           </div>
         </div>
-        <div className="tab-bar">
-          <div className="tabs">
+        <div className="notifications-tab-bar">
+          <div className="notifications-tabs">
             <div
-              className={`tab ${activeTab === 'All' ? 'active' : ''}`}
+              className={`notifications-tab ${activeTab === 'All' ? 'active' : ''}`}
               onClick={() => handleTabClick('All')}
             >
               All
             </div>
             <div
-              className={`tab ${activeTab === 'Requests' ? 'active' : ''}`}
+              className={`notifications-tab ${activeTab === 'Requests' ? 'active' : ''}`}
               onClick={() => handleTabClick('Requests')}
             >
               Requests
             </div>
             <div
-              className={`tab ${activeTab === 'Unread' ? 'active' : ''}`}
+              className={`notifications-tab ${activeTab === 'Unread' ? 'active' : ''}`}
               onClick={() => handleTabClick('Unread')}
             >
               Unread
@@ -78,116 +78,6 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
         </div>
         <div className="notification-content">{renderContent()}</div>
       </div>
-      <style>{`
-        .notificationOverlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-        }
-        .dropdown {
-          position: absolute;
-          top: 0rem;
-          right: 8rem;
-          background-color: white;
-          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-          border-radius: 0.5rem;
-          overflow: hidden;
-          transform: scaleY(0);
-          transform-origin: top;
-          transition: transform 0.1s ease;
-          z-index: 1001;
-          width: 45rem;
-          height: 100vh;
-          overflow-y: auto;
-        }
-        .open {
-          transform: scaleY(1);
-        }
-        .header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1rem;
-          border-bottom: 1px solid #ddd;
-          background-color: #f9f9f9;
-        }
-        .title {
-          font-size: 1.5rem;
-          font-weight: 600;
-        }
-        .settings-container {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        .settingsIcon {
-          height: 2rem;
-          width: 2rem;
-          color: gray;
-          cursor: pointer;
-        }
-        .tooltip {
-          position: absolute;
-          bottom: -0.5rem;
-          right: 120%;
-          background-color: black;
-          color: white;
-          font-size: 1.1rem;
-          padding: 0.5rem;
-          border-radius: 0.5rem;
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(10px);
-          transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-          white-space: nowrap;
-        }
-        .settings-container:hover .tooltip {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0);
-        }
-        .tab-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0.75rem 1rem;
-          border-bottom: 1px solid #ddd;
-          background-color: #f9f9f9;
-        }
-        .tabs {
-          display: flex;
-          flex: 1;
-        }
-        .tab {
-          padding: 0.75rem 1rem;
-          text-align: center;
-          cursor: pointer;
-          font-size: 1.4rem;
-          color: #333;
-          transition: background-color 0.3s ease;
-        }
-        .tab.active {
-          background-color: transparent;
-          border-bottom: 2px solid gray;
-          font-weight: 500;
-        }
-        .mark-read-btn {
-          color: blue;
-          border: none;
-          cursor: pointer;
-          font-size: 1.2rem;
-          font-weight: 500;
-          background-color: transparent;
-        }
-        .notification-content {
-          color: gray;
-          display: flex;
-          flex-direction: column;
-        }
-      `}</style>
     </>
   );
 };

@@ -41,7 +41,7 @@ const Notifications = ({ initialSettings }) => {
       <p>Decide what you want to be notified about, and what you don&apso;t.</p>
       <hr />
 
-      <div className="section">
+      <div className="notification-settings-section">
         <h4>Comments</h4>
         <Toggle
           label="Someone @mentions me in a comment or reply"
@@ -60,7 +60,7 @@ const Notifications = ({ initialSettings }) => {
         />
       </div>
 
-      <div className="section">
+      <div className="notification-settings-section">
         <h4>Access</h4>
         <Toggle
           label="Someone has made me an editor"
@@ -75,123 +75,22 @@ const Notifications = ({ initialSettings }) => {
       </div>
 
       <button
-        className="save-btn"
+        className="notification-save-btn"
         onClick={handleSaveChanges}
         disabled={isSaving}
       >
         {isSaving ? 'Saving...' : 'Save Changes'}
         <FiCheckCircle />
       </button>
-
-      <style>{`
-        .notification-settings {
-          padding: 2rem;
-         background-color: #f9f9f9;
-          box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
-          border: 1px solid #e0e0e0;
-          border-radius: 0.8rem;
-          margin: auto;
-          font-family: 'Arial', sans-serif;
-        }
-
-        h3 {
-          margin-bottom: 1rem;
-          color: #333;
-          font-size: 1.8rem;
-        }
-
-        p {
-          margin-bottom: 1rem;
-          color: #777;
-          font-size: 1.4rem;
-        }
-
-        .section {
-          margin: 1rem 0 2rem 0 ;
-        }
-
-        h4 {
-          margin-bottom: 1rem;
-          color: #555;
-          font-size: 1.6rem;
-        }
-
-        .save-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem 1.5rem;
-          background-color: #c3e11d;
-          border: none;
-          border-radius: 0.5rem;
-          color: #333;
-          font-weight: 500;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          opacity: ${isSaving ? '0.6' : '1'};
-        }
-
-        .save-btn:disabled {
-          cursor: not-allowed;
-        }
-
-        .save-btn:hover {
-          background-color: #b2e042;
-        }
-
-        .save-btn svg {
-          margin-left: 0.8rem;
-        }
-      `}</style>
     </div>
   );
 };
 
 // Toggle component with prop validation
 const Toggle = ({ label, isChecked, onToggle }) => (
-  <div className="toggle">
+  <div className="notification-toggle">
     <label>{label}</label>
     <input type="checkbox" checked={isChecked} onChange={onToggle} />
-    <style>{`
-      .toggle {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-      }
-
-      label {
-        color: #333;
-        font-size: 1.4rem;
-      }
-
-      input[type='checkbox'] {
-        width: 2rem;
-        height: 2rem;
-        cursor: pointer;
-        appearance: none;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 0.3rem;
-        position: relative;
-      }
-
-      input[type='checkbox']:checked {
-        background-color: #2196f3;
-        border-color: #2196f3;
-        border-radius: 1rem;
-      }
-
-      input[type='checkbox']:checked::after {
-        content: '\\2714';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 1.4rem;
-      }
-    `}</style>
   </div>
 );
 

@@ -38,73 +38,29 @@ const requestsNotifications = [
 const RequestsNotifications = () => {
   return (
     <div className="notification-list">
+      {/* TODO: Parked styles live in dashboard-inline.scss under "RequestsNotifications".
+          When reviving, uncomment the block below — class names already match.
+          To apply card-style bg/border/color on the wrapper, also add
+          `requests-notifications-list` to the className above. */}
       {/*{requestsNotifications.map((notification) => (*/}
-      {/*  <div className="notification-item" key={notification.id}>*/}
-      {/*    <div className="notification-avatar">*/}
+      {/*  <div className="requests-notifications-item" key={notification.id}>*/}
+      {/*    <div className="requests-notifications-avatar">*/}
       {/*      {notification.avatar ? (*/}
-      {/*        <img src={notification.avatar} alt="avatar" className="avatar" />*/}
+      {/*        <img src={notification.avatar} alt="avatar" className="requests-notifications-avatar-img" />*/}
       {/*      ) : (*/}
-      {/*        <FaUserCircle className="default-avatar" />*/}
+      {/*        <FaUserCircle className="requests-notifications-default-avatar" />*/}
       {/*      )}*/}
       {/*    </div>*/}
-      {/*    <div className="notification-details">*/}
-      {/*      <div className="notification-name">{notification.name}</div>*/}
-      {/*      <div className="notification-message">*/}
+      {/*    <div className="requests-notifications-details">*/}
+      {/*      <div className="requests-notifications-name">{notification.name}</div>*/}
+      {/*      <div className="requests-notifications-message">*/}
       {/*        {notification.message} -{' '}*/}
-      {/*        <span className="notification-team">{notification.team}</span>*/}
+      {/*        <span className="requests-notifications-team">{notification.team}</span>*/}
       {/*      </div>*/}
       {/*    </div>*/}
-      {/*    <div className="notification-date">{notification.date}</div>*/}
+      {/*    <div className="requests-notifications-date">{notification.date}</div>*/}
       {/*  </div>*/}
       {/*))}*/}
-      <style>{`
-        .notification-list {
-          background-color: #fff;
-          border-radius: 8px;
-          color:black;
-        }
-        .notification-item {
-          display: flex;
-          align-items: center;
-          padding: 1rem 1.5rem;
-          &:hover{
-          cursor:pointer;
-          background-color: rgba(10, 10, 10, 0.1);
-          }
-        }
-        .notification-avatar {
-          margin-right: 1rem;
-        }
-        .avatar,
-        .default-avatar {
-          width: 3rem;
-          height: 3rem;
-          border-radius: 50%;
-        }
-        .default-avatar {
-          color: #777;
-          font-size: 3rem;
-        }
-        .notification-details {
-          flex-grow: 1;
-        }
-        .notification-name {
-          font-size: 1.6rem;
-          font-weight: 600;
-        }
-        .notification-message {
-          font-size: 1.4rem;
-          color: #555;
-          margin-top: 0.3rem;
-        }
-        .notification-team {
-          font-weight: 500;
-        }
-        .notification-date {
-          font-size: 1.2rem;
-          color: #888;
-        }
-      `}</style>
     </div>
   );
 };
