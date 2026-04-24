@@ -148,28 +148,28 @@ const HelpCenterComp = () => {
       id: 'dashboard',
       title: 'Dashboard',
       content: (
-        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>Stay in Control, All in One Place</div>
+        <div className="help-Heading" style={{ backgroundImage: `url("${headingss}")` }}>Stay in Control, All in One Place</div>
       ),
     },
     {
       id: 'assistant',
       title: 'AI Assistant',
       content: (
-        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>Your Smart Guide for Seamless Change</div>
+        <div className="help-Heading" style={{ backgroundImage: `url("${headingss}")` }}>Your Smart Guide for Seamless Change</div>
       ),
     },
     {
       id: 'assessment',
       title: 'AI Assessment',
       content: (
-        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>Insightful Reports Made Effortless</div>
+        <div className="help-Heading" style={{ backgroundImage: `url("${headingss}")` }}>Insightful Reports Made Effortless</div>
       ),
     },
     {
       id: 'playbook',
       title: 'Digital Playbook',
       content: (
-        <div className="help-Heading" style={{ backgroundImage: `url(${headingss})` }}>
+        <div className="help-Heading" style={{ backgroundImage: `url("${headingss}")` }}>
           Visualize and Build Your Digital Roadmap
         </div>
       ),
