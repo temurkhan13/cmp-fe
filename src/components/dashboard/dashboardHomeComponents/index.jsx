@@ -309,51 +309,6 @@ const DashboardHomeComp = () => {
           onClose={() => setShowNotification(false)}
         />
       )}
-      <style>
-        {`
-        .selected-workspace-name {
-          position: absolute;
-          top: 2rem;
-          left: 3rem;
-        }
-        .selected-workspace-name p {
-          font-size: 1.5rem;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .selected-workspace-name .workspace-badge {
-          background-color: #C3E11D;
-          color: #0B1444;
-          padding: 0.25rem 0.75rem;
-          border-radius: 7px;
-          font-size: 1.3rem;
-          font-weight: 700;
-        }
-
-        @media (max-width: 1080px) {
-          .selected-workspace-name {
-            position: relative;
-            top: 0;
-            left: 0;
-            padding: 0 2rem;
-          }
-        }
-
-        @media (max-width: 600px) {
-          .selected-workspace-name {
-            padding: 0 1rem;
-          }
-          .selected-workspace-name p {
-            font-size: 1.3rem;
-          }
-          .selected-workspace-name .workspace-badge {
-            font-size: 1.1rem;
-          }
-        }
-        `}
-      </style>
     </div>
   );
 };

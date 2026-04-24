@@ -79,11 +79,11 @@ const PlanAndBillingmodal = ({ isOpen, onClose }) => {
 
   return (
     <div className="plan-billing-modal-overlay">
-      <div className="modal-content">
-        <button className="close-button" onClick={onClose}>
+      <div className="plan-billing-modal-content">
+        <button className="plan-billing-modal-close" onClick={onClose}>
           <IoClose size={24} />
         </button>
-        <div className="pricing-component">
+        <div className="plan-billing-pricing">
           <div className="plan-billing-tabs">
             <button
               className={selectedTab === 'personal' ? 'active' : ''}
@@ -98,77 +98,13 @@ const PlanAndBillingmodal = ({ isOpen, onClose }) => {
               Business
             </button>
           </div>
-          <div className="cards-container">
+          <div className="plan-billing-cards">
             {plansData[selectedTab].map((plan, index) => (
               <Card key={index} plan={plan} />
             ))}
           </div>
         </div>
       </div>
-
-      <style>{`
-        .plan-billing-modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.3);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-        }
-        .modal-content {
-          background-color: gray;
-          color: white;
-          padding: 30px;
-          // border-radius: 10px;
-          position: relative;
-          // max-width: 800px;
-          width: 100%;
-          height:100%;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background: none;
-          border: none;
-          color: #fff;
-          cursor: pointer;
-        }
-        .pricing-component {
-          text-align: center;
-        }
-        .plan-billing-tabs {
-          display: flex;
-          justify-content: center;
-          margin-bottom: 20px;
-        }
-        .plan-billing-tabs button {
-          background: none;
-          border: none;
-          color: #fff;
-          padding: 10px 20px;
-          margin: 0;
-          cursor: pointer;
-          font-size: 1.4rem;
-          // border-bottom: 2px solid transparent;
-          display: flex;
-          align-items: center;
-          gap: 5px;
-        }
-        .plan-billing-tabs button.active {
-          border-bottom: 1px solid white;
-        }
-        .cards-container {
-          display: flex;
-          justify-content: center;
-          gap: 20px;
-        }
-      `}</style>
     </div>
   );
 };
@@ -181,9 +117,9 @@ const Card = ({ plan }) => {
       </p>
       <p>{plan.price}</p>
       {plan.isCurrentPlan ? (
-        <button className="current-plan-button">Your Current Plan</button>
+        <button className="plan-billing-current-plan-btn">Your Current Plan</button>
       ) : (
-        <button className="upgrade-button">
+        <button className="plan-billing-upgrade-btn">
           {plan.buttonText} <AiOutlineArrowRight />
         </button>
       )}
@@ -197,74 +133,6 @@ const Card = ({ plan }) => {
       </ul>
 
       <p className="limit-apply">Limits Apply</p>
-
-      <style>{`
-        .plan-billing-card {
-          background-color: white;
-          border-radius: 1rem;
-          width: 40rem;
-          height: 45rem;
-          text-align: left;
-          color: black;
-          font-size: 1.4rem;
-          padding: 2rem;
-          position: relative; /* Added for the limit-apply positioning */
-        }
-        .plan-billing-card h2 {
-          font-size: 24px;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .plan-billing-card p {
-          font-size: 18px;
-          margin-bottom: 15px;
-        }
-        .current-plan-button {
-          background-color: transparent;
-          padding: 10px 20px;
-          border: 1px solid gray;
-          border-radius: 1rem;
-          color: black;
-          text-align: center;
-          cursor: not-allowed;
-          margin-bottom: 10px;
-          width: 100%;
-        }
-        .upgrade-button {
-          background-color: #C3E11D;
-          color: #00316F;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 1rem;
-          cursor: pointer;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 5px;
-          width: 100%;
-        }
-        .plan-billing-card ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-        .plan-billing-card ul li {
-          text-align: left;
-          margin: 5px 0;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        .limit-apply {
-          font-size: 1.2rem !important;
-          text-decoration: underline;
-          position: absolute;
-          bottom: 1rem; /* Adjusted for better positioning */
-        }
-      `}</style>
     </div>
   );
 };

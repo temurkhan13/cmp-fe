@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
+import { FiDownload } from 'react-icons/fi';
 import {
   useEditReportMutation,
 } from '../../../redux/api/workspaceApi';
@@ -19,11 +20,24 @@ const Editor = ({
   asssessment,
 }) => {
   const editor = useRef(null);
+  const exportRef = useRef(null);
   const [content, setContent] = useState(data?.content || '');
   const [assessmentID, setAssessmentID] = useState(assesmentId);
   const [editReport] = useEditReportMutation();
   const [saveStatus, setSaveStatus] = useState('idle');
   const [showRegenConfirm, setShowRegenConfirm] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [createPlaybookLoading, setCreatePlaybookLoading] = useState(false);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (exportRef.current && !exportRef.current.contains(e.target)) {
+        setExportOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const htmlContent = useMemo(
     () => marked(content || data?.content),
@@ -53,6 +67,7 @@ const Editor = ({
   };
 
   const handleExport = async (type) => {
+    setExportOpen(false);
     try {
       await exportDocument({
         type,
@@ -109,6 +124,26 @@ const Editor = ({
     [placeholder, height]
   );
 
+  const createPlaybook = async () => {
+    setCreatePlaybookLoading(true);
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const res = await apiClient.post('/dpb/sitemap', {
+        message: stripHtml(editor.current?.value || content || '').substring(0, 500),
+        sitemapName: title || 'Assessment Playbook',
+        userId: user.id || user._id,
+      });
+      const id = res.data._id || res.data.id;
+      if (id) window.location.href = `/playbook/${id}`;
+    }
+    catch (e) {
+      import.meta.env.DEV && console.error('Create playbook error:', e);
+    }
+    finally {
+      setCreatePlaybookLoading(false);
+    }
+  }
+
   return (
     <div className="editor-container">
       <div className="editor-toolbar">
@@ -118,7 +153,7 @@ const Editor = ({
             handleContentUpdate(currentContent);
           }}
           disabled={saveStatus === 'saving'}
-          className="editor-btn editor-btn--save"
+          className="assiss-btn"
           style={{
             background: saveStatus === 'saved' ? '#dcfce7' : saveStatus === 'error' ? '#fee2e2' : undefined,
             cursor: saveStatus === 'saving' ? 'not-allowed' : undefined,
@@ -127,34 +162,27 @@ const Editor = ({
         >
           {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save Failed' : 'Save'}
         </button>
-        <button onClick={() => handleExport('pdf')} className="editor-btn">
-          PDF
-        </button>
-        <button onClick={() => handleExport('docx')} className="editor-btn">
-          Word
-        </button>
-        <button onClick={() => handleExport('pptx')} className="editor-btn">
-          PowerPoint
-        </button>
-        <button onClick={() => handleExport('xlsx')} className="editor-btn">
-          Excel
-        </button>
-        <button onClick={() => setShowRegenConfirm(true)} className="editor-btn editor-btn--regen">
+        <div className="editor-export-wrap" ref={exportRef}>
+          <button
+            onClick={() => setExportOpen(!exportOpen)}
+            className="assiss-btn"
+          >
+            <FiDownload size={16} /> Export
+          </button>
+          {exportOpen && (
+            <div className="editor-export-dropdown">
+              <button onClick={() => handleExport('pdf')}>PDF</button>
+              <button onClick={() => handleExport('docx')}>Word (.docx)</button>
+              <button onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</button>
+              <button onClick={() => handleExport('xlsx')}>Excel (.xlsx)</button>
+            </div>
+          )}
+        </div>
+        <button onClick={() => setShowRegenConfirm(true)} className="assiss-btn">
           Re-generate
         </button>
-        <button onClick={async () => {
-          try {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const res = await apiClient.post('/dpb/sitemap', {
-              message: stripHtml(editor.current?.value || content || '').substring(0, 500),
-              sitemapName: title || 'Assessment Playbook',
-              userId: user.id || user._id,
-            });
-            const id = res.data._id || res.data.id;
-            if (id) window.location.href = `/playbook/${id}`;
-          } catch (e) { import.meta.env.DEV && console.error('Create playbook error:', e); }
-        }} className="editor-btn editor-btn--playbook">
-          Create Playbook
+        <button onClick={createPlaybook} className="assiss-btn">
+          {createPlaybookLoading ? 'Creating Playbook...' : 'Create Playbook'}
         </button>
       </div>
       <JoditEditor

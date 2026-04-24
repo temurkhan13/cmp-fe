@@ -16,7 +16,6 @@
   gap: 1.5rem;
 }
 
-/* ── Header ─────────────────────────────── */
 .playbook-header {
   display: flex;
   align-items: center;
@@ -119,7 +118,6 @@
   }
 }
 
-/* ── Content Area ───────────────────────── */
 .playbook-content {
   max-width: 900px;
   margin: 0 auto;
@@ -127,7 +125,6 @@
   width: 100%;
 }
 
-/* ── Cover ──────────────────────────────── */
 .playbook-cover {
   background: linear-gradient(135deg, #00316f 0%, #0052b4 100%);
   border-radius: 16px;
@@ -175,7 +172,6 @@
   margin: 0;
 }
 
-/* ── Stage ──────────────────────────────── */
 .playbook-stage {
   background: #fff;
   border-radius: 12px;
@@ -193,7 +189,6 @@
   padding: 1.5rem;
 }
 
-/* ── Node ───────────────────────────────── */
 .playbook-node {
   margin-bottom: 1.5rem;
   padding-left: 1rem;
@@ -207,7 +202,6 @@
   margin: 0 0 1rem 0;
 }
 
-/* ── NodeData Block ─────────────────────── */
 .playbook-nodedata {
   margin-bottom: 1.2rem;
 }
@@ -251,7 +245,6 @@
   }
 }
 
-/* ── Branding Panel ─────────────────────── */
 .playbook-brand-btn {
   padding: 6px 14px;
   border: 1px solid #ddd;
@@ -330,7 +323,6 @@
   }
 }
 
-/* ── Cover Logo ─────────────────────────── */
 .playbook-cover-logo {
   height: 50px;
   max-width: 150px;
@@ -339,7 +331,6 @@
   border-radius: 8px;
 }
 
-/* ── Stage Actions ──────────────────────── */
 .playbook-stage-header {
   display: flex;
   align-items: center;
@@ -403,7 +394,6 @@
   }
 }
 
-/* ── Add Stage ──────────────────────────── */
 .playbook-add-stage {
   display: flex;
   align-items: center;

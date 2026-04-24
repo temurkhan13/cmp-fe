@@ -1,10 +1,3 @@
-// Note: a bare `.card { ... }` rule lived here previously but was unused by
-// DashboardCard (which renders `.card-dashboard`). It was unintentionally
-// styling chat message bubbles (`className="card chat-card user-card"`)
-// whenever this stylesheet happened to be loaded via a prior dashboard visit,
-// causing the chat cards to look different on reload vs. navigation.
-// Removed; chat bubble layout now lives in chat-message.scss.
-
 .card-dashboard {
   display: flex;
   align-items: center;

@@ -34,91 +34,34 @@ const unreadNotifications = [
 const UnreadNotifications = () => {
   return (
     <div className="notification-list">
+      {/* TODO: Parked styles live in dashboard-inline.scss under "UnreadNotifications".
+          When reviving, uncomment the block below — the class names here already
+          match the parked rules. */}
       {/*{unreadNotifications.map((notification) => (*/}
-      {/*  <div className="notification-item" key={notification.id}>*/}
-      {/*    <div className="notification-avatar">*/}
+      {/*  <div className="unread-notifications-item" key={notification.id}>*/}
+      {/*    <div className="unread-notifications-avatar">*/}
       {/*      {notification.avatar ? (*/}
-      {/*        <img src={notification.avatar} alt="avatar" className="avatar" />*/}
+      {/*        <img src={notification.avatar} alt="avatar" className="unread-notifications-avatar-img" />*/}
       {/*      ) : (*/}
-      {/*        <FaUserCircle className="default-avatar" />*/}
+      {/*        <FaUserCircle className="unread-notifications-default-avatar" />*/}
       {/*      )}*/}
       {/*    </div>*/}
-      {/*    <div className="notification-details">*/}
-      {/*      <div className="notification-name">{notification.name}</div>*/}
-      {/*      <div className="notification-message">*/}
+      {/*    <div className="unread-notifications-details">*/}
+      {/*      <div className="unread-notifications-name">{notification.name}</div>*/}
+      {/*      <div className="unread-notifications-message">*/}
       {/*        {notification.message} -{' '}*/}
-      {/*        <span className="notification-team">{notification.team}</span>*/}
+      {/*        <span className="unread-notifications-team">{notification.team}</span>*/}
       {/*      </div>*/}
-      {/*      <div className="notification-submessage">*/}
+      {/*      <div className="unread-notifications-submessage">*/}
       {/*        {notification.subMessage}*/}
       {/*      </div>*/}
       {/*    </div>*/}
-      {/*    <div className="notification-meta">*/}
-      {/*      <div className="notification-date">{notification.date}</div>*/}
-      {/*      <MdCircle className="unread-icon" />*/}
+      {/*    <div className="unread-notifications-meta">*/}
+      {/*      <div className="unread-notifications-date">{notification.date}</div>*/}
+      {/*      <MdCircle className="unread-notifications-icon" />*/}
       {/*    </div>*/}
       {/*  </div>*/}
       {/*))}*/}
-      <style>{`
-        .notification-list {
-        }
-        .notification-item {
-          display: flex;
-          align-items: center;
-          padding: 1rem 1.5rem;
-          position: relative;
-          &:hover{
-           cursor:pointer;
-          background-color: rgba(10, 10, 10, 0.1);
-          }
-        }
-        .notification-avatar {
-          margin-right: 1rem;
-        }
-        .avatar,
-        .default-avatar {
-          width: 3.5rem;
-          height: 3.5rem;
-          border-radius: 50%;
-        }
-        .default-avatar {
-          color: #777;
-          font-size: 3.5rem;
-        }
-        .notification-details {
-          flex-grow: 1;
-        }
-        .notification-name {
-          font-size: 1.6rem;
-          font-weight: 600;
-          margin-bottom: 0.2rem;
-        }
-        .notification-message {
-          font-size: 1.4rem;
-          color: #555;
-          margin-bottom: 0.3rem;
-        }
-        .notification-team {
-          font-weight: 500;
-        }
-        .notification-submessage {
-          font-size: 1.3rem;
-          color: #777;
-        }
-        .notification-meta {
-          display: flex;
-          align-items: center;
-        }
-        .notification-date {
-          font-size: 1.2rem;
-          color: #888;
-          margin-right: 0.5rem;
-        }
-        .unread-icon {
-          font-size: 0.8rem;
-          color: red;
-        }
-      `}</style>
     </div>
   );
 };

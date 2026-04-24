@@ -1,9 +1,5 @@
 @import "../../utils/mixins";
 
-// Global design tokens, universal reset, form styles, focus ring, and body
-// defaults moved to scss/utils/_base.scss so non-dashboard routes (e.g. the
-// chat pages) don't break when this layout isn't mounted.
-
 .SibebarIcons {
   position: absolute;
   font-size: 15px;
@@ -560,7 +556,6 @@
   transition: all 0.15s ease;
 }
 
-// ── Responsive: Sidebar overlay + hamburger ──
 .sidebar-overlay {
   display: none;
 }

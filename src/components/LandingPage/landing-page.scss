@@ -57,9 +57,6 @@
   animation: spin 1s linear infinite;
 }
 
-// @keyframes spin → defined globally in _animation.scss
-
-// ─── Legal pages (PrivacyPolicy & Terms) ────────────────
 .legal-page {
   max-width: 800px;
   margin: 0 auto;
@@ -98,7 +95,6 @@
   margin-top: 0.5rem;
 }
 
-// ─── Layout ──────────────────────────────────────────────
 .landing-layout {
   position: relative;
   overflow: visible;
@@ -112,7 +108,6 @@
   overflow: visible;
 }
 
-// ─── Home ────────────────────────────────────────────────
 .landing-home {
   max-width: 1580px;
   margin: 0 auto;
@@ -120,7 +115,6 @@
   overflow: visible;
 }
 
-// ─── HeroSection ─────────────────────────────────────────
 .hero-section {
   width: 100%;
   height: calc(100dvh - 100px);
@@ -273,7 +267,6 @@
   }
 }
 
-// ─── Navbar ──────────────────────────────────────────────
 .landing-navbar {
   height: 60px;
   display: flex;
@@ -406,7 +399,6 @@
   }
 }
 
-// ─── Accordion ───────────────────────────────────────────
 .landing-accordion {
   border-radius: 8px;
   margin-bottom: 15px;
@@ -462,7 +454,6 @@
   }
 }
 
-// ─── Pricing ─────────────────────────────────────────────
 .pricing-check-icon {
   color: #C3E11D;
   flex-shrink: 0;
@@ -607,7 +598,6 @@
   box-shadow: 0 4px 12px rgba(195, 225, 29, 0.4);
 }
 
-// ─── FAQs ────────────────────────────────────────────────
 .faqs {
   margin: 50px;
   font-size: 1.5rem;
@@ -639,7 +629,6 @@
   color: #333;
 }
 
-// ─── Team ────────────────────────────────────────────────
 .team {
   margin-top: 50px;
 }
@@ -726,7 +715,6 @@
   font-size: 20px;
 }
 
-// ─── FeaturesCard ────────────────────────────────────────
 .featurecard {
   display: flex;
   font-size: 1.5rem !important;
@@ -765,7 +753,6 @@
   font-size: 2rem !important;
 }
 
-// ─── Features ───────────────────────────────────────────
 .features-container {
   padding: 5rem 3.125rem;
 }
@@ -800,7 +787,6 @@
   }
 }
 
-// ─── MainCard ────────────────────────────────────────────
 .change-ai-cards {
   background-color: #ffffff;
   display: flex;
@@ -831,7 +817,6 @@
   font-size: 1.3rem;
 }
 
-// ─── Main ────────────────────────────────────────────────
 .main-container {
   margin-top: 3rem;
   padding: 1rem;
@@ -935,7 +920,6 @@
   }
 }
 
-// ─── Footer ─────────────────────────────────────────────
 .footer-container {
   display: flex;
   flex-direction: column;

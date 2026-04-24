@@ -15,9 +15,6 @@
   margin: 0 auto;
 }
 
-// .selected-workspace-name, .workspace-badge → moved to scss/components/common/_header.scss
-// .section, .footer, .userName, .fileName, .chatContent, .fileDetails, .folderName → in dashboard-inline.scss / DashboardHome.css
-
 .assistant-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

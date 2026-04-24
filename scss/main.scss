@@ -2,11 +2,4 @@
 @import './layout';
 @import './components/feature';
 
-// Auth styles moved to src/modules/auth/auth-styles.scss (loaded by AuthLayout)
-
-// UI checkout/assessmentChat moved to co-located imports
 @import './components/common';
-
-// Assessment & assistant styles moved to co-located:
-// - src/components/assessment/assessment.scss
-// - src/components/assisstent/assisstent.scss

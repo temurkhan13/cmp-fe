@@ -15,6 +15,7 @@ import {
 } from '../../redux/slices/trashSlice';
 import { SkeletonCard } from '../common/Skeleton';
 import NotificationBar from '../common/NotificationBar';
+import './dashboardHomeComponents/styles/dashboard-card.scss';
 
 const typeIcons = {
   workspace: <BsWindowStack size={20} color="grey" />,
