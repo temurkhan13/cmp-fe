@@ -145,9 +145,9 @@ const SignIn = () => {
                   htmlFor="checkbox"
                 >
                   <input id="checkbox" type="checkbox" />
-                  <Components.Feature.Text className="secondary--light">
+                  <p className="secondary--light">
                     Remember Me
-                  </Components.Feature.Text>
+                  </p>
                 </label>
                 <Link
                   to="/forgot-password/verification"
