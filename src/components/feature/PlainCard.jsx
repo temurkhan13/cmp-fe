@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import Components from '../../components';
+import Button from '../common/Button';
 import { GoCheckCircle } from 'react-icons/go';
 import { v4 as uuidv4 } from 'uuid';
 import { Link } from 'react-router-dom';
@@ -21,13 +22,14 @@ const PlainCard = (props) => {
           <span>${props.price}</span>/ {props.plainType ? 'yearly' : 'monthly'}
         </Components.Feature.Text>
         <Link to="/check-out">
-          <Components.Feature.Button
-            className={`primary${
-              props.name === 'Starter' ? '--light' : ''
-            } mb_Tertiary`}
+          <Button
+            variant={props.name === 'Starter' ? 'secondary' : 'primary'}
+            size="lg"
+            block
+            className="mb_Tertiary"
           >
             Get Started
-          </Components.Feature.Button>
+          </Button>
         </Link>
       </header>
       <section>

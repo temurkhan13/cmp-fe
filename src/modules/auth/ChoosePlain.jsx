@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import data from '../../data';
 
 const ChoosePlain = () => {
@@ -24,12 +25,13 @@ const ChoosePlain = () => {
           Choose the payment plan that best suits your requirements.
         </Components.Feature.Text>
         <div>
-          <Components.Feature.Button
-            className={`toggle${isActive ? '' : '--active'}`}
+          <Button
+            variant="toggle"
+            active={!isActive}
             onClick={toggleHandler}
           >
             Monthly
-          </Components.Feature.Button>
+          </Button>
           {/* <Components.Feature.Button
             className={`toggle${isActive ? '--active' : ''}`}
             onClick={toggleHandler}

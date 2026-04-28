@@ -16,6 +16,7 @@ import {
   useRemoveReplyMutation,
 } from '../../../redux/api/workspaceApi';
 import { selectSelectedFolder } from '../../../redux/slices/folderSlice';
+import Button from '../../common/Button';
 
 const Comments = ({ comments }) => {
   const dispatch = useDispatch();
@@ -228,14 +229,15 @@ const Comments = ({ comments }) => {
                     )}
 
                     {comment.replies?.length > 0 && (
-                      <button
+                      <Button
+                        variant="link"
                         className="cm-replies-toggle"
                         onClick={() => toggleReplies(comment.commentId)}
                       >
                         {showReplies[comment.commentId]
                           ? 'Hide replies'
                           : `${comment.replies.length} ${comment.replies.length === 1 ? 'reply' : 'replies'}`}
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -296,13 +298,15 @@ const Comments = ({ comments }) => {
                       onChange={(e) => setReplyTexts((prev) => ({ ...prev, [comment.commentId]: e.target.value }))}
                       onKeyDown={(e) => { if (e.key === 'Enter') handleAddReply(comment.commentId, msgId); }}
                     />
-                    <button
+                    <Button
+                      variant="icon"
+                      ariaLabel="Send reply"
                       className="cm-send-btn"
-                      onClick={() => handleAddReply(comment.commentId, msgId)}
                       disabled={!(replyTexts[comment.commentId] || '').trim()}
+                      onClick={() => handleAddReply(comment.commentId, msgId)}
                     >
                       <IoSend size={14} />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

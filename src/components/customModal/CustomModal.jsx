@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
+import Button from '../common/Button';
 
 import './custom-modal.scss';
 
@@ -21,25 +22,32 @@ const CustomModal = ({
       <div className="custom-modal-dialog" onClick={(e) => e.stopPropagation()}>
         <div className="custom-modal-header">
           <p className="custom-modal-heading">{heading}</p>
-          <button className="custom-modal-close-button" onClick={onClose}>
+          <Button
+            variant="icon"
+            ariaLabel="Close"
+            className="custom-modal-close-button"
+            onClick={onClose}
+          >
             <RxCross2 className="custom-modal-cross-icon" />
-          </button>
+          </Button>
         </div>
         <hr className="custom-modal-straight-line" />
         <div className="custom-modal-body">{bodyContent}</div>
         <div className="custom-modal-actions">
-          <button
+          <Button
+            variant="secondary"
             className="custom-modal-button custom-modal-cancel-button"
             onClick={onClose}
           >
             {cancelText}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             className="custom-modal-button custom-modal-proceed-button"
             onClick={onProceed}
           >
             {proceedText}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

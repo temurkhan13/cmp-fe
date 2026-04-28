@@ -25,6 +25,7 @@ import {
 } from '../../redux/slices/folderSlice';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { select } from 'jodit/esm/plugins/select/select';
+import Button from '../../components/common/Button';
 
 const MyAssessmentComp = () => {
   const dispatch = useDispatch();
@@ -171,16 +172,17 @@ const MyAssessmentComp = () => {
               </p>
             </div>
             <div className="">
-              <button
+              <Button
+                variant="primary"
                 className="assiss-btn assiss-btn--flex"
+                iconRight={<AiOutlinePlus />}
                 onClick={() => {
                   dispatch(setCurrentChatId(null));
                   navigate('/assessment/chat');
                 }}
               >
                 Start Assessment
-                <AiOutlinePlus />
-              </button>
+              </Button>
             </div>
           </div>
         </section>

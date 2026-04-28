@@ -3,6 +3,7 @@ import JoditEditor from 'jodit-react';
 import { BiChevronDown, BiChevronRight } from 'react-icons/bi';
 import { FiTrash2, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
+import Button from '../common/Button';
 
 function PlaybookSection({
   stage,
@@ -32,29 +33,35 @@ function PlaybookSection({
           </span>
         </div>
         <div className="playbook-stage-actions">
-          <button
+          <Button
+            variant="icon"
+            ariaLabel="Move up"
             className="playbook-stage-action-btn"
-            onClick={() => onMoveStage(stageIndex, -1)}
-            disabled={stageIndex === 0}
             title="Move up"
+            disabled={stageIndex === 0}
+            onClick={() => onMoveStage(stageIndex, -1)}
           >
             <FiArrowUp size={14} />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="icon"
+            ariaLabel="Move down"
             className="playbook-stage-action-btn"
-            onClick={() => onMoveStage(stageIndex, 1)}
-            disabled={stageIndex === totalStages - 1}
             title="Move down"
+            disabled={stageIndex === totalStages - 1}
+            onClick={() => onMoveStage(stageIndex, 1)}
           >
             <FiArrowDown size={14} />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="icon"
+            ariaLabel="Delete stage"
             className="playbook-stage-action-btn delete"
-            onClick={() => onDeleteStage(stageId)}
             title="Delete stage"
+            onClick={() => onDeleteStage(stageId)}
           >
             <FiTrash2 size={14} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -167,15 +174,17 @@ function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInsp
     <div className="playbook-nodedata">
       <div className="playbook-nodedata-header">
         <h4>{nodeData.heading}</h4>
-        <button
+        <Button
+          variant="secondary"
+          size="sm"
           className="playbook-inspire-btn"
-          onClick={handleInspire}
-          disabled={inspiring}
+          iconLeft={<HiSparkles size={14} />}
           title="Generate AI content for this section"
+          loading={inspiring}
+          onClick={handleInspire}
         >
-          <HiSparkles size={14} />
-          {inspiring ? 'Generating...' : 'Inspire Me'}
-        </button>
+          Inspire Me
+        </Button>
       </div>
       <JoditEditor
         ref={editorRef}

@@ -28,6 +28,7 @@ import {
   setSelectedFolder,
   toggleFolderActivation,
 } from '../../redux/slices/folderSlice.js';
+import Button from '../../components/common/Button';
 
 const Chat = () => {
   const dispatch = useDispatch();
@@ -226,13 +227,14 @@ const Chat = () => {
 
       {/* Floating button to open right sidebar on responsive */}
       {isResponsive && (
-        <button
+        <Button
+          variant="icon"
+          ariaLabel="Open assessments panel"
           className="responsive-fab"
           onClick={() => setShowRightSidebar(true)}
-          aria-label="Open assessments panel"
         >
           <RiNewspaperLine />
-        </button>
+        </Button>
       )}
     </div>
   );

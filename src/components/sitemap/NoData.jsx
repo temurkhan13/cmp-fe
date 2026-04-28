@@ -1,6 +1,7 @@
 import { BiFolder } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
+import Button from '../common/Button';
 import './sitemap.scss';
 
 function NoData() {
@@ -13,15 +14,16 @@ function NoData() {
           Digital Playbook
         </span>
         <div>
-          <button
+          <Button
+            variant="primary"
             className="sitemap-nodata__create-btn"
+            iconLeft={<BiPlus />}
             onClick={() => {
               navigate('/sitemap/new');
             }}
           >
-            <BiPlus />
             Create Template
-          </button>
+          </Button>
         </div>
       </div>
       <div className="sitemap-nodata__content">

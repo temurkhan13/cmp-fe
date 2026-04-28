@@ -6,6 +6,7 @@ import { IoMdClose } from 'react-icons/io';
 import { TbExclamationCircle } from 'react-icons/tb';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { FaEquals } from 'react-icons/fa';
+import Button from '../../components/common/Button';
 import data from '../../data';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
@@ -144,12 +145,13 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
                 You have successfully submitted your questionnaire.
               </p>
               <div className={styles.InitialBtn}>
-                <button
+                <Button
+                  variant="primary"
                   className={styles.ButtonStyleAss}
                   onClick={handleSubmit}
                 >
                   Done
-                </button>
+                </Button>
               </div>
               {submitError && (
                 <p className={styles.submitError}>
@@ -192,26 +194,36 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
 
             <div className={styles.ButtonsContainer}>
               {activeStep > 1 && (
-                <button className={styles.ButtonStylePrev} onClick={prevStep}>
-                  <MdKeyboardArrowLeft />
+                <Button
+                  variant="secondary"
+                  className={styles.ButtonStylePrev}
+                  iconLeft={<MdKeyboardArrowLeft />}
+                  onClick={prevStep}
+                >
                   Previous
-                </button>
+                </Button>
               )}
-              <button className={styles.ButtonStyleNext} onClick={nextStep}>
-                Next <MdKeyboardArrowRight />
-              </button>
-              <button
+              <Button
+                variant="primary"
                 className={styles.ButtonStyleNext}
-                onClick={skipStep}
+                iconRight={<MdKeyboardArrowRight />}
+                onClick={nextStep}
+              >
+                Next
+              </Button>
+              <Button
+                variant="primary"
+                className={styles.ButtonStyleNext}
                 disabled={
                   !!answers[
                   `question-${data.questionnaire.Questions[activeStep - 1].id
                   }`
                   ]
                 }
+                onClick={skipStep}
               >
                 Skip
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -226,12 +238,13 @@ const Questionnaire = ({ handleCloseImproveResponseModal }) => {
                 assessment insights.
               </p>
               <div className={styles.InitialBtn}>
-                <button
+                <Button
+                  variant="primary"
                   className={styles.ButtonStyleNext}
                   onClick={() => setShowQuestionnaire(true)}
                 >
                   Continue
-                </button>
+                </Button>
               </div>
             </div>
           </div>

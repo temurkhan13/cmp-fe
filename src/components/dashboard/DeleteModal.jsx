@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { IoClose } from 'react-icons/io5';
+import Button from '../common/Button';
 
 const DeleteModal = ({ folderName, onCancel, onDelete }) => {
   const handleOverlayClick = (e) => {
@@ -24,12 +25,20 @@ const DeleteModal = ({ folderName, onCancel, onDelete }) => {
           </p>
         </div>
         <div className="delete-modal-footer">
-          <button className="delete-modal-cancel-btn" onClick={onCancel}>
+          <Button
+            variant="secondary"
+            className="delete-modal-cancel-btn"
+            onClick={onCancel}
+          >
             Cancel
-          </button>
-          <button className="delete-modal-confirm-btn" onClick={onDelete}>
+          </Button>
+          <Button
+            variant="primary"
+            className="delete-modal-confirm-btn"
+            onClick={onDelete}
+          >
             Delete Permanently
-          </button>
+          </Button>
         </div>
       </div>
     </div>

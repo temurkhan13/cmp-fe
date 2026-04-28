@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import apiClient from '../../api/axios';
+import Button from '../common/Button';
 
 const ChangePassword = ({ onChangePassword }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -125,9 +126,14 @@ const ChangePassword = ({ onChangePassword }) => {
         </div>
       </div>
 
-      <button type="submit" className="update-button" disabled={loading}>
-        {loading ? 'Updating...' : 'Update Password'}
-      </button>
+      <Button
+        type="submit"
+        variant="primary"
+        className="update-button"
+        loading={loading}
+      >
+        Update Password
+      </Button>
       {successMessage && (
         <p className="change-password-success">{successMessage}</p>
       )}

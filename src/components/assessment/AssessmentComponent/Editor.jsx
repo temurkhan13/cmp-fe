@@ -7,6 +7,7 @@ import {
 } from '../../../redux/api/workspaceApi';
 import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
+import Button from '../../common/Button';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
 import { exportDocument } from '@utils/exportDocument';
@@ -147,43 +148,56 @@ const Editor = ({
   return (
     <div className="editor-container">
       <div className="editor-toolbar">
-        <button
-          onClick={() => {
-            const currentContent = editor.current?.value || editor.current?.getEditorValue?.() || '';
-            handleContentUpdate(currentContent);
-          }}
-          disabled={saveStatus === 'saving'}
+        <Button
+          variant="primary"
           className="assiss-btn"
+          disabled={saveStatus === 'saving'}
           style={{
             background: saveStatus === 'saved' ? '#dcfce7' : saveStatus === 'error' ? '#fee2e2' : undefined,
             cursor: saveStatus === 'saving' ? 'not-allowed' : undefined,
             color: saveStatus === 'error' ? '#dc2626' : undefined,
           }}
+          loading={saveStatus === 'saving'}
+          onClick={() => {
+            const currentContent = editor.current?.value || editor.current?.getEditorValue?.() || '';
+            handleContentUpdate(currentContent);
+          }}
         >
           {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save Failed' : 'Save'}
-        </button>
+        </Button>
         <div className="editor-export-wrap" ref={exportRef}>
-          <button
-            onClick={() => setExportOpen(!exportOpen)}
+          <Button
+            variant="primary"
             className="assiss-btn"
+            iconLeft={<FiDownload size={16} />}
+            onClick={() => setExportOpen(!exportOpen)}
           >
-            <FiDownload size={16} /> Export
-          </button>
+            Export
+          </Button>
           {exportOpen && (
             <div className="editor-export-dropdown">
-              <button onClick={() => handleExport('pdf')}>PDF</button>
-              <button onClick={() => handleExport('docx')}>Word (.docx)</button>
-              <button onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</button>
-              <button onClick={() => handleExport('xlsx')}>Excel (.xlsx)</button>
+              <Button variant="ghost" onClick={() => handleExport('pdf')}>PDF</Button>
+              <Button variant="ghost" onClick={() => handleExport('docx')}>Word (.docx)</Button>
+              <Button variant="ghost" onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</Button>
+              <Button variant="ghost" onClick={() => handleExport('xlsx')}>Excel (.xlsx)</Button>
             </div>
           )}
         </div>
-        <button onClick={() => setShowRegenConfirm(true)} className="assiss-btn">
+        <Button
+          variant="primary"
+          className="assiss-btn"
+          onClick={() => setShowRegenConfirm(true)}
+        >
           Re-generate
-        </button>
-        <button onClick={createPlaybook} className="assiss-btn">
-          {createPlaybookLoading ? 'Creating Playbook...' : 'Create Playbook'}
-        </button>
+        </Button>
+        <Button
+          variant="primary"
+          className="assiss-btn"
+          loading={createPlaybookLoading}
+          onClick={createPlaybook}
+        >
+          Create Playbook
+        </Button>
       </div>
       <JoditEditor
         ref={editor}

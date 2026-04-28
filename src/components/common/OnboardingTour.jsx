@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Button from './Button';
 import './common.scss';
 
 const TOUR_STEPS = [
@@ -161,9 +162,13 @@ const OnboardingTour = () => {
             <span className="onboarding-tooltip-counter">
               {currentStep + 1} of {TOUR_STEPS.length}
             </span>
-            <button onClick={handleSkip} className="onboarding-tooltip-skip">
+            <Button
+              variant="link"
+              className="onboarding-tooltip-skip"
+              onClick={handleSkip}
+            >
               Skip tour
-            </button>
+            </Button>
           </div>
 
           <h4 className="onboarding-tooltip-title">{step.title}</h4>
@@ -178,9 +183,14 @@ const OnboardingTour = () => {
                 />
               ))}
             </div>
-            <button onClick={handleNext} className="onboarding-tooltip-next-btn">
+            <Button
+              variant="primary"
+              size="sm"
+              className="onboarding-tooltip-next-btn"
+              onClick={handleNext}
+            >
               {isLast ? 'Get Started' : 'Next'}
-            </button>
+            </Button>
           </div>
         </motion.div>
       </AnimatePresence>

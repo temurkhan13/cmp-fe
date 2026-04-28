@@ -1,9 +1,9 @@
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
 import useRegister from '../../hooks/useRegister';
-import { LoadingSpinner } from '../../components/common/Loaders';
 
 const SetNewPassword = () => {
   const location = useLocation();
@@ -54,13 +54,15 @@ const SetNewPassword = () => {
                 place="Confirm password"
               />
               {error && <p className="auth-error">{error}</p>}
-              <Components.Feature.Button
-                className="primary"
+              <Button
+                variant="primary"
+                size="lg"
+                block
                 type="submit"
-                disabled={loading}
+                loading={loading}
               >
-                {loading ? <LoadingSpinner /> : 'Continue'}
-              </Components.Feature.Button>
+                Continue
+              </Button>
             </Form>
           )}
         </Formik>

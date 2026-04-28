@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Modal from '../../components/common/Modal';
+import Button from '../../components/common/Button';
 import { useDispatch } from 'react-redux';
 import { verify, resendVerification } from '../../redux/slices/authSlice.js';
 import { useNavigate } from 'react-router-dom';
@@ -160,9 +161,14 @@ const EmailVerificationHandler = () => {
       {verificationData === false && (
         <div className="email-verification-bar">
           <p>Please verify your email to unlock all features.</p>
-          <button onClick={handleVerifyClick} className="email-verify-btn">
+          <Button
+            variant="primary"
+            size="sm"
+            className="email-verify-btn"
+            onClick={handleVerifyClick}
+          >
             Verify
-          </button>
+          </Button>
         </div>
       )}
 
@@ -209,9 +215,14 @@ const EmailVerificationHandler = () => {
           </span>
         </p>
 
-        <button className="code-submit-btn" onClick={handleCloseModal}>
+        <Button
+          variant="primary"
+          size="lg"
+          className="code-submit-btn"
+          onClick={handleCloseModal}
+        >
           Submit
-        </button>
+        </Button>
       </Modal>
     </>
   );

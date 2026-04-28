@@ -29,6 +29,7 @@ import {
 } from '../../components/assistant/index.js';
 import Modal from '../../components/common/Modal';
 import Questionnaire from '../../modules/assessment/Questionnaire';
+import Button from '../../components/common/Button';
 
 const AiAssistantChat = () => {
   const dispatch = useDispatch();
@@ -211,13 +212,14 @@ const AiAssistantChat = () => {
 
       {/* Floating button to open right sidebar on responsive */}
       {isResponsive && (
-        <button
+        <Button
+          variant="icon"
+          ariaLabel="Open sidebar panel"
           className="responsive-fab"
           onClick={() => setShowRightSidebar(true)}
-          aria-label="Open sidebar panel"
         >
           <FaImages />
-        </button>
+        </Button>
       )}
 
       {showNotification && (

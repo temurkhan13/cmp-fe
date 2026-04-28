@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { IoSend } from 'react-icons/io5';
 import { useAddCommentMutation } from '../../redux/api/workspaceApi';
+import Button from '../common/Button';
 
 const CommentPopup = ({
   onClose,
@@ -55,13 +56,15 @@ const CommentPopup = ({
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
           />
-          <button
+          <Button
+            variant="icon"
+            ariaLabel="Send comment"
             className="cm-popup-send"
-            onClick={handleSend}
             disabled={!comment.trim()}
+            onClick={handleSend}
           >
             <IoSend size={16} />
-          </button>
+          </Button>
         </div>
       </div>
     </>

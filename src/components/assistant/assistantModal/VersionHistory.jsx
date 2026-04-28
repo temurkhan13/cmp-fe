@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { FaUserCircle } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import Button from '../../common/Button';
 
 const VersionHistory = ({ versions, onClose }) => {
   const closeModal = () => {
@@ -13,7 +14,7 @@ const VersionHistory = ({ versions, onClose }) => {
         <NoDataAvailable message="No data available" />
       ) : (
         <>
-          <button className="current-version">Current Version</button>
+          <Button variant="secondary" className="current-version">Current Version</Button>
           <div className="versions-container">
             {versions.map((version, index) => (
               <div
@@ -22,7 +23,7 @@ const VersionHistory = ({ versions, onClose }) => {
               >
                 {index >= 3 && <div className="version-history-overlay"></div>}
                 {index >= 3 && (
-                  <button className="show-date-button">Upgrade</button>
+                  <Button variant="primary" className="show-date-button">Upgrade</Button>
                 )}
                 <div className="version-content">
                   <p className="vh-date">{version.date}</p>
@@ -40,10 +41,16 @@ const VersionHistory = ({ versions, onClose }) => {
           </div>
           <hr className="straight-Line" />
           <div className="footer-buttons">
-            <button className="vh-cancel" onClick={closeModal}>
+            <Button
+              variant="secondary"
+              className="vh-cancel"
+              onClick={closeModal}
+            >
               Cancel
-            </button>
-            <button className="restore-version">Restore Version</button>
+            </Button>
+            <Button variant="primary" className="restore-version">
+              Restore Version
+            </Button>
           </div>
         </>
       )}

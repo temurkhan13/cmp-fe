@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { RxCross2 } from 'react-icons/rx';
+import Button from '../common/Button';
 
 import './custom-dropdown.scss';
 
@@ -49,9 +50,14 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
     <div className="custom-dropdown-search">
       <div className="custom-dropdown-search-header">
         <p className="custom-dropdown-search-title">{title}</p>
-        <button className="custom-dropdown-close-button" onClick={onClose}>
+        <Button
+          variant="icon"
+          ariaLabel="Close"
+          className="custom-dropdown-close-button"
+          onClick={onClose}
+        >
           <RxCross2 className="custom-dropdown-cross-icon" />
-        </button>
+        </Button>
       </div>
       <hr className="custom-dropdown-search-hr" />
       <div className="custom-dropdown-search-input">
@@ -69,13 +75,17 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
         </span>
         <span>|</span>
         <div className="custom-dropdown-nav-buttons">
-          <button
+          <Button
+            variant="icon"
+            ariaLabel="Previous"
             className="custom-dropdown-nav-button"
             onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}
           >
             <FaChevronUp />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="icon"
+            ariaLabel="Next"
             className="custom-dropdown-nav-button"
             onClick={() =>
               setCurrentIndex(
@@ -84,7 +94,7 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
             }
           >
             <FaChevronDown />
-          </button>
+          </Button>
         </div>
       </div>
       {searchTerm && ( // Only show the list when there is a search term

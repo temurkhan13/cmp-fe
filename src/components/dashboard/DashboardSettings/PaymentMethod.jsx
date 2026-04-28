@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import PaymentModal from './PaymentModal';
 import { RxCross2 } from 'react-icons/rx';
+import Button from '../../common/Button';
 
 const PaymentMethod = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,23 +49,32 @@ const PaymentMethod = () => {
           </span>
         </div>
         <div className="payment-card-actions">
-          <button
+          <Button
+            variant="ghost"
+            className="edit-card-action"
             onClick={() =>
               handleEditClick({ cardNumber: '5914', expiryDate: '11/26' })
             }
-            className="edit-card-action"
           >
             Edit
-          </button>
-          <button onClick={handleDeleteClick} className="delete-card-action">
+          </Button>
+          <Button
+            variant="ghost"
+            className="delete-card-action"
+            onClick={handleDeleteClick}
+          >
             Delete
-          </button>
+          </Button>
         </div>
       </div>
 
-      <button className="payment-method-add-btn" onClick={handleAddPaymentClick}>
+      <Button
+        variant="primary"
+        className="payment-method-add-btn"
+        onClick={handleAddPaymentClick}
+      >
         Add Payment Method
-      </button>
+      </Button>
 
       {isModalOpen && (
         <PaymentModal onClose={handleCloseModal} details={paymentDetails} />
@@ -85,9 +95,14 @@ const DeleteModal = ({ paymentDetails, onClose }) => (
     <div className="pm-delete-modal-content">
       <div className="pm-delete-modal-header">
         <p>Delete Card Details</p>
-        <button className="pm-delete-modal-close" onClick={onClose}>
+        <Button
+          variant="icon"
+          ariaLabel="Close"
+          className="pm-delete-modal-close"
+          onClick={onClose}
+        >
           <RxCross2 size={18} />
-        </button>
+        </Button>
       </div>
       <p>
         You&apos;re about to delete{' '}
@@ -98,10 +113,16 @@ const DeleteModal = ({ paymentDetails, onClose }) => (
         your list. This can&apos;t be undone.
       </p>
       <div className="pm-delete-modal-buttons">
-        <button className="pm-delete-cancel-btn" onClick={onClose}>
+        <Button
+          variant="secondary"
+          className="pm-delete-cancel-btn"
+          onClick={onClose}
+        >
           Cancel
-        </button>
-        <button className="pm-delete-confirm-btn">Delete Permanently</button>
+        </Button>
+        <Button variant="primary" className="pm-delete-confirm-btn">
+          Delete Permanently
+        </Button>
       </div>
     </div>
   </div>

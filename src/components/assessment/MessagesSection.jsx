@@ -60,6 +60,7 @@ import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
 import Editor from './AssessmentComponent/Editor.jsx';
 import useAssessment from '../../hooks/useAssessment.js';
+import Button from '../common/Button';
 
 const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUpdate, onBookmarksUpdate }) => {
   const dispatch = useDispatch();
@@ -903,7 +904,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                   Phase: {assessmentPhases[selectedAssessment || selectedAssessmentTitle?.ReportTitle || selectedAssessmentTitle]}
                 </span>
               )}
-              <button
+              <Button
+                variant="primary"
+                className="msg-start-btn"
                 onClick={() =>
                   handleStartAssessment(
                     selectedAssessmentTitle?.ReportTitle ||
@@ -911,10 +914,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                       'Change Vision/Case for Change'
                   )
                 }
-                className="msg-start-btn"
               >
                 Start Assessment
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -929,12 +931,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       {showInputField && (
         <>
           <div className="msg-report-wrapper">
-            <button
-              onClick={handleSingleReport}
+            <Button
+              variant="primary"
               className={`msg-view-report-btn ${showReportButton ? 'msg-view-report-btn--visible' : 'msg-view-report-btn--hidden'}`}
+              onClick={handleSingleReport}
             >
               View Report
-            </button>
+            </Button>
           </div>
           <div className="Message_container">
             {/* Progress bar */}
@@ -957,13 +960,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
             {chat.length <= 1 && (
               <div className="msg-suggestions">
                 {['Help me get started', 'What should I consider?', 'Give me an example', 'Summarise best practices'].map((suggestion) => (
-                  <button
+                  <Button
                     key={suggestion}
-                    onClick={() => setFirstPrompt(suggestion)}
+                    variant="secondary"
+                    size="sm"
                     className="msg-suggestion-btn"
+                    onClick={() => setFirstPrompt(suggestion)}
                   >
                     {suggestion}
-                  </button>
+                  </Button>
                 ))}
               </div>
             )}
@@ -982,13 +987,15 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                   <span className="file-preview-chip__name">{file.name.length > 30 ? file.name.slice(0, 27) + '...' : file.name}</span>
                   <span className="file-preview-chip__size">{(file.size / 1024).toFixed(0)} KB</span>
                 </div>
-                <button
+                <Button
+                  variant="icon"
+                  ariaLabel="Remove file"
                   className="file-preview-chip__remove"
-                  onClick={() => setFile(null)}
                   title="Remove file"
+                  onClick={() => setFile(null)}
                 >
                   &times;
-                </button>
+                </Button>
               </div>
             )}
             <div className="input-container msg-input-relative">

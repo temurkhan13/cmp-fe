@@ -6,6 +6,7 @@ import { BiPlus, BiPlusCircle } from 'react-icons/bi';
 import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
 import { useReorder } from '../../hooks/useReorder';
+import Button from '../common/Button';
 import './node.scss';
 const Node = ({ data }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
@@ -199,8 +200,10 @@ const Node = ({ data }) => {
             </div>
             {/* <div style={{ position: 'absolute', top:'100' }}> */}
             {data.nodeData.length === 0 && data.showGenerateAIButton && (
-              <button
+              <Button
+                variant="primary"
                 className={`node-generate-btn ${isLoading ? 'node-generate-btn--loading' : ''}`}
+                loading={isLoading}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (data.nodeData.length === 0 && !data.isRoot) {
@@ -213,10 +216,9 @@ const Node = ({ data }) => {
                     );
                   }
                 }}
-                disabled={isLoading}
               >
-                {isLoading ? 'Generating...' : 'Generate with AI'}
-              </button>
+                Generate with AI
+              </Button>
             )}
             {/* <BiPlusCircle
               style={{

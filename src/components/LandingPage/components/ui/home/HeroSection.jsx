@@ -1,6 +1,7 @@
 import { DottedBg, heroBg, heroBg2, MainBg } from '../../../assets';
 import { FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../../../common/Button';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -13,14 +14,17 @@ const HeroSection = () => {
         <h1 className="hero-text" style={{ backgroundImage: `url(${heroBg})` }}>
           Transforming the <br /> future of <br /> Documentation
         </h1>
-        <button
+        <Button
+          variant="primary"
+          size="lg"
           className="demo-button"
+          iconRight={<FaArrowRight className="hero-rotate-icon" />}
           onClick={() => {
             navigate('/sign-up');
           }}
         >
-          Get Free Demo <FaArrowRight className="hero-rotate-icon" />
-        </button>
+          Get Free Demo
+        </Button>
       </div>
     </div>
   );

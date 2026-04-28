@@ -11,6 +11,7 @@ import { BiArrowBack, BiPlus } from 'react-icons/bi';
 import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
 import ConfirmModal from '../common/ConfirmModal';
+import Button from '../common/Button';
 import { exportDocument } from '@utils/exportDocument';
 
 function PlaybookEditor() {
@@ -196,9 +197,14 @@ function PlaybookEditor() {
       <div className="playbook-editor">
         <div className="playbook-empty">
           <p>Playbook not found</p>
-          <button className="assiss-btn" onClick={() => navigate('/digital-playbook/list')}>
-            <BiArrowBack /> Back to Playbooks
-          </button>
+          <Button
+            variant="primary"
+            className="assiss-btn"
+            iconLeft={<BiArrowBack />}
+            onClick={() => navigate('/digital-playbook/list')}
+          >
+            Back to Playbooks
+          </Button>
         </div>
       </div>
     );
@@ -209,34 +215,42 @@ function PlaybookEditor() {
       {/* Header */}
       <div className="playbook-header">
         <div className="playbook-header-left">
-          <button
+          <Button
+            variant="icon"
+            ariaLabel="Back to playbooks"
             className="playbook-back-btn"
-            onClick={() => navigate('/digital-playbook/list')}
             title="Back to playbooks"
+            onClick={() => navigate('/digital-playbook/list')}
           >
             <BiArrowBack size={18} />
-          </button>
+          </Button>
           <BsFilePlayFill size={20} />
           <h1 className="playbook-title">{playbook.name}</h1>
           {saving && <span className="playbook-saving">Saving...</span>}
         </div>
         <div className="playbook-header-right">
-          <button
+          <Button
+            variant="secondary"
             className="playbook-brand-btn"
             onClick={() => setBrandingOpen(!brandingOpen)}
           >
             🎨 Branding
-          </button>
+          </Button>
           <div className="playbook-export-wrap" ref={exportRef}>
-            <button className="assiss-btn" onClick={() => setExportOpen(!exportOpen)}>
-              <FiDownload size={16} /> Export
-            </button>
+            <Button
+              variant="primary"
+              className="assiss-btn"
+              iconLeft={<FiDownload size={16} />}
+              onClick={() => setExportOpen(!exportOpen)}
+            >
+              Export
+            </Button>
             {exportOpen && (
               <div className="playbook-export-dropdown">
-                <button onClick={() => handleExport('pdf')}>PDF</button>
-                <button onClick={() => handleExport('docx')}>Word (.docx)</button>
-                <button onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</button>
-                <button onClick={() => handleExport('xlsx')}>Excel (.xlsx)</button>
+                <Button variant="ghost" onClick={() => handleExport('pdf')}>PDF</Button>
+                <Button variant="ghost" onClick={() => handleExport('docx')}>Word (.docx)</Button>
+                <Button variant="ghost" onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</Button>
+                <Button variant="ghost" onClick={() => handleExport('xlsx')}>Excel (.xlsx)</Button>
               </div>
             )}
           </div>
@@ -258,8 +272,12 @@ function PlaybookEditor() {
             <span className="branding-color-hex">{accentColor}</span>
           </div>
           <div className="branding-actions">
-            <button className="assiss-btn" onClick={saveBranding}>Save Branding</button>
-            <button onClick={() => setBrandingOpen(false)}>Cancel</button>
+            <Button variant="primary" className="assiss-btn" onClick={saveBranding}>
+              Save Branding
+            </Button>
+            <Button variant="secondary" onClick={() => setBrandingOpen(false)}>
+              Cancel
+            </Button>
           </div>
         </div>
       )}
@@ -297,13 +315,16 @@ function PlaybookEditor() {
             onChange={(e) => setNewStageName(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') addStage(); }}
           />
-          <button
+          <Button
+            variant="primary"
             className="assiss-btn"
+            iconLeft={<BiPlus />}
+            disabled={!newStageName.trim()}
+            loading={addingStage}
             onClick={addStage}
-            disabled={addingStage || !newStageName.trim()}
           >
-            {addingStage ? 'Adding...' : <><BiPlus /> Add Stage</>}
-          </button>
+            Add Stage
+          </Button>
         </div>
       </div>
       <ConfirmModal

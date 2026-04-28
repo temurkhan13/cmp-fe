@@ -6,6 +6,7 @@ import '../assessment.scss';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { RxCross2 } from 'react-icons/rx';
+import Button from '../../common/Button';
 
 const EditModal = ({ isOpen, onClose }) => {
   const [logo, setLogo] = useState(null);
@@ -35,9 +36,14 @@ const EditModal = ({ isOpen, onClose }) => {
   return (
     <div className="edit-overlay">
       <div className="modalContainer">
-        <button className="closeButton" onClick={onClose}>
+        <Button
+          variant="icon"
+          ariaLabel="Close"
+          className="closeButton"
+          onClick={onClose}
+        >
           <RxCross2 className="edit-modal-close-icon" />
-        </button>
+        </Button>
         <p className="title edit-modal-title">
           Choose your branding
         </p>
@@ -96,7 +102,7 @@ const EditModal = ({ isOpen, onClose }) => {
                 )}
               </div>
             ))}
-            <button onClick={addColorPicker}>Add more colors</button>
+            <Button variant="link" onClick={addColorPicker}>Add more colors</Button>
           </div>
         </div>
         <hr className="saperator" />
@@ -134,9 +140,13 @@ const EditModal = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className="update-btn">
-          <button className="updateButton" onClick={onClose}>
+          <Button
+            variant="primary"
+            className="updateButton"
+            onClick={onClose}
+          >
             Update
-          </button>
+          </Button>
         </div>
 
       </div>

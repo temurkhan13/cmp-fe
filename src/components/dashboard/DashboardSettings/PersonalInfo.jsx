@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
 import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
+import Button from '../../common/Button';
+import { BiTrash } from 'react-icons/bi';
 
 const PersonalInfo = () => {
   const dispatch = useDispatch();
@@ -151,24 +153,28 @@ const PersonalInfo = () => {
             className="personal-info-upload-input"
             accept="image/png, image/jpeg, image/gif"
           />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="personal-info-upload-btn"
-          >
-            Upload Image
-          </button>
+          <div className='avatar-upload-actions'>
+            <Button
+              variant="secondary"
+              className="personal-info-upload-btn"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Upload Image
+            </Button>
+            {avatar && (
+              <Button
+                variant="secondary"
+                className="personal-info-delete-btn"
+                onClick={handleImageDelete}
+                iconLeft={<BiTrash />}
+              >
+                Delete
+              </Button>
+            )}
+          </div>
           <small>JPG, GIF, or PNG. Max size of 1Mb</small>
         </div>
-        {avatar && (
-          <button
-            type="button"
-            onClick={handleImageDelete}
-            className="personal-info-delete-btn"
-          >
-            Delete
-          </button>
-        )}
+
       </div>
       <form className="personal-info-form" onSubmit={handleSubmit}>
         <div className="personal-info-form-row">
@@ -232,13 +238,15 @@ const PersonalInfo = () => {
           </div>
         </div>
 
-        <button
+        <Button
           type="submit"
+          variant="primary"
           className="personal-info-save-btn"
-          disabled={!hasChanged || loading}
+          disabled={!hasChanged}
+          loading={loading}
         >
-          {loading ? 'Saving...' : 'Save Changes'}
-        </button>
+          Save Changes
+        </Button>
         {errors.form && <small className="personal-info-error">{errors.form}</small>}
         {successMessage && (
           <div className="personal-info-success">{successMessage}</div>
@@ -250,13 +258,13 @@ const PersonalInfo = () => {
       <div className="personal-info-danger-zone">
         <h3 className='settings-danger-title'>Danger Zone</h3>
         <p className='settings-danger-desc'>Once you delete your account, there is no going back. Please be certain.</p>
-        <button
-          type="button"
+        <Button
+          variant="destructive"
           className="personal-info-delete-account-btn"
           onClick={() => setShowDeleteConfirm(true)}
         >
           Delete Account
-        </button>
+        </Button>
       </div>
       <ConfirmModal
         isOpen={showDeleteConfirm}

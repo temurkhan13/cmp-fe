@@ -8,6 +8,7 @@ import { FaRegFolderOpen } from 'react-icons/fa6';
 import { MdKeyboardArrowRight, MdKeyboardArrowDown } from 'react-icons/md';
 
 import NoDataAvailable from '../../components/common/NoDataAvailable';
+import Button from '../common/Button';
 
 import './custom-modal.scss';
 
@@ -157,10 +158,14 @@ const MoveToModal = ({ folders }) => {
           placeholder="Enter folder name"
         />
       ) : (
-        <button className="custom-modal-folder-btn" onClick={handleNewFolderClick}>
-          <GoPlus size={18} />
+        <Button
+          variant="ghost"
+          className="custom-modal-folder-btn"
+          iconLeft={<GoPlus size={18} />}
+          onClick={handleNewFolderClick}
+        >
           New Folder
-        </button>
+        </Button>
       )}
       <hr className="custom-modal-straight-line" />
     </>

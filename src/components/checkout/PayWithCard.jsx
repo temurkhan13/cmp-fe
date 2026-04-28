@@ -1,6 +1,7 @@
 import { Formik, Form } from 'formik';
 import './checkout.scss';
 import Components from '../../components';
+import Button from '../common/Button';
 import data from '../../data';
 import { Link } from 'react-router-dom';
 
@@ -80,9 +81,9 @@ const PayWithCard = () => {
                 </blockquote>
               </div>
               <Link to="/dashboard">
-                <Components.Feature.Button className="primary">
+                <Button variant="primary" size="lg" block>
                   Subscribe
-                </Components.Feature.Button>
+                </Button>
               </Link>
             </Form>
           )}

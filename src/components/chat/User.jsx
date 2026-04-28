@@ -2,6 +2,7 @@ import { useState } from "react";
 import Links from "./Links";
 import Documents from "./Documents";
 import Images from "./Images";
+import Button from "../common/Button";
 
 const contents = [
   { component: <Images />, key: "images" },
@@ -26,13 +27,15 @@ const User = () => {
       <div className="button-content-container">
         <div className="buttons-row">
           {buttons.map((button, index) => (
-            <button
+            <Button
               key={index}
+              variant="toggle"
+              active={activeIndex === index}
               className={`button ${activeIndex === index ? "active" : ""}`}
               onClick={() => handleButtonClick(index)}
             >
               {button}
-            </button>
+            </Button>
           ))}
         </div>
         <hr />

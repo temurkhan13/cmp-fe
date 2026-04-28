@@ -1,5 +1,6 @@
 import data from '../../data';
 import Components from '../../components';
+import Button from '../../components/common/Button';
 
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
@@ -69,13 +70,16 @@ const SignUp = () => {
           Please enter the following information in order to sign up
         </Components.Feature.Text>
         <section className="mbt_Tertiary">
-          <Components.Feature.Button
-            className="auth mb_Secondary"
-            icon={assets.auth.google}
+          <Button
+            variant="secondary"
+            size="lg"
+            block
+            className="mb_Secondary"
+            iconLeft={<img src={assets.auth.google} alt="" />}
             onClick={signinWithGoogle}
           >
             Continue with Google
-          </Components.Feature.Button>
+          </Button>
         </section>
         <div className="mb_Tertiary">
           <span></span>
@@ -142,13 +146,16 @@ const SignUp = () => {
               </div>
 
               {error && <p className="auth-error">{error}</p>}
-              <Components.Feature.Button
-                className="primary"
+              <Button
+                variant="primary"
+                size="lg"
+                block
                 type="submit"
-                disabled={isLoading || error} // Disable based on form validity, loading state, or error
+                disabled={!!error}
+                loading={isLoading}
               >
-                {isLoading ? 'Creating account...' : 'Create Account'}
-              </Components.Feature.Button>
+                Create Account
+              </Button>
             </Form>
           )}
         </Formik>

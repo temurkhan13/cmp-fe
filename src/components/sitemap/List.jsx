@@ -11,6 +11,7 @@ import { FaFolderTree } from 'react-icons/fa6';
 import ConfirmModal from '../common/ConfirmModal';
 import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
+import Button from '../common/Button';
 import './sitemap.scss';
 import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
 import '../dashboard/dashboardHomeComponents/styles/folder.scss';
@@ -102,13 +103,14 @@ function List() {
                 Sitemaps
               </p>
               <div className="center-buttons">
-                <button
+                <Button
+                  variant="primary"
                   className="assiss-btn assiss-btn--flex"
+                  iconRight={<BiPlus />}
                   onClick={() => navigate('/sitemap/new')}
                 >
                   Create Sitemap
-                  <BiPlus />
-                </button>
+                </Button>
               </div>
             </div>
           </section>
@@ -142,7 +144,9 @@ function List() {
                       className="sitemap-card__actions"
                       ref={openMenuId === _id ? menuRef : null}
                     >
-                      <button
+                      <Button
+                        variant="icon"
+                        ariaLabel="More options"
                         className="sitemap-card__menu-btn"
                         title="More options"
                         onClick={(e) => {
@@ -151,29 +155,31 @@ function List() {
                         }}
                       >
                         <FiMoreVertical size={16} />
-                      </button>
+                      </Button>
                       {openMenuId === _id && (
                         <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
-                          <button
+                          <Button
+                            variant="ghost"
                             className="sitemap-card__dropdown-item"
+                            iconLeft={<FiEdit2 size={14} />}
                             onClick={() => {
                               setOpenMenuId(null);
                               setRenameModal({ open: true, id: _id, name });
                             }}
                           >
-                            <FiEdit2 size={14} />
                             Rename
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            variant="ghost"
                             className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
+                            iconLeft={<FiTrash2 size={14} />}
                             onClick={() => {
                               setOpenMenuId(null);
                               setDeleteConfirm({ open: true, id: _id });
                             }}
                           >
-                            <FiTrash2 size={14} />
                             Move to Trash
-                          </button>
+                          </Button>
                         </div>
                       )}
                     </div>

@@ -1,4 +1,5 @@
 import { RxMagicWand } from 'react-icons/rx';
+import Button from '../common/Button';
 import './chat.scss';
 
 const AskAi = () => {
@@ -6,7 +7,7 @@ const AskAi = () => {
     <div className="PopupBox ask-ai-popup">
       <div className="navabr">
         <div className="dropdown">
-          <button className="dropbtn">
+          <Button variant="ghost" className="dropbtn">
             <span>
               <RxMagicWand />
             </span>{' '}
@@ -17,7 +18,7 @@ const AskAi = () => {
               type="text"
               placeholder="Ask AI to edit or generate..."
             />
-          </button>
+          </Button>
           <div className="dropdown-content">
             <a href="#">Improve Writing</a>
             <a href="#">Fix Spelling & Grammer</a>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MdSupportAgent, MdSend, MdClose } from 'react-icons/md';
 import apiClient from '../../api/axios';
+import Button from './Button';
 import './common.scss';
 
 const SupportChat = () => {
@@ -59,9 +60,14 @@ const SupportChat = () => {
   return (
     <>
       {!isOpen && (
-        <button onClick={() => setIsOpen(true)} className="support-chat-fab">
+        <Button
+          variant="icon"
+          ariaLabel="Open support chat"
+          className="support-chat-fab"
+          onClick={() => setIsOpen(true)}
+        >
           <MdSupportAgent size={28} color="#0B1444" />
-        </button>
+        </Button>
       )}
 
       {isOpen && (
@@ -71,9 +77,14 @@ const SupportChat = () => {
               <MdSupportAgent size={22} color="#C3E11D" />
               <span className="support-chat-header-name">Support Assistant</span>
             </div>
-            <button onClick={() => setIsOpen(false)} className="support-chat-close-btn">
+            <Button
+              variant="icon"
+              ariaLabel="Close support chat"
+              className="support-chat-close-btn"
+              onClick={() => setIsOpen(false)}
+            >
               <MdClose size={18} />
-            </button>
+            </Button>
           </div>
 
           <div className="support-chat-messages">
@@ -113,9 +124,15 @@ const SupportChat = () => {
               className="support-chat-input"
               disabled={loading}
             />
-            <button onClick={handleSend} disabled={loading || !input.trim()} className="support-chat-send-btn">
+            <Button
+              variant="primary"
+              ariaLabel="Send message"
+              className="support-chat-send-btn"
+              disabled={loading || !input.trim()}
+              onClick={handleSend}
+            >
               <MdSend size={18} />
-            </button>
+            </Button>
           </div>
         </div>
       )}

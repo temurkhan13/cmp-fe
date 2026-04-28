@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FiCheckCircle } from 'react-icons/fi';
+import Button from '../../common/Button';
 
 const Notifications = ({ initialSettings }) => {
   const defaultSettings = {
@@ -74,14 +75,15 @@ const Notifications = ({ initialSettings }) => {
         />
       </div>
 
-      <button
+      <Button
+        variant="primary"
         className="notification-save-btn"
         onClick={handleSaveChanges}
-        disabled={isSaving}
+        loading={isSaving}
+        iconRight={<FiCheckCircle />}
       >
-        {isSaving ? 'Saving...' : 'Save Changes'}
-        <FiCheckCircle />
-      </button>
+        Save Changes
+      </Button>
     </div>
   );
 };

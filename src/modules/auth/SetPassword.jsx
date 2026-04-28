@@ -1,4 +1,5 @@
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
@@ -9,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/slices/authSlice';
 import { useSelector } from 'react-redux';
-import { LoadingSpinner } from '../../components/common/Loaders';
 
 const SetPassword = () => {
   const dispatch = useDispatch();
@@ -77,13 +77,15 @@ const SetPassword = () => {
                 place="Confirm password"
               />
               {error && <p className="auth-error">{error}</p>}
-              <Components.Feature.Button
-                className="primary"
+              <Button
+                variant="primary"
+                size="lg"
+                block
                 type="submit"
-                disabled={isLoading}
+                loading={isLoading}
               >
-                {isLoading ? <LoadingSpinner /> : 'Continue'}
-              </Components.Feature.Button>
+                Continue
+              </Button>
             </Form>
           )}
         </Formik>

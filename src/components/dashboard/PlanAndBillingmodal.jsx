@@ -4,6 +4,7 @@ import { BsFillStarFill } from 'react-icons/bs';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { IoClose } from 'react-icons/io5';
 import { MdCheck } from 'react-icons/md';
+import Button from '../common/Button';
 
 const PlanAndBillingmodal = ({ isOpen, onClose }) => {
   const [selectedTab, setSelectedTab] = useState('personal');
@@ -80,23 +81,32 @@ const PlanAndBillingmodal = ({ isOpen, onClose }) => {
   return (
     <div className="plan-billing-modal-overlay">
       <div className="plan-billing-modal-content">
-        <button className="plan-billing-modal-close" onClick={onClose}>
+        <Button
+          variant="icon"
+          ariaLabel="Close"
+          className="plan-billing-modal-close"
+          onClick={onClose}
+        >
           <IoClose size={24} />
-        </button>
+        </Button>
         <div className="plan-billing-pricing">
           <div className="plan-billing-tabs">
-            <button
+            <Button
+              variant="toggle"
+              active={selectedTab === 'personal'}
               className={selectedTab === 'personal' ? 'active' : ''}
               onClick={() => handleTabChange('personal')}
             >
               Personal
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="toggle"
+              active={selectedTab === 'business'}
               className={selectedTab === 'business' ? 'active' : ''}
               onClick={() => handleTabChange('business')}
             >
               Business
-            </button>
+            </Button>
           </div>
           <div className="plan-billing-cards">
             {plansData[selectedTab].map((plan, index) => (
@@ -117,11 +127,21 @@ const Card = ({ plan }) => {
       </p>
       <p>{plan.price}</p>
       {plan.isCurrentPlan ? (
-        <button className="plan-billing-current-plan-btn">Your Current Plan</button>
+        <Button
+          variant="secondary"
+          className="plan-billing-current-plan-btn"
+          disabled
+        >
+          Your Current Plan
+        </Button>
       ) : (
-        <button className="plan-billing-upgrade-btn">
-          {plan.buttonText} <AiOutlineArrowRight />
-        </button>
+        <Button
+          variant="primary"
+          className="plan-billing-upgrade-btn"
+          iconRight={<AiOutlineArrowRight />}
+        >
+          {plan.buttonText}
+        </Button>
       )}
       <ul>
         {plan.features.map((feature, idx) => (

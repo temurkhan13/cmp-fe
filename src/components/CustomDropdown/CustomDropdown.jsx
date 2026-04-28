@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight, MdInsertLink } from 'react-icons/md';
 import { IoIosCheckmark, IoMdTrash } from 'react-icons/io';
 import { RiFolderTransferFill } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
+import Button from '../common/Button';
 
 import './custom-dropdown.scss';
 
@@ -191,10 +192,14 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
       {/*</Dropdown.Item>*/}
       {/*<hr className="custom-dropdown-straight-line" />*/}
       <Dropdown.Item>
-        <button className="custom-dropdown-click-btn" onClick={handleOpenMoveToTrashModal}>
-          <IoMdTrash className="custom-dropdown-icon-right" />
+        <Button
+          variant="ghost"
+          className="custom-dropdown-click-btn"
+          iconLeft={<IoMdTrash className="custom-dropdown-icon-right" />}
+          onClick={handleOpenMoveToTrashModal}
+        >
           Move to trash
-        </button>
+        </Button>
         <CustomModal
           isOpen={isMoveToTrashModalOpen}
           onClose={handleCloseMoveToTrashModal}
