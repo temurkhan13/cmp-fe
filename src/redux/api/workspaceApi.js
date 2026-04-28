@@ -589,6 +589,12 @@ export const workspaceApi = createApi({
         responseHandler: (response) => response.blob(), // Process as Blob
       }),
     }),
+    regenerateReport: builder.mutation({
+      query: ({ assessmentId }) => ({
+        url: `workspace-assessment/${assessmentId}/report/regenerate`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -647,5 +653,6 @@ export const {
   useAddFeedbackMutation,
   useEditReportMutation,
   useDownloadReportMutation,
+  useRegenerateReportMutation,
   useUpdateAssessmentQuestionMutation,
 } = workspaceApi;

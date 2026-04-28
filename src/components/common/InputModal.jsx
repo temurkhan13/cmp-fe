@@ -51,7 +51,6 @@ const InputModal = ({
           <Button
             variant="icon"
             ariaLabel="Close"
-            className="confirm-modal-close-button"
             onClick={onCancel}
             disabled={loading}
           >
@@ -73,7 +72,7 @@ const InputModal = ({
         <div className="confirm-modal-actions">
           <Button
             variant="secondary"
-            className="confirm-modal-btn confirm-modal-cancel-btn"
+            className="confirm-modal-btn"
             onClick={onCancel}
             disabled={loading}
           >
@@ -81,7 +80,7 @@ const InputModal = ({
           </Button>
           <Button
             variant="primary"
-            className="confirm-modal-btn confirm-modal-confirm-btn"
+            className="confirm-modal-btn"
             onClick={handleConfirm}
             disabled={!value.trim()}
             loading={loading}

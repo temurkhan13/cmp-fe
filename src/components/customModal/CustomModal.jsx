@@ -25,7 +25,6 @@ const CustomModal = ({
           <Button
             variant="icon"
             ariaLabel="Close"
-            className="custom-modal-close-button"
             onClick={onClose}
           >
             <RxCross2 className="custom-modal-cross-icon" />
@@ -36,14 +35,14 @@ const CustomModal = ({
         <div className="custom-modal-actions">
           <Button
             variant="secondary"
-            className="custom-modal-button custom-modal-cancel-button"
+            className="custom-modal-button"
             onClick={onClose}
           >
             {cancelText}
           </Button>
           <Button
             variant="primary"
-            className="custom-modal-button custom-modal-proceed-button"
+            className="custom-modal-button"
             onClick={onProceed}
           >
             {proceedText}

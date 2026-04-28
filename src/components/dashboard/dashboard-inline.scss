@@ -254,7 +254,6 @@
 }
 
 .update-button {
-  @include btn-primary;
   font-size: 1.4rem;
   padding: 1rem 2rem;
   border-radius: 0.8rem;
@@ -1760,28 +1759,11 @@
   padding: 1rem;
   color: #333;
   border: 0.2rem solid #ccc;
-  border-radius: 1rem;
   font-size: 1.4rem;
 }
 
 .delete-card-action {
   background-color: lightgray;
-}
-
-.payment-method-add-btn {
-  background-color: #C3E11D;
-  color: #000;
-  border: none;
-  padding: 1rem;
-  border-radius: 1rem;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
-
-.payment-method-add-btn:hover {
-  background-color: #b2e200;
 }
 
 .pm-delete-modal {
@@ -1812,13 +1794,6 @@
   margin: 0;
 }
 
-.pm-delete-modal-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-}
-
 .pm-delete-modal-content {
   padding: 2rem;
   text-align: center;
@@ -1842,23 +1817,18 @@
 .pm-delete-confirm-btn {
   padding: 0.9rem;
   width: 50%;
-  border-radius: 1rem;
   font-size: 1.4rem;
   font-weight: 400;
-  cursor: pointer;
 }
 
 .pm-delete-cancel-btn {
-  background-color: transparent;
   color: #333;
   border: 0.2rem solid #ccc;
   width: 15rem;
 }
 
 .pm-delete-confirm-btn {
-  background-color: #C3E11D;
   color: black;
-  border: none;
 }
 
 .settings-page {
@@ -1926,33 +1896,6 @@
   margin: 1rem 0 2rem 0;
 }
 
-.notification-save-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 1.5rem;
-  background-color: #c3e11d;
-  border: none;
-  border-radius: 0.5rem;
-  color: #333;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.notification-save-btn:hover {
-  background-color: #b2e042;
-}
-
-.notification-save-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.notification-save-btn svg {
-  margin-left: 0.8rem;
-}
-
 .notification-toggle {
   display: flex;
   justify-content: space-between;
@@ -2016,13 +1959,10 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  border: none;
-  cursor: pointer;
   font-size: 1.5rem;
   background-color: lightgray;
   display: flex;
   padding: 0.2rem;
-  border-radius: 50%;
 }
 
 .payment-modal-title {
@@ -2074,8 +2014,6 @@
   border: 1px solid #000;
   color: #000;
   border-radius: 1rem;
-  cursor: pointer;
-  font-size: 1.3rem;
   width: 50%;
   transition: background-color 0.3s ease;
 }
@@ -2088,10 +2026,7 @@
   background-color: #c4ff00;
   border: none;
   color: #000;
-  padding: 0.5rem 1rem;
   border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 1.3rem;
   width: 50%;
   transition: background-color 0.3s ease;
 }
@@ -2167,10 +2102,7 @@
   padding: 1rem 1.5rem;
   border: 0.1rem solid #0B1444;
   background: #fff;
-  cursor: pointer;
   font-size: 1.4rem;
-  border-radius: 1rem;
-  color: #0B1444;
   width: 15rem;
 }
 
@@ -2178,9 +2110,6 @@
   background: lightgray;
   border: none;
   color: black;
-  font-size: 1.5rem;
-  cursor: pointer;
-  border-radius: 1rem;
   padding: 1rem;
 }
 
@@ -2248,13 +2177,7 @@
 
 .personal-info-save-btn {
   padding: 1rem 1.5rem;
-  background-color: #C3E11D;
-  border: none;
   color: #000;
-  font-size: 1.5rem;
-  border-radius: 1rem;
-  cursor: pointer;
-  font-weight: 500;
   width: 15rem;
   transition: background-color 0.3s ease;
 }
@@ -2274,11 +2197,7 @@
   padding: 1rem 2rem;
   background-color: #c00;
   border: none;
-  color: white;
   font-size: 1.4rem;
-  border-radius: 1rem;
-  cursor: pointer;
-  font-weight: 500;
   transition: background-color 0.3s ease;
 }
 
@@ -2352,28 +2271,13 @@
   justify-content: space-between;
 }
 
+// Layout-only — visual handled by cmp-btn variants (PR 10b passthrough cleanup)
 .delete-modal-cancel-btn {
-  background: none;
-  border: 0.125rem solid #00008b;
-  border-radius: 1rem;
-  padding: 1rem;
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: #00008b;
-  cursor: pointer;
   flex: 1;
   margin-right: 0.5rem;
 }
 
 .delete-modal-confirm-btn {
-  background: #ccff00;
-  border: none;
-  border-radius: 1rem;
-  padding: 1rem;
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
   flex: 1;
   margin-left: 0.5rem;
 }

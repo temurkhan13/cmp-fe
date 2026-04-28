@@ -17,6 +17,7 @@ import { SkeletonCard } from '../common/Skeleton';
 import NotificationBar from '../common/NotificationBar';
 import Button from '../common/Button';
 import './dashboardHomeComponents/styles/dashboard-card.scss';
+import '../sitemap/sitemap.scss';
 
 const typeIcons = {
   workspace: <BsWindowStack size={20} color="grey" />,
@@ -74,31 +75,34 @@ const TrashCard = ({ item, entityType, onAction }) => {
           {dateLabel && <p>Deleted: {dateLabel}</p>}
         </div>
       </div>
-      <div className="actions" ref={menuRef}>
-        <FiMoreVertical
-          className="more-icon"
+      <div className="sitemap-card__actions" ref={menuRef}>
+        <Button
+          variant="icon"
+          ariaLabel="More options"
+          className="sitemap-card__menu-btn"
+          title="More options"
           onClick={(e) => {
             e.stopPropagation();
             setIsMenuOpen(!isMenuOpen);
           }}
-          size={18}
-          color="#000"
-        />
+        >
+          <FiMoreVertical size={16} />
+        </Button>
         {isMenuOpen && (
-          <div className="dropdown-menu">
+          <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
             <Button
               variant="ghost"
-              className="dropdown-item"
-              iconLeft={<MdOutlineSettingsBackupRestore size={16} />}
+              className="sitemap-card__dropdown-item"
+              iconLeft={<MdOutlineSettingsBackupRestore size={14} />}
               onClick={(e) => handleAction('restore', e)}
               loading={isLoading}
             >
               Restore
             </Button>
             <Button
-              variant="destructive"
-              className="dropdown-item trash-delete-btn"
-              iconLeft={<MdDeleteForever size={16} />}
+              variant="ghost"
+              className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
+              iconLeft={<MdDeleteForever size={14} />}
               onClick={(e) => handleAction('delete', e)}
               loading={isLoading}
             >

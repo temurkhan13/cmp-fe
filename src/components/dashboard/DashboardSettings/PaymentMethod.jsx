@@ -68,11 +68,7 @@ const PaymentMethod = () => {
         </div>
       </div>
 
-      <Button
-        variant="primary"
-        className="payment-method-add-btn"
-        onClick={handleAddPaymentClick}
-      >
+      <Button variant="primary" onClick={handleAddPaymentClick}>
         Add Payment Method
       </Button>
 
@@ -95,12 +91,7 @@ const DeleteModal = ({ paymentDetails, onClose }) => (
     <div className="pm-delete-modal-content">
       <div className="pm-delete-modal-header">
         <p>Delete Card Details</p>
-        <Button
-          variant="icon"
-          ariaLabel="Close"
-          className="pm-delete-modal-close"
-          onClick={onClose}
-        >
+        <Button variant="icon" ariaLabel="Close" onClick={onClose}>
           <RxCross2 size={18} />
         </Button>
       </div>

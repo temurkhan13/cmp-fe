@@ -18,4 +18,30 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  overrides: [
+    {
+      // PR 11 — guard against new bare <button> elements after the consolidation.
+      // Use the shared <Button> component from src/components/common/Button.jsx.
+      files: [
+        'src/components/**/*.{js,jsx}',
+        'src/modules/**/*.{js,jsx}',
+        'src/layout/**/*.{js,jsx}',
+      ],
+      excludedFiles: ['src/components/common/Button.jsx'],
+      rules: {
+        'react/forbid-elements': [
+          'error',
+          {
+            forbid: [
+              {
+                element: 'button',
+                message:
+                  'Use the shared <Button> from src/components/common/Button.jsx instead of native <button>. See cmp-fe/BUTTON_DISCOVERY.md.',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
 }

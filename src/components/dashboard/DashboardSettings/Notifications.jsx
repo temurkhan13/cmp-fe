@@ -77,7 +77,6 @@ const Notifications = ({ initialSettings }) => {
 
       <Button
         variant="primary"
-        className="notification-save-btn"
         onClick={handleSaveChanges}
         loading={isSaving}
         iconRight={<FiCheckCircle />}
