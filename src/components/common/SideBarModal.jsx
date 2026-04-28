@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 import { RxCross2 } from 'react-icons/rx';
+import Button from './Button';
 
 const SideBarModal = ({ title, bodyContent, onClose }) => {
   const closeModal = () => {
@@ -12,9 +13,14 @@ const SideBarModal = ({ title, bodyContent, onClose }) => {
         <div className="sidebar-modal" onClick={(e) => e.stopPropagation()}>
           <div className="sidebar-modal-header">
             <p className="sidebar-modal-title">{title}</p>
-            <button className="sidebar-modal-close" onClick={closeModal}>
+            <Button
+              variant="icon"
+              ariaLabel="Close"
+              className="sidebar-modal-close"
+              onClick={closeModal}
+            >
               <RxCross2 />
-            </button>
+            </Button>
           </div>
           <hr className="sidebar-modal-divider" />
           <div className="sidebar-modal-body">{bodyContent}</div>

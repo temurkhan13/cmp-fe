@@ -12,7 +12,7 @@ const PlainDetail = () => {
       <div className="plainDetail">
         <Button
           variant="ghost"
-          className="back mb_Tertiary"
+          className="mb_Tertiary"
           iconLeft={<IoMdArrowBack />}
           onClick={goBack}
         >

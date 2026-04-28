@@ -4,6 +4,7 @@ import JoditEditor from 'jodit-react';
 import { FiDownload } from 'react-icons/fi';
 import {
   useEditReportMutation,
+  useRegenerateReportMutation,
 } from '../../../redux/api/workspaceApi';
 import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
@@ -25,6 +26,7 @@ const Editor = ({
   const [content, setContent] = useState(data?.content || '');
   const [assessmentID, setAssessmentID] = useState(assesmentId);
   const [editReport] = useEditReportMutation();
+  const [regenerateReport, { isLoading: regenLoading }] = useRegenerateReportMutation();
   const [saveStatus, setSaveStatus] = useState('idle');
   const [showRegenConfirm, setShowRegenConfirm] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -64,6 +66,18 @@ const Editor = ({
       if (import.meta.env.DEV) console.error(error);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
+
+  const handleRegenerate = async () => {
+    try {
+      const response = await regenerateReport({ assessmentId: assessmentID }).unwrap();
+      const newContent = response?.data?.report?.content;
+      if (newContent) setContent(newContent);
+      setShowRegenConfirm(false);
+    } catch (error) {
+      if (import.meta.env.DEV) console.error('Regenerate report error:', error);
+      setShowRegenConfirm(false);
     }
   };
 
@@ -186,9 +200,11 @@ const Editor = ({
         <Button
           variant="primary"
           className="assiss-btn"
+          loading={regenLoading}
+          disabled={regenLoading}
           onClick={() => setShowRegenConfirm(true)}
         >
-          Re-generate
+          {regenLoading ? 'Re-generating...' : 'Re-generate'}
         </Button>
         <Button
           variant="primary"
@@ -212,10 +228,7 @@ const Editor = ({
         description="Re-generate this report? Your edits will be replaced."
         confirmText="Re-generate"
         cancelText="Cancel"
-        onConfirm={async () => {
-          await handleExport('pdf');
-          setShowRegenConfirm(false);
-        }}
+        onConfirm={handleRegenerate}
         onCancel={() => setShowRegenConfirm(false)}
       />
     </div>

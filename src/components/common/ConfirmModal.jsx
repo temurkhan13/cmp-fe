@@ -35,7 +35,6 @@ const ConfirmModal = ({
           <Button
             variant="icon"
             ariaLabel="Close"
-            className="confirm-modal-close-button"
             onClick={onCancel}
             disabled={loading}
           >
@@ -47,7 +46,7 @@ const ConfirmModal = ({
         <div className="confirm-modal-actions">
           <Button
             variant="secondary"
-            className="confirm-modal-btn confirm-modal-cancel-btn"
+            className="confirm-modal-btn"
             onClick={onCancel}
             disabled={loading}
           >
@@ -55,7 +54,7 @@ const ConfirmModal = ({
           </Button>
           <Button
             variant="primary"
-            className="confirm-modal-btn confirm-modal-confirm-btn"
+            className="confirm-modal-btn"
             onClick={handleConfirm}
             loading={loading}
           >
