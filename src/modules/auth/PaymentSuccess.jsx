@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import apiClient from '../../api/axios';
 import { getUser } from '../../redux/slices/authSlice';
 
@@ -69,12 +70,15 @@ const PaymentSuccess = () => {
           <Components.Feature.Text className="primary--light mb_Secondary">
             Your subscription has been activated. You now have access to all your plan features.
           </Components.Feature.Text>
-          <Components.Feature.Button
-            className="primary"
+          <Button
+            variant="primary"
+            size="lg"
+            block
+            style={{ maxWidth: '28rem' }}
             onClick={() => window.location.href = '/dashboard'}
           >
             Go to Dashboard
-          </Components.Feature.Button>
+          </Button>
         </div>
       )}
 
@@ -93,12 +97,15 @@ const PaymentSuccess = () => {
           <Components.Feature.Text className="primary--light mb_Secondary">
             We couldn&apos;t verify your payment. Please contact support if you were charged.
           </Components.Feature.Text>
-          <Components.Feature.Button
-            className="primary"
+          <Button
+            variant="primary"
+            size="lg"
+            block
+            style={{ maxWidth: '28rem' }}
             onClick={() => navigate('/dashboard/PlanBilling')}
           >
             Back to Plans
-          </Components.Feature.Button>
+          </Button>
         </div>
       )}
 

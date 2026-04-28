@@ -1,6 +1,7 @@
 import { FaTimes, FaSearch, FaArrowRight } from 'react-icons/fa';
 import assets from '../../assets';
 import { FiPlus } from 'react-icons/fi';
+import Button from '../common/Button';
 import './dashboard-inline.scss';
 
 const MoveToTrash = ({ isOpen, onClose }) => {
@@ -43,26 +44,34 @@ const MoveToTrash = ({ isOpen, onClose }) => {
         </div>
         <hr />
         <div className="move-trash__new-folder-wrapper">
-          <button className="move-trash__new-folder-btn">
-            <FiPlus className="move-trash__plus-icon" /> New Folder
-          </button>
+          <Button
+            variant="ghost"
+            className="move-trash__new-folder-btn"
+            iconLeft={<FiPlus className="move-trash__plus-icon" />}
+          >
+            New Folder
+          </Button>
         </div>
         <hr />
         <div className="move-trash__buttons">
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             className="move-trash__btn move-trash__cancel-btn"
             onClick={onClose}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
             className="move-trash__btn move-trash__move-btn"
             onClick={() => {
               /* Handle move action */
             }}
           >
             Move
-          </button>
+          </Button>
         </div>
       </div>
     </div>

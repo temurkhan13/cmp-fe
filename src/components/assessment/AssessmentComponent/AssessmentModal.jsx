@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
+import Button from '../../common/Button';
 
 const AssessmentModal = ({ content, onClose }) => {
   const handleClose = () => {
@@ -8,9 +9,14 @@ const AssessmentModal = ({ content, onClose }) => {
   return (
     <div className="assessment-modal-overlay" onClick={handleClose}>
       <div className="assessment-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="assessment-modal-close" onClick={handleClose}>
+        <Button
+          variant="icon"
+          ariaLabel="Close"
+          className="assessment-modal-close"
+          onClick={handleClose}
+        >
           <RxCross2 size={18} />
-        </button>
+        </Button>
         <div className="assessment-modal-content">{content}</div>
       </div>
     </div>

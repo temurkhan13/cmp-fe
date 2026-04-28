@@ -1,6 +1,7 @@
 import React from 'react';
 import { teamslide1, teamslide2, video } from '../../../assets';
 import { FaArrowRight } from 'react-icons/fa';
+import Button from '../../../../common/Button';
 
 const Team = () => {
   return (
@@ -15,9 +16,9 @@ const Team = () => {
         </div>
         <div className="team-slide flex flex-col">
           <div className="team-slide-card">
-            <button>
+            <Button variant="icon" ariaLabel="View slide">
               <FaArrowRight className="team-rotate-icon" />
-            </button>
+            </Button>
             <h2 className="team-slide-title">
               4x your data response rate <br /> with generative AI and instant{' '}
               <br /> output formats.

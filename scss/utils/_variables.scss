@@ -31,3 +31,34 @@ $big_Monitor: 87em;
 // Dashboard Responsive Breakpoints
 $dashboard_tablet: 67.5em; // 1080px
 $dashboard_mobile: 37.5em; // 600px
+
+// Button design tokens (cmp-btn) — see cmp-fe/BUTTON_DISCOVERY.md § 8.3
+// Colors
+$btn-color-primary-bg: #C3E11D;            // matches existing $color_parentColor (lime brand)
+$btn-color-primary-text: $color_BlueDark;  // #0B1444
+$btn-color-secondary-bg: transparent;
+$btn-color-secondary-border: $color_BlueDark;
+$btn-color-secondary-text: $color_BlueDark;
+$btn-color-destructive-bg: #DC2626;        // pending Phase 2 approval — see § 11
+$btn-color-destructive-text: #FFFFFF;
+$btn-color-ghost-bg: transparent;
+$btn-color-ghost-text: $color_Primary;     // #0a0a0a
+$btn-color-ghost-hover-bg: $bg_gray--ligth;
+$btn-color-link-text: $color_BlueLight;    // #0066ff
+$btn-color-toggle-bg: transparent;
+$btn-color-toggle-text: $color_Tertiary;
+$btn-color-toggle-active-bg: $color_BlueDark;
+$btn-color-toggle-active-text: #FFFFFF;
+$btn-color-icon-bg: transparent;
+$btn-color-icon-hover-bg: rgba(0, 0, 0, 0.05);
+
+// Sizes
+$btn-padding-sm: 0.5rem 1rem;
+$btn-padding-md: 0.8rem 1.5rem;
+$btn-padding-lg: 1rem 2rem;
+$btn-font-sm: 1.3rem;
+$btn-font-md: 1.5rem;
+$btn-font-lg: 1.6rem;
+$btn-radius-sm: 0.5rem;
+$btn-radius-md: 1rem;
+$btn-radius-lg: 1rem;

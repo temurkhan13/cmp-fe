@@ -1,4 +1,5 @@
 import '../dashboard-inline.scss';
+import Button from '../../common/Button';
 
 const Account = () => {
   return (
@@ -40,9 +41,9 @@ const Account = () => {
         <h3 className="account-plan-subtitle">
           Free
         </h3>
-        <button className="account-upgrade-btn">
+        <Button variant="primary" className="account-upgrade-btn">
           Upgrade Plan
-        </button>
+        </Button>
       </div>
     </div>
   );

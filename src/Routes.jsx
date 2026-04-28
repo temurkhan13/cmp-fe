@@ -11,6 +11,7 @@ import Terms from './components/LandingPage/components/Terms';
 import NotFound from './components/common/NotFound';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import CommandPalette from './components/common/CommandPalette';
+import ButtonPlayground from './components/common/ButtonPlayground';
 import { motion } from 'framer-motion';
 
 const PageFade = ({ children }) => (
@@ -67,6 +68,9 @@ const Routess = () => {
           {data.routes.sitemapRoutesData.map((el) => (
             <Route path={el.path} element={<PageFade><el.element /></PageFade>} key={el.path} />
           ))}
+          {import.meta.env.DEV && (
+            <Route path="/button-playground" element={<ButtonPlayground />} />
+          )}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ErrorBoundary>

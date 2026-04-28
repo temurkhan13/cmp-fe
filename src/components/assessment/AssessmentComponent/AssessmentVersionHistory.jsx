@@ -4,6 +4,7 @@ import { FiClock, FiRotateCcw, FiSave } from 'react-icons/fi';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import apiClient from '../../../api/axios';
 import toast from 'react-hot-toast';
+import Button from '../../common/Button';
 
 const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
   const [versions, setVersions] = useState([]);
@@ -114,10 +115,14 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
           <p className="vh-empty-title">No versions saved</p>
           <p className="vh-empty-desc">Save your current report to start tracking version history.</p>
         </div>
-        <button className="vh-save-btn" onClick={handleSaveVersion}>
-          <FiSave size={16} />
+        <Button
+          variant="primary"
+          className="vh-save-btn"
+          iconLeft={<FiSave size={16} />}
+          onClick={handleSaveVersion}
+        >
           Save Current Version
-        </button>
+        </Button>
       </div>
     );
   }
@@ -126,10 +131,14 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
     <>
       <div className="vh-container">
         {/* Save button */}
-        <button className="vh-save-btn" onClick={handleSaveVersion}>
-          <FiSave size={16} />
+        <Button
+          variant="primary"
+          className="vh-save-btn"
+          iconLeft={<FiSave size={16} />}
+          onClick={handleSaveVersion}
+        >
           Save Current Version
-        </button>
+        </Button>
 
         {/* Version list */}
         <div className="vh-list">
@@ -165,15 +174,23 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
 
         {/* Footer */}
         <div className="vh-footer">
-          <button className="vh-btn vh-btn--cancel" onClick={onClose}>Cancel</button>
-          <button
-            className="vh-btn vh-btn--restore"
-            onClick={handleRestore}
-            disabled={restoring || selectedVersion === null}
+          <Button
+            variant="secondary"
+            className="vh-btn vh-btn--cancel"
+            onClick={onClose}
           >
-            <FiRotateCcw size={14} />
-            {restoring ? 'Restoring...' : 'Restore'}
-          </button>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            className="vh-btn vh-btn--restore"
+            iconLeft={<FiRotateCcw size={14} />}
+            disabled={selectedVersion === null}
+            loading={restoring}
+            onClick={handleRestore}
+          >
+            Restore
+          </Button>
         </div>
       </div>
     </>

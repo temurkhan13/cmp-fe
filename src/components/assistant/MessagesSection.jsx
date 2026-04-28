@@ -21,6 +21,7 @@ import { Example } from '@utils';
 // import fileIcon from '@assets/dashboard/fileIcon.png';
 import TonePopup from '../../components/common/TonePopup';
 import CommentPopup from './CommentPopup';
+import Button from '../common/Button';
 import { ScaleLoader } from 'react-spinners';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -956,13 +957,15 @@ const MessagesSection = ({ setCurrentChat }) => {
               <span className="file-preview-chip__name">{file.name.length > 30 ? file.name.slice(0, 27) + '...' : file.name}</span>
               <span className="file-preview-chip__size">{(file.size / 1024).toFixed(0)} KB</span>
             </div>
-            <button
+            <Button
+              variant="icon"
+              ariaLabel="Remove file"
               className="file-preview-chip__remove"
-              onClick={() => setFile(null)}
               title="Remove file"
+              onClick={() => setFile(null)}
             >
               &times;
-            </button>
+            </Button>
           </div>
         )}
         <div className="input-container msg-input-relative">

@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
+import Button from '../common/Button';
 
 const nodeTypes = {
   custom: Node,
@@ -586,15 +587,18 @@ const SitemapLayoutFlow = ({ id }) => {
     >
       <Panel position="top-left">
         <div className="flow-panel-row">
-          <button
-            onClick={() => onLayout('TB')}
+          <Button
+            variant="secondary"
             className="flow-layout-btn"
+            onClick={() => onLayout('TB')}
           >
             Layout
-          </button>
+          </Button>
           {id && (
-            <button
-              disabled={convertingPlaybook}
+            <Button
+              variant="primary"
+              className={`flow-convert-btn ${convertingPlaybook ? 'flow-convert-btn--loading' : ''}`}
+              loading={convertingPlaybook}
               onClick={async () => {
                 try {
                   setConvertingPlaybook(true);
@@ -608,10 +612,9 @@ const SitemapLayoutFlow = ({ id }) => {
                   setConvertingPlaybook(false);
                 }
               }}
-              className={`flow-convert-btn ${convertingPlaybook ? 'flow-convert-btn--loading' : ''}`}
             >
-              {convertingPlaybook ? 'Converting...' : 'Convert to Playbook'}
-            </button>
+              Convert to Playbook
+            </Button>
           )}
         </div>
       </Panel>
@@ -660,7 +663,8 @@ const SitemapLayoutFlow = ({ id }) => {
                       e.key === 'Enter' && onInit('Playbook Introduction')
                     }
                   ></textarea>
-                  <button
+                  <Button
+                    variant="primary"
                     className="flow-generate-btn"
                     disabled={isLoading}
                     onKeyDown={(e) =>
@@ -669,7 +673,7 @@ const SitemapLayoutFlow = ({ id }) => {
                     onClick={() => onInit('Playbook Introduction')}
                   >
                     Generate Sitemap
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : null}

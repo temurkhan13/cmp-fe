@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Button from './Button';
 import './common.scss';
 
 class ErrorBoundary extends Component {
@@ -33,12 +34,13 @@ class ErrorBoundary extends Component {
             An unexpected error occurred. Please try refreshing the page or go back to the dashboard.
           </p>
           <div className="error-boundary__actions">
-            <button
-              onClick={() => window.location.reload()}
+            <Button
+              variant="primary"
               className="error-boundary__btn-primary"
+              onClick={() => window.location.reload()}
             >
               Refresh Page
-            </button>
+            </Button>
             <Link to="/dashboard" className="error-boundary__btn-secondary">
               Go to Dashboard
             </Link>

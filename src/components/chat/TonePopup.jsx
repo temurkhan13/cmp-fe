@@ -5,6 +5,7 @@ import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
 import { FaLocationArrow } from 'react-icons/fa6';
 import PropTypes from 'prop-types';
+import Button from '../common/Button';
 
 const TonePopup = ({
   onToneChange,
@@ -23,22 +24,32 @@ const TonePopup = ({
       {!showAskAi ? (
         <div className="navbar">
           <div className="dropdown">
-            <button
+            <Button
+              variant="ghost"
               className="dropbtn chat-tone-inspire-btn"
+              iconLeft={<RiMagicFill />}
               onClick={() => setShowAskAi(true)}
             >
-              <RiMagicFill /> Inspire me
-            </button>
+              Inspire me
+            </Button>
           </div>
           <div className="dropdown">
-            <button className="dropbtn">
-              <GoCommentDiscussion /> Comment
-            </button>
+            <Button
+              variant="ghost"
+              className="dropbtn"
+              iconLeft={<GoCommentDiscussion />}
+            >
+              Comment
+            </Button>
           </div>
           <div className="dropdown">
-            <button className="dropbtn">
-              <RxMagicWand /> Change Tone
-            </button>
+            <Button
+              variant="ghost"
+              className="dropbtn"
+              iconLeft={<RxMagicWand />}
+            >
+              Change Tone
+            </Button>
             <div className="dropdownContent">
               <a
                 href="#"
@@ -97,9 +108,13 @@ const TonePopup = ({
             </div>
           </div>
           <div className="dropdown">
-            <button className="dropbtn">
-              <BsFilterLeft /> Response Length
-            </button>
+            <Button
+              variant="ghost"
+              className="dropbtn"
+              iconLeft={<BsFilterLeft />}
+            >
+              Response Length
+            </Button>
             <div className="dropdownContent">
               <a
                 href="#"
@@ -143,7 +158,10 @@ const TonePopup = ({
       ) : (
         <div className="navbar">
           <div className="dropdown chat-tone-ask-ai-dropdown">
-            <button className="dropbtn chat-tone-ask-ai-input-wrapper">
+            <Button
+              variant="ghost"
+              className="dropbtn chat-tone-ask-ai-input-wrapper"
+            >
               <RiMagicFill className="chat-tone-ask-ai-send" />
               <input
                 type="text"
@@ -151,7 +169,7 @@ const TonePopup = ({
                 placeholder="Ask AI to edit or generate..."
               />
               <FaLocationArrow />
-            </button>
+            </Button>
             <div className="dropdownContent">
               <a
                 href="#"

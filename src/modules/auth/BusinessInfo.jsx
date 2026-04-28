@@ -1,6 +1,7 @@
 import { Formik, Form } from 'formik';
 import { useDispatch } from 'react-redux';
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import data from '../../data';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { setBusinessInfo } from '../../redux/slices/businessInfoSlice';
@@ -100,9 +101,9 @@ const BusinessInfo = () => {
                   />
                 </div>
 
-                <Components.Feature.Button className="primary" type="submit">
+                <Button variant="primary" size="lg" block type="submit">
                   Continue
-                </Components.Feature.Button>
+                </Button>
               </Form>
             )}
           </Formik>

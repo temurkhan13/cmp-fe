@@ -39,6 +39,12 @@
   border: 2px solid white;
 }
 
+.avatar-upload-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 
 .dropdownMenu {
   @include dropdown-menu;
@@ -1225,6 +1231,7 @@
 
   &.open {
     transform: translateY(-50%) translateX(0);
+    padding: 1rem;
   }
 
   &::-webkit-scrollbar {
@@ -1244,7 +1251,7 @@
 .sidebar-toggle {
   position: absolute;
   top: 1rem;
-  left: 1.3rem;
+  left: 0.7rem;
   background: none;
   border: none;
   cursor: pointer;

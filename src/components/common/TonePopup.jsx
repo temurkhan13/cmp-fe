@@ -5,6 +5,7 @@ import { RiMagicFill } from 'react-icons/ri';
 import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
 import { FaLocationArrow } from 'react-icons/fa6';
+import Button from './Button';
 
 const TonePopup = ({
   onToneChange,
@@ -66,12 +67,14 @@ const TonePopup = ({
             ref={dropdownRef}
             onClick={handleClickInsideDropdown}
           >
-            <button
+            <Button
+              variant="ghost"
               className="dropbtn tone-popup-inspire-btn"
+              iconLeft={<RiMagicFill />}
               onClick={handleAskAiToggle}
             >
-              <RiMagicFill /> Inspire Me
-            </button>
+              Inspire Me
+            </Button>
             <div className="dropdownContent">
               <a
                 href="#"
@@ -116,9 +119,13 @@ const TonePopup = ({
             ref={dropdownRef}
             onClick={handleClickInsideDropdown}
           >
-            <button className="dropbtn">
-              <RxMagicWand /> Change Tone
-            </button>
+            <Button
+              variant="ghost"
+              className="dropbtn"
+              iconLeft={<RxMagicWand />}
+            >
+              Change Tone
+            </Button>
             <div className="dropdownContent">
               <a
                 href="#"
@@ -181,9 +188,13 @@ const TonePopup = ({
             ref={dropdownRef}
             onClick={handleClickInsideDropdown}
           >
-            <button className="dropbtn">
-              <BsFilterLeft /> Response Length
-            </button>
+            <Button
+              variant="ghost"
+              className="dropbtn"
+              iconLeft={<BsFilterLeft />}
+            >
+              Response Length
+            </Button>
             <div className="dropdownContent">
               <a
                 href="#"

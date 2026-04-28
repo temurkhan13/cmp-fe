@@ -5,6 +5,7 @@ import { IoMdSettings } from 'react-icons/io';
 import AllNotifications from './AllNotifications';
 import UnreadNotifications from './UnreadNotifications';
 import RequestsNotifications from './RequestsNotifications';
+import Button from '../common/Button';
 
 const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
   const [activeTab, setActiveTab] = useState('All');
@@ -72,9 +73,13 @@ const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
               Unread
             </div>
           </div>
-          <button className="mark-read-btn" onClick={handleMarkAllAsRead}>
+          <Button
+            variant="link"
+            className="mark-read-btn"
+            onClick={handleMarkAllAsRead}
+          >
             Mark all as read
-          </button>
+          </Button>
         </div>
         <div className="notification-content">{renderContent()}</div>
       </div>

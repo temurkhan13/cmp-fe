@@ -23,6 +23,7 @@ import {
 } from '../../redux/slices/folderSlice.js';
 import { IoIosChatboxes } from 'react-icons/io';
 import PageHeader from '../../components/common/PageHeader';
+import Button from '../../components/common/Button';
 import './ai-assistant.scss';
 
 const AiAssistant = () => {
@@ -179,16 +180,17 @@ const AiAssistant = () => {
           </div>
 
           <div className="center-buttons">
-            <button
+            <Button
+              variant="primary"
               className="assiss-btn assiss-btn--flex"
+              iconRight={<AiOutlinePlus size={18} />}
               onClick={() => {
                 dispatch(setCurrentChatId(null));
                 navigate('/assistant/chat');
               }}
             >
               Create Assistant
-              <AiOutlinePlus size={18} />
-            </button>
+            </Button>
           </div>
         </div>
       </section>

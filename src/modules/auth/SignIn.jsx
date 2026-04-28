@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, googleLogin } from '../../redux/slices/authSlice';
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import { signinWithGoogle } from './SignInWithGoogle';
 import assets from '../../assets/index.js';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -83,13 +84,16 @@ const SignIn = () => {
           Please enter your login credentials to access your account
         </Components.Feature.Text>
         <section className="mbt_Tertiary">
-          <Components.Feature.Button
-            className="auth mb_Secondary"
-            icon={assets.auth.google}
+          <Button
+            variant="secondary"
+            size="lg"
+            block
+            className="mb_Secondary"
+            iconLeft={<img src={assets.auth.google} alt="" />}
             onClick={signinWithGoogle}
           >
             Continue with Google
-          </Components.Feature.Button>
+          </Button>
         </section>
         <div className="mb_Tertiary">
           <span></span>
@@ -152,13 +156,15 @@ const SignIn = () => {
                   Forgot Password?
                 </Link>
               </section>
-              <Components.Feature.Button
-                className="primary"
+              <Button
+                variant="primary"
+                block
                 type="submit"
-                disabled={isLoading}
+                size="lg"
+                loading={isLoading}
               >
-                {isLoading ? 'Logging in...' : 'Log In'}
-              </Components.Feature.Button>
+                Log In
+              </Button>
             </Form>
           )}
         </Formik>

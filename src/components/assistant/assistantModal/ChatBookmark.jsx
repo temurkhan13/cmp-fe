@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FaBookmark } from 'react-icons/fa';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import { truncateText } from '../../../utils/helperFunction';
+import Button from '../../common/Button';
 
 const ChatBookmark = ({ date, messages }) => {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -65,12 +66,13 @@ const ChatBookmark = ({ date, messages }) => {
                   {isExpanded ? message.text : truncateText(message.text, 200)}
                 </p>
                 {needsTruncate && (
-                  <button
+                  <Button
+                    variant="link"
                     className="bm-toggle"
                     onClick={() => toggleExpand(index)}
                   >
                     {isExpanded ? 'Show less' : 'Show more'}
-                  </button>
+                  </Button>
                 )}
               </div>
 

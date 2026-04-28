@@ -1,6 +1,5 @@
 export { default as Container } from "./Container";
 export { default as Text } from "./Text";
-export { default as Button } from "./Button";
 export { default as Heading } from "./Heading";
 export { default as FormInput } from "./FormInput";
 export { default as VerifyCode } from "./VerifyCode";

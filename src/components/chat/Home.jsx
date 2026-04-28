@@ -1,4 +1,5 @@
 import UserImg from '../../assets/chat/user.png';
+import Button from '../common/Button';
 const RawData = [
   {
     Time: 'Today at 14:13 AM',
@@ -42,8 +43,8 @@ const Home = () => {
       </div>
       <hr />
       <div className="historyBtn">
-        <button>Cancel</button>
-        <button>Remove version</button>
+        <Button variant="secondary">Cancel</Button>
+        <Button variant="destructive">Remove version</Button>
       </div>
     </div>
   );

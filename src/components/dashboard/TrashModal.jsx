@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { FaTimes } from 'react-icons/fa';
+import Button from '../common/Button';
 import './dashboard-inline.scss';
 
 const TrashModal = ({ isOpen, onClose, onProceed }) => {
@@ -19,18 +20,22 @@ const TrashModal = ({ isOpen, onClose, onProceed }) => {
         </p>
         <hr />
         <div className="trash-modal__buttons">
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             className="trash-modal__btn trash-modal__cancel-btn"
             onClick={onClose}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
             className="trash-modal__btn trash-modal__proceed-btn"
             onClick={onProceed}
           >
             Proceed
-          </button>
+          </Button>
         </div>
       </div>
     </div>

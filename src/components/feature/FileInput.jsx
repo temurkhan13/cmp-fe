@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../common/Button';
 
 const FileInput = () => {
   const [file, setFile] = useState(null);
@@ -49,7 +50,7 @@ const FileInput = () => {
         {file && (
           <div className="file-info">
             <p>File Selected: {file.name}</p>
-            <button onClick={handleUpload}>Upload</button>
+            <Button variant="primary" onClick={handleUpload}>Upload</Button>
           </div>
         )}
       </div>

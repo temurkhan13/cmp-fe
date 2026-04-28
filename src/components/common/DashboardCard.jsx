@@ -5,6 +5,7 @@ import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
 import { FaBookmark } from 'react-icons/fa';
 import { MdOutlineDelete } from 'react-icons/md';
 import CustomModal from '../customModal/CustomModal';
+import Button from './Button';
 import './common.scss';
 
 const DashboardCard = ({ chat }) => {
@@ -49,9 +50,13 @@ const DashboardCard = ({ chat }) => {
             <BiDotsVerticalRounded className="common-card-menu-icon" />
             {isDropdownOpen && (
               <div className="common-card-dropdown" ref={dropdownRef}>
-                <button onClick={handleMoveToTrash}>
-                  <MdOutlineDelete className="common-card-menu-delete-icon" /> Move to Trash
-                </button>
+                <Button
+                  variant="ghost"
+                  iconLeft={<MdOutlineDelete className="common-card-menu-delete-icon" />}
+                  onClick={handleMoveToTrash}
+                >
+                  Move to Trash
+                </Button>
               </div>
             )}
           </div>

@@ -6,6 +6,7 @@ import Sidebarlogo from '@assets/dashboard/sidebarLogo.png';
 import CoverPhoto from '../../assets/common/coverPhoto.svg';
 import { FaSave } from 'react-icons/fa';
 import { FaDownload } from 'react-icons/fa6';
+import Button from '../common/Button';
 
 // Styled components
 const Page = styled.div`
@@ -128,13 +129,12 @@ const WordReportTemplate = ({ content = '', title }) => {
         <img src={CoverPhoto} alt="Cover" className="cover-photo" />
 
         <div className="floatBtn">
-          <button>
-            <FaSave /> Save
-          </button>
-          <button>
-            <FaDownload />
+          <Button variant="primary" iconLeft={<FaSave />}>
+            Save
+          </Button>
+          <Button variant="primary" iconLeft={<FaDownload />}>
             Download
-          </button>
+          </Button>
         </div>
       </CoverPageContainer>
 

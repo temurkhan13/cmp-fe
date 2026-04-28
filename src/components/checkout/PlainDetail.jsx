@@ -1,4 +1,5 @@
 import Components from '../../components';
+import Button from '../common/Button';
 import { IoMdArrowBack } from 'react-icons/io';
 
 const PlainDetail = () => {
@@ -9,13 +10,14 @@ const PlainDetail = () => {
   return (
     <>
       <div className="plainDetail">
-        <Components.Feature.Button
-          onClick={goBack}
+        <Button
+          variant="ghost"
           className="back mb_Tertiary"
+          iconLeft={<IoMdArrowBack />}
+          onClick={goBack}
         >
-          <IoMdArrowBack />
           Back
-        </Components.Feature.Button>
+        </Button>
         <header>
           <Components.Feature.Heading className="secondry mb_Primary">
             Subscription To Membership Plan

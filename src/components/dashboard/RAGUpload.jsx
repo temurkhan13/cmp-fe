@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { FiUploadCloud, FiFile, FiTrash2, FiCheck } from 'react-icons/fi';
 import apiClient from '../../api/axios';
+import Button from '../common/Button';
 
 const RAGUpload = () => {
   const [files, setFiles] = useState([]);
@@ -101,13 +102,14 @@ const RAGUpload = () => {
               />
             </div>
           ))}
-          <button
+          <Button
+            variant="primary"
             className="rag-upload-btn"
+            loading={uploading}
             onClick={handleUpload}
-            disabled={uploading}
           >
-            {uploading ? 'Processing...' : `Upload ${files.length} file${files.length > 1 ? 's' : ''}`}
-          </button>
+            {`Upload ${files.length} file${files.length > 1 ? 's' : ''}`}
+          </Button>
         </div>
       )}
 

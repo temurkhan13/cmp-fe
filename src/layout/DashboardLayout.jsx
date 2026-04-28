@@ -22,6 +22,7 @@ import { getUser } from '../redux/slices/authSlice.js';
 import { FaFolderTree } from 'react-icons/fa6';
 import OnboardingTour from '../components/common/OnboardingTour';
 import SupportChat from '../components/common/SupportChat';
+import Button from '../components/common/Button';
 import useMediaQuery from '../hooks/useMediaQuery';
 
 const DashboardLayout = ({ children }) => {
@@ -131,9 +132,14 @@ const DashboardLayout = ({ children }) => {
   return (
     <>
       {isSmallScreen && !isOpen && (
-        <button className="hamburger-btn" onClick={toggleSidebar}>
+        <Button
+          variant="icon"
+          ariaLabel="Open sidebar"
+          className="hamburger-btn"
+          onClick={toggleSidebar}
+        >
           <i className="bx bx-menu"></i>
-        </button>
+        </Button>
       )}
 
       {isSmallScreen && isOpen && (
@@ -188,7 +194,8 @@ const DashboardLayout = ({ children }) => {
 
         {user && !user.subscription && (
           <div className="upgrade-plan">
-            <button
+            <Button
+              variant="primary"
               className="upgrade-button"
               onClick={handlePlanRoute}
             >
@@ -203,7 +210,7 @@ const DashboardLayout = ({ children }) => {
                   Get Change AI Starter Plan
                 </p>
               )}
-            </button>
+            </Button>
           </div>
         )}
 

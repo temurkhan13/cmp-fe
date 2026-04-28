@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { FaCheck } from 'react-icons/fa';
+import Button from '../../../../common/Button';
 
 const plans = [
   {
@@ -94,12 +95,13 @@ const Pricing = () => {
               ))}
             </ul>
 
-            <button
-              onClick={() => navigate('/sign-up')}
+            <Button
+              variant={plan.highlighted ? 'primary' : 'secondary'}
               className={`pricing-cta ${plan.highlighted ? 'pricing-cta--primary' : ''}`}
+              onClick={() => navigate('/sign-up')}
             >
               {plan.cta}
-            </button>
+            </Button>
           </div>
         ))}
       </div>

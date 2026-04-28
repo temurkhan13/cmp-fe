@@ -10,6 +10,7 @@ import { RiNewspaperLine } from 'react-icons/ri';
 import { IoIosChatboxes } from 'react-icons/io';
 import AvatarGroup from '../../common/AvatarGroup';
 import ConfirmModal from '../../common/ConfirmModal';
+import Button from '../../common/Button';
 
 // Enum for item types
 const ItemTypeEnum = Object.freeze({
@@ -150,13 +151,14 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
           />
           {isMenuOpen && (
             <div className="dropdown-menu">
-              <button
+              <Button
+                variant="ghost"
                 className="dropdown-item"
                 onClick={handleTrashClick}
                 disabled={isLoading}
               >
                 Move to Trash
-              </button>
+              </Button>
             </div>
           )}
         </div>

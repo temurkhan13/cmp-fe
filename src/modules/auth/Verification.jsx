@@ -1,4 +1,5 @@
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom';
@@ -56,9 +57,9 @@ const verification = () => {
               />
               {error && <div className="auth-error">{error}</div>}
 
-              <Components.Feature.Button className="primary" type="submit">
+              <Button variant="primary" size="lg" block type="submit">
                 Continue
-              </Components.Feature.Button>
+              </Button>
             </Form>
           )}
         </Formik>

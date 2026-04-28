@@ -15,6 +15,7 @@ import {
 } from '../../redux/slices/trashSlice';
 import { SkeletonCard } from '../common/Skeleton';
 import NotificationBar from '../common/NotificationBar';
+import Button from '../common/Button';
 import './dashboardHomeComponents/styles/dashboard-card.scss';
 
 const typeIcons = {
@@ -85,22 +86,24 @@ const TrashCard = ({ item, entityType, onAction }) => {
         />
         {isMenuOpen && (
           <div className="dropdown-menu">
-            <button
+            <Button
+              variant="ghost"
               className="dropdown-item"
+              iconLeft={<MdOutlineSettingsBackupRestore size={16} />}
               onClick={(e) => handleAction('restore', e)}
-              disabled={isLoading}
+              loading={isLoading}
             >
-              <MdOutlineSettingsBackupRestore size={16} />
-              {isLoading ? 'Restoring...' : 'Restore'}
-            </button>
-            <button
+              Restore
+            </Button>
+            <Button
+              variant="destructive"
               className="dropdown-item trash-delete-btn"
+              iconLeft={<MdDeleteForever size={16} />}
               onClick={(e) => handleAction('delete', e)}
-              disabled={isLoading}
+              loading={isLoading}
             >
-              <MdDeleteForever size={16} />
-              {isLoading ? 'Deleting...' : 'Delete Permanently'}
-            </button>
+              Delete Permanently
+            </Button>
           </div>
         )}
       </div>
@@ -163,13 +166,15 @@ const TrashModule = () => {
     <div className="trash-container">
       <div className="tabs">
         {TABS.map((tab) => (
-          <button
+          <Button
             key={tab.key}
+            variant="toggle"
+            active={activeTab === tab.key}
             className={`tab ${activeTab === tab.key ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.key)}
           >
             {tab.label}
-          </button>
+          </Button>
         ))}
       </div>
       <div className="trash-content">

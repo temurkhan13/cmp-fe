@@ -6,6 +6,7 @@ import FileStructure from '../../dashboard/FileStructure';
 import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import NotificationBar from '../../common/NotificationBar';
+import Button from '../../common/Button';
 import { BiSolidFolderOpen } from 'react-icons/bi';
 
 import './styles/folder.scss';
@@ -75,12 +76,14 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
             </p>
           </div>
           <div>
-            <button
+            <Button
+              variant="primary"
               className="assiss-btn"
+              iconRight={<AiOutlinePlus />}
               onClick={() => setIsNewFolderModalOpen(true)}
             >
-              New Project <AiOutlinePlus />
-            </button>
+              New Project
+            </Button>
           </div>
         </div>
       </section>
@@ -211,9 +214,13 @@ const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
                     </div>
                   </div>
 
-                  <button type="submit" className="create-workspace-btn">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="create-workspace-btn"
+                  >
                     Create
-                  </button>
+                  </Button>
                 </Form>
               )}
             </Formik>

@@ -13,6 +13,7 @@ import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Button from './Button';
 // import UserProfilePic from '../../assets/chat/user.png';
 
 const Header = ({ activeWorkspace, workspaces, siteMapId, onMenuToggle }) => {
@@ -67,13 +68,14 @@ const Header = ({ activeWorkspace, workspaces, siteMapId, onMenuToggle }) => {
     <div className="topbar">
       <div>
         {onMenuToggle && (
-          <button
+          <Button
+            variant="icon"
+            ariaLabel="Toggle sidebar"
             className="header-hamburger"
             onClick={onMenuToggle}
-            aria-label="Toggle sidebar"
           >
             <TbMenu2 />
-          </button>
+          </Button>
         )}
         <Components.Feature.HeaderDropDown />
         <div className="selected-workspace-name chatpage-header">

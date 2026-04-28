@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { dropdown, Logo1 } from '../../assets';
 import { FaArrowRight, FaBars, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../../common/Button';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -102,22 +103,25 @@ const Navbar = () => {
           {/*</li>*/}
         </ul>
         <div className={isOpen ? 'landing-navbar-buttons mobile-open' : 'landing-navbar-buttons'}>
-          <button
+          <Button
+            variant="secondary"
             className="landing-navbar-btn"
             onClick={() => {
               navigate('/log-in');
             }}
           >
             Login
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             className="landing-navbar-btn landing-navbar-btn-primary"
+            iconRight={<FaArrowRight />}
             onClick={() => {
               navigate('/sign-up');
             }}
           >
-            Get Started <FaArrowRight />
-          </button>
+            Get Started
+          </Button>
         </div>
       </div>
     </nav>

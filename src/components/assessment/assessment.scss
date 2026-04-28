@@ -39,6 +39,8 @@
   position: relative;
   width: 100%;
   max-width: 1000px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .msg-view-report-btn {

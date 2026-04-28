@@ -12,6 +12,7 @@ import { timeAgo } from './helper.js';
 import ConfirmModal from '../common/ConfirmModal';
 import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
+import Button from '../common/Button';
 import './sitemap.scss';
 import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
 import '../dashboard/dashboardHomeComponents/styles/folder.scss';
@@ -173,10 +174,14 @@ function PlaybookList() {
               Digital Playbooks
             </p>
             <div className="center-buttons">
-              <button className="assiss-btn assiss-btn--flex" onClick={() => setShowCreate(true)}>
+              <Button
+                variant="primary"
+                className="assiss-btn assiss-btn--flex"
+                iconRight={<BiPlus />}
+                onClick={() => setShowCreate(true)}
+              >
                 Create Playbook
-                <BiPlus />
-              </button>
+              </Button>
             </div>
           </div>
         </section>
@@ -186,14 +191,16 @@ function PlaybookList() {
             <p className="playbook-create-form__label">Start from a template or create custom:</p>
             <div className="playbook-templates">
               {PLAYBOOK_TEMPLATES.map((tpl) => (
-                <button
+                <Button
                   key={tpl.name}
-                  onClick={() => { setCreateName(tpl.name); setCreateMessage(tpl.description); }}
+                  variant="toggle"
+                  active={createName === tpl.name}
                   className={`playbook-template-btn ${createName === tpl.name ? 'playbook-template-btn--selected' : ''}`}
+                  onClick={() => { setCreateName(tpl.name); setCreateMessage(tpl.description); }}
                 >
                   <span>{tpl.icon}</span>
                   <span>{tpl.name}</span>
-                </button>
+                </Button>
               ))}
             </div>
             <input
@@ -211,20 +218,22 @@ function PlaybookList() {
               className="playbook-create-textarea"
             />
             <div className="playbook-create-actions">
-              <button
+              <Button
+                variant="primary"
                 className="assiss-btn"
+                disabled={!createName.trim()}
+                loading={creating}
                 onClick={createPlaybook}
-                disabled={creating || !createName.trim()}
-                style={{ opacity: creating ? 0.6 : 1 }}
               >
-                {creating ? 'Creating...' : 'Create'}
-              </button>
-              <button
+                Create
+              </Button>
+              <Button
+                variant="secondary"
                 className="playbook-cancel-btn"
                 onClick={() => { setShowCreate(false); setCreateName(''); setCreateMessage(''); }}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -266,7 +275,9 @@ function PlaybookList() {
                       className="sitemap-card__actions"
                       ref={openMenuId === pbId ? menuRef : null}
                     >
-                      <button
+                      <Button
+                        variant="icon"
+                        ariaLabel="More options"
                         className="sitemap-card__menu-btn"
                         title="More options"
                         onClick={(e) => {
@@ -275,29 +286,31 @@ function PlaybookList() {
                         }}
                       >
                         <FiMoreVertical size={16} />
-                      </button>
+                      </Button>
                       {openMenuId === pbId && (
                         <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
-                          <button
+                          <Button
+                            variant="ghost"
                             className="sitemap-card__dropdown-item"
+                            iconLeft={<FiEdit2 size={14} />}
                             onClick={() => {
                               setOpenMenuId(null);
                               setRenameModal({ open: true, id: pbId, name: pb.name });
                             }}
                           >
-                            <FiEdit2 size={14} />
                             Rename
-                          </button>
-                          <button
+                          </Button>
+                          <Button
+                            variant="ghost"
                             className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
+                            iconLeft={<FiTrash2 size={14} />}
                             onClick={() => {
                               setOpenMenuId(null);
                               setDeleteConfirm({ open: true, id: pbId });
                             }}
                           >
-                            <FiTrash2 size={14} />
                             Move to Trash
-                          </button>
+                          </Button>
                         </div>
                       )}
                     </div>
@@ -309,13 +322,15 @@ function PlaybookList() {
 
         {!loading && totalPages > 1 && (
           <div className="playbook-pagination">
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
+              className={`playbook-page-btn ${page <= 1 ? 'playbook-page-btn--disabled' : ''}`}
               disabled={page <= 1}
               onClick={() => fetchPlaybooks(page - 1)}
-              className={`playbook-page-btn ${page <= 1 ? 'playbook-page-btn--disabled' : ''}`}
             >
               Previous
-            </button>
+            </Button>
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
               .reduce((acc, p, idx, arr) => {
@@ -327,22 +342,27 @@ function PlaybookList() {
                 item === '...' ? (
                   <span key={`ellipsis-${idx}`} className="playbook-pagination__ellipsis">...</span>
                 ) : (
-                  <button
+                  <Button
                     key={item}
-                    onClick={() => fetchPlaybooks(item)}
+                    variant="toggle"
+                    size="sm"
+                    active={item === page}
                     className={`playbook-page-btn ${item === page ? 'playbook-page-btn--active' : ''}`}
+                    onClick={() => fetchPlaybooks(item)}
                   >
                     {item}
-                  </button>
+                  </Button>
                 )
               )}
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
+              className={`playbook-page-btn ${page >= totalPages ? 'playbook-page-btn--disabled' : ''}`}
               disabled={page >= totalPages}
               onClick={() => fetchPlaybooks(page + 1)}
-              className={`playbook-page-btn ${page >= totalPages ? 'playbook-page-btn--disabled' : ''}`}
             >
               Next
-            </button>
+            </Button>
             <span className="playbook-pagination__count">
               {totalResults} playbook{totalResults !== 1 ? 's' : ''}
             </span>

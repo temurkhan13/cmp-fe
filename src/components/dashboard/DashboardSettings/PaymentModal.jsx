@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { SiVisa } from 'react-icons/si';
 import { AiOutlineClose } from 'react-icons/ai';
+import Button from '../../common/Button';
 
 const countries = [
   { code: 'US', name: 'United States 🇺🇸' },
@@ -71,9 +72,14 @@ const PaymentModal = ({ onClose, details }) => {
   return (
     <div className="payment-modal-overlay" onClick={handleOverlayClick}>
       <div className="payment-modal-content">
-        <button className="payment-modal-close" onClick={onClose}>
+        <Button
+          variant="icon"
+          ariaLabel="Close"
+          className="payment-modal-close"
+          onClick={onClose}
+        >
           <AiOutlineClose />
-        </button>
+        </Button>
         <h2 className="payment-modal-title">Add Card Details</h2>
         <form onSubmit={handleSubmit}>
           <div className="payment-modal-form-group">
@@ -169,12 +175,22 @@ const PaymentModal = ({ onClose, details }) => {
             </div>
           </div>
           <div className="payment-modal-button-group">
-            <button type="button" className="payment-modal-cancel-btn" onClick={onClose}>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="payment-modal-cancel-btn"
+              onClick={onClose}
+            >
               Cancel
-            </button>
-            <button type="submit" className="payment-modal-add-btn">
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              className="payment-modal-add-btn"
+            >
               Add Card
-            </button>
+            </Button>
           </div>
         </form>
       </div>

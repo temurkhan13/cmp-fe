@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { get } from 'jodit/esm/core/helpers';
 import { fetchWorkspaceAssessments } from '../../../redux/slices/folderSlice';
 import { selectCurrentFolder } from '../../../redux/selectors/selectors';
+import Button from '../../common/Button';
 
 const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelected }) => {
   const navigate = useNavigate();
@@ -224,12 +225,14 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelect
                   </div>
                   {currentReport.finalReportURL && (
                     <>
-                      <button
+                      <Button
+                        variant="icon"
+                        ariaLabel="Edit report"
                         className="complete-button"
                         onClick={() => viewReport(currentReport)}
                       >
                         <CiEdit />
-                      </button>
+                      </Button>
                     </>
                   )}
                 </div>

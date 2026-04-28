@@ -4,6 +4,7 @@ import { FaCheck } from 'react-icons/fa';
 import apiClient from '../../api/axios';
 import Components from '..';
 import toast from 'react-hot-toast';
+import Button from '../common/Button';
 import './dashboard-inline.scss';
 
 const PLAN_FEATURES = {
@@ -132,13 +133,15 @@ const PlanAndBilling = () => {
                   </li>
                 ))}
               </ul>
-              <button
-                disabled={isCurrent || checkoutLoading === plan.id}
-                onClick={() => !isCurrent && handleSubscribe(plan.id)}
+              <Button
+                variant="primary"
                 className={`billing-plan-card__btn ${isCurrent ? 'billing-plan-card__btn--current' : isHighlighted ? 'billing-plan-card__btn--highlighted' : 'billing-plan-card__btn--default'}`}
+                disabled={isCurrent}
+                loading={checkoutLoading === plan.id}
+                onClick={() => !isCurrent && handleSubscribe(plan.id)}
               >
-                {checkoutLoading === plan.id ? 'Redirecting...' : isCurrent ? 'Current Plan' : plan.price === 0 ? 'Downgrade' : 'Upgrade'}
-              </button>
+                {isCurrent ? 'Current Plan' : plan.price === 0 ? 'Downgrade' : 'Upgrade'}
+              </Button>
             </div>
           );
         })}

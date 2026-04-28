@@ -2,11 +2,8 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
+import Button from './Button';
 import './common.scss';
-
-const Spinner = () => (
-  <span className="confirm-modal-spinner" />
-);
 
 const ConfirmModal = ({
   isOpen,
@@ -35,27 +32,35 @@ const ConfirmModal = ({
       <div className="confirm-modal-dialog" onClick={(e) => e.stopPropagation()}>
         <div className="confirm-modal-header">
           <p className="confirm-modal-heading">{title}</p>
-          <button className="confirm-modal-close-button" onClick={onCancel} disabled={loading}>
+          <Button
+            variant="icon"
+            ariaLabel="Close"
+            className="confirm-modal-close-button"
+            onClick={onCancel}
+            disabled={loading}
+          >
             <RxCross2 className="confirm-modal-cross-icon" />
-          </button>
+          </Button>
         </div>
         <hr className="confirm-modal-straight-line" />
         <div className="confirm-modal-body">{description}</div>
         <div className="confirm-modal-actions">
-          <button
+          <Button
+            variant="secondary"
             className="confirm-modal-btn confirm-modal-cancel-btn"
             onClick={onCancel}
             disabled={loading}
           >
             {cancelText}
-          </button>
-          <button
-            className={`confirm-modal-btn confirm-modal-confirm-btn ${loading ? 'confirm-modal-confirm-btn--disabled' : ''}`}
+          </Button>
+          <Button
+            variant="primary"
+            className="confirm-modal-btn confirm-modal-confirm-btn"
             onClick={handleConfirm}
-            disabled={loading}
+            loading={loading}
           >
-            {loading ? <Spinner /> : confirmText}
-          </button>
+            {confirmText}
+          </Button>
         </div>
       </div>
     </div>,

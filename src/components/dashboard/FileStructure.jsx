@@ -19,6 +19,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import InputModal from '../common/InputModal';
 import ConfirmModal from '../common/ConfirmModal';
+import Button from '../common/Button';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const navigate = useNavigate();
@@ -227,18 +228,31 @@ const ModalContent = ({ folder, onSelect, onDelete, onClose }) => (
   <div className="fs-modal">
     <div className="modal-wrapper">
       <h3 className="modal-heading">{folder.folderName}</h3>
-      <button className="modal-closebtn" onClick={onClose}>
+      <Button
+        variant="icon"
+        ariaLabel="Close"
+        className="modal-closebtn"
+        onClick={onClose}
+      >
         <RxCross2 />
-      </button>
+      </Button>
     </div>
     <div className="modal-content">
       <div className="modal-actions">
-        <button className="folder-modal-button switch-btn" onClick={onSelect}>
+        <Button
+          variant="primary"
+          className="folder-modal-button switch-btn"
+          onClick={onSelect}
+        >
           Select Project
-        </button>
-        <button className="folder-modal-button delete-btn" onClick={onDelete}>
+        </Button>
+        <Button
+          variant="destructive"
+          className="folder-modal-button delete-btn"
+          onClick={onDelete}
+        >
           Move to Trash
-        </button>
+        </Button>
       </div>
     </div>
   </div>

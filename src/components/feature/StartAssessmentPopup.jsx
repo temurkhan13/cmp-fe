@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import Button from "../common/Button";
 
 const StartAssessmentPopup = ({ data, showStartAssessment }) => {
   return (
@@ -8,7 +9,9 @@ const StartAssessmentPopup = ({ data, showStartAssessment }) => {
         Evaluate the key aspects of a change initiative: objectives, benefits,
         risks, and success metrics.
       </p>
-      <button onClick={() => showStartAssessment(true)}>Start Assessment</button>
+      <Button variant="primary" onClick={() => showStartAssessment(true)}>
+        Start Assessment
+      </Button>
     </div>
   );
 };

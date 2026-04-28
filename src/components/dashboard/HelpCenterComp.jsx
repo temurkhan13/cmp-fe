@@ -7,6 +7,7 @@ import {
 } from 'react-icons/md';
 import { BsFilePlayFill } from 'react-icons/bs';
 import headingss from '../../assets/dashboard/heading.svg';
+import Button from '../common/Button';
 
 const HelpCenterComp = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -187,9 +188,14 @@ const HelpCenterComp = () => {
         className={`helpcenter-sidebar ${sidebarOpen ? 'open' : ''}`}
         onClick={!sidebarOpen ? toggleSidebar : null}
       >
-        <button onClick={toggleSidebar} className="sidebar-toggle">
+        <Button
+          variant="icon"
+          ariaLabel="Toggle sidebar"
+          className="sidebar-toggle"
+          onClick={toggleSidebar}
+        >
           {sidebarOpen ? <FaTimes /> : <FaBars />}
-        </button>
+        </Button>
         {options.map((option, index) => (
           <div
             key={index}

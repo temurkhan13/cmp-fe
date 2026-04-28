@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
 import { FiImage, FiFile, FiLink, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import NoDataAvailable from '../common/NoDataAvailable';
+import Button from '../common/Button';
 import './chat.scss';
 
 const TABS = [
@@ -36,15 +37,17 @@ const Media = ({ images = [], documents = [], links = [] }) => {
         {/* Tabs */}
         <div className="md-tabs">
           {TABS.map(({ key, label, icon: Icon }) => (
-            <button
+            <Button
               key={key}
+              variant="toggle"
+              active={activeTab === key}
               className={`md-tab ${activeTab === key ? 'md-tab--active' : ''}`}
+              iconLeft={<Icon size={15} />}
               onClick={() => setActiveTab(key)}
             >
-              <Icon size={15} />
               {label}
               {counts[key] > 0 && <span className="md-tab-count">{counts[key]}</span>}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -119,11 +122,32 @@ const Media = ({ images = [], documents = [], links = [] }) => {
       {lightboxIndex !== null && (
         <div className="md-lightbox" onClick={closeLightbox}>
           <div className="md-lightbox-inner" onClick={(e) => e.stopPropagation()}>
-            <button className="md-lb-close" onClick={closeLightbox}><RxCross2 size={20} /></button>
+            <Button
+              variant="icon"
+              ariaLabel="Close lightbox"
+              className="md-lb-close"
+              onClick={closeLightbox}
+            >
+              <RxCross2 size={20} />
+            </Button>
             {images.length > 1 && (
               <>
-                <button className="md-lb-nav md-lb-nav--prev" onClick={() => setLightboxIndex((i) => (i === 0 ? images.length - 1 : i - 1))}><FiChevronLeft size={24} /></button>
-                <button className="md-lb-nav md-lb-nav--next" onClick={() => setLightboxIndex((i) => (i === images.length - 1 ? 0 : i + 1))}><FiChevronRight size={24} /></button>
+                <Button
+                  variant="icon"
+                  ariaLabel="Previous image"
+                  className="md-lb-nav md-lb-nav--prev"
+                  onClick={() => setLightboxIndex((i) => (i === 0 ? images.length - 1 : i - 1))}
+                >
+                  <FiChevronLeft size={24} />
+                </Button>
+                <Button
+                  variant="icon"
+                  ariaLabel="Next image"
+                  className="md-lb-nav md-lb-nav--next"
+                  onClick={() => setLightboxIndex((i) => (i === images.length - 1 ? 0 : i + 1))}
+                >
+                  <FiChevronRight size={24} />
+                </Button>
               </>
             )}
             <img src={images[lightboxIndex]} alt="Preview" className="md-lb-img" />

@@ -1,0 +1,180 @@
+// cmp-btn — unified button component (see cmp-fe/BUTTON_DISCOVERY.md § 8.2)
+// Class prefix `cmp-btn` is namespaced to avoid collision with the legacy `.btn--*`
+// family in scss/components/feature/_button.scss, which stays alive until PR 10.
+
+.cmp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: $btn-padding-md;
+  font-family: inherit;
+  font-size: $btn-font-md;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.24px;
+  border: 1px solid transparent;
+  border-radius: $btn-radius-md;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  user-select: none;
+  white-space: nowrap;
+
+  &:disabled,
+  &[aria-disabled='true'],
+  &.cmp-btn--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  // Spinner (driven by aria-busy="true") — uses shared spin animation defined in _animation.scss
+  &[aria-busy='true'] {
+    cursor: wait;
+
+    .cmp-btn__spinner {
+      @include spinner(1.4rem, currentColor);
+      min-width: 1.4rem;
+    }
+  }
+}
+
+// ---------- Sizes ----------
+.cmp-btn--sm {
+  padding: $btn-padding-sm;
+  font-size: $btn-font-sm;
+  border-radius: $btn-radius-sm;
+}
+
+.cmp-btn--md {
+  padding: $btn-padding-md;
+  font-size: $btn-font-md;
+  border-radius: $btn-radius-md;
+}
+
+.cmp-btn--lg {
+  padding: $btn-padding-lg;
+  font-size: $btn-font-lg;
+  border-radius: $btn-radius-lg;
+}
+
+// ---------- Variants ----------
+.cmp-btn--primary {
+  background-color: $btn-color-primary-bg;
+  color: $btn-color-primary-text;
+  border-color: $btn-color-primary-bg;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    box-shadow: 0 4px 12px rgba(195, 225, 29, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+.cmp-btn--secondary {
+  background-color: $btn-color-secondary-bg;
+  color: $btn-color-secondary-text;
+  border-color: $btn-color-secondary-border;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: rgba(11, 20, 68, 0.04);
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    background-color: rgba(11, 20, 68, 0.08);
+  }
+}
+
+.cmp-btn--destructive {
+  background-color: $btn-color-destructive-bg;
+  color: $btn-color-destructive-text;
+  border-color: $btn-color-destructive-bg;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    filter: brightness(0.92);
+  }
+
+  &:active:not(:disabled):not([aria-disabled='true']) {
+    filter: brightness(0.85);
+  }
+}
+
+.cmp-btn--ghost {
+  background-color: $btn-color-ghost-bg;
+  color: $btn-color-ghost-text;
+  border-color: transparent;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: $btn-color-ghost-hover-bg;
+  }
+}
+
+.cmp-btn--link {
+  padding: 0;
+  background-color: transparent;
+  color: $btn-color-link-text;
+  border: none;
+  border-radius: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    text-decoration-thickness: 2px;
+  }
+}
+
+.cmp-btn--icon {
+  // Square aspect: equal padding regardless of size token
+  background-color: $btn-color-icon-bg;
+  border-color: transparent;
+  border-radius: 50%;
+
+  &.cmp-btn--sm { padding: 0.4rem; }
+  &.cmp-btn--md { padding: 0.6rem; }
+  &.cmp-btn--lg { padding: 0.8rem; }
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: $btn-color-icon-hover-bg;
+  }
+}
+
+.cmp-btn--toggle {
+  background-color: $btn-color-toggle-bg;
+  color: $btn-color-toggle-text;
+  border-color: transparent;
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    background-color: $btn-color-icon-hover-bg;
+  }
+
+  &.is-active {
+    // background-color: $btn-color-toggle-active-bg;
+    // color: $btn-color-toggle-active-text;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+// Loading state (also reflected via aria-busy on the element)
+.cmp-btn--loading {
+  cursor: wait;
+}
+
+// Block — full-width modifier (form CTAs, auth submits, etc.)
+.cmp-btn--block {
+  width: 100%;
+}

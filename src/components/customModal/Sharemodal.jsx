@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 //import { addUserToChat } from '../redux/actions'; // Adjust with your actual action creator
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
+import Button from '../common/Button';
 
 import './custom-modal.scss';
 
@@ -124,9 +125,14 @@ const ShareModal = ({ members, onClose }) => {
           <div className="custom-modal-share-header">
             <h3 className="custom-modal-share-heading">Share "AI Assistant Test File"</h3>
             <div className="custom-modal-close-link-btn">
-              <button className="custom-modal-copy-link-btn">
-                <IoMdLink size={18} /> Copy Link
-              </button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="custom-modal-copy-link-btn"
+                iconLeft={<IoMdLink size={18} />}
+              >
+                Copy Link
+              </Button>
               <span className="custom-modal-share-close-button" onClick={onClose}>
                 <RxCross2 className="custom-modal-share-cross-icon" />
               </span>
@@ -168,9 +174,10 @@ const ShareModal = ({ members, onClose }) => {
                 ))}
               </ul>
             )}
-            <button
-              disabled={isInviteButtonDisabled}
+            <Button
+              variant="primary"
               className="custom-modal-invite-btn"
+              disabled={isInviteButtonDisabled}
               style={{
                 '--invite-btn-bg': isInviteButtonDisabled ? '#f1f1f1' : '#C3E11D',
                 '--invite-btn-color': isInviteButtonDisabled ? '#666' : '#0B1444',
@@ -179,7 +186,7 @@ const ShareModal = ({ members, onClose }) => {
               onClick={handleSendInvite}
             >
               Send Invite
-            </button>
+            </Button>
           </div>
           <hr className="custom-modal-straight-line" />
 
@@ -205,9 +212,13 @@ const ShareModal = ({ members, onClose }) => {
           </ul>
 
           {/* Add the new button here */}
-          <button className="custom-modal-apply-btn" onClick={handleApplyChanges}>
+          <Button
+            variant="primary"
+            className="custom-modal-apply-btn"
+            onClick={handleApplyChanges}
+          >
             Apply Changes
-          </button>
+          </Button>
         </div>
       </div>
     </>

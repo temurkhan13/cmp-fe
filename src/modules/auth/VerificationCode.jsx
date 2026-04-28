@@ -1,4 +1,5 @@
 import Components from '../../components';
+import Button from '../../components/common/Button';
 import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
 import data from '../../data';
@@ -110,9 +111,9 @@ const verification = () => {
                   {resendMessage}
                 </p>
               )}
-              <Components.Feature.Button className="primary" type="submit">
+              <Button variant="primary" size="lg" block type="submit">
                 Reset Password
-              </Components.Feature.Button>
+              </Button>
             </Form>
           )}
         </Formik>

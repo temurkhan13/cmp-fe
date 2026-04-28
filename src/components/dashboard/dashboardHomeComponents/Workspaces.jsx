@@ -18,6 +18,7 @@ import NotificationBar from '../../common/NotificationBar';
 import { FaFolderTree } from 'react-icons/fa6';
 import InputModal from '../../common/InputModal';
 import ConfirmModal from '../../common/ConfirmModal';
+import Button from '../../common/Button';
 
 const Workspaces = ({
   activeWorkspace,
@@ -160,12 +161,14 @@ const Workspaces = ({
             Workspaces
           </p>
         </div>
-        <button
+        <Button
+          variant="primary"
           className="workspace-btn"
+          iconRight={<AiOutlinePlus />}
           onClick={() => setIsNewWorkspaceModalOpen(true)}
         >
-          New Workspace <AiOutlinePlus className="icon" />
-        </button>
+          New Workspace
+        </Button>
       </div>
       {/*</div>*/}
 
@@ -220,12 +223,14 @@ const Workspaces = ({
           <div className="modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
             <div className="modal-wrapper">
               <h3 className="modal-heading">{selectedWorkspace.workspaceName}</h3>
-              <button
+              <Button
+                variant="icon"
+                ariaLabel="Close"
                 className="modal-closebtn"
                 onClick={() => setIsModalOpen(false)}
               >
                 <RxCross2 />
-              </button>
+              </Button>
             </div>
             <div className="modal-content">
               <ModalSections
@@ -246,12 +251,14 @@ const Workspaces = ({
           <div className="modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
             <div className="modal-wrapper">
               <h3 className="modal-heading">Create New Workspace</h3>
-              <button
+              <Button
+                variant="icon"
+                ariaLabel="Close"
                 className="modal-closebtn"
                 onClick={() => setIsNewWorkspaceModalOpen(false)}
               >
                 <RxCross2 />
-              </button>
+              </Button>
             </div>
             <div className="input-wrapper">
               <input
@@ -267,12 +274,13 @@ const Workspaces = ({
                 onChange={(e) => setNewWorkspaceDescription(e.target.value)}
                 placeholder="Enter workspace description"
               />
-              <button
-                onClick={handleNewWorkspaceSubmit}
+              <Button
+                variant="primary"
                 className="create-workspace-btn"
+                onClick={handleNewWorkspaceSubmit}
               >
                 Create
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -373,31 +381,38 @@ const ModalSections = ({
             onChange={(e) => setInputValue(e.target.value)}
           />
           <div className="workspace-rename-buttons">
-            <button
+            <Button
+              variant="secondary"
               className="cancel-button"
               onClick={() => setIsRenaming(false)}
             >
               Cancel
-            </button>
-            <button className="save-button" onClick={handleSaveRename}>
+            </Button>
+            <Button
+              variant="primary"
+              className="save-button"
+              onClick={handleSaveRename}
+            >
               Save
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
         <div className="confirm-modal-actions">
-          <button
+          <Button
+            variant="primary"
             className="modal-buttons link_chat"
             onClick={() => handleWorkspaceSwitch(selectedWorkspace)}
           >
             Switch Workspace
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="destructive"
             className="modal-buttons delete-button"
             onClick={handleMoveToTrash}
           >
             Move to Trash
-          </button>
+          </Button>
         </div>
       )}
 
