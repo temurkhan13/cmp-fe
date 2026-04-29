@@ -69,7 +69,7 @@ const AiAssistant = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {}
+      } catch { /* ignored */ }
     },
     [dispatch, selectedWorkspace]
   );
@@ -120,6 +120,7 @@ const AiAssistant = () => {
     };
 
     fetchStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
   useEffect(() => {
@@ -146,13 +147,13 @@ const AiAssistant = () => {
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   const handleDataUpdated = useCallback(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <DashboardLayout>

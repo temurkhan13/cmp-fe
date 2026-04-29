@@ -1,15 +1,13 @@
 import Components from '../../components';
 import Button from '../../components/common/Button';
 import { Formik, Form } from 'formik';
-import { useLocation } from 'react-router-dom';
 import data from '../../data';
 import { useNavigate } from 'react-router-dom';
 import { ResetforgetPasswordWithCode, forgetPasswordGetCode } from '../../redux/slices/authSlice.js';
 import { useDispatch } from 'react-redux';
 import { useState, useEffect, useCallback } from 'react';
 
-const verification = () => {
-  const location = useLocation();
+const VerificationCode = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -78,7 +76,7 @@ const verification = () => {
             resetForm();
           }}
         >
-          {(formik) => (
+          {() => (
             <Form>
               <Components.Feature.FormInput name="otp" label="" place="OTP" />
               <Components.Feature.FormInput
@@ -122,4 +120,4 @@ const verification = () => {
   );
 };
 
-export default verification;
+export default VerificationCode;

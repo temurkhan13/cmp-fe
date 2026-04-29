@@ -1,26 +1,7 @@
-import { useState } from 'react';
 import PersonalInfo from './PersonalInfo';
 // import PaymentMethod from './PaymentMethod';
-import Notifications from './Notifications';
 
 const SettingsTabs = () => {
-  const [activeTab, setActiveTab] = useState('personal-info');
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'personal-info':
-        return <PersonalInfo />;
-      // case 'payment-method':
-      //   return <PaymentMethod />;
-      // case 'change-password':
-      //   return <ChangePassword />;
-      case 'notifications':
-        return <Notifications />;
-      default:
-        return <PersonalInfo />;
-    }
-  };
-
   return (
     <div className='settings-page'>
       {/* When reviving these tabs, use className="settings-tabs" on the wrapper,

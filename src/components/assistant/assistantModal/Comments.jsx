@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { FaEllipsisV, FaCheck } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import '../../chat/chat.scss';
 
@@ -19,7 +19,6 @@ import { selectSelectedFolder } from '../../../redux/slices/folderSlice';
 import Button from '../../common/Button';
 
 const Comments = ({ comments }) => {
-  const dispatch = useDispatch();
   const workspaceId = useSelector(
     (state) => state.workspaces.currentWorkspaceId
   );

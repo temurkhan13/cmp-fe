@@ -30,10 +30,10 @@ const EmailVerificationHandler = () => {
   const handleResendCode = async () => {
     setResendCode(true);
     dispatch(resendVerification())
-      .then((response) => {
+      .then(() => {
         setResendCode(false);
       })
-      .catch((error) => {
+      .catch(() => {
         setResendCode(false);
       });
   };
@@ -79,7 +79,7 @@ const EmailVerificationHandler = () => {
         window.location.reload();
         navigate('/dashboard');
       })
-      .catch((error) => {});
+      .catch(() => { /* intentionally empty */ });
   };
 
   const handleCodeChange = (index, value) => {

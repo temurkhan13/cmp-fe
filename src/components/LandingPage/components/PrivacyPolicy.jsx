@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
 
       <section className="legal-page__section">
         <h2 className="legal-page__heading">1. Introduction</h2>
-        <p>Welcome to Change.ai ("we", "our", "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our change management platform.</p>
+        <p>Welcome to Change.ai (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our change management platform.</p>
       </section>
 
       <section className="legal-page__section">

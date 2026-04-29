@@ -2,30 +2,18 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
 import CustomModal from '../customModal/CustomModal';
-import MoveToModal from '../customModal/MoveToModal';
 
 import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
-import { MdOutlineKeyboardArrowRight, MdInsertLink } from 'react-icons/md';
+import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { IoIosCheckmark, IoMdTrash } from 'react-icons/io';
-import { RiFolderTransferFill } from 'react-icons/ri';
 import { BsThreeDots } from 'react-icons/bs';
 import Button from '../common/Button';
 
 import './custom-dropdown.scss';
 
 const CustomDropdown = ({ activeIcon, handleIconClick }) => {
-  const [isMoveToModalOpen, setMoveToModalOpen] = useState(false);
   const [isMoveToTrashModalOpen, setMoveToTrashModalOpen] = useState(false);
 
-  const handleOpenMoveToModal = () => {
-    setMoveToModalOpen(true);
-  };
-  const handleCloseMoveToModal = () => {
-    setMoveToModalOpen(false);
-  };
-  const handleProceedMoveTo = () => {
-    setMoveToModalOpen(false);
-  };
   const handleOpenMoveToTrashModal = () => {
     setMoveToTrashModalOpen(true);
   };
@@ -35,78 +23,6 @@ const CustomDropdown = ({ activeIcon, handleIconClick }) => {
   const handleProceedMoveToTrash = () => {
     setMoveToTrashModalOpen(false);
   };
-
-  const folders = [
-    {
-      name: 'NeuralNet',
-      subfolders: [
-        {
-          name: 'DeepLearning 1',
-          subfolders: [],
-        },
-        {
-          name: 'DeepLearning 2',
-          subfolders: [],
-        },
-      ],
-    },
-    {
-      name: 'MachineLearning',
-      subfolders: [
-        {
-          name: 'SupervisedLearning 1',
-          subfolders: [],
-        },
-        {
-          name: 'SupervisedLearning 2',
-          subfolders: [],
-        },
-      ],
-    },
-    {
-      name: 'AI Model',
-      subfolders: [
-        {
-          name: 'UnsupervisedLearning 1',
-          subfolders: [],
-        },
-        {
-          name: 'UnsupervisedLearning 2',
-          subfolders: [],
-        },
-      ],
-    },
-    {
-      name: 'Algorithm',
-      subfolders: [
-        {
-          name: 'ReinforcementLearning 1',
-          subfolders: [],
-        },
-        {
-          name: 'ReinforcementLearning 2',
-          subfolders: [],
-        },
-      ],
-    },
-    {
-      name: 'ArtificialIntelligence',
-      subfolders: [
-        {
-          name: 'NeuralNetwork 1',
-          subfolders: [],
-        },
-        {
-          name: 'NeuralNetwork 2',
-          subfolders: [],
-        },
-      ],
-    },
-    {
-      name: 'DataScience',
-      subfolders: [],
-    },
-  ];
 
   return (
     <Dropdown

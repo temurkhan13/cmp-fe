@@ -1,11 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 // import PropTypes from 'prop-types';
 import { AiOutlinePlus } from 'react-icons/ai';
-import {
-  BsThreeDots,
-  BsThreeDotsVertical,
-  BsWindowStack,
-} from 'react-icons/bs';
+import { BsWindowStack } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { useDispatch } from 'react-redux';
 import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
@@ -15,10 +11,10 @@ import {
   useUpdateWorkspaceMutation,
 } from '../../../redux/api/workspaceApi';
 import NotificationBar from '../../common/NotificationBar';
-import { FaFolderTree } from 'react-icons/fa6';
 import InputModal from '../../common/InputModal';
 import ConfirmModal from '../../common/ConfirmModal';
 import Button from '../../common/Button';
+import IconCard from '../../common/IconCard';
 
 const Workspaces = ({
   activeWorkspace,
@@ -36,7 +32,6 @@ const Workspaces = ({
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const modalRef = useRef(null);
-  const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
   const [renameModal, setRenameModal] = useState({ open: false, workspace: null });
   const [trashConfirm, setTrashConfirm] = useState({ open: false, id: null });
 
@@ -62,6 +57,7 @@ const Workspaces = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showError = (message) => {
@@ -100,16 +96,20 @@ const Workspaces = ({
     onWorkspaceChange(workspace);
   };
 
-  const truncateString = (str, num) =>
-    str.length > num ? str.slice(0, num) + '...' : str;
-
   const handleRenameWorkspace = (workspace) => {
     if (workspace.workspaceName === 'Default Workspace') {
       showError('Default workspace cannot be renamed.');
       return;
     }
     setRenameModal({ open: true, workspace });
-    setOpenDropdown(null);
+  };
+
+  const handleDeleteWorkspace = (workspace) => {
+    if (workspace.workspaceName === 'Default Workspace') {
+      showError('Default workspace cannot be moved to trash.');
+      return;
+    }
+    setTrashConfirm({ open: true, id: workspace.id });
   };
 
   const handleRenameConfirm = async (newName) => {
@@ -137,23 +137,13 @@ const Workspaces = ({
         entityType: 'workspace',
         id: workspaceId,
       }).unwrap();
-      setOpenDropdown(false);
       onWorkspaceUpdated();
       showSuccess('Workspace moved to trash successfully!');
     } catch (error) { if (import.meta.env.DEV) console.error(error); }
   };
-  const toggleDropdown = (index) => {
-    setOpenDropdown((prevIndex) => (prevIndex === index ? null : index));
-  };
 
   return (
     <div className="collection">
-      {/*<div className="workspace-header">*/}
-      {/*  <p className="collection-heading">Workspaces</p>*/}
-      {/*  <button className="workspace-btn" onClick={() => setIsNewWorkspaceModalOpen(true)}>*/}
-      {/*    New Workspace <AiOutlinePlus className="icon" />*/}
-      {/*  </button>*/}
-
       <div className="container-heading">
         <div className="left-buttons">
           <p className="assistant-heading">
@@ -174,41 +164,31 @@ const Workspaces = ({
 
       <div className="icons">
         {workspaces?.map((workspace, index) => (
-          <div key={workspace.id || index} className="icon-container">
-            <BsThreeDotsVertical
-              size={18}
-              className="three-dots-vertical cursor-pointer"
-              onClick={() => toggleDropdown(index)}
-            />
-            {openDropdown === index && (
-              <div className="dropdown-menuu">
-                <div
-                  className="dropdown-itemm"
-                  onClick={(e) => { e.stopPropagation(); handleRenameWorkspace(workspace); }}
-                >
-                  Rename
-                </div>
-                <div
-                  className="dropdown-itemm deletee"
-                  onClick={() => { setOpenDropdown(null); setTrashConfirm({ open: true, id: workspace.id }); }}
-                >
-                  Delete
-                </div>
-              </div>
-            )}
-            <BsWindowStack
-              onClick={() => handleWorkspaceSwitch(workspace)}
-              style={
-                activeWorkspace?.id === workspace.id
-                  ? { color: 'black', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
-                  : { color: 'grey', width: '5rem', height: '5rem', marginBottom: '0.5rem' }
-              }
-              className="collection-icon"
-            />
-            <span className="icon-label" title={workspace.workspaceName}>
-              {truncateString(workspace.workspaceName, 8)}
-            </span>
-          </div>
+          <IconCard
+            key={workspace.id || index}
+            icon={
+              <BsWindowStack
+                onClick={() => handleWorkspaceSwitch(workspace)}
+                className={`${activeWorkspace?.id === workspace.id ? 'active' : ''}`}
+              />
+            }
+            label={workspace.workspaceName}
+            truncateAt={10}
+            hoverFadeKebab
+            menuItems={[
+              {
+                key: 'rename',
+                label: 'Rename',
+                onClick: () => handleRenameWorkspace(workspace),
+              },
+              {
+                key: 'delete',
+                label: 'Delete',
+                variant: 'danger',
+                onClick: () => handleDeleteWorkspace(workspace),
+              },
+            ]}
+          />
         ))}
 
         {workspaces?.length <= 0 && (
@@ -336,13 +316,18 @@ const ModalSections = ({
   handleWorkspaceSwitch,
   moveToTrash,
   setIsModalOpen,
-  showError,
   onWorkspaceUpdated,
 }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [inputValue, setInputValue] = useState(selectedWorkspace.workspaceName);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [updateWorkspace] = useUpdateWorkspaceMutation();
+
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setShowSuccessNotification(true);
+  };
 
   const handleSaveRename = async () => {
     if (inputValue.trim().length < 3) {
@@ -414,6 +399,15 @@ const ModalSections = ({
             Move to Trash
           </Button>
         </div>
+      )}
+
+      {showSuccessNotification && (
+        <NotificationBar
+          message={successMessage}
+          type="success"
+          duration={5000}
+          onClose={() => setShowSuccessNotification(false)}
+        />
       )}
 
     </div>

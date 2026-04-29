@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import apiClient from '../api/axios';
 
-const useGenerateSingleReport = ({ workspaceId, folderId, assessmentId }) => {
-  const [error, setError] = useState(null);
+const useGenerateSingleReport = ({ assessmentId }) => {
+  const [error] = useState(null);
 
   const GenerateSingleReport = async () => {
     try {

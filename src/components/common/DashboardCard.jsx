@@ -1,65 +1,43 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import { AiOutlineLike, AiOutlineDislike } from 'react-icons/ai';
-import { FaBookmark } from 'react-icons/fa';
 import { MdOutlineDelete } from 'react-icons/md';
 import CustomModal from '../customModal/CustomModal';
-import Button from './Button';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import './common.scss';
 
 const DashboardCard = ({ chat }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMoveToTrashModalOpen, setIsMoveToTrashModalOpen] = useState(false);
-  const menuRef = useRef(null);
-  const dropdownRef = useRef(null);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   const handleMoveToTrash = () => {
     setIsMoveToTrashModalOpen(true);
-    setIsDropdownOpen(false);
   };
 
   const handleCloseMoveToTrashModal = () => {
     setIsMoveToTrashModalOpen(false);
   };
 
-  // Click outside event handler to close the dropdown menu
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !menuRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
-
   return (
     <>
       <div className="common-card">
         <div className="common-card-header">
           <p className="common-card-title">{chat.chatTitle}</p>
-          <div className="common-card-menu" ref={menuRef} onClick={toggleDropdown}>
-            <BiDotsVerticalRounded className="common-card-menu-icon" />
-            {isDropdownOpen && (
-              <div className="common-card-dropdown" ref={dropdownRef}>
-                <Button
-                  variant="ghost"
-                  iconLeft={<MdOutlineDelete className="common-card-menu-delete-icon" />}
-                  onClick={handleMoveToTrash}
-                >
-                  Move to Trash
-                </Button>
+          <AnchoredMenu
+            align="right"
+            trigger={({ onClick }) => (
+              <div className="common-card-menu" onClick={onClick}>
+                <BiDotsVerticalRounded className="common-card-menu-icon" />
               </div>
             )}
-          </div>
+            items={[
+              {
+                key: 'trash',
+                label: 'Move to Trash',
+                icon: <MdOutlineDelete className="common-card-menu-delete-icon" />,
+                onClick: handleMoveToTrash,
+              },
+            ]}
+          />
         </div>
         <div className="common-card-body">
           <p className="common-card-content">{chat.text}</p>

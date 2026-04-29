@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
 import { FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
@@ -12,6 +12,7 @@ import ConfirmModal from '../common/ConfirmModal';
 import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import Button from '../common/Button';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import './sitemap.scss';
 import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
 import '../dashboard/dashboardHomeComponents/styles/folder.scss';
@@ -25,9 +26,7 @@ function List() {
   const selectedWorkspace = useSelector(selectWorkspace);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
   const [renameModal, setRenameModal] = useState({ open: false, id: null, name: '' });
-  const [openMenuId, setOpenMenuId] = useState(null);
   const [moveToTrash] = useMoveToTrashMutation();
-  const menuRef = useRef(null);
 
   async function getData(workSpaceId) {
     const response = await apiClient.get(`/workspace/user/sitemaps?workspaceId=${workSpaceId}`);
@@ -64,19 +63,8 @@ function List() {
 
   useEffect(() => {
     onInit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setOpenMenuId(null);
-      }
-    };
-    if (openMenuId) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [openMenuId]);
 
   return (
     <div className="sitemap-list-page">
@@ -140,49 +128,39 @@ function List() {
                         Modified {timeAgo(updatedAt)}
                       </span>
                     ) : null}
-                    <div
-                      className="sitemap-card__actions"
-                      ref={openMenuId === _id ? menuRef : null}
-                    >
-                      <Button
-                        variant="icon"
-                        ariaLabel="More options"
-                        className="sitemap-card__menu-btn"
-                        title="More options"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuId(openMenuId === _id ? null : _id);
-                        }}
-                      >
-                        <FiMoreVertical size={16} />
-                      </Button>
-                      {openMenuId === _id && (
-                        <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
-                          <Button
-                            variant="ghost"
-                            className="sitemap-card__dropdown-item"
-                            iconLeft={<FiEdit2 size={14} />}
-                            onClick={() => {
-                              setOpenMenuId(null);
-                              setRenameModal({ open: true, id: _id, name });
-                            }}
-                          >
-                            Rename
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
-                            iconLeft={<FiTrash2 size={14} />}
-                            onClick={() => {
-                              setOpenMenuId(null);
-                              setDeleteConfirm({ open: true, id: _id });
-                            }}
-                          >
-                            Move to Trash
-                          </Button>
-                        </div>
+                    <AnchoredMenu
+                      align="right"
+                      className="cmp-dropdown-anchor-corner"
+                      trigger={({ onClick }) => (
+                        <Button
+                          variant="icon"
+                          ariaLabel="More options"
+                          className="sitemap-card__menu-btn"
+                          title="More options"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onClick();
+                          }}
+                        >
+                          <FiMoreVertical size={16} />
+                        </Button>
                       )}
-                    </div>
+                      items={[
+                        {
+                          key: 'rename',
+                          label: 'Rename',
+                          icon: <FiEdit2 size={14} />,
+                          onClick: () => setRenameModal({ open: true, id: _id, name }),
+                        },
+                        {
+                          key: 'delete',
+                          label: 'Move to Trash',
+                          icon: <FiTrash2 size={14} />,
+                          variant: 'danger',
+                          onClick: () => setDeleteConfirm({ open: true, id: _id }),
+                        },
+                      ]}
+                    />
                   </div>
                 ))}
             </div>

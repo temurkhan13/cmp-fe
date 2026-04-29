@@ -67,25 +67,6 @@ const PersonalInfo = () => {
     setPhotoDeleted(true);
   };
 
-  const generateInitialsImage = () => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''
-      }`.toUpperCase();
-
-    canvas.width = 200;
-    canvas.height = 200;
-    context.fillStyle = '#C3E11D';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.font = 'bold 80px Arial';
-    context.fillStyle = '#0B1444';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(initials, canvas.width / 2, canvas.height / 2);
-
-    return canvas.toDataURL('image/png');
-  };
-
   const validateForm = () => {
     const errors = {};
     if (email && !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {

@@ -12,7 +12,6 @@ function PlaybookSection({
   totalStages,
   onUpdateNodeData,
   onInspire,
-  onRefresh,
   onDeleteStage,
   onMoveStage,
 }) {
@@ -101,7 +100,7 @@ function PlaybookSection({
   );
 }
 
-function NodeDataBlock({ nodeData, stageId, nodeId, playbookId, onUpdate, onInspire }) {
+function NodeDataBlock({ nodeData, stageId, nodeId, onUpdate, onInspire }) {
   const editorRef = useRef(null);
   const [inspiring, setInspiring] = useState(false);
   const [content, setContent] = useState(nodeData.description || '');

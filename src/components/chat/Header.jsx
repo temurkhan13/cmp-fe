@@ -6,7 +6,6 @@ import './chat.scss';
 // react-icons
 import { IoSearchOutline } from 'react-icons/io5';
 import { HiUser, HiOutlineDotsHorizontal } from 'react-icons/hi';
-import { RiUserSharedLine } from 'react-icons/ri';
 
 // images
 import Sidebar from '../../assets/dashboard/sidebarLogo.png';

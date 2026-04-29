@@ -19,9 +19,9 @@ const DeleteModal = ({ folderName, onCancel, onDelete }) => {
         </div>
         <div className="delete-modal-body">
           <p>
-            You're about to delete <strong>{folderName}</strong> from your
+            You&apos;re about to delete <strong>{folderName}</strong> from your
             <br />
-            Trash. This can't be undone.
+            Trash. This can&apos;t be undone.
           </p>
         </div>
         <div className="delete-modal-footer">

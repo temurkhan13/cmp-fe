@@ -8,7 +8,7 @@ import { forgetPasswordGetCode } from '../../redux/slices/authSlice.js';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-const verification = () => {
+const Verification = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState('');
@@ -19,7 +19,7 @@ const verification = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await dispatch(forgetPasswordGetCode(values.email)).unwrap();
+      await dispatch(forgetPasswordGetCode(values.email)).unwrap();
       localStorage.setItem('forgetEmail', values.email);
       setSubmitting(false);
       navigate('/forgot-password/Code');
@@ -48,7 +48,7 @@ const verification = () => {
           }
           onSubmit={handleSubmit}
         >
-          {(formik) => (
+          {() => (
             <Form>
               <Components.Feature.FormInput
                 name="email"
@@ -79,4 +79,4 @@ const verification = () => {
   );
 };
 
-export default verification;
+export default Verification;

@@ -1,5 +1,4 @@
 // src/components/Stepper.js
-import React from 'react';
 // import './Stepper.scss';
 
 const Stepper = ({ currentStep, totalSteps }) => {

@@ -68,7 +68,7 @@ export const workspaceApi = createApi({
 
     // Chats
     addChat: builder.mutation({
-      query: ({ workspaceId, folderId, chat }) => ({
+      query: ({ workspaceId, folderId }) => ({
         url: `workspace/${workspaceId}/folder/${folderId}/chat`,
         method: 'POST',
         // body: chat,

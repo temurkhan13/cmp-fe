@@ -174,7 +174,7 @@ const chatSlice = createSlice({
       }
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: () => {
     // Handle async thunks if any
   },
 });

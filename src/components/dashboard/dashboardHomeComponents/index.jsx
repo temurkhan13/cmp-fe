@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react';
 import Workspaces from './Workspaces';
 import CountingCards from './CountingCards';
 import Folder from './Folder';
-import Account from './Account';
 import NotificationBar from '../../common/NotificationBar.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -111,6 +110,7 @@ const DashboardHomeComp = () => {
       finally { setIsFetching(false); }
     };
     fetchStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const handleFolderSelection = useCallback(
@@ -141,9 +141,10 @@ const DashboardHomeComp = () => {
               folderId: folder.id,
             })
           ).unwrap();
-        } catch { }
+        } catch { /* ignored */ }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch, selectedWorkspace]
   );
 
@@ -182,6 +183,7 @@ const DashboardHomeComp = () => {
     //   setError("No workspaces available.");
     //   setShowNotification(true);
     // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardStats, selectedWorkspace, dispatch]);
 
   useEffect(() => {
@@ -191,9 +193,10 @@ const DashboardHomeComp = () => {
         selectedWorkspace.folders[0];
       handleFolderSelection(activeFolder, selectedWorkspace.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWorkspace, currentFolder]);
 
-  const handleRemoveItem = useCallback((itemId, itemType) => {
+  const handleRemoveItem = useCallback(() => {
     // Refetch folder data from backend so Redux state updates
     const folder = currentFolder;
     const wsId = activeWorkspace?.id || selectedWorkspace?.id;

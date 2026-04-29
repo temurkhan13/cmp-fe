@@ -3,8 +3,6 @@ import apiClient from '../api/axios';
 import { addContent } from '../redux/reducers/editorReducer';
 
 const useAssessmentReport = ({
-  workspaceId,
-  folderId,
   assessmentId,
   allAssessmentData,
 }) => {

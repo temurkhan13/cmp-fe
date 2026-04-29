@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 
 import './chat-message.scss';
 import './assessment.scss';
-import { LuPencil } from 'react-icons/lu';
 import {
   FaCopy,
   FaThumbsUp,
   FaThumbsDown,
-  FaSync,
   FaBookmark,
 } from 'react-icons/fa';
-import { IoAttach, IoChevronDown, IoChevronUp, IoSend } from 'react-icons/io5';
-import { CiEdit } from 'react-icons/ci';
+import { IoAttach, IoSend } from 'react-icons/io5';
 import AiPic from '../../assets/dashboard/sidebarLogo.png';
 import UserAvatar from '../common/UserAvatar';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
@@ -41,17 +38,14 @@ import useAssessmentReport from '../../hooks/useAssessmentReport';
 import useChat from '../../hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import assessmentQnaData, { assessmentDescriptions, assessmentPhases } from '../../data/chat/assessmentQnaData';
-import appConfig from '../../config/config.js';
 import {
   useDislikeChatMessageMutation,
   useGetWorkspacesQuery,
   useLikeChatMessageMutation,
   useRemoveBookmarkMutation,
   useAddBookmarkMutation,
-  useUpdateChatMutation,
   useUpdateAssessmentQuestionMutation,
 } from '../../redux/api/workspaceApi';
-import { selectAllWorkspaces } from '../../redux/selectors/selectors';
 import { selectWorkspace, setCurrentSelectedTitle } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
@@ -67,25 +61,25 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const location = useLocation();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
-  const [text, setText] = useState('');
+  const [, setText] = useState('');
   const [chat, setChat] = useState([]);
   const [generateSingleReport, setGenerateSingleReport] = useState(false);
-  const [finalReport, setFinalReport] = useState('');
-  const [reportTitle, setReportTitle] = useState('');
+  const [, setFinalReport] = useState('');
+  const [, setReportTitle] = useState('');
   const [SubReportId, setSubReportId] = useState('');
-  const [fileUrl, setFileUrl] = useState('');
+  const [, setFileUrl] = useState('');
   const [assessmentId, setAssessmentId] = useState();
   const [selectedText, setSelectedText] = useState('');
   const [editingQaId, setEditingQaId] = useState('');
-  const [selectedTone, setSelectedTone] = useState('');
+  const [, setSelectedTone] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
-  const [responseLength, setResponseLength] = useState('');
-  const [askAi, setAskAI] = useState('');
+  const [, setResponseLength] = useState('');
+  const [, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [allAssessmentData, setAllAssessmentData] = useState([]);
+  const [allAssessmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
   const [reactions, setReactions] = useState({});
   const [copy, setCopy] = useState({});
@@ -121,7 +115,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       // Clear the assessment ID from URL so the id useEffect doesn't re-fetch
       navigate('/assessment/chat', { replace: true });
     }
-  }, [selectedAssessment]);
+  }, [selectedAssessment, navigate]);
 
   useEffect(() => {
     // Reset input state when switching assessments
@@ -188,6 +182,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       };
       getAssessmentAsync();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -209,13 +204,11 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   // custom hooks
   const {
     StartAssessment,
-    report: startFinalReport,
     isReportGenerated: isStartReportGenerated,
   } = usestartAssessment();
   const {
     AssessmentReport,
     isReportGenerated,
-    report,
     setAssessmentData,
     singleAssessmenChats,
   } = useAssessmentReport({
@@ -249,7 +242,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const [likeChatMessage] = useLikeChatMessageMutation();
   const [dislikeChatMessage] = useDislikeChatMessageMutation();
   const userId = useSelector((state) => state.auth.user?.id);
-  const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
   const { refetch } = useGetWorkspacesQuery(userId);
   const [firstPrompt, setFirstPrompt] = useState('');
@@ -257,7 +249,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const { Explain } = useExplain();
   const [updateAssessmentQuestion] = useUpdateAssessmentQuestionMutation();
 
-  const { error, chatWithdoc } = useChat();
+  const { error } = useChat();
   const [userProfilePhoto, setUserProfilePhoto] = useState(null);
   const [userName, setUserName] = useState('');
 
@@ -536,11 +528,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
         setGenerateSingleReport(false);
       }
     }
-    if (selectedWorkspace) {
-      const filteredFolders = (selectedWorkspace?.folders || []).filter(
-        (item) => item._id === folderId
-      );
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generateSingleReport, selectedWorkspace]);
 
   const handleClosePopup = () => {

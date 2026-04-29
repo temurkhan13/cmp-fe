@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { dropdown, Logo1 } from '../../assets';
+import { Logo1 } from '../../assets';
 import { FaArrowRight, FaBars, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../common/Button';
@@ -7,22 +7,12 @@ import Button from '../../../common/Button';
 const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownHomeOpen, setDropdownHomeOpen] = useState(false);
-  const [dropdownAboutOpen, setDropdownAboutOpen] = useState(false);
+  const [, setDropdownHomeOpen] = useState(false);
+  const [, setDropdownAboutOpen] = useState(false);
   const navRef = useRef(null);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
-  };
-
-  const toggleDropdownHome = () => {
-    setDropdownHomeOpen(!dropdownHomeOpen);
-    setDropdownAboutOpen(false); // Close About dropdown
-  };
-
-  const toggleDropdownAbout = () => {
-    setDropdownAboutOpen(!dropdownAboutOpen);
-    setDropdownHomeOpen(false); // Close Home dropdown
   };
 
   // Close dropdowns when clicking outside

@@ -8,38 +8,46 @@ import {
   fetchTrashItemsAsync,
 } from '../../redux/slices/trashSlice';
 import { FaTrash } from 'react-icons/fa';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 
 const TrashItemCard = ({ name, type, dateDeleted, onRestore, onDelete }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <div
       className="trash-card"
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => { setIsHovered(false); setShowDropdown(false); }}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <h3>{name}</h3>
       <p>Type: {type}</p>
       <p>Date Deleted: {dateDeleted}</p>
 
       {isHovered && (
-        <div className="three-dots" onClick={() => setShowDropdown((prev) => !prev)}>
-          <FiMoreHorizontal />
-        </div>
-      )}
-
-      {showDropdown && (
-        <div className="dropdown-menu">
-          <div className="dropdown-item" onClick={onRestore}>
-            <MdOutlineSettingsBackupRestore size={18} />
-            Restore
-          </div>
-          <div className="dropdown-item" onClick={onDelete}>
-            <MdDelete size={18} />
-            Delete Permanently
-          </div>
-        </div>
+        <AnchoredMenu
+          align="right"
+          className="cmp-dropdown-anchor-corner"
+          trigger={({ onClick }) => (
+            <div className="three-dots" onClick={onClick}>
+              <FiMoreHorizontal />
+            </div>
+          )}
+          items={[
+            {
+              key: 'restore',
+              label: 'Restore',
+              icon: <MdOutlineSettingsBackupRestore size={18} />,
+              onClick: onRestore,
+            },
+            {
+              key: 'delete',
+              label: 'Delete Permanently',
+              icon: <MdDelete size={18} />,
+              variant: 'danger',
+              onClick: onDelete,
+            },
+          ]}
+        />
       )}
 
     </div>
@@ -67,14 +75,14 @@ const TrashSitemap = () => {
     try {
       await dispatch(restoreFromTrash({ type: 'sitemap', id }));
       dispatch(fetchTrashItemsAsync());
-    } catch {}
+    } catch { /* ignored */ }
   };
 
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteFromTrash({ type: 'sitemap', id }));
       dispatch(fetchTrashItemsAsync());
-    } catch {}
+    } catch { /* ignored */ }
   };
 
   return (

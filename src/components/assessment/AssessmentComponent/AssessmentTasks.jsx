@@ -6,18 +6,15 @@ import NoDataAvailable from '../../common/NoDataAvailable';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   selectWorkspace,
-  setCurrentSelectedTitle,
 } from '../../../redux/slices/workspacesSlice';
 import assessmentQnaData from '../../../data/chat/assessmentQnaData';
 import { CiEdit } from 'react-icons/ci';
 import useAssessment from '../../../hooks/useAssessment';
 import { useNavigate, useParams } from 'react-router-dom';
-import { get } from 'jodit/esm/core/helpers';
 import { fetchWorkspaceAssessments } from '../../../redux/slices/folderSlice';
-import { selectCurrentFolder } from '../../../redux/selectors/selectors';
 import Button from '../../common/Button';
 
-const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelected }) => {
+const AssessmentTasks = ({ handleAssessmentSelect, folderID, onTaskSelected }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,13 +25,11 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelect
   );
   const folderId = useSelector((state) => state.workspaces.currentFolderId);
   const selectedWorkspace = useSelector(selectWorkspace);
-  const [assessmentId, setAssessmentId] = useState('');
+  const [, setAssessmentId] = useState('');
   const [selectedFolder, setSelectedFolder] = useState({});
   const [selectedReport, setSelectedReport] = useState();
   const [mergeReports, setMergeRepoorts] = useState([]);
-  const [workspaceID, setWorkspaceId] = useState(workspaceId);
-  const [assessmentData, setAssessmentData] = useState([]);
-  const currentFolder = useSelector(selectCurrentFolder);
+  const [, setAssessmentData] = useState([]);
   const [assessmentsData, setAssessmentsData] = useState([]);
   const { getAssessment } = useAssessment(workspaceId, folderId);
 
@@ -64,6 +59,7 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelect
   // Fetch fresh data whenever component mounts, folder changes, or assessment id changes
   useEffect(() => {
     fetchAssessments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceId, folderId, folderID, id]);
   useEffect(() => {
     if (workspaceId && folderId && selectedWorkspace?.folders) {
@@ -102,9 +98,8 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelect
         setSelectedFolder(filteredFolders[0]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceId, folderId]);
-  const handleDownload = (format) => {};
-
   const handleClose = () => {
     setIsModalOpen(false);
   };
@@ -124,17 +119,9 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelect
     return map[status] || map['pending'];
   };
 
-  const calculateCollectiveProgress = (tasks) => {
-    const totalProgress = tasks.reduce((sum, task) => sum + task.progress, 0);
-    return (totalProgress / tasks.length).toFixed(0);
-  };
-
   const generateAllReports = () => {
     // Logic to generate all reports goes here
   };
-
-  const collectiveProgress = calculateCollectiveProgress(tasks);
-  const collectiveColors = getColor(collectiveProgress);
 
   // Calculate assessment completion stats
   const totalAssessments = assessmentQnaData?.length || 0;
@@ -243,7 +230,6 @@ const AssessmentTasks = ({ tasks, handleAssessmentSelect, folderID, onTaskSelect
           <div className="task-list">
             {assessmentQnaData.map((assessment, index) => {
               const matchedAssessment = assessmentsData?.find((data) => data?.name === assessment);
-              const taskColors = getColor(false);
               return (
                 <div className="task-item" key={index}>
                   <div

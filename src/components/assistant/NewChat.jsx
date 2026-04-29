@@ -23,8 +23,6 @@ import {
   selectAllFolders,
   selectCurrentChat,
   selectCurrentFolder,
-  selectCurrentWorkspace,
-  selectFolderById,
 } from '../../redux/selectors/selectors';
 import {
   selectWorkspace,
@@ -33,14 +31,13 @@ import {
 import { setChats } from '../../redux/slices/chatSlice';
 import { getChatsAsync } from '../../redux/slices/chatSlice';
 import {
-  selectFolderData,
   selectSelectedFolder,
   setSelectedFolder,
 } from '../../redux/slices/folderSlice.js';
 
 const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   const navigate = useNavigate();
-  const projects = useSelector(selectAllFolders);
+  useSelector(selectAllFolders);
 
   const [loading, setLoading] = useState(false);
   const [chatsLoading, setChatsLoading] = useState(true);
@@ -59,12 +56,12 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   // const currentWorkspace = useSelector(selectCurrentWorkspace);
   const currentWorkspace = useSelector(selectWorkspace);
   const currentFolder = useSelector(selectCurrentFolder);
-  const currentChat = useSelector(selectCurrentChat);
+  useSelector(selectCurrentChat);
   const currentChatId = useSelector((state) => state.workspaces.currentChatId);
   const selectedFolder = useSelector(selectSelectedFolder);
 
   const CHATS_PER_PAGE = 20;
-  const chats = useSelector(selectAllChats);
+  useSelector(selectAllChats);
   const [showableChats, setShowableChats] = useState([]);
   const [visibleCount, setVisibleCount] = useState(CHATS_PER_PAGE);
   const myChats = useSelector((state) => state.chat.chats);
@@ -103,7 +100,7 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
       .then((response) => {
         dispatch(setChats(normalizeChats(response.payload.data)));
       })
-      .catch((error) => { })
+      .catch(() => { /* ignored */ })
       .finally(() => setChatsLoading(false));
   }, [currentWorkspace, currentFolder, dispatch, selectedFolder]);
 
@@ -135,7 +132,6 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
     });
     setIsModalOpen(true);
   };
-  const folderId = useSelector(selectCurrentFolder);
 
   const handleChatSelect = (chatId) => {
     dispatch(setCurrentChatId(chatId));
@@ -182,7 +178,7 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
         .then((response) => {
           dispatch(setChats(normalizeChats(response.payload.data)));
         })
-        .catch((error) => { })
+        .catch(() => { /* ignored */ })
         .finally(() => setChatsLoading(false));
     }
   };
@@ -213,6 +209,7 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
     return () => {
       chatContainer.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   return (

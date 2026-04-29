@@ -251,7 +251,7 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(codeVerifyAsync.fulfilled, (state, action) => {
+      .addCase(codeVerifyAsync.fulfilled, (state) => {
         state.isLoggedIn = true;
         state.isLoading = false;
         state.error = null;

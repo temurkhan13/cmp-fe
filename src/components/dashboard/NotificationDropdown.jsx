@@ -9,7 +9,7 @@ import Button from '../common/Button';
 
 const NotificationDropdown = ({ isOpen, markAllAsRead, onClose }) => {
   const [activeTab, setActiveTab] = useState('All');
-  const [hasUnread, setHasUnread] = useState(true);
+  const [, setHasUnread] = useState(true);
   const navigate = useNavigate();
 
   const handleTabClick = (tab) => {

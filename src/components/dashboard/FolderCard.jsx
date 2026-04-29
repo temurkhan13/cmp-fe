@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import {
   FaTrash,
@@ -11,52 +11,18 @@ import {
 import assets from '@assets';
 import CustomModal from '../customModal/CustomModal';
 import MoveToModal from '../customModal/MoveToModal';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import PropTypes from 'prop-types';
-import useManagerChat from '@hooks/useManagerChat';
 import { downloadFolderAsZip } from '@utils/ExportAs';
 import './dashboard-inline.scss';
 
 const FolderCard = ({ folder }) => {
-  if (!folder) return null;
-
-  const { id, name } = folder;
-  const { moveChatToFolder, renameFolder, deleteFolder } = useManagerChat;
-
-  const [showDropdown, setShowDropdown] = useState(false);
   const [isMoveToModalOpen, setMoveToModalOpen] = useState(false);
   const [isMoveToTrashModalOpen, setMoveToTrashModalOpen] = useState(false);
 
-  const dropdownRef = useRef(null);
+  if (!folder) return null;
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleItemClick = (action) => {
-    switch (action) {
-      case 'Move to trash':
-        setMoveToTrashModalOpen(true);
-        break;
-      case 'Move To Folder':
-        setMoveToModalOpen(true);
-        break;
-      case 'Downloads':
-        downloadFolderAsZip(folder);
-        break;
-      default:
-        setShowDropdown(false);
-        break;
-    }
-  };
+  const { id, name } = folder;
 
   const folders = [
     {
@@ -100,52 +66,54 @@ const FolderCard = ({ folder }) => {
       </div>
       <div className="folder-card__items">
         <p className="folder-card__item-count">{id} Items</p>
-        <div ref={dropdownRef} className="folder-card__dots-wrapper">
-          <BsThreeDots
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="folder-card__dots-icon"
-          />
-          {showDropdown && (
-            <div className="folder-card__dropdown">
-              <p
-                className="folder-card__dropdown-item"
-                onClick={() => handleItemClick('Move To Folder')}
-              >
-                <FaFolderPlus className="folder-card__dropdown-icon" /> Move To Folder
-              </p>
-              <p
-                className="folder-card__dropdown-item"
-                onClick={() => handleItemClick('Duplicate')}
-              >
-                <FaCopy className="folder-card__dropdown-icon" /> Duplicate
-              </p>
-              <p
-                className="folder-card__dropdown-item"
-                onClick={() => handleItemClick('Rename')}
-              >
-                <FaEdit className="folder-card__dropdown-icon" /> Rename
-              </p>
-              <p
-                className="folder-card__dropdown-item"
-                onClick={() => handleItemClick('Downloads')}
-              >
-                <FaDownload className="folder-card__dropdown-icon" /> Download As Zip
-              </p>
-              <p
-                className="folder-card__dropdown-item"
-                onClick={() => handleItemClick('Copy Link')}
-              >
-                <FaLink className="folder-card__dropdown-icon" /> Copy Link
-              </p>
-              <p
-                className="folder-card__dropdown-item"
-                onClick={() => handleItemClick('Move to trash')}
-              >
-                <FaTrash className="folder-card__dropdown-icon" /> Move to trash
-              </p>
-            </div>
+        <AnchoredMenu
+          align="right"
+          trigger={({ onClick }) => (
+            <BsThreeDots
+              onClick={onClick}
+              className="folder-card__dots-icon"
+            />
           )}
-        </div>
+          items={[
+            {
+              key: 'move',
+              label: 'Move To Folder',
+              icon: <FaFolderPlus />,
+              onClick: () => setMoveToModalOpen(true),
+            },
+            {
+              key: 'duplicate',
+              label: 'Duplicate',
+              icon: <FaCopy />,
+              onClick: () => {},
+            },
+            {
+              key: 'rename',
+              label: 'Rename',
+              icon: <FaEdit />,
+              onClick: () => {},
+            },
+            {
+              key: 'download',
+              label: 'Download As Zip',
+              icon: <FaDownload />,
+              onClick: () => downloadFolderAsZip(folder),
+            },
+            {
+              key: 'copy-link',
+              label: 'Copy Link',
+              icon: <FaLink />,
+              onClick: () => {},
+            },
+            {
+              key: 'trash',
+              label: 'Move to trash',
+              icon: <FaTrash />,
+              variant: 'danger',
+              onClick: () => setMoveToTrashModalOpen(true),
+            },
+          ]}
+        />
       </div>
 
       <CustomModal
