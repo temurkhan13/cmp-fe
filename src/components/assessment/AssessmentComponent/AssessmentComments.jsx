@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
 import { useState } from 'react';
-import { FaEllipsisV, FaCheck } from 'react-icons/fa';
+import { FaEllipsisV } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoFilter } from 'react-icons/io5';
 import { RxAvatar } from 'react-icons/rx';
@@ -9,6 +9,7 @@ import { MdOutlineAttachFile, MdAlternateEmail } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import AnchoredMenu from '../../dropdowns/AnchoredMenu';
 
 import {
   updateComment,
@@ -26,7 +27,6 @@ const AssessmentComments = ({ comments }) => {
   const [showReplies, setShowReplies] = useState({});
   const [editingComment, setEditingComment] = useState(null);
   const [editedText, setEditedText] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const handleEditComment = (commentId) => {
@@ -80,10 +80,6 @@ const AssessmentComments = ({ comments }) => {
     }));
   };
 
-  const toggleDropdown = () => {
-    setShowDropdown((prevState) => !prevState);
-  };
-
   const handleItemClick = (item) => {
     setSelectedItem((prevItem) => (prevItem === item ? null : item));
   };
@@ -95,19 +91,18 @@ const AssessmentComments = ({ comments }) => {
       <div className="comment-input">
         <CiSearch className="search-icon" />
         <input className="filter-input" placeholder="Find any word" />
-        <IoFilter onClick={toggleDropdown} className="filter-icon" />
-        {showDropdown && (
-          <div className="dropdown-menu">
-            <ul>
-              {menuItems.map((item, index) => (
-                <li key={index} onClick={() => handleItemClick(item)}>
-                  {item}
-                  {selectedItem === item && <FaCheck className="check-icon" />}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <AnchoredMenu
+          align="right"
+          trigger={({ onClick }) => (
+            <IoFilter onClick={onClick} className="filter-icon" />
+          )}
+          items={menuItems.map((item) => ({
+            key: item,
+            label: item,
+            selected: selectedItem === item,
+            onClick: () => handleItemClick(item),
+          }))}
+        />
       </div>
       <hr />
       <div className="chat-container">

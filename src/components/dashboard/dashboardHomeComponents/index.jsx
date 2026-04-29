@@ -19,7 +19,10 @@ import {
   setSelectedFolder,
   toggleFolderActivation,
 } from '../../../redux/slices/folderSlice';
-import DashboardCard from './DashboardCard.jsx';
+import { useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
+import Card from '../../common/Card';
+import AvatarGroup from '../../common/AvatarGroup';
+import ConfirmModal from '../../common/ConfirmModal';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { GiWireframeGlobe } from 'react-icons/gi';
@@ -30,9 +33,38 @@ import { BsFilePlayFill } from 'react-icons/bs';
 import './styles/dashboard-home.scss';
 import { SkeletonCard, SkeletonStatCards } from '../../common/Skeleton';
 
+const cardIconFor = (type) => {
+  if (type === 'chats') return <IoIosChatboxes size={20} color="grey" />;
+  if (type === 'assessment') return <RiNewspaperLine size={20} color="grey" />;
+  if (type === 'sitemap') return <FaFolderTree size={20} color="grey" />;
+  return <RiNewspaperLine size={20} color="grey" />;
+};
+
+const titleFor = (item) =>
+  item.name ||
+  item.title ||
+  item.chatTitle ||
+  (item.report && item.report[0] ? item.report[0].ReportTitle : '') ||
+  'Unknown Item';
+
+const metaFor = (item) => {
+  const rawDate = item.createdAt || item.created_at || item.updatedAt || item.updated_at;
+  return rawDate ? `Created on: ${new Date(rawDate).toLocaleDateString()}` : null;
+};
+
+const badgeFor = (item) => {
+  if (item.status === 'completed') return <div className="card-badge card-badge--green">Completed</div>;
+  if (item.status === 'in-progress') return <div className="card-badge card-badge--blue">In Progress</div>;
+  if (item.status === 'pending') return <div className="card-badge card-badge--yellow">Pending</div>;
+  return null;
+};
+
 const SectionGrid = ({ title, items, itemType, onRemove }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [moveToTrash] = useMoveToTrashMutation();
+  const [confirmId, setConfirmId] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   const handleCardClick = (item) => {
     if (itemType === 'assessments') {
@@ -40,6 +72,19 @@ const SectionGrid = ({ title, items, itemType, onRemove }) => {
     } else if (itemType === 'chats') {
       dispatch(setCurrentChatId(item.id));
       navigate(`/assistant/chat/${item.id}`);
+    }
+  };
+
+  const handleConfirmTrash = async () => {
+    if (!confirmId) return;
+    try {
+      await moveToTrash({ entityType: itemType, id: confirmId }).unwrap();
+      const id = confirmId;
+      setConfirmId(null);
+      onRemove(id);
+    } catch {
+      setConfirmId(null);
+      setShowError(true);
     }
   };
 
@@ -63,14 +108,45 @@ const SectionGrid = ({ title, items, itemType, onRemove }) => {
       </div>
       <div className="grid">
         {items.map((item) => (
-          <DashboardCard
+          <Card
             key={item.id}
-            data={{ ...item, type: itemType }}
-            onRemove={onRemove}
+            variant="horizontal"
+            icon={cardIconFor(itemType)}
+            title={titleFor(item)}
+            meta={metaFor(item)}
+            badge={badgeFor(item)}
+            footerRight={
+              item.sharedUsers?.length > 0 ? (
+                <AvatarGroup users={item.sharedUsers} max={3} size={24} />
+              ) : null
+            }
+            menuItems={[
+              {
+                key: 'trash',
+                label: 'Move to Trash',
+                onClick: () => setConfirmId(item.id),
+              },
+            ]}
             onClick={() => handleCardClick(item)}
           />
         ))}
       </div>
+      <ConfirmModal
+        isOpen={!!confirmId}
+        title="Move to Trash"
+        description="This item will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={handleConfirmTrash}
+        onCancel={() => setConfirmId(null)}
+      />
+      {showError && (
+        <NotificationBar
+          message="Failed to move to trash. Please try again."
+          type="error"
+          onClose={() => setShowError(false)}
+        />
+      )}
     </div>
   );
 };

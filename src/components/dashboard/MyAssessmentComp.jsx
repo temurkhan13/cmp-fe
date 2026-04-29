@@ -12,23 +12,44 @@ import {
   updateWorkspaceStatus,
 } from '../../redux/slices/workspacesSlice';
 import useManagerChat from '@hooks/useManagerChat';
-import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard';
+import Card from '../../components/common/Card';
+import AvatarGroup from '../../components/common/AvatarGroup';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import NotificationBar from '../../components/common/NotificationBar';
+import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import Folder from './dashboardHomeComponents/Folder';
 import {
   fetchFolderData,
   resetFolderState,
-  selectFolderData,
   setSelectedFolder,
   fetchWorkspaceAssessments,
 } from '../../redux/slices/folderSlice';
 import { RiNewspaperLine } from 'react-icons/ri';
 import Button from '../../components/common/Button';
 
+const titleFor = (item) =>
+  item.name ||
+  item.title ||
+  item.chatTitle ||
+  (item.report && item.report[0] ? item.report[0].ReportTitle : '') ||
+  'Unknown Item';
+
+const metaFor = (item) => {
+  const rawDate = item.createdAt || item.created_at || item.updatedAt || item.updated_at;
+  return rawDate ? `Created on: ${new Date(rawDate).toLocaleDateString()}` : null;
+};
+
+const badgeFor = (item) => {
+  if (item.status === 'completed') return <div className="card-badge card-badge--green">Completed</div>;
+  if (item.status === 'in-progress') return <div className="card-badge card-badge--blue">In Progress</div>;
+  if (item.status === 'pending') return <div className="card-badge card-badge--yellow">Pending</div>;
+  return null;
+};
+
 const MyAssessmentComp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectedWorkspace = useSelector(selectWorkspace);
-  const folderData = useSelector(selectFolderData);
   // const selectAssessmentsData = useSelector(selectAssessments);
   const { managerData } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +57,9 @@ const MyAssessmentComp = () => {
   const [currentFolder, setCurrentFolder] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
   const [assessmentData, setAssessmentData] = useState(null);
+  const [moveToTrash] = useMoveToTrashMutation();
+  const [confirmId, setConfirmId] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   const activeWorkspace = useMemo(() => {
     return (
@@ -140,6 +164,18 @@ const MyAssessmentComp = () => {
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
 
+  const handleConfirmTrash = async () => {
+    if (!confirmId) return;
+    try {
+      await moveToTrash({ entityType: 'assessment', id: confirmId }).unwrap();
+      setConfirmId(null);
+      handleRemoveChat();
+    } catch {
+      setConfirmId(null);
+      setShowError(true);
+    }
+  };
+
   const handleDataUpdated = useCallback(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
@@ -192,15 +228,25 @@ const MyAssessmentComp = () => {
             (assessmentData.payload.results.length > 0 ? (
               <div className="grid">
                 {assessmentData.payload.results.map((item) => (
-                  <DashboardCard
+                  <Card
                     key={item.id}
-                    data={{
-                      ...item,
-                      type: 'assessment',
-                      folderData: folderData,
-                      idd: item.id,
-                    }}
-                    onRemove={() => handleRemoveChat()}
+                    variant="horizontal"
+                    icon={<RiNewspaperLine size={20} color="grey" />}
+                    title={titleFor(item)}
+                    meta={metaFor(item)}
+                    badge={badgeFor(item)}
+                    footerRight={
+                      item.sharedUsers?.length > 0 ? (
+                        <AvatarGroup users={item.sharedUsers} max={3} size={24} />
+                      ) : null
+                    }
+                    menuItems={[
+                      {
+                        key: 'trash',
+                        label: 'Move to Trash',
+                        onClick: () => setConfirmId(item.id),
+                      },
+                    ]}
                     onClick={() => {
                       dispatch(setCurrentChatId(item.id));
                       navigate(`/assessment/chat/${item.id}`);
@@ -216,6 +262,22 @@ const MyAssessmentComp = () => {
         </div>
       </div>
 
+      <ConfirmModal
+        isOpen={!!confirmId}
+        title="Move to Trash"
+        description="This item will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={handleConfirmTrash}
+        onCancel={() => setConfirmId(null)}
+      />
+      {showError && (
+        <NotificationBar
+          message="Failed to move to trash. Please try again."
+          type="error"
+          onClose={() => setShowError(false)}
+        />
+      )}
     </div>
   );
 };

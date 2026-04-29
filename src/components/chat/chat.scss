@@ -1,10 +1,3 @@
-.ask-ai-popup {
-  background-color: white;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  z-index: 9999;
-}
-
 .chat-close-icon {
   background: lightgray;
   padding: 7px;
@@ -25,39 +18,6 @@
 
 .comments-row--spaced {
   justify-content: space-between;
-}
-
-.chat-tone-inspire-btn {
-  color: rgba(0, 102, 255, 1);
-  font-weight: 400;
-}
-
-.chat-tone-ask-ai-dropdown {
-  min-width: 100%;
-  padding: 5px 5px;
-  border-radius: 10px;
-}
-
-.chat-tone-ask-ai-input-wrapper {
-  display: flex;
-  position: relative;
-  width: 100%;
-  border: 1px solid lightgray;
-  border-radius: 10px;
-  align-items: center;
-  padding: 5px;
-}
-
-.chat-tone-ask-ai-input {
-  flex: 1;
-  border: none;
-  outline: none;
-  padding: 5px;
-  font-size: 14px;
-}
-
-.chat-tone-ask-ai-send {
-  color: rgba(0, 102, 255, 1);
 }
 
 .chat-header-improve-btn {
@@ -481,38 +441,6 @@
 
 .cm-filter-icon:hover {
   color: #333;
-}
-
-.cm-filter-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 4px;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  z-index: 10;
-  min-width: 160px;
-  overflow: hidden;
-}
-
-.cm-filter-item {
-  padding: 0.7rem 1rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.cm-filter-item:hover {
-  background: #f5f5f5;
-}
-
-.cm-filter-item.active {
-  color: #0B1444;
-  font-weight: 600;
 }
 
 .cm-list {

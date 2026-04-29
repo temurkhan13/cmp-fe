@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
-import { FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import Loading from './Loading';
 import apiClient from '../../api/axios';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import ConfirmModal from '../common/ConfirmModal';
 import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import Button from '../common/Button';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import Card from '../common/Card';
 import './sitemap.scss';
 import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
 import '../dashboard/dashboardHomeComponents/styles/folder.scss';
@@ -114,54 +114,29 @@ function List() {
                   return (name || '').toLowerCase().includes(searchQuery.toLowerCase());
                 })
                 ?.map(({ _id, name, updatedAt }) => (
-                  <div
+                  <Card
                     key={`${_id}-recent`}
-                    className="sitemap-card"
+                    variant="horizontal"
+                    icon={<FaFolderTree size={18} />}
+                    title={name}
+                    meta={updatedAt ? `Modified ${timeAgo(updatedAt)}` : undefined}
                     onClick={() => navigate(`/sitemap/${_id}`)}
-                  >
-                    <div className="sitemap-card__header">
-                      <FaFolderTree size={18} />
-                      <span className="sitemap-card__name">{name}</span>
-                    </div>
-                    {updatedAt ? (
-                      <span className="sitemap-card__date">
-                        Modified {timeAgo(updatedAt)}
-                      </span>
-                    ) : null}
-                    <AnchoredMenu
-                      align="right"
-                      className="cmp-dropdown-anchor-corner"
-                      trigger={({ onClick }) => (
-                        <Button
-                          variant="icon"
-                          ariaLabel="More options"
-                          className="sitemap-card__menu-btn"
-                          title="More options"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onClick();
-                          }}
-                        >
-                          <FiMoreVertical size={16} />
-                        </Button>
-                      )}
-                      items={[
-                        {
-                          key: 'rename',
-                          label: 'Rename',
-                          icon: <FiEdit2 size={14} />,
-                          onClick: () => setRenameModal({ open: true, id: _id, name }),
-                        },
-                        {
-                          key: 'delete',
-                          label: 'Move to Trash',
-                          icon: <FiTrash2 size={14} />,
-                          variant: 'danger',
-                          onClick: () => setDeleteConfirm({ open: true, id: _id }),
-                        },
-                      ]}
-                    />
-                  </div>
+                    menuItems={[
+                      {
+                        key: 'rename',
+                        label: 'Rename',
+                        icon: <FiEdit2 size={14} />,
+                        onClick: () => setRenameModal({ open: true, id: _id, name }),
+                      },
+                      {
+                        key: 'delete',
+                        label: 'Move to Trash',
+                        icon: <FiTrash2 size={14} />,
+                        variant: 'danger',
+                        onClick: () => setDeleteConfirm({ open: true, id: _id }),
+                      },
+                    ]}
+                  />
                 ))}
             </div>
           )}

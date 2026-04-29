@@ -310,42 +310,6 @@
   }
 }
 
-.sitemap-card__header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-right: 2rem;
-}
-
-.sitemap-card__name {
-  font-size: 1.5rem;
-  font-weight: 500;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sitemap-card__date {
-  font-size: 1.2rem;
-  color: rgba(10, 10, 10, 0.46);
-}
-
-.sitemap-card__menu-btn {
-  background: transparent;
-  border: none;
-  padding: 4px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-}
-
 .sitemap-list-empty {
   display: flex;
   flex-direction: row;
@@ -475,28 +439,6 @@
   @media (max-width: 600px) {
     grid-template-columns: repeat(1, 1fr);
     height: calc(80dvh - 165px);
-  }
-}
-
-.playbook-card,
-.sitemap-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  gap: 1rem;
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  height: fit-content;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
 }
 

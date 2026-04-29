@@ -109,4 +109,11 @@
   .cmp-dropdown-item-danger {
     color: $btn-color-destructive-bg;
   }
+
+  // Used by select-one menus where one item shows a trailing checkmark.
+  // Wraps the label so flex pushes the FaCheck icon to the right.
+  .cmp-dropdown-item-label {
+    flex: 1;
+    text-align: left;
+  }
 }
