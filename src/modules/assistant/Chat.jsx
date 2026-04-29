@@ -34,9 +34,9 @@ const AiAssistantChat = () => {
   const dispatch = useDispatch();
   const { chatId } = useParams();
   const userId =
-    useSelector((state) => state.auth.user?.id) ||
+    useSelector((state) => state.auth.user?.id || state.auth.user?._id) ||
     localStorage.getItem('userId');
-  const { error } = useGetWorkspacesQuery(userId);
+  const { error } = useGetWorkspacesQuery(userId, { skip: !userId });
   const selectedWorkspace = useSelector(selectWorkspace);
   const allWorkspaces = useSelector(selectAllWorkspaces);
   const selectedFolder = useSelector((state) => state.folder.selectedFolder);

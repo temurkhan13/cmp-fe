@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { FaCheck } from 'react-icons/fa';
 import Button from '../common/Button';
 
 const AnchoredMenu = ({ align, trigger, items, className }) => {
+  const hasSelectMode = items.some((i) => i.selected !== undefined);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -48,7 +50,12 @@ const AnchoredMenu = ({ align, trigger, items, className }) => {
                 item.onClick();
               }}
             >
-              {item.label}
+              {hasSelectMode ? (
+                <span className="cmp-dropdown-item-label">{item.label}</span>
+              ) : (
+                item.label
+              )}
+              {item.selected && <FaCheck size={10} />}
             </Button>
           ))}
         </div>
@@ -67,6 +74,7 @@ AnchoredMenu.propTypes = {
       icon: PropTypes.node,
       onClick: PropTypes.func.isRequired,
       variant: PropTypes.oneOf(['default', 'danger']),
+      selected: PropTypes.bool,
     })
   ).isRequired,
   className: PropTypes.string,

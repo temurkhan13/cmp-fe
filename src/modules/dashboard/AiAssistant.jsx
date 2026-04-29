@@ -10,7 +10,11 @@ import {
   setSelectedWorkspace,
   updateWorkspaceStatus,
 } from '../../redux/slices/workspacesSlice';
-import DashboardCard from '../../components/dashboard/dashboardHomeComponents/DashboardCard.jsx';
+import Card from '../../components/common/Card';
+import AvatarGroup from '../../components/common/AvatarGroup';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import NotificationBar from '../../components/common/NotificationBar';
+import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import NoData from '../../components/common/NoDataAvailable.jsx';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +30,25 @@ import PageHeader from '../../components/common/PageHeader';
 import Button from '../../components/common/Button';
 import './ai-assistant.scss';
 
+const titleFor = (item) =>
+  item.name ||
+  item.title ||
+  item.chatTitle ||
+  (item.report && item.report[0] ? item.report[0].ReportTitle : '') ||
+  'Unknown Item';
+
+const metaFor = (item) => {
+  const rawDate = item.createdAt || item.created_at || item.updatedAt || item.updated_at;
+  return rawDate ? `Created on: ${new Date(rawDate).toLocaleDateString()}` : null;
+};
+
+const badgeFor = (item) => {
+  if (item.status === 'completed') return <div className="card-badge card-badge--green">Completed</div>;
+  if (item.status === 'in-progress') return <div className="card-badge card-badge--blue">In Progress</div>;
+  if (item.status === 'pending') return <div className="card-badge card-badge--yellow">Pending</div>;
+  return null;
+};
+
 const AiAssistant = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,6 +60,9 @@ const AiAssistant = () => {
   // Local States
   const [error, setError] = useState(null);
   const [currentFolder, setCurrentFolder] = useState(null);
+  const [moveToTrash] = useMoveToTrashMutation();
+  const [confirmId, setConfirmId] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   // Memoize Active Workspace
   const activeWorkspace = useMemo(() => {
@@ -147,6 +173,18 @@ const AiAssistant = () => {
     }
   }, [dispatch, selectedWorkspace, currentFolder]);
 
+  const handleConfirmTrash = async () => {
+    if (!confirmId) return;
+    try {
+      await moveToTrash({ entityType: 'chat', id: confirmId }).unwrap();
+      setConfirmId(null);
+      handleRemoveChat();
+    } catch {
+      setConfirmId(null);
+      setShowError(true);
+    }
+  };
+
   const handleDataUpdated = useCallback(() => {
     dispatch(fetchDashboardStats());
   }, [dispatch]);
@@ -201,10 +239,25 @@ const AiAssistant = () => {
         {folderData?.[0]?.chats.length > 0 ? (
           <div className="assistant-grid">
             {folderData?.[0]?.chats?.map((item) => (
-              <DashboardCard
+              <Card
                 key={item.id}
-                data={{ ...item, type: 'chat' }}
-                onRemove={() => handleRemoveChat()}
+                variant="horizontal"
+                icon={<IoIosChatboxes size={20} color="grey" />}
+                title={titleFor(item)}
+                meta={metaFor(item)}
+                badge={badgeFor(item)}
+                footerRight={
+                  item.sharedUsers?.length > 0 ? (
+                    <AvatarGroup users={item.sharedUsers} max={3} size={24} />
+                  ) : null
+                }
+                menuItems={[
+                  {
+                    key: 'trash',
+                    label: 'Move to Trash',
+                    onClick: () => setConfirmId(item.id),
+                  },
+                ]}
                 onClick={() => {
                   dispatch(setCurrentChatId(item.id));
                   navigate(`/assistant/chat/${item.id}`);
@@ -219,6 +272,22 @@ const AiAssistant = () => {
         )}
       </div>
 
+      <ConfirmModal
+        isOpen={!!confirmId}
+        title="Move to Trash"
+        description="This item will be moved to trash. You can restore it from the Trash page."
+        confirmText="Move to Trash"
+        cancelText="Cancel"
+        onConfirm={handleConfirmTrash}
+        onCancel={() => setConfirmId(null)}
+      />
+      {showError && (
+        <NotificationBar
+          message="Failed to move to trash. Please try again."
+          type="error"
+          onClose={() => setShowError(false)}
+        />
+      )}
     </DashboardLayout>
   );
 };

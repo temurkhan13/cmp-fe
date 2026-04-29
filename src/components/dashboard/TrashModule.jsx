@@ -1,13 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiMoreVertical } from 'react-icons/fi';
 import { MdOutlineSettingsBackupRestore, MdDeleteForever } from 'react-icons/md';
 import { BsWindowStack } from 'react-icons/bs';
 import { FaRegFolderOpen, FaTrash } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { FaFolderTree } from 'react-icons/fa6';
-import { truncateText } from '../../utils/helperFunction';
 import {
   fetchTrashItems,
   restoreFromTrash,
@@ -16,9 +14,7 @@ import {
 import { SkeletonCard } from '../common/Skeleton';
 import NotificationBar from '../common/NotificationBar';
 import Button from '../common/Button';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
-import './dashboardHomeComponents/styles/dashboard-card.scss';
-import '../sitemap/sitemap.scss';
+import Card from '../common/Card';
 
 const typeIcons = {
   workspace: <BsWindowStack size={20} color="grey" />,
@@ -40,63 +36,33 @@ const getDisplayName = (item, type) => {
 const getId = (item) => item._id || item.id;
 
 const TrashCard = ({ item, entityType, onAction }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
   const displayName = getDisplayName(item, entityType);
   const rawDate = item.dateDeleted || item.deleted_at || item.createdAt || item.created_at;
   const parsed = rawDate ? new Date(rawDate) : null;
   const dateLabel = parsed && !isNaN(parsed.getTime()) ? parsed.toLocaleDateString() : '';
 
-  const handleAction = async (action) => {
-    setIsLoading(true);
-    await onAction(action, entityType, getId(item));
-    setIsLoading(false);
-  };
-
   return (
-    <div className="card-dashboard trash-card-item">
-      <div>{typeIcons[entityType]}</div>
-      <div className="info">
-        <div>
-          <h3>{truncateText(displayName, 20)}</h3>
-          {dateLabel && <p>Deleted: {dateLabel}</p>}
-        </div>
-      </div>
-      <AnchoredMenu
-        align="right"
-        className="cmp-dropdown-anchor-corner"
-        trigger={({ onClick }) => (
-          <Button
-            variant="icon"
-            ariaLabel="More options"
-            className="sitemap-card__menu-btn"
-            title="More options"
-            loading={isLoading}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            <FiMoreVertical size={16} />
-          </Button>
-        )}
-        items={[
-          {
-            key: 'restore',
-            label: 'Restore',
-            icon: <MdOutlineSettingsBackupRestore size={14} />,
-            onClick: () => handleAction('restore'),
-          },
-          {
-            key: 'delete',
-            label: 'Delete Permanently',
-            icon: <MdDeleteForever size={14} />,
-            variant: 'danger',
-            onClick: () => handleAction('delete'),
-          },
-        ]}
-      />
-    </div>
+    <Card
+      variant="horizontal"
+      icon={typeIcons[entityType]}
+      title={displayName}
+      meta={dateLabel ? `Deleted: ${dateLabel}` : undefined}
+      menuItems={[
+        {
+          key: 'restore',
+          label: 'Restore',
+          icon: <MdOutlineSettingsBackupRestore size={14} />,
+          onClick: () => onAction('restore', entityType, getId(item)),
+        },
+        {
+          key: 'delete',
+          label: 'Delete Permanently',
+          icon: <MdDeleteForever size={14} />,
+          variant: 'danger',
+          onClick: () => onAction('delete', entityType, getId(item)),
+        },
+      ]}
+    />
   );
 };
 

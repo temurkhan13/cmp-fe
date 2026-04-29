@@ -264,61 +264,6 @@
   cursor: pointer;
 }
 
-.common-card {
-  width: 22rem;
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-  background-color: #fff;
-  padding: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.common-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.common-card-title {
-  font-weight: 600;
-  font-size: 1.2rem;
-}
-
-.common-card-menu {
-  position: relative;
-}
-
-.common-card-menu-icon {
-  font-size: 1.5rem;
-  color: black;
-  cursor: pointer;
-}
-
-.common-card-menu-delete-icon {
-  margin-right: 0.5rem;
-}
-
-.common-card-body {
-  margin-top: 1rem;
-  font-size: 1rem;
-  color: #333;
-}
-
-.common-card-content {
-  color: #666;
-  font-size: 1rem;
-}
-
-.common-card-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-}
-
 .error-boundary {
   display: flex;
   flex-direction: column;
@@ -709,12 +654,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.tone-popup-ask-ai-dropdown {
-  min-width: 100%;
-  padding: 5px 5px;
-  border-radius: 10px;
 }
 
 .onboarding-overlay {

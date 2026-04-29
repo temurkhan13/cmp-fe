@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-
 import PropTypes from 'prop-types';
 import { RiMagicFill } from 'react-icons/ri';
 import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
 import Button from './Button';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 
 const TonePopup = ({
   onToneChange,
@@ -12,224 +11,82 @@ const TonePopup = ({
   HandleAskAi,
   onClose,
 }) => {
-  const [showAskAi, setShowAskAi] = useState(false);
-  const dropdownRef = useRef(null);
-
-  // Close dropdown when clicking outside
-  const handleClickOutside = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setShowAskAi(false); // Close the dropdown when clicking outside
-    }
+  const handleAskAi = (value) => {
+    HandleAskAi(value);
+    onClose();
   };
-
-  // Prevent the dropdown from closing when clicking inside it
-  const handleClickInsideDropdown = (e) => {
-    e.stopPropagation(); // Prevent closing dropdown when clicking inside
+  const handleTone = (value) => {
+    onToneChange(value);
+    onClose();
   };
-
-  const handleAskAiToggle = (e) => {
-    e.stopPropagation();
-    setShowAskAi((prev) => !prev); // Toggle dropdown state
-  };
-
-  const handleOptionClick = () => {
+  const handleLength = (value) => {
+    onResponseLengthChange(value);
     onClose();
   };
 
-  // Attach event listener to close the dropdown if clicked outside
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
     <div className="PopupBox">
-      {!showAskAi ? (
-        <div className="navbar">
-          <div
-            className="dropdown"
-            ref={dropdownRef}
-            onClick={handleClickInsideDropdown}
-          >
+      <div className="navbar">
+        <AnchoredMenu
+          align="left"
+          trigger={({ onClick }) => (
             <Button
               variant="ghost"
               className="dropbtn tone-popup-inspire-btn"
               iconLeft={<RiMagicFill />}
-              onClick={handleAskAiToggle}
+              onClick={onClick}
             >
               Inspire Me
             </Button>
-            <div className="dropdownContent">
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Improve Writing');
-                  handleOptionClick();
-                }}
-              >
-                Improve Writing
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Fix Spelling & Grammar');
-                  handleOptionClick();
-                }}
-              >
-                Fix Grammar
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Summarize');
-                  handleOptionClick();
-                }}
-              >
-                Summarize
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  HandleAskAi('Explain This');
-                  handleOptionClick();
-                }}
-              >
-                Explain This
-              </a>
-            </div>
-          </div>
-          <div
-            className="dropdown"
-            ref={dropdownRef}
-            onClick={handleClickInsideDropdown}
-          >
+          )}
+          items={[
+            { key: 'improve-writing', label: 'Improve Writing', onClick: () => handleAskAi('Improve Writing') },
+            { key: 'fix-grammar', label: 'Fix Grammar', onClick: () => handleAskAi('Fix Spelling & Grammar') },
+            { key: 'summarize', label: 'Summarize', onClick: () => handleAskAi('Summarize') },
+            { key: 'explain-this', label: 'Explain This', onClick: () => handleAskAi('Explain This') },
+          ]}
+        />
+        <AnchoredMenu
+          align="left"
+          trigger={({ onClick }) => (
             <Button
               variant="ghost"
               className="dropbtn"
               iconLeft={<RxMagicWand />}
+              onClick={onClick}
             >
               Change Tone
             </Button>
-            <div className="dropdownContent">
-              <a
-                href="#"
-                onClick={() => {
-                  onToneChange('Normal');
-                  handleOptionClick();
-                }}
-              >
-                Normal
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onToneChange('Professional');
-                  handleOptionClick();
-                }}
-              >
-                Professional
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onToneChange('Casual');
-                  handleOptionClick();
-                }}
-              >
-                Casual
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onToneChange('Relax');
-                  handleOptionClick();
-                }}
-              >
-                Relax
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onToneChange('Friendly');
-                  handleOptionClick();
-                }}
-              >
-                Friendly
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onToneChange('StraightForward');
-                  handleOptionClick();
-                }}
-              >
-                StraightForward
-              </a>
-            </div>
-          </div>
-          <div
-            className="dropdown"
-            ref={dropdownRef}
-            onClick={handleClickInsideDropdown}
-          >
+          )}
+          items={[
+            { key: 'normal', label: 'Normal', onClick: () => handleTone('Normal') },
+            { key: 'professional', label: 'Professional', onClick: () => handleTone('Professional') },
+            { key: 'casual', label: 'Casual', onClick: () => handleTone('Casual') },
+            { key: 'relax', label: 'Relax', onClick: () => handleTone('Relax') },
+            { key: 'friendly', label: 'Friendly', onClick: () => handleTone('Friendly') },
+            { key: 'straightforward', label: 'StraightForward', onClick: () => handleTone('StraightForward') },
+          ]}
+        />
+        <AnchoredMenu
+          align="left"
+          trigger={({ onClick }) => (
             <Button
               variant="ghost"
               className="dropbtn"
               iconLeft={<BsFilterLeft />}
+              onClick={onClick}
             >
               Response Length
             </Button>
-            <div className="dropdownContent">
-              <a
-                href="#"
-                onClick={() => {
-                  onResponseLengthChange('Auto');
-                  handleOptionClick();
-                }}
-              >
-                Auto
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onResponseLengthChange('Small');
-                  handleOptionClick();
-                }}
-              >
-                Small
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onResponseLengthChange('Medium');
-                  handleOptionClick();
-                }}
-              >
-                Medium
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  onResponseLengthChange('Comprehensive');
-                  handleOptionClick();
-                }}
-              >
-                Comprehensive
-              </a>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="navbar">
-          <div
-            className="dropdown tone-popup-ask-ai-dropdown"
-            ref={dropdownRef}
-            onClick={handleClickInsideDropdown}
-          ></div>
-        </div>
-      )}
+          )}
+          items={[
+            { key: 'auto', label: 'Auto', onClick: () => handleLength('Auto') },
+            { key: 'small', label: 'Small', onClick: () => handleLength('Small') },
+            { key: 'medium', label: 'Medium', onClick: () => handleLength('Medium') },
+            { key: 'comprehensive', label: 'Comprehensive', onClick: () => handleLength('Comprehensive') },
+          ]}
+        />
+      </div>
     </div>
   );
 };

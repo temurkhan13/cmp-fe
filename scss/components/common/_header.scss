@@ -170,7 +170,7 @@
 }
 
 .header-hamburger {
-  display: none;
+  display: none !important;
   background: none;
   border: none;
   cursor: pointer;
@@ -187,7 +187,7 @@
   }
 
   @media (max-width: $dashboard_tablet) {
-    display: flex;
+    display: flex !important;
   }
 }
 

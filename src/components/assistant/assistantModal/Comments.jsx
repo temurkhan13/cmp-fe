@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
 import { useState, useEffect } from 'react';
-import { FaEllipsisV, FaCheck } from 'react-icons/fa';
+import { FaEllipsisV } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import AnchoredMenu from '../../dropdowns/AnchoredMenu';
 import '../../chat/chat.scss';
 
 import {
@@ -37,7 +38,6 @@ const Comments = ({ comments }) => {
   const [editedCommentText, setEditedCommentText] = useState('');
   const [replyTexts, setReplyTexts] = useState({});
   const [editedReplyText, setEditedReplyText] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [dropdownKey, setDropdownKey] = useState(0);
@@ -102,7 +102,6 @@ const Comments = ({ comments }) => {
     } else {
       await removeCommentMutation({ workspaceId, folderId, chatId, messageId, commentId });
     }
-    setShowDropdown(false);
   };
 
   const toggleReplies = (commentId) => {
@@ -161,24 +160,18 @@ const Comments = ({ comments }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
-        <IoFilter
-          onClick={() => setShowDropdown((prev) => !prev)}
-          className="cm-filter-icon"
+        <AnchoredMenu
+          align="right"
+          trigger={({ onClick }) => (
+            <IoFilter onClick={onClick} className="cm-filter-icon" />
+          )}
+          items={menuItems.map((item) => ({
+            key: item,
+            label: item,
+            selected: selectedItem === item,
+            onClick: () => handleItemClick(item),
+          }))}
         />
-        {showDropdown && (
-          <div className="cm-filter-dropdown">
-            {menuItems.map((item) => (
-              <div
-                key={item}
-                className={`cm-filter-item ${selectedItem === item ? 'active' : ''}`}
-                onClick={() => handleItemClick(item)}
-              >
-                {item}
-                {selectedItem === item && <FaCheck size={10} />}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Comments List */}

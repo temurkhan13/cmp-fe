@@ -98,8 +98,10 @@ const MessagesSection = ({ setCurrentChat }) => {
   // const [likeChatMessage,dislikeChatMessage] = useLikeDislikeChatMutation()
   const [likeChatMessage] = useLikeChatMessageMutation();
   const [dislikeChatMessage] = useDislikeChatMessageMutation();
-  const userId = useSelector((state) => state.auth.user?.id);
-  useGetWorkspacesQuery(userId);
+  const userId = useSelector(
+    (state) => state.auth.user?.id || state.auth.user?._id
+  );
+  useGetWorkspacesQuery(userId, { skip: !userId });
   const currentWorkspace = useSelector(selectWorkspace);
   const workspaceId = currentWorkspace?.id;
   const selectedFolder = useSelector(selectSelectedFolder);

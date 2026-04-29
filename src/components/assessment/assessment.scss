@@ -1261,41 +1261,6 @@
     color: black;
   }
 
-  .dropdown-menu {
-    position: absolute;
-    z-index: 10;
-    top: 8rem;
-    right: 5rem;
-    width: 12rem;
-    background: white;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-    border-radius: 0.5rem;
-    overflow: hidden;
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 0 auto;
-
-      li {
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        &:hover {
-          background: #f0f0f0;
-        }
-      }
-    }
-  }
-
-  .check-icon {
-    color: green;
-    font-size: 1rem;
-  }
-
   .reply-wrapper {
     display: flex;
     padding: 0.5rem 0;
