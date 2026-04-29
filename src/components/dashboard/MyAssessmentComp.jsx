@@ -12,7 +12,7 @@ import {
   updateWorkspaceStatus,
 } from '../../redux/slices/workspacesSlice';
 import useManagerChat from '@hooks/useManagerChat';
-import Card from '../../components/common/Card';
+import { Card } from '../../components/common';
 import AvatarGroup from '../../components/common/AvatarGroup';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import NotificationBar from '../../components/common/NotificationBar';

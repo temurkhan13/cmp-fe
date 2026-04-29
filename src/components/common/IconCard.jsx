@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import AnchoredMenu from './AnchoredMenu';
 import { truncateText } from '../../utils/helperFunction';
 
 const IconCard = ({

@@ -3,7 +3,7 @@ import { RiMagicFill } from 'react-icons/ri';
 import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
 import Button from './Button';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import AnchoredMenu from './AnchoredMenu';
 
 const TonePopup = ({
   onToneChange,

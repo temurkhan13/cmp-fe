@@ -6,7 +6,7 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import Components from '@components';
 import ShareModal from '../customModal/Sharemodal';
 import Modal from '../../components/common/Modal';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import AnchoredMenu from './AnchoredMenu';
 import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { logout } from '../../redux/slices/authSlice';

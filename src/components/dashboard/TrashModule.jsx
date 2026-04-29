@@ -14,7 +14,7 @@ import {
 import { SkeletonCard } from '../common/Skeleton';
 import NotificationBar from '../common/NotificationBar';
 import Button from '../common/Button';
-import Card from '../common/Card';
+import { Card } from '../common';
 
 const typeIcons = {
   workspace: <BsWindowStack size={20} color="grey" />,

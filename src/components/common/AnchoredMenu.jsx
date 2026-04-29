@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FaCheck } from 'react-icons/fa';
-import Button from '../common/Button';
+import Button from './Button';
 
 const AnchoredMenu = ({ align, trigger, items, className }) => {
   const hasSelectMode = items.some((i) => i.selected !== undefined);

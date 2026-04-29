@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
+import AnchoredMenu from './AnchoredMenu';
+import Button from './Button';
 import { FiMoreVertical } from 'react-icons/fi';
-import AnchoredMenu from '../../dropdowns/AnchoredMenu';
-import Button from '../Button';
 
 const VARIANTS = ['horizontal', 'vertical'];
 

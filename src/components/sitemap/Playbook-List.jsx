@@ -13,7 +13,7 @@ import ConfirmModal from '../common/ConfirmModal';
 import InputModal from '../common/InputModal';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import Button from '../common/Button';
-import Card from '../common/Card';
+import { Card } from '../common';
 import './sitemap.scss';
 import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
 import '../dashboard/dashboardHomeComponents/styles/folder.scss';

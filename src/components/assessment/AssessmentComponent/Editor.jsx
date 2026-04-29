@@ -9,7 +9,7 @@ import {
 import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
 import Button from '../../common/Button';
-import AnchoredMenu from '../../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../../common';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
 import { exportDocument } from '@utils/exportDocument';

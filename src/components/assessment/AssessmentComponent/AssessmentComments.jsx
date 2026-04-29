@@ -9,7 +9,7 @@ import { RiSendPlane2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import Button from '../../common/Button';
-import AnchoredMenu from '../../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../../common';
 
 import {
   updateComment,

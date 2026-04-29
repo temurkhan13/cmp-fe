@@ -12,7 +12,7 @@ import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
 import ConfirmModal from '../common/ConfirmModal';
 import Button from '../common/Button';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../common';
 import { exportDocument } from '@utils/exportDocument';
 
 function PlaybookEditor() {

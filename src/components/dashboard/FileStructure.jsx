@@ -9,14 +9,10 @@ import {
   useMoveToTrashMutation,
   useGetWorkspacesQuery,
 } from '../../redux/api/workspaceApi';
-import NotificationBar from '../common/NotificationBar';
 import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
-import './styles/file-structure.scss';
-import IconCard from '../common/IconCard';
-import InputModal from '../common/InputModal';
-import ConfirmModal from '../common/ConfirmModal';
-import Button from '../common/Button';
+import { IconCard, Button, InputModal, ConfirmModal, NotificationBar } from '../common';
+import "./dashboard-inline.scss";
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const dispatch = useDispatch();
