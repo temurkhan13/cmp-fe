@@ -3,28 +3,6 @@
 // `.dropdown*` / `.dropdownMenu` / `.profile-dropdown*` families scattered across
 // components/* until all dropdown groups are migrated to this common style.
 
-.cmp-dropdown {
-  @include dropdown-menu;
-  top: 5rem;
-  right: 0;
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  z-index: 1001;
-  width: 18rem;
-}
-
-.cmp-dropdown-item {
-  justify-content: flex-start;
-  padding: 1rem;
-  font-size: 1.4rem;
-  border-radius: 5px;
-}
-
-.cmp-dropdown-item-icon {
-  margin-right: 1rem;
-  font-size: 1.8rem;
-}
-
 .cmp-dropdown-item-danger {
   color: $btn-color-destructive-bg;
 }
@@ -37,12 +15,6 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0);
   z-index: 0;
-}
-
-@media (max-width: 600px) {
-  .cmp-dropdown {
-    width: 16rem;
-  }
 }
 
 // Anchored variant — dropdown positioned relative to a trigger button,
@@ -91,10 +63,10 @@
     display: flex;
     justify-content: flex-start;
     width: 100%;
-    padding: 10px 20px;
+    padding: 1.2rem 1.6rem;
     border-radius: 0;
     text-align: left;
-    font-size: 0.95rem;
+    font-size: 1.3rem;
     white-space: nowrap;
 
     &:hover {

@@ -9,7 +9,6 @@ export { default as FileInput } from "./FileInput";
 export { default as ScrollToTop } from "./ScrollToTop";
 export { default as MessageItemText } from "./MessageItemText";
 export { default as MessageItemFile } from "./MessageItemFile";
-export { default as DropDownList } from "./DropDownList";
 export { default as StartAssessmentPopup } from "./StartAssessmentPopup"
 export { default as PlainCard } from "./PlainCard";
 

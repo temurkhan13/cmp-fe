@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import Dropdown from 'react-multilevel-dropdown';
 import { useState, useEffect } from 'react';
 import { FaEllipsisV } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
@@ -40,8 +39,6 @@ const Comments = ({ comments }) => {
   const [editedReplyText, setEditedReplyText] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [dropdownKey, setDropdownKey] = useState(0);
-  const closeDropdown = () => setDropdownKey((k) => k + 1);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -192,18 +189,23 @@ const Comments = ({ comments }) => {
                         <span className="cm-author">{comment.userName}</span>
                         <span className="cm-time">{formatTime(comment.timestamp)}</span>
                       </div>
-                      <Dropdown
-                        key={`comment-dd-${comment.commentId}-${dropdownKey}`}
-                        title={<FaEllipsisV size={12} className="cm-menu-icon" />}
-                        buttonClassName="cm-menu-btn"
-                      >
-                        <Dropdown.Item onClick={() => { closeDropdown(); handleEditComment(comment.commentId); }}>
-                          Edit
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => { closeDropdown(); handleDeleteComment(comment._id, false, null, msgId); }}>
-                          Delete
-                        </Dropdown.Item>
-                      </Dropdown>
+                      <AnchoredMenu
+                        align="right"
+                        trigger={({ onClick }) => (
+                          <Button
+                            variant="ghost"
+                            className="cm-menu-btn"
+                            ariaLabel="Comment options"
+                            onClick={onClick}
+                          >
+                            <FaEllipsisV size={12} className="cm-menu-icon" />
+                          </Button>
+                        )}
+                        items={[
+                          { key: 'edit', label: 'Edit', onClick: () => handleEditComment(comment.commentId) },
+                          { key: 'delete', label: 'Delete', onClick: () => handleDeleteComment(comment._id, false, null, msgId) },
+                        ]}
+                      />
                     </div>
 
                     {editingCommentId === comment.commentId ? (
@@ -246,18 +248,23 @@ const Comments = ({ comments }) => {
                               <span className="cm-author">{reply.userName}</span>
                               <span className="cm-time">{formatTime(reply.timestamp)}</span>
                             </div>
-                            <Dropdown
-                              key={`reply-dd-${reply.replyId}-${dropdownKey}`}
-                              title={<FaEllipsisV size={10} className="cm-menu-icon" />}
-                              buttonClassName="cm-menu-btn"
-                            >
-                              <Dropdown.Item onClick={() => { closeDropdown(); handleEditReply(comment.commentId, reply.replyId); }}>
-                                Edit
-                              </Dropdown.Item>
-                              <Dropdown.Item onClick={() => { closeDropdown(); handleDeleteComment(reply.replyId, true, comment.commentId, msgId); }}>
-                                Delete
-                              </Dropdown.Item>
-                            </Dropdown>
+                            <AnchoredMenu
+                              align="right"
+                              trigger={({ onClick }) => (
+                                <Button
+                                  variant="ghost"
+                                  className="cm-menu-btn"
+                                  ariaLabel="Reply options"
+                                  onClick={onClick}
+                                >
+                                  <FaEllipsisV size={10} className="cm-menu-icon" />
+                                </Button>
+                              )}
+                              items={[
+                                { key: 'edit', label: 'Edit', onClick: () => handleEditReply(comment.commentId, reply.replyId) },
+                                { key: 'delete', label: 'Delete', onClick: () => handleDeleteComment(reply.replyId, true, comment.commentId, msgId) },
+                              ]}
+                            />
                           </div>
 
                           {editingReplyId === reply.replyId ? (
