@@ -43,7 +43,7 @@ const useStartAssessment = () => {
         await dispatch(
           fetchFolderData({ workspaceId, folderId: folder.id })
         ).unwrap();
-      } catch {}
+      } catch { /* ignored */ }
     },
     [dispatch, currentWorkspace]
   );

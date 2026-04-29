@@ -131,7 +131,6 @@ const ButtonPlayground = () => {
           style={rowStyle}
           onSubmit={(e) => {
             e.preventDefault();
-            // eslint-disable-next-line no-alert
             alert('submit fired');
           }}
         >

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CiBellOn } from 'react-icons/ci';
 import { FiLogOut } from 'react-icons/fi';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { CgProfile } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import NotificationDropdown from './NotificationDropdown';
+import DropdownMenu from '../dropdowns/DropdownMenu';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
 import { logout } from '../../redux/slices/authSlice';
@@ -103,34 +104,36 @@ const Header = () => {
           </div>
         )}
 
-        {dropdownOpen && (
-          <div className="dropdownMenu">
-            <div
-              className="dropdownItem"
-              onClick={() => {
+        <DropdownMenu
+          isOpen={dropdownOpen}
+          onClose={closeDropdowns}
+          items={[
+            {
+              key: 'profile',
+              label: 'Profile',
+              icon: <CgProfile />,
+              onClick: () => {
                 navigate('/dashboard/settings');
-                closeDropdowns(); // Close dropdown after navigating
-              }}
-            >
-              <CgProfile className="dropdownIcon" />
-              Profile
-            </div>
-            <div
-              className="dropdownItem"
-              onClick={handleOpenChangePasswordModal}
-            >
-              <RiLockPasswordLine className="dropdownIcon" />
-              Change Password
-            </div>
-            <div className="dropdownItem" onClick={handleLogout}>
-              <FiLogOut className="dropdownIcon" />
-              Logout
-            </div>
-          </div>
-        )}
+                closeDropdowns();
+              },
+            },
+            {
+              key: 'change-password',
+              label: 'Change Password',
+              icon: <RiLockPasswordLine />,
+              onClick: handleOpenChangePasswordModal,
+            },
+            {
+              key: 'logout',
+              label: 'Logout',
+              icon: <FiLogOut />,
+              onClick: handleLogout,
+            },
+          ]}
+        />
 
-        {(dropdownOpen || notificationOpen) && (
-          <div className="header-overlay" onClick={closeDropdowns}></div>
+        {notificationOpen && (
+          <div className="cmp-dropdown-overlay" onClick={closeDropdowns}></div>
         )}
       </div>
       {isChangePasswordModalOpen && (

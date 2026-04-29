@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiMoreVertical } from 'react-icons/fi';
 import { MdOutlineSettingsBackupRestore, MdDeleteForever } from 'react-icons/md';
@@ -16,6 +16,7 @@ import {
 import { SkeletonCard } from '../common/Skeleton';
 import NotificationBar from '../common/NotificationBar';
 import Button from '../common/Button';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import './dashboardHomeComponents/styles/dashboard-card.scss';
 import '../sitemap/sitemap.scss';
 
@@ -39,28 +40,14 @@ const getDisplayName = (item, type) => {
 const getId = (item) => item._id || item.id;
 
 const TrashCard = ({ item, entityType, onAction }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const menuRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const displayName = getDisplayName(item, entityType);
   const rawDate = item.dateDeleted || item.deleted_at || item.createdAt || item.created_at;
   const parsed = rawDate ? new Date(rawDate) : null;
   const dateLabel = parsed && !isNaN(parsed.getTime()) ? parsed.toLocaleDateString() : '';
 
-  const handleAction = async (action, e) => {
-    e.stopPropagation();
-    setIsMenuOpen(false);
+  const handleAction = async (action) => {
     setIsLoading(true);
     await onAction(action, entityType, getId(item));
     setIsLoading(false);
@@ -75,42 +62,40 @@ const TrashCard = ({ item, entityType, onAction }) => {
           {dateLabel && <p>Deleted: {dateLabel}</p>}
         </div>
       </div>
-      <div className="sitemap-card__actions" ref={menuRef}>
-        <Button
-          variant="icon"
-          ariaLabel="More options"
-          className="sitemap-card__menu-btn"
-          title="More options"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsMenuOpen(!isMenuOpen);
-          }}
-        >
-          <FiMoreVertical size={16} />
-        </Button>
-        {isMenuOpen && (
-          <div className="sitemap-card__dropdown" onClick={(e) => e.stopPropagation()}>
-            <Button
-              variant="ghost"
-              className="sitemap-card__dropdown-item"
-              iconLeft={<MdOutlineSettingsBackupRestore size={14} />}
-              onClick={(e) => handleAction('restore', e)}
-              loading={isLoading}
-            >
-              Restore
-            </Button>
-            <Button
-              variant="ghost"
-              className="sitemap-card__dropdown-item sitemap-card__dropdown-item--danger"
-              iconLeft={<MdDeleteForever size={14} />}
-              onClick={(e) => handleAction('delete', e)}
-              loading={isLoading}
-            >
-              Delete Permanently
-            </Button>
-          </div>
+      <AnchoredMenu
+        align="right"
+        className="cmp-dropdown-anchor-corner"
+        trigger={({ onClick }) => (
+          <Button
+            variant="icon"
+            ariaLabel="More options"
+            className="sitemap-card__menu-btn"
+            title="More options"
+            loading={isLoading}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            <FiMoreVertical size={16} />
+          </Button>
         )}
-      </div>
+        items={[
+          {
+            key: 'restore',
+            label: 'Restore',
+            icon: <MdOutlineSettingsBackupRestore size={14} />,
+            onClick: () => handleAction('restore'),
+          },
+          {
+            key: 'delete',
+            label: 'Delete Permanently',
+            icon: <MdDeleteForever size={14} />,
+            variant: 'danger',
+            onClick: () => handleAction('delete'),
+          },
+        ]}
+      />
     </div>
   );
 };

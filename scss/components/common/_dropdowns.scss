@@ -1,0 +1,112 @@
+// cmp-dropdown — unified dropdown menu styles
+// Class prefix `cmp-dropdown` is namespaced to avoid collision with the legacy
+// `.dropdown*` / `.dropdownMenu` / `.profile-dropdown*` families scattered across
+// components/* until all dropdown groups are migrated to this common style.
+
+.cmp-dropdown {
+  @include dropdown-menu;
+  top: 5rem;
+  right: 0;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  z-index: 1001;
+  width: 18rem;
+}
+
+.cmp-dropdown-item {
+  justify-content: flex-start;
+  padding: 1rem;
+  font-size: 1.4rem;
+  border-radius: 5px;
+}
+
+.cmp-dropdown-item-icon {
+  margin-right: 1rem;
+  font-size: 1.8rem;
+}
+
+.cmp-dropdown-item-danger {
+  color: $btn-color-destructive-bg;
+}
+
+.cmp-dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 0;
+}
+
+@media (max-width: 600px) {
+  .cmp-dropdown {
+    width: 16rem;
+  }
+}
+
+// Anchored variant — dropdown positioned relative to a trigger button,
+// closed via ref-based click-outside detection (see AnchoredMenu.jsx).
+.cmp-dropdown-anchor {
+  position: relative;
+}
+
+// Utility: pins the AnchoredMenu wrapper to the top-right corner of a
+// positioned (position: relative) parent. Use for card-style kebab menus.
+// Combine with the AnchoredMenu `className` prop.
+.cmp-dropdown-anchor-corner {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+// Modifier: hides the wrapper until the parent is hovered.
+// The parent card must define its own :hover override:
+//   .my-card:hover .cmp-dropdown-anchor-corner--hover-fade { opacity: 1; }
+.cmp-dropdown-anchor-corner--hover-fade {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.cmp-dropdown-anchored {
+  position: absolute;
+  top: 100%;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 200;
+
+  &.cmp-dropdown-anchored-left {
+    left: 0;
+  }
+
+  &.cmp-dropdown-anchored-right {
+    right: 0;
+  }
+
+  .cmp-btn {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.95rem;
+    white-space: nowrap;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #eee;
+    }
+  }
+
+  .cmp-dropdown-item-danger {
+    color: $btn-color-destructive-bg;
+  }
+}

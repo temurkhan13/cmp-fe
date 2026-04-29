@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import SideBarModal from '../../components/common/SideBarModal';
@@ -10,7 +9,6 @@ import AssessmentComments from './AssessmentComponent/AssessmentComments';
 import ChatBookmark from '../assistant/assistantModal/ChatBookmark';
 import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
 
-import { IoIosChatboxes } from 'react-icons/io';
 import { PiClockCounterClockwiseBold } from 'react-icons/pi';
 import {
   FaBookmark,
@@ -20,7 +18,7 @@ import { RiNewspaperLine } from 'react-icons/ri';
 
 const Assessments = ({ handleAssessmentSelect, folderID, chatMedia, bookmarkData = [], isOverlay = false, isVisible = false, onClose }) => {
   const [activeIcon, setActiveIcon] = useState('question');
-  const [comments, setComments] = useState([]);
+  const [comments] = useState([]);
   const { id: assessmentId } = useParams();
 
   const images = chatMedia?.images || [];

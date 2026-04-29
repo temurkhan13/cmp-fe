@@ -1,4 +1,4 @@
-import { DottedBg, heroBg, heroBg2, MainBg } from '../../../assets';
+import { DottedBg, heroBg, MainBg } from '../../../assets';
 import { FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../../common/Button';

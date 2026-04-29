@@ -5,7 +5,6 @@ import { RxCross2 } from 'react-icons/rx';
 import { IoMdLink } from 'react-icons/io';
 import { FaUserCircle } from 'react-icons/fa';
 
-import { useSelector, useDispatch } from 'react-redux';
 //import { addUserToChat } from '../redux/actions'; // Adjust with your actual action creator
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
@@ -13,10 +12,8 @@ import Button from '../common/Button';
 
 import './custom-modal.scss';
 
-const ShareModal = ({ members, onClose }) => {
-  const dispatch = useDispatch();
-
-  const { selectedChatId, chats, users, currentChat } = useSelectedChat();
+const ShareModal = ({ onClose }) => {
+  const { users, currentChat } = useSelectedChat();
 
   const permanentOwner = {
     name: 'Owner Name', // Replace with actual owner name
@@ -44,6 +41,7 @@ const ShareModal = ({ members, onClose }) => {
       }));
       setUserRoles([permanentOwner, ...userRolesArray]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChat, userDetailsMap]);
 
   const handleRoleChange = (userId, newRole) => {
@@ -77,10 +75,6 @@ const ShareModal = ({ members, onClose }) => {
   };
 
   const handleSendInvite = () => {
-    const newUser = {
-      name: inputValue,
-      role,
-    };
     // dispatch(addUserToChat(newUser, selectedChatId)); // Dispatch action to add user to chat
     setInputValue('');
     setRole('edit');
@@ -123,7 +117,7 @@ const ShareModal = ({ members, onClose }) => {
       <div className="custom-modal-share-overlay" onClick={onClose}>
         <div className="custom-modal-share-dialog" onClick={(e) => e.stopPropagation()}>
           <div className="custom-modal-share-header">
-            <h3 className="custom-modal-share-heading">Share "AI Assistant Test File"</h3>
+            <h3 className="custom-modal-share-heading">Share &quot;AI Assistant Test File&quot;</h3>
             <div className="custom-modal-close-link-btn">
               <Button
                 variant="secondary"

@@ -9,7 +9,7 @@ import { BsArrowReturnLeft } from 'react-icons/bs';
 const HeaderDropDown = () => {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
-  const [showIcon, setShowIcon] = useState(false);
+  const [showIcon] = useState(false);
 
   const toggleDropdown = () => {
     setOpen(!isOpen);

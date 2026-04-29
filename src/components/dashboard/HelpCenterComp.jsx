@@ -89,18 +89,18 @@ const HelpCenterComp = () => {
           <p>
             The AI Assessment module helps you create, customize, and download
             comprehensive change management reports tailored to your
-            organization's needs. This tool simplifies the assessment process,
+            organization&apos;s needs. This tool simplifies the assessment process,
             making it easier for users to generate insightful reports with
-            minimal effort. Here's how it works: Step-by-Step Assessment
+            minimal effort. Here&apos;s how it works: Step-by-Step Assessment
             Journey: Start by selecting an assessment from a library of 24
             change management reports. The Change AI bot will guide you through
-            a series of questions to help build your report. If you're unsure of
-            any answers, use the "Inspire Me" button to get ideas and guidance.
+            a series of questions to help build your report. If you&apos;re unsure of
+            any answers, use the &quot;Inspire Me&quot; button to get ideas and guidance.
             Customizable Report Editor: After answering the questions, the
             generated report can be opened in an intuitive editor. Modify,
             enhance, and personalize the report to better fit your
-            organization's specific needs and insights. Downloadable Reports:
-            Once you're satisfied with your report, download it for easy sharing
+            organization&apos;s specific needs and insights. Downloadable Reports:
+            Once you&apos;re satisfied with your report, download it for easy sharing
             and record-keeping. Allows you to deliver professional, data-driven
             reports that support decision-making and change management efforts
             within your team. The AI Assessment module empowers you to create
@@ -136,7 +136,7 @@ const HelpCenterComp = () => {
             presentation. The Digital Playbook makes it simple to develop,
             organize, and communicate your digital strategies, helping you
             transform ideas into actionable plans with a professional and
-            visually engaging approach.
+            visually engaging approach.
           </p>
         </div>
       ),

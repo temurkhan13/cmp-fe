@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { Handle, Position } from '@xyflow/react';
-import { BiPlus, BiPlusCircle } from 'react-icons/bi';
+import { BiPlus } from 'react-icons/bi';
 import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
 import { useReorder } from '../../hooks/useReorder';
@@ -16,8 +16,8 @@ const Node = ({ data }) => {
   const inputRef = useRef();
 
   const [
-    draggedIndex,
-    draggedOverIndex,
+    ,
+    ,
     handleDragStart,
     handleDragOver,
     handleDrop,

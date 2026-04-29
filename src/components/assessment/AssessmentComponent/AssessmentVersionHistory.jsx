@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FiClock, FiRotateCcw, FiSave } from 'react-icons/fi';
-import NoDataAvailable from '../../common/NoDataAvailable';
 import apiClient from '../../../api/axios';
 import toast from 'react-hot-toast';
 import Button from '../../common/Button';
@@ -20,6 +19,7 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
       setLoading(false);
       setHasReport(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assessmentId]);
 
   const fetchData = async () => {

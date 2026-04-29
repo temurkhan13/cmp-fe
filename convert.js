@@ -1,5 +1,4 @@
 import postmanToOpenApi from 'postman-to-openapi';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,5 +11,5 @@ const outputFilePath = path.resolve(__dirname, 'cmpOpenAi.yaml');
 postmanToOpenApi(postmanCollectionPath, outputFilePath, {
   defaultTag: 'General',
 })
-  .then((result) => {})
-  .catch((err) => {});
+  .then(() => {})
+  .catch(() => {});

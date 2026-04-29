@@ -18,13 +18,10 @@ import {
   fetchFolderData,
   resetFolderState,
   selectFolderData,
-  selectSelectedFolder,
   setSelectedFolder,
-  toggleFolderActivation,
   fetchWorkspaceAssessments,
 } from '../../redux/slices/folderSlice';
 import { RiNewspaperLine } from 'react-icons/ri';
-import { select } from 'jodit/esm/plugins/select/select';
 import Button from '../../components/common/Button';
 
 const MyAssessmentComp = () => {
@@ -33,7 +30,6 @@ const MyAssessmentComp = () => {
   const selectedWorkspace = useSelector(selectWorkspace);
   const folderData = useSelector(selectFolderData);
   // const selectAssessmentsData = useSelector(selectAssessments);
-  const selectedFolder = useSelector(selectSelectedFolder);
   const { managerData } = useManagerChat();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -81,6 +77,7 @@ const MyAssessmentComp = () => {
 
   useEffect(() => {
     if (activeWorkspace) handleFolderSelection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWorkspace, selectedWorkspace, dispatch]);
 
   const handleWorkspaceChange = useCallback(
@@ -96,6 +93,7 @@ const MyAssessmentComp = () => {
         workspace.folders[0];
       handleFolderSelection(firstFolder);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch]
   );
 
@@ -124,6 +122,7 @@ const MyAssessmentComp = () => {
       }
     };
     fetchStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
 
   useEffect(() => {

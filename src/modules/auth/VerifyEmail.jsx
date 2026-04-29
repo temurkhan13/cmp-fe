@@ -1,6 +1,5 @@
 import Components from '../../components';
 import { Formik, Form } from 'formik';
-import useVerifyEmail from '../../hooks/useVerifyEmail';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -60,7 +59,7 @@ const VerifyEmail = () => {
             resetForm();
           }}
         >
-          {(formik) => (
+          {() => (
             <Form>
               <Components.Feature.VerifyCode
                 name="number"
@@ -69,7 +68,7 @@ const VerifyEmail = () => {
                 place="Enter 6-digit code"
                 handleVerification={async (value) => {
                   try {
-                    const response = await dispatch(verify(value)).unwrap();
+                    await dispatch(verify(value)).unwrap();
                     //  if (response.success) {
                     navigate('/choose-plan');
                     //  }

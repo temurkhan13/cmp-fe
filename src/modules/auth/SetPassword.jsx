@@ -3,8 +3,6 @@ import Button from '../../components/common/Button';
 import data from '../../data';
 import { Formik, Form } from 'formik';
 import { useLocation } from 'react-router-dom';
-import useRegister from '../../hooks/useRegister';
-
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
@@ -62,7 +60,7 @@ const SetPassword = () => {
           }
           onSubmit={handleSubmit}
         >
-          {(formik) => (
+          {() => (
             <Form>
               <Components.Feature.FormInput
                 type="password"

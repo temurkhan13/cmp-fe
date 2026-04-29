@@ -1,9 +1,8 @@
 import Components from '../../components';
 import '../../components/assessment/assessment.scss';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { useGetWorkspacesQuery } from '../../redux/api/workspaceApi';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { RiNewspaperLine } from 'react-icons/ri';
@@ -24,7 +23,6 @@ import {
 import {
   fetchFolderData,
   resetFolderState,
-  selectFolderData,
   setSelectedFolder,
   toggleFolderActivation,
 } from '../../redux/slices/folderSlice.js';
@@ -32,7 +30,6 @@ import Button from '../../components/common/Button';
 
 const Chat = () => {
   const dispatch = useDispatch();
-  const { chatId } = useParams(); // Extract chatId from the URL
   const userId =
     useSelector((state) => state.auth.user?.id) ||
     localStorage.getItem('userId');
@@ -40,8 +37,6 @@ const Chat = () => {
   const { error } = useGetWorkspacesQuery(userId);
   const workspacess = useSelector(selectAllWorkspaces);
   const selectedWorkspace = useSelector(selectWorkspace);
-  const folderData = useSelector(selectFolderData);
-
   const isResponsive = useMediaQuery('(max-width: 1080px)');
   const [showLeftSidebar, setShowLeftSidebar] = useState(false);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
@@ -60,7 +55,7 @@ const Chat = () => {
     setSelectedAssessment(assessment);
   };
 
-  const [currentFolder, setCurrentFolder] = useState(null);
+  const [, setCurrentFolder] = useState(null);
   const [folderID, setFolderID] = useState(null);
 
   // Memoize Active Workspace
@@ -153,18 +148,8 @@ const Chat = () => {
     };
 
     fetchStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isFetched, selectedWorkspace, handleWorkspaceChange]);
-
-  const handleRemoveChat = useCallback(async () => {
-    if (currentFolder) {
-      await dispatch(
-        fetchFolderData({
-          workspaceId: selectedWorkspace.id,
-          folderId: currentFolder.id,
-        })
-      ).unwrap();
-    }
-  }, [dispatch, selectedWorkspace, currentFolder]);
 
   // Lock body scroll when a responsive drawer is open
   useEffect(() => {

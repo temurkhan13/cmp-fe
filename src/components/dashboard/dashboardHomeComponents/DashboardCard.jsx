@@ -10,7 +10,7 @@ import { RiNewspaperLine } from 'react-icons/ri';
 import { IoIosChatboxes } from 'react-icons/io';
 import AvatarGroup from '../../common/AvatarGroup';
 import ConfirmModal from '../../common/ConfirmModal';
-import Button from '../../common/Button';
+import AnchoredMenu from '../../dropdowns/AnchoredMenu';
 
 // Enum for item types
 const ItemTypeEnum = Object.freeze({
@@ -32,12 +32,10 @@ const getEntityType = (type) => {
   return typeMapping[type] || type;
 };
 
-const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [moveToTrash, { isLoading }] = useMoveToTrashMutation();
+const DashboardCard = ({ data = {}, onRemove, onClick }) => {
+  const [moveToTrash] = useMoveToTrashMutation();
   const [showNotification, setShowNotification] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const menuRef = useRef(null);
   const mountedRef = useRef(true); // Track component mounting status
 
   // Track mounting status to avoid setting state on an unmounted component
@@ -48,14 +46,9 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
     };
   }, []);
 
-  const handleTrashClick = useCallback(
-    (event) => {
-      event.stopPropagation();
-      setIsMenuOpen(false);
-      setShowConfirm(true);
-    },
-    []
-  );
+  const handleTrashClick = useCallback(() => {
+    setShowConfirm(true);
+  }, []);
 
   const handleConfirmTrash = useCallback(
     async () => {
@@ -87,17 +80,6 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
   const createdAt = rawDate
     ? new Date(rawDate).toLocaleDateString()
     : '';
-
-  // Close the dropdown menu when clicking outside of it
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <>
@@ -139,29 +121,28 @@ const DashboardCard = ({ data = {}, onRemove, onClick, folderData, id }) => {
           )}
         </div>
 
-        <div className="actions" ref={menuRef}>
-          <FiMoreVertical
-            className="more-icon"
-            onClick={(event) => {
-              event.stopPropagation();
-              setIsMenuOpen(!isMenuOpen);
-            }}
-            size={18}
-            color="#000"
-          />
-          {isMenuOpen && (
-            <div className="dropdown-menu">
-              <Button
-                variant="ghost"
-                className="dropdown-item"
-                onClick={handleTrashClick}
-                disabled={isLoading}
-              >
-                Move to Trash
-              </Button>
-            </div>
+        <AnchoredMenu
+          align="right"
+          className="cmp-dropdown-anchor-corner"
+          trigger={({ onClick: triggerClick }) => (
+            <FiMoreVertical
+              className="more-icon"
+              onClick={(event) => {
+                event.stopPropagation();
+                triggerClick();
+              }}
+              size={18}
+              color="#000"
+            />
           )}
-        </div>
+          items={[
+            {
+              key: 'trash',
+              label: 'Move to Trash',
+              onClick: handleTrashClick,
+            },
+          ]}
+        />
       </div>
       {showNotification && (
         <NotificationBar

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAddFeedbackMutation } from '../../redux/api/workspaceApi';
-import commonModal from '../../components/common/Modal';
 import Button from '../common/Button';
 const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -13,7 +12,7 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
   const [modalMessage, setModalMessage] = useState('');
 
   // Mutation hook
-  const [addFeedback, { isLoading, isError, isSuccess }] =
+  const [addFeedback, { isLoading }] =
     useAddFeedbackMutation();
 
   const handleRadioChange = (option) => {

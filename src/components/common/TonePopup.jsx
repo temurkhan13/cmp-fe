@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { RiMagicFill } from 'react-icons/ri';
 import { RxMagicWand } from 'react-icons/rx';
 import { BsFilterLeft } from 'react-icons/bs';
-import { FaLocationArrow } from 'react-icons/fa6';
 import Button from './Button';
 
 const TonePopup = ({
@@ -14,7 +13,6 @@ const TonePopup = ({
   onClose,
 }) => {
   const [showAskAi, setShowAskAi] = useState(false);
-  const [inputValue, setInputValue] = useState('');
   const dropdownRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -32,18 +30,6 @@ const TonePopup = ({
   const handleAskAiToggle = (e) => {
     e.stopPropagation();
     setShowAskAi((prev) => !prev); // Toggle dropdown state
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleInputKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      HandleAskAi(inputValue);
-      setInputValue('');
-      e.stopPropagation(); // Prevent closing the dropdown when pressing Enter
-    }
   };
 
   const handleOptionClick = () => {

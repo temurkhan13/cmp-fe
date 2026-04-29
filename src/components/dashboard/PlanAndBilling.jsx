@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { FaCheck } from 'react-icons/fa';
 import apiClient from '../../api/axios';
-import Components from '..';
 import toast from 'react-hot-toast';
 import Button from '../common/Button';
 import './dashboard-inline.scss';
@@ -41,8 +39,7 @@ const PLAN_FEATURES = {
 const PlanAndBilling = () => {
   const [plans, setPlans] = useState([]);
   const [currentPlan, setCurrentPlan] = useState(null);
-  const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(null);
 
   useEffect(() => {

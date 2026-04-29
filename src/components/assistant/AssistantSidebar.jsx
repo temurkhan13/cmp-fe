@@ -8,7 +8,7 @@ import Comments from './assistantModal/Comments';
 import ChatBookmark from './assistantModal/ChatBookmark';
 import VersionHistory from './assistantModal/VersionHistory';
 import { IoIosChatboxes } from 'react-icons/io';
-import { FaHistory, FaBookmark, FaImages } from 'react-icons/fa';
+import { FaBookmark, FaImages } from 'react-icons/fa';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice';
 import {
@@ -18,7 +18,7 @@ import {
   useGetChatLinksQuery,
 } from '../../redux/api/workspaceApi';
 
-const AssistantSidebar = ({ isOverlay = false, isVisible = false, onClose, ...props }) => {
+const AssistantSidebar = ({ isOverlay = false, isVisible = false, ...props }) => {
   const currentChat = props?.currentChat;
   const [bookmarksShow, setBookmarksShow] = useState([]);
 

@@ -41,7 +41,7 @@ const SetNewPassword = () => {
           }
           onSubmit={handleSubmit}
         >
-          {(formik) => (
+          {() => (
             <Form>
               <Components.Feature.FormInput
                 name="password"

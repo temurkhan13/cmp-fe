@@ -1,36 +1,3 @@
-import { FaUserCircle } from 'react-icons/fa';
-import { MdCircle } from 'react-icons/md';
-
-const unreadNotifications = [
-  {
-    id: 1,
-    avatar: null,
-    name: 'Jerald Huels',
-    message: 'Mentioned you',
-    subMessage: '@Imran Icon Change',
-    team: 'Designs Ops',
-    date: 'Aug 10',
-  },
-  {
-    id: 2,
-    avatar: null,
-    name: 'Imran',
-    message: 'Replied',
-    subMessage: 'Done',
-    team: 'Designs Ops',
-    date: 'Aug 10',
-  },
-  {
-    id: 2,
-    avatar: null,
-    name: 'Imran',
-    message: 'Replied',
-    subMessage: 'Done',
-    team: 'Designs Ops',
-    date: 'Aug 10',
-  },
-];
-
 const UnreadNotifications = () => {
   return (
     <div className="notification-list">

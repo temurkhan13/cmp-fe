@@ -8,7 +8,7 @@ const Terms = () => {
 
       <section className="legal-page__section">
         <h2 className="legal-page__heading">1. Acceptance of Terms</h2>
-        <p>By accessing or using the Change.ai platform ("Service"), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use the Service.</p>
+        <p>By accessing or using the Change.ai platform (&quot;Service&quot;), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use the Service.</p>
       </section>
 
       <section className="legal-page__section">

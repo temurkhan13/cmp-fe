@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { BiCheckCircle, BiCopy, BiEdit } from 'react-icons/bi';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
@@ -7,7 +7,7 @@ import { HexColorPicker } from 'react-colorful';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import './sitemap.scss';
 
-function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown, closeAllMenus }) {
+function NodeItem({ nodeData, updateNodeDataWithPropertyName, addNodeChild, onDelete, onMoveUp, onMoveDown }) {
   const { id, heading, description, color: rawColor, isEditing } = nodeData ?? {};
   const color = rawColor || '#f0f0f0';
   const [showContextMenu, setShowContextMenu] = useState(false);

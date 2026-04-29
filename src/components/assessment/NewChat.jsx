@@ -95,6 +95,7 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
     return () => {
       chatContainer.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   return (

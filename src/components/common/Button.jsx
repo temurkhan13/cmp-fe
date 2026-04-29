@@ -25,7 +25,6 @@ const Button = forwardRef(function Button(
   ref,
 ) {
   if (variant === 'icon' && !ariaLabel && import.meta.env.DEV) {
-    // eslint-disable-next-line no-console
     console.warn('[Button] variant="icon" requires an ariaLabel for accessibility.');
   }
 

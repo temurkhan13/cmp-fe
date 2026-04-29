@@ -9,13 +9,11 @@ import {
   FaCopy,
   FaThumbsUp,
   FaThumbsDown,
-  FaSync,
   FaCommentAlt,
 } from 'react-icons/fa';
 import { IoAttach, IoSend } from 'react-icons/io5';
 import { FaBookmark } from 'react-icons/fa6';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
-import UserPic from '@assets/chat/user.png';
 import AiPic from '@assets/dashboard/sidebarLogo.png';
 import { Example } from '@utils';
 // import fileIcon from '@assets/dashboard/fileIcon.png';
@@ -42,9 +40,7 @@ import {
   useGetWorkspacesQuery,
   useLikeChatMessageMutation,
   useRemoveBookmarkMutation,
-  useUpdateChatMutation,
 } from '../../redux/api/workspaceApi';
-import { FaUser } from 'react-icons/fa';
 
 import {
   useAddMessageMutation,
@@ -55,8 +51,6 @@ import {
 } from '../../redux/api/workspaceApi';
 import {
   selectCurrentChat,
-  selectCurrentFolder,
-  selectCurrentWorkspace,
 } from '../../redux/selectors/selectors';
 import * as FaIcons from 'react-icons/fa';
 import { setChats, getChatsAsync } from '../../redux/slices/chatSlice';
@@ -99,14 +93,13 @@ const MessagesSection = ({ setCurrentChat }) => {
   //api Integration
   const [addMessage] = useAddMessageMutation();
   const [updateMessage] = useUpdateMessageMutation();
-  const [updateChat] = useUpdateChatMutation();
   const [addBookmark] = useAddBookmarkMutation();
   const [removeBookmark] = useRemoveBookmarkMutation();
   // const [likeChatMessage,dislikeChatMessage] = useLikeDislikeChatMutation()
   const [likeChatMessage] = useLikeChatMessageMutation();
   const [dislikeChatMessage] = useDislikeChatMessageMutation();
   const userId = useSelector((state) => state.auth.user?.id);
-  const { data: workspaces } = useGetWorkspacesQuery(userId);
+  useGetWorkspacesQuery(userId);
   const currentWorkspace = useSelector(selectWorkspace);
   const workspaceId = currentWorkspace?.id;
   const selectedFolder = useSelector(selectSelectedFolder);
@@ -123,7 +116,6 @@ const MessagesSection = ({ setCurrentChat }) => {
     const fallback = currentWorkspace?.folders?.find((f) => f.isActive) || currentWorkspace?.folders?.[0];
     return fallback || selectedFolder;
   })();
-  const currentFolder = folderId;
   const currentChat = useSelector(selectCurrentChat);
 
 
@@ -156,6 +148,7 @@ const MessagesSection = ({ setCurrentChat }) => {
   }, { skip: !workspaceId || !resolvedFolderId || !chatId });
 
   // Safe refetch that doesn't throw when query is skipped
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const refetch = async () => {
     try { if (chatId) await rawRefetch(); } catch (e) { /* query not active */ }
   };
@@ -164,6 +157,7 @@ const MessagesSection = ({ setCurrentChat }) => {
     if (chat && (chat?._id || chat?.id)) {
       setCurrentChat(chat);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat]);
 
   // const [chat, setChat] = useState(
@@ -180,9 +174,9 @@ const MessagesSection = ({ setCurrentChat }) => {
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedText, setSelectedText] = useState('');
-  const [selectedTone, setSelectedTone] = useState('');
-  const [responseLength, setResponseLength] = useState('');
-  const [askAi, setAskAI] = useState('');
+  const [, setSelectedTone] = useState('');
+  const [, setResponseLength] = useState('');
+  const [, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
   const [showCommentPopup, setShowCommentPopup] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
@@ -196,11 +190,11 @@ const MessagesSection = ({ setCurrentChat }) => {
   const { autoWritingFnc } = useAuto();
   const { shortText } = useShorter();
   const { LongText } = useLonger();
-  const { error, chatWithdoc } = useChat();
+  const { error } = useChat();
   const { handleInspire } = useInspire();
   // Translation removed — feature not needed
   const { Explain } = useExplain();
-  const [firstPrompt, setFirstPrompt] = useState('');
+  const [, setFirstPrompt] = useState('');
 
   const renderIcon = (iconName, style = {}) => {
     const IconComponent = FaIcons[iconName];
@@ -334,7 +328,7 @@ const MessagesSection = ({ setCurrentChat }) => {
       if (response) {
         applyFixedText(response);
       }
-    } catch (error) {
+    } catch { /* ignored */
     } finally {
       setLoading(false);
     }
@@ -358,7 +352,7 @@ const MessagesSection = ({ setCurrentChat }) => {
       if (response) {
         await applyFixedText(response);
       }
-    } catch (error) {
+    } catch { /* ignored */
     } finally {
       setLoading(false);
     }
@@ -406,6 +400,7 @@ const MessagesSection = ({ setCurrentChat }) => {
       setPendingSuggestionSend(false);
       handleSendMessage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingSuggestionSend, text]);
 
   const handleSendMessage = async () => {
@@ -454,7 +449,7 @@ const MessagesSection = ({ setCurrentChat }) => {
           .then((response) => {
             dispatch(setChats(response.payload.data));
           })
-          .catch((error) => { });
+          .catch(() => { /* ignored */ });
       }
       setText('');
       setFile(null);
@@ -466,12 +461,6 @@ const MessagesSection = ({ setCurrentChat }) => {
     }
   };
 
-  const HandleEnterKey = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
   // const handleInspireClick = async () => {
   //   //Todo: will implement Inspire
   //   // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
@@ -499,8 +488,9 @@ const MessagesSection = ({ setCurrentChat }) => {
         setText(inspiredText);
         handleSendMessage();
       } else {
+        // intentionally empty
       }
-    } catch (error) {
+    } catch { /* ignored */
     } finally {
       setLoading(false);
     }

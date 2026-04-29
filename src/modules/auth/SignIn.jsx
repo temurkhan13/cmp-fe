@@ -67,6 +67,7 @@ const SignIn = () => {
   // Handle authentication response on component mount
   useEffect(() => {
     handleAuthResponse();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Toggle password visibility

@@ -1,4 +1,3 @@
-import React from 'react';
 import { teamslide1, teamslide2, video } from '../../../assets';
 import { FaArrowRight } from 'react-icons/fa';
 import Button from '../../../../common/Button';

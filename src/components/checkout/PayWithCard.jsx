@@ -35,7 +35,7 @@ const PayWithCard = () => {
             resetForm();
           }}
         >
-          {(formik) => (
+          {() => (
             <Form>
               <div className="payWithCard-form">
                 <Components.Feature.FormInput

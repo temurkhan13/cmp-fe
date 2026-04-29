@@ -11,7 +11,6 @@ const SearchDropdown = ({ title, items, visible, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [query, setQuery] = useState('');
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     if (e.target.value.trim()) {

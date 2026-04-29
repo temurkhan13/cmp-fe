@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
@@ -12,6 +12,7 @@ import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
 import ConfirmModal from '../common/ConfirmModal';
 import Button from '../common/Button';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import { exportDocument } from '@utils/exportDocument';
 
 function PlaybookEditor() {
@@ -22,24 +23,12 @@ function PlaybookEditor() {
   const [playbook, setPlaybook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [exportOpen, setExportOpen] = useState(false);
   const [addingStage, setAddingStage] = useState(false);
   const [newStageName, setNewStageName] = useState('');
   const [brandingOpen, setBrandingOpen] = useState(false);
   const [accentColor, setAccentColor] = useState('#00316f');
   const [logoUrl, setLogoUrl] = useState('');
-  const exportRef = useRef(null);
   const [deleteStageConfirm, setDeleteStageConfirm] = useState({ open: false, stageId: null });
-
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (exportRef.current && !exportRef.current.contains(e.target)) {
-        setExportOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const fetchPlaybook = useCallback(async () => {
     if (!id) return;
@@ -168,7 +157,6 @@ function PlaybookEditor() {
   };
 
   const handleExport = async (type) => {
-    setExportOpen(false);
     try {
       await exportDocument({
         type,
@@ -236,24 +224,25 @@ function PlaybookEditor() {
           >
             🎨 Branding
           </Button>
-          <div className="playbook-export-wrap" ref={exportRef}>
-            <Button
-              variant="primary"
-              className="assiss-btn"
-              iconLeft={<FiDownload size={16} />}
-              onClick={() => setExportOpen(!exportOpen)}
-            >
-              Export
-            </Button>
-            {exportOpen && (
-              <div className="playbook-export-dropdown">
-                <Button variant="ghost" onClick={() => handleExport('pdf')}>PDF</Button>
-                <Button variant="ghost" onClick={() => handleExport('docx')}>Word (.docx)</Button>
-                <Button variant="ghost" onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</Button>
-                <Button variant="ghost" onClick={() => handleExport('xlsx')}>Excel (.xlsx)</Button>
-              </div>
+          <AnchoredMenu
+            align="right"
+            trigger={({ onClick }) => (
+              <Button
+                variant="primary"
+                className="assiss-btn"
+                iconLeft={<FiDownload size={16} />}
+                onClick={onClick}
+              >
+                Export
+              </Button>
             )}
-          </div>
+            items={[
+              { key: 'pdf', label: 'PDF', onClick: () => handleExport('pdf') },
+              { key: 'docx', label: 'Word (.docx)', onClick: () => handleExport('docx') },
+              { key: 'pptx', label: 'PowerPoint (.pptx)', onClick: () => handleExport('pptx') },
+              { key: 'xlsx', label: 'Excel (.xlsx)', onClick: () => handleExport('xlsx') },
+            ]}
+          />
         </div>
       </div>
 

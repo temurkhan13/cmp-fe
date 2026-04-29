@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
-import { BiPlus } from 'react-icons/bi';
 import { TbMenu2 } from 'react-icons/tb';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 import Components from '@components';
-import assets from '../../assets';
 import ShareModal from '../customModal/Sharemodal';
 import Modal from '../../components/common/Modal';
-import ProfileDropdown from './Logout';
+import DropdownMenu from '../dropdowns/DropdownMenu';
 import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { useLocation } from 'react-router-dom';
@@ -16,27 +15,19 @@ import { useSelector } from 'react-redux';
 import Button from './Button';
 // import UserProfilePic from '../../assets/chat/user.png';
 
-const Header = ({ activeWorkspace, workspaces, siteMapId, onMenuToggle }) => {
-  const [activeIcon, setActiveIcon] = useState(null);
+const Header = ({ siteMapId, onMenuToggle }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [activeWorkspaceName, SetActiveWorkspaceName] = useState([]);
   const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
     useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const location = useLocation();
-  const handleIconClick = (icon) => {
-    setActiveIcon(activeIcon === icon ? null : icon);
-  };
   const selectedWorkspace = useSelector(selectWorkspace);
   // SetActiveWorkspaceName(selectedWorkspace);
-
-  const closeActiveIcon = () => setActiveIcon(null);
 
   const toggleProfileDropdown = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
-  const handleOpenShareModal = () => setIsShareModalOpen(true);
   const handleCloseShareModal = () => setIsShareModalOpen(false);
 
   const handleOpenImproveResponseModal = () =>
@@ -170,9 +161,18 @@ const Header = ({ activeWorkspace, workspaces, siteMapId, onMenuToggle }) => {
           </div>
         )}
       </section>
-      {isProfileDropdownOpen && (
-        <ProfileDropdown onClose={toggleProfileDropdown} />
-      )}
+      <DropdownMenu
+        isOpen={isProfileDropdownOpen}
+        onClose={toggleProfileDropdown}
+        items={[
+          {
+            key: 'logout',
+            label: 'Logout',
+            icon: <FaSignOutAlt />,
+            onClick: toggleProfileDropdown,
+          },
+        ]}
+      />
       {isShareModalOpen && <ShareModal onClose={handleCloseShareModal} />}
       {isImproveResponseModalOpen && (
         <Modal

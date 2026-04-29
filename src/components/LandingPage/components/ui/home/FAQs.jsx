@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { faqsLogo } from '../../../assets';
 import { Accordian } from '../../feature/Index.js'; // Adjust path to your assets
 

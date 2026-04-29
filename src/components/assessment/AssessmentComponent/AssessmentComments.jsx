@@ -22,7 +22,7 @@ const AssessmentComments = ({ comments }) => {
   const dispatch = useDispatch();
   const chatId = useSelector((state) => state.chat.selectedChatId);
 
-  const [selectedComment, setSelectedComment] = useState(null);
+  const [, setSelectedComment] = useState(null);
   const [showReplies, setShowReplies] = useState({});
   const [editingComment, setEditingComment] = useState(null);
   const [editedText, setEditedText] = useState('');

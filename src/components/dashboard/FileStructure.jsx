@@ -1,11 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BiSolidFolderOpen } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
 import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
 import CustomModal from '../customModal/CustomModal';
-import { truncateText } from '../../utils/helperFunction';
 import apiClient from '../../api/axios';
 import {
   useMoveToTrashMutation,
@@ -15,14 +13,12 @@ import NotificationBar from '../common/NotificationBar';
 import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import './styles/file-structure.scss';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import useOutsideClick from '../../hooks/useOutsideClick';
+import IconCard from '../common/IconCard';
 import InputModal from '../common/InputModal';
 import ConfirmModal from '../common/ConfirmModal';
 import Button from '../common/Button';
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -31,29 +27,8 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const [moveToTrash] = useMoveToTrashMutation();
   const { refetch } = useGetWorkspacesQuery(workspace.id);
   const folderId = useSelector(selectSelectedFolder);
-  const [openDropdown, setOpenDropdown] = useState(null); // State to toggle dropdown visibility
   const [renameModal, setRenameModal] = useState({ open: false, folder: null });
   const [trashConfirm, setTrashConfirm] = useState({ open: false, folder: null });
-  const dropdownRef = useRef(null);
-
-  // Close dropdown on click outside
-  useOutsideClick(dropdownRef, () => setOpenDropdown(null));
-
-  // Close dropdown on Escape key
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') setOpenDropdown(null);
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
-
-  const modalRef = useRef(null);
-
-  const openModal = useCallback((folder) => {
-    setSelectedFolder(folder);
-    setIsModalOpen(true);
-  }, []);
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
@@ -83,7 +58,6 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
       }).unwrap();
       refetch();
       onFolderUpdate();
-      setOpenDropdown(null);
     } catch {
       setError('Error moving to trash');
     }
@@ -96,10 +70,6 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   }, [dispatch, onFolderSelect, selectedFolder, closeModal]);
 
   const handleCloseError = useCallback(() => setError(null), []);
-
-  const toggleDropdown = (index) => {
-    setOpenDropdown((prevIndex) => (prevIndex === index ? null : index));
-  };
 
   return (
     <section className="folders-files">
@@ -120,51 +90,34 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
 
       <div className="files-container">
         {workspace.folders.map((folder) => (
-          <div
+          <IconCard
             key={folder.id}
-            className="file"
-          // onClick={() => openModal(folder)}
-          >
-            <span className="icon">
-              <BsThreeDotsVertical
-                size={18}
-                className="file-structure-close-btn"
-                onClick={() => toggleDropdown(folder)}
-              />
-              {openDropdown === folder && (
-                <div className="dropdown-menuu" ref={dropdownRef}>
-                  <div
-                    className="dropdown-itemm"
-                    onClick={() => {
-                      setRenameModal({ open: true, folder });
-                      setOpenDropdown(null);
-                    }}
-                  >
-                    Rename
-                  </div>
-                  <div
-                    className="dropdown-itemm deletee"
-                    onClick={() => { setOpenDropdown(null); setTrashConfirm({ open: true, folder }); }}
-                  >
-                    Delete
-                  </div>
-                </div>
-              )}
+            icon={
               <BiSolidFolderOpen
-                style={
-                  folderId?.id === folder.id
-                    ? { color: 'black', height: '5rem', width: '5rem' }
-                    : { color: 'grey', height: '5rem', width: '5rem' }
-
-                }
                 onClick={() => {
                   dispatch(setSelectedReduxFolder(folder));
                   onFolderSelect(folder);
                 }}
+                className={`${folderId?.id === folder.id ? 'active' : ''}`}
               />
-            </span>
-            <p>{truncateText(folder.folderName, 10)}</p>
-          </div>
+            }
+            label={folder.folderName}
+            truncateAt={10}
+            hoverFadeKebab
+            menuItems={[
+              {
+                key: 'rename',
+                label: 'Rename',
+                onClick: () => setRenameModal({ open: true, folder }),
+              },
+              {
+                key: 'delete',
+                label: 'Delete',
+                variant: 'danger',
+                onClick: () => setTrashConfirm({ open: true, folder }),
+              },
+            ]}
+          />
         ))}
       </div>
 

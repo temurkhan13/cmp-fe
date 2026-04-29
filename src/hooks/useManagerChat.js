@@ -109,7 +109,7 @@ import apiClient from '@api/axios';
 const useManagerChat = () => {
   const [error, setError] = useState(null);
   const [managerData, setData] = useState(null); // State to hold folders and chats
-  const [useMockData, setUseMockData] = useState(true); // Manage mock data toggle
+  const [useMockData] = useState(true); // Manage mock data toggle
   const [useMockData2, setUseMockData2] = useState(false); // Manage mock data toggle
 
   // Function to move a chat to a different folder
@@ -230,6 +230,7 @@ const useManagerChat = () => {
       };
       setData(mockData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useMockData]); // Ensure useEffect runs when useMockData changes
 
   // Function to toggle mock data for testing purposes

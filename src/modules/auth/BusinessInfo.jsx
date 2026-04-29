@@ -50,7 +50,7 @@ const BusinessInfo = () => {
             }
             onSubmit={handleSubmit}
           >
-            {(formik) => (
+            {() => (
               <Form>
                 <div className="businessInfo-form">
                   <blockquote>

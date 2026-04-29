@@ -34,25 +34,6 @@ const edgeTypes = {
   'custom-edge': Edge,
 };
 
-const DEFAULT_NODE = [
-  {
-    id: 'root',
-    type: 'custom',
-    position: { x: 0, y: 0 },
-    data: {
-      id: 'root',
-      label: 'Add Title',
-      nodeData: [],
-      onAddChild: () => {},
-      isRoot: true,
-      updateNodeLabelById: () => {},
-      fetchNodeData: () => {},
-      siteMapId: '',
-      showGenerateAIButton: false,
-    },
-  },
-];
-
 const SitemapLayoutFlow = ({ id }) => {
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -386,8 +367,6 @@ const SitemapLayoutFlow = ({ id }) => {
   };
   const onInit = async (
     stage = 'Playbook Introduction',
-    nodeId = '',
-    nodeData = [],
     sitemapId = ''
   ) => {
     const parsedUserData = userData ? JSON.parse(userData) : null;
@@ -560,6 +539,7 @@ const SitemapLayoutFlow = ({ id }) => {
     }
 
     getSitemap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -17,7 +17,6 @@ import {
 import {
   fetchFolderData,
   resetFolderState,
-  selectFolderData,
   setSelectedFolder,
   toggleFolderActivation,
 } from '../../redux/slices/folderSlice';
@@ -48,7 +47,7 @@ const AiAssistantChat = () => {
 
   const [currentChat, setCurrentChat] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationMessage] = useState('');
   const [isFetched, setIsFetched] = useState(false);
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
 
@@ -60,6 +59,7 @@ const AiAssistantChat = () => {
     } else if (!chatId && reduxChatId) {
       dispatch(setCurrentChatId(null));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
 
   // Memoize active workspace for optimization
@@ -67,11 +67,6 @@ const AiAssistantChat = () => {
     () => selectedWorkspace || allWorkspaces?.[0],
     [selectedWorkspace, allWorkspaces]
   );
-
-  const showError = (message) => {
-    setNotificationMessage(message);
-    setShowNotification(true);
-  };
 
   const handleFolderSelection = useCallback(
     async (folder, workspaceId = activeWorkspace?.id) => {

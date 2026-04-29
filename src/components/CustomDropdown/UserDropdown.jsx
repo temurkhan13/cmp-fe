@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import Dropdown from 'react-multilevel-dropdown';
 import { MdPeople, MdPerson } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 import NoDataAvailable from '../common/NoDataAvailable';

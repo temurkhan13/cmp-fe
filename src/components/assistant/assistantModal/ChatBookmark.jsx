@@ -5,7 +5,7 @@ import NoDataAvailable from '../../common/NoDataAvailable';
 import { truncateText } from '../../../utils/helperFunction';
 import Button from '../../common/Button';
 
-const ChatBookmark = ({ date, messages }) => {
+const ChatBookmark = ({ messages }) => {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [user, setUser] = useState(null);
 

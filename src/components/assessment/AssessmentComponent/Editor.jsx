@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
 import { FiDownload } from 'react-icons/fi';
 import {
@@ -9,41 +9,31 @@ import {
 import apiClient from '../../../api/axios';
 import ConfirmModal from '../../common/ConfirmModal';
 import Button from '../../common/Button';
+import AnchoredMenu from '../../dropdowns/AnchoredMenu';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
 import { exportDocument } from '@utils/exportDocument';
 
 const Editor = ({
   placeholder,
+  // eslint-disable-next-line no-unused-vars
   height = '100%',
   data,
   title,
   assesmentId,
-  asssessment,
 }) => {
   const editor = useRef(null);
-  const exportRef = useRef(null);
   const [content, setContent] = useState(data?.content || '');
-  const [assessmentID, setAssessmentID] = useState(assesmentId);
+  const [assessmentID] = useState(assesmentId);
   const [editReport] = useEditReportMutation();
   const [regenerateReport, { isLoading: regenLoading }] = useRegenerateReportMutation();
   const [saveStatus, setSaveStatus] = useState('idle');
   const [showRegenConfirm, setShowRegenConfirm] = useState(false);
-  const [exportOpen, setExportOpen] = useState(false);
   const [createPlaybookLoading, setCreatePlaybookLoading] = useState(false);
-
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (exportRef.current && !exportRef.current.contains(e.target)) {
-        setExportOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const htmlContent = useMemo(
     () => marked(content || data?.content),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [content]
   );
 
@@ -82,7 +72,6 @@ const Editor = ({
   };
 
   const handleExport = async (type) => {
-    setExportOpen(false);
     try {
       await exportDocument({
         type,
@@ -136,7 +125,7 @@ const Editor = ({
         'source',
       ],
     }),
-    [placeholder, height]
+    [placeholder]
   );
 
   const createPlaybook = async () => {
@@ -179,24 +168,25 @@ const Editor = ({
         >
           {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save Failed' : 'Save'}
         </Button>
-        <div className="editor-export-wrap" ref={exportRef}>
-          <Button
-            variant="primary"
-            className="assiss-btn"
-            iconLeft={<FiDownload size={16} />}
-            onClick={() => setExportOpen(!exportOpen)}
-          >
-            Export
-          </Button>
-          {exportOpen && (
-            <div className="editor-export-dropdown">
-              <Button variant="ghost" onClick={() => handleExport('pdf')}>PDF</Button>
-              <Button variant="ghost" onClick={() => handleExport('docx')}>Word (.docx)</Button>
-              <Button variant="ghost" onClick={() => handleExport('pptx')}>PowerPoint (.pptx)</Button>
-              <Button variant="ghost" onClick={() => handleExport('xlsx')}>Excel (.xlsx)</Button>
-            </div>
+        <AnchoredMenu
+          align="left"
+          trigger={({ onClick }) => (
+            <Button
+              variant="primary"
+              className="assiss-btn"
+              iconLeft={<FiDownload size={16} />}
+              onClick={onClick}
+            >
+              Export
+            </Button>
           )}
-        </div>
+          items={[
+            { key: 'pdf', label: 'PDF', onClick: () => handleExport('pdf') },
+            { key: 'docx', label: 'Word (.docx)', onClick: () => handleExport('docx') },
+            { key: 'pptx', label: 'PowerPoint (.pptx)', onClick: () => handleExport('pptx') },
+            { key: 'xlsx', label: 'Excel (.xlsx)', onClick: () => handleExport('xlsx') },
+          ]}
+        />
         <Button
           variant="primary"
           className="assiss-btn"

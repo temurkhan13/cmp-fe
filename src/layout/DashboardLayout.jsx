@@ -117,10 +117,6 @@ const DashboardLayout = ({ children }) => {
     setIsOpen(!isOpen);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -174,7 +170,7 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         <ul className="navlist">
-          {Menu.map(({ path, name, Icon }, index) => (
+          {Menu.map(({ path, name, Icon }) => (
             <Link
               to={path}
               key={path}
