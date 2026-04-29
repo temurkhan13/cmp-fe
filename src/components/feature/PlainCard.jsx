@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import Components from '../../components';
 import Button from '../common/Button';
 import { GoCheckCircle } from 'react-icons/go';
-import { v4 as uuidv4 } from 'uuid';
 import { Link } from 'react-router-dom';
 
 const PlainCard = (props) => {
@@ -39,7 +38,7 @@ const PlainCard = (props) => {
 
         <div>
           {props.features.map((el) => (
-            <Item key={uuidv4()}>{el}</Item>
+            <Item key={`${props.name}-${el}`}>{el}</Item>
           ))}
         </div>
       </section>

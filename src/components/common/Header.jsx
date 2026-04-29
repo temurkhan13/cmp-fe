@@ -3,29 +3,33 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { TbMenu2 } from 'react-icons/tb';
 import { FaSignOutAlt } from 'react-icons/fa';
-
 import Components from '@components';
 import ShareModal from '../customModal/Sharemodal';
 import Modal from '../../components/common/Modal';
-import DropdownMenu from '../dropdowns/DropdownMenu';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
-import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { logout } from '../../redux/slices/authSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Button from './Button';
 // import UserProfilePic from '../../assets/chat/user.png';
 
-const Header = ({ siteMapId, onMenuToggle }) => {
+const Header = ({ onMenuToggle }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isImproveResponseModalOpen, setIsImproveResponseModalOpen] =
     useState(false);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectedWorkspace = useSelector(selectWorkspace);
-  // SetActiveWorkspaceName(selectedWorkspace);
 
-  const toggleProfileDropdown = () => {
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  const handleLogout = async () => {
+    await dispatch(logout());
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('selectedFolder');
+    localStorage.removeItem('selectedWorkspace');
+    navigate('/log-in');
   };
 
   const handleCloseShareModal = () => setIsShareModalOpen(false);
@@ -50,9 +54,8 @@ const Header = ({ siteMapId, onMenuToggle }) => {
     if (!user) {
       return 'N/A';
     }
-    return `${user.firstName?.[0] || ''}${
-      user.lastName?.[0] || ''
-    }`.toUpperCase();
+    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''
+      }`.toUpperCase();
   };
 
   return (
@@ -74,36 +77,6 @@ const Header = ({ siteMapId, onMenuToggle }) => {
             Workspace <span className="workspace-badge">{selectedWorkspace?.workspaceName}</span>
           </p>
         </div>
-        {(siteMapId && location.pathname === '/sitemap/new') ||
-        location.pathname === `/sitemap/${siteMapId}` ? (
-          <div>
-            <div className="topbar-sitemap-actions">
-              <div>
-                {/* <a
-                  style={{
-                    width: '100%',
-                    background: '#C3E11B',
-                    border: 'none',
-                    padding: '5px',
-                    borderRadius: '6px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    marginTop: '5px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'black',
-                    textDecoration: 'none',
-                  }}
-                  href="http://139.59.4.99:3500/"
-                  target="_blank"
-                >
-                  <BiPlus />
-                  Create Wireframe
-                </a> */}
-              </div>
-            </div>
-          </div>
-        ) : null}
       </div>
       <section>
         <div>
@@ -113,66 +86,41 @@ const Header = ({ siteMapId, onMenuToggle }) => {
           >
             Survey Info
           </span>
-
-          {/* <span
-            className={activeIcon === 'search' ? 'active' : ''}
-            onClick={() => handleIconClick('search')}
-          >
-            <BiSearch />
-          </span>
-          {activeIcon === 'search' && (
-            <SearchDropdown
-              title="Search"
-              items={searchUser}
-              visible={activeIcon === 'search'}
-              onClose={closeActiveIcon}
-            />
-          )} */}
-          {/* <UserDropdown
-            activeIcon={activeIcon}
-            handleIconClick={handleIconClick}
-          /> */}
-          {/* <CustomDropdown
-            activeIcon={activeIcon}
-            handleIconClick={handleIconClick}
-          /> */}
-          {/*<div className="shareBtn" onClick={handleOpenShareModal}>*/}
-          {/*  <FaUserPlus />*/}
-          {/*  <span>Share</span>*/}
-          {/*</div>*/}
         </div>
-        {photoPath ? (
-          <img
-            src={
-              photoPath ||
-              'https://avatar.iran.liara.run/public/boy?username=Ash'
-            }
-            alt="profile"
-            className="ProfileImage topbar-profile-img"
-            onClick={toggleProfileDropdown}
-            onError={(e) =>
-              (e.target.src =
-                'https://avatar.iran.liara.run/public/boy?username=Ash')
-            }
-          />
-        ) : (
-          <div onClick={toggleProfileDropdown} className="initials-placeholder">
-            {getInitials()}
-          </div>
-        )}
+        <AnchoredMenu
+          align="right"
+          trigger={({ onClick }) =>
+            photoPath ? (
+              <img
+                src={
+                  photoPath ||
+                  'https://avatar.iran.liara.run/public/boy?username=Ash'
+                }
+                alt="profile"
+                className="ProfileImage topbar-profile-img"
+                onClick={onClick}
+                onError={(e) =>
+                (e.target.src =
+                  'https://avatar.iran.liara.run/public/boy?username=Ash')
+                }
+              />
+            ) : (
+              <div onClick={onClick} className="initials-placeholder">
+                {getInitials()}
+              </div>
+            )
+          }
+          items={[
+            {
+              key: 'logout',
+              label: 'Logout',
+              icon: <FaSignOutAlt />,
+              onClick: handleLogout,
+            },
+          ]}
+          className={'header-avatar'}
+        />
       </section>
-      <DropdownMenu
-        isOpen={isProfileDropdownOpen}
-        onClose={toggleProfileDropdown}
-        items={[
-          {
-            key: 'logout',
-            label: 'Logout',
-            icon: <FaSignOutAlt />,
-            onClick: toggleProfileDropdown,
-          },
-        ]}
-      />
       {isShareModalOpen && <ShareModal onClose={handleCloseShareModal} />}
       {isImproveResponseModalOpen && (
         <Modal

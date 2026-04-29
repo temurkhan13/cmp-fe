@@ -5,16 +5,15 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import { CgProfile } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import NotificationDropdown from './NotificationDropdown';
-import DropdownMenu from '../dropdowns/DropdownMenu';
+import AnchoredMenu from '../dropdowns/AnchoredMenu';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
 import { logout } from '../../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import './dashboard-inline.scss';
-// import { persistor } from '../../redux/store/store.js';
+
 const Header = () => {
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const user = useSelector((state) => state.auth.user);
   const photoPath = user?.photoPath || '';
@@ -23,9 +22,8 @@ const Header = () => {
     if (!user) {
       return 'N/A';
     }
-    return `${user.firstName?.[0] || ''}${
-      user.lastName?.[0] || ''
-    }`.toUpperCase();
+    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''
+      }`.toUpperCase();
   };
 
   const [notifications] = useState([]);
@@ -34,38 +32,26 @@ const Header = () => {
     useState(false);
   const dispatch = useDispatch();
 
-  const handleProfileClick = () => {
-    setDropdownOpen(!dropdownOpen);
-    setNotificationOpen(false);
-  };
-
   const handleNotificationClick = () => {
     setNotificationOpen(!notificationOpen);
-    setDropdownOpen(false);
   };
 
-  const closeDropdowns = () => {
-    setDropdownOpen(false);
+  const closeNotifications = () => {
     setNotificationOpen(false);
   };
 
   const handleLogout = async () => {
     await dispatch(logout());
-    // persistor.purge();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('selectedFolder');
     localStorage.removeItem('selectedWorkspace');
 
-    // OR if you want to clear everything
-    // localStorage.clear();
     navigate('/log-in');
-    closeDropdowns();
   };
 
   const handleOpenChangePasswordModal = () => {
     setChangePasswordModalOpen(true);
-    closeDropdowns();
   };
 
   const handleCloseChangePasswordModal = () => {
@@ -74,9 +60,6 @@ const Header = () => {
 
   return (
     <header className="header">
-      {/*<div>*/}
-      {/*  <LoadingBar style={{ backgroundColor: 'blue', height: '5px' }} />*/}
-      {/*</div>*/}
       <div className="ProfileBar">
         <div className="bellWrapper" onClick={handleNotificationClick}>
           <CiBellOn className="BellIcon" />
@@ -86,36 +69,37 @@ const Header = () => {
         {notificationOpen && (
           <NotificationDropdown
             isOpen={notificationOpen}
-            markAllAsRead={() => {}}
-            onClose={closeDropdowns}
+            markAllAsRead={() => { }}
+            onClose={closeNotifications}
           />
         )}
 
-        {photoPath ? (
-          <img
-            src={photoPath}
-            alt="User"
-            className="ProfileImage"
-            onClick={handleProfileClick}
-          />
-        ) : (
-          <div onClick={handleProfileClick} className="initials-placeholder">
-            {getInitials()}
-          </div>
-        )}
-
-        <DropdownMenu
-          isOpen={dropdownOpen}
-          onClose={closeDropdowns}
+        <AnchoredMenu
+          align="right"
+          trigger={({ onClick }) => {
+            const handleTriggerClick = () => {
+              setNotificationOpen(false);
+              onClick();
+            };
+            return photoPath ? (
+              <img
+                src={photoPath}
+                alt="User"
+                className="ProfileImage"
+                onClick={handleTriggerClick}
+              />
+            ) : (
+              <div onClick={handleTriggerClick} className="initials-placeholder">
+                {getInitials()}
+              </div>
+            );
+          }}
           items={[
             {
               key: 'profile',
               label: 'Profile',
               icon: <CgProfile />,
-              onClick: () => {
-                navigate('/dashboard/settings');
-                closeDropdowns();
-              },
+              onClick: () => navigate('/dashboard/settings'),
             },
             {
               key: 'change-password',
@@ -133,7 +117,7 @@ const Header = () => {
         />
 
         {notificationOpen && (
-          <div className="cmp-dropdown-overlay" onClick={closeDropdowns}></div>
+          <div className="cmp-dropdown-overlay" onClick={closeNotifications}></div>
         )}
       </div>
       {isChangePasswordModalOpen && (

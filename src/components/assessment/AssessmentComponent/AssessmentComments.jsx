@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import Dropdown from 'react-multilevel-dropdown';
 import { useState } from 'react';
 import { FaEllipsisV } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
@@ -9,6 +8,7 @@ import { MdOutlineAttachFile, MdAlternateEmail } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import NoDataAvailable from '../../common/NoDataAvailable';
+import Button from '../../common/Button';
 import AnchoredMenu from '../../dropdowns/AnchoredMenu';
 
 import {
@@ -125,23 +125,23 @@ const AssessmentComments = ({ comments }) => {
                           {comment.timestamp}
                         </span>
                       </span>
-                      <Dropdown
-                        title={<FaEllipsisV className="options-icon" />}
-                        buttonClassName="dropdown-button"
-                      >
-                        <Dropdown.Item
-                          onClick={() => handleEditComment(comment.commentId)}
-                        >
-                          Edit Comment
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() =>
-                            handleDeleteComment(comment.commentId, false)
-                          }
-                        >
-                          Delete Comment
-                        </Dropdown.Item>
-                      </Dropdown>
+                      <AnchoredMenu
+                        align="right"
+                        trigger={({ onClick }) => (
+                          <Button
+                            variant="ghost"
+                            className="dropdown-button"
+                            ariaLabel="Comment options"
+                            onClick={onClick}
+                          >
+                            <FaEllipsisV className="options-icon" />
+                          </Button>
+                        )}
+                        items={[
+                          { key: 'edit', label: 'Edit Comment', onClick: () => handleEditComment(comment.commentId) },
+                          { key: 'delete', label: 'Delete Comment', onClick: () => handleDeleteComment(comment.commentId, false) },
+                        ]}
+                      />
                     </div>
                     <div className="comment-body">
                       {editingComment === comment.commentId ? (
@@ -189,32 +189,23 @@ const AssessmentComments = ({ comments }) => {
                                 {reply.timestamp}
                               </span>
                             </span>
-                            <Dropdown
-                              title={<FaEllipsisV className="options-icon" />}
-                              buttonClassName="dropdown-button"
-                            >
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleEditReply(
-                                    comment.commentId,
-                                    reply.replyId
-                                  )
-                                }
-                              >
-                                Edit Reply
-                              </Dropdown.Item>
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleDeleteComment(
-                                    reply.replyId,
-                                    true,
-                                    comment.commentId
-                                  )
-                                }
-                              >
-                                Delete Reply
-                              </Dropdown.Item>
-                            </Dropdown>
+                            <AnchoredMenu
+                              align="right"
+                              trigger={({ onClick }) => (
+                                <Button
+                                  variant="ghost"
+                                  className="dropdown-button"
+                                  ariaLabel="Reply options"
+                                  onClick={onClick}
+                                >
+                                  <FaEllipsisV className="options-icon" />
+                                </Button>
+                              )}
+                              items={[
+                                { key: 'edit', label: 'Edit Reply', onClick: () => handleEditReply(comment.commentId, reply.replyId) },
+                                { key: 'delete', label: 'Delete Reply', onClick: () => handleDeleteComment(reply.replyId, true, comment.commentId) },
+                              ]}
+                            />
                           </div>
                           <div className="reply-body">
                             {editingComment === reply.replyId ? (

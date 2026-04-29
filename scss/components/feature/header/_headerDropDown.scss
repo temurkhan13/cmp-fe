@@ -1,6 +1,7 @@
 .header-dropDown {
   position: relative;
-  & > header {
+
+  &>header {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -8,22 +9,39 @@
     border-radius: 1.2rem;
     padding: 0.6rem;
     cursor: pointer;
-    & > * {
+
+    &>* {
       &:first-child {
         height: 3.6rem;
         width: 3.6rem;
       }
+
       &:last-child {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 0.6rem 0.3rem;
-        & > * {
+
+        &>* {
           font-size: 2.5rem;
           color: $color_Secondry;
         }
       }
     }
+  }
+}
+
+.header-dropdown {
+  border: 1px solid rgba(10, 10, 10, 0.1019607843);
+  border-radius: 1.2rem;
+
+  .cmp-dropdown-anchor {
+    margin: 0;
+    height: fit-content;
+  }
+
+  .cmp-btn {
+    padding: 0.6rem;
   }
 }
 

@@ -1,5 +1,4 @@
 import Components from '..';
-import { v4 as uuidv4 } from 'uuid';
 
 const SubscriptionPlainsGrid = (props) => {
   return (
@@ -12,7 +11,7 @@ const SubscriptionPlainsGrid = (props) => {
             price={el.price}
             features={el.features}
             plainType={props.active}
-            key={uuidv4()}
+            key={el.name}
           />
         ))}
       </div>
