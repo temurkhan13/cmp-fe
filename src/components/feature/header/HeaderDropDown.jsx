@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { RiArrowUpSLine, RiArrowDownSLine } from 'react-icons/ri';
 import { BsArrowReturnLeft } from 'react-icons/bs';
-import AnchoredMenu from '../../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../../common';
 import Button from '../../common/Button';
 
 const HeaderDropDown = () => {

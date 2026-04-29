@@ -1,4 +1,4 @@
-import './spinner.scss';
+import './common.scss';
 
 const Spinner = () => {
   return (

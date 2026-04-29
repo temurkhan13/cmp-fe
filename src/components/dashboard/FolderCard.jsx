@@ -11,7 +11,7 @@ import {
 import assets from '@assets';
 import CustomModal from '../customModal/CustomModal';
 import MoveToModal from '../customModal/MoveToModal';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../common';
 import PropTypes from 'prop-types';
 import { downloadFolderAsZip } from '@utils/ExportAs';
 import './dashboard-inline.scss';

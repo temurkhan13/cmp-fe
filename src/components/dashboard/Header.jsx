@@ -5,7 +5,7 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import { CgProfile } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import NotificationDropdown from './NotificationDropdown';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../common';
 import Modal from '../../components/common/Modal';
 import ChangePassword from '../../components/dashboard/ChangePassword';
 import { logout } from '../../redux/slices/authSlice';

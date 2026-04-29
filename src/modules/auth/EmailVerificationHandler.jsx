@@ -4,7 +4,8 @@ import Button from '../../components/common/Button';
 import { useDispatch } from 'react-redux';
 import { verify, resendVerification } from '../../redux/slices/authSlice.js';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '../../components/dashboard/Spinner/Spinner.jsx';
+import { Spinner } from '../../components/common';
+
 const EmailVerificationHandler = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [resendCode, setResendCode] = useState(false);

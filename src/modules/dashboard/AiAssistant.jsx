@@ -10,7 +10,7 @@ import {
   setSelectedWorkspace,
   updateWorkspaceStatus,
 } from '../../redux/slices/workspacesSlice';
-import Card from '../../components/common/Card';
+import { Card } from '../../components/common';
 import AvatarGroup from '../../components/common/AvatarGroup';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import NotificationBar from '../../components/common/NotificationBar';

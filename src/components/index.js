@@ -1,6 +1,5 @@
 import * as Common from './common';
 import * as Feature from './feature';
-// import * as UI from './ui';
 import * as Assistant from './assistant';
 import * as Assessment from './assessment';
 import * as Dashboard from './dashboard';
@@ -12,7 +11,6 @@ import * as CheckOut from './checkout';
 const Components = {
   Common,
   Feature,
-  // UI,
   Assistant,
   Assessment,
   Dashboard,

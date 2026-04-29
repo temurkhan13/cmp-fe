@@ -20,7 +20,7 @@ import {
   toggleFolderActivation,
 } from '../../../redux/slices/folderSlice';
 import { useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
-import Card from '../../common/Card';
+import { Card } from '../../common';
 import AvatarGroup from '../../common/AvatarGroup';
 import ConfirmModal from '../../common/ConfirmModal';
 import { FaFolderTree } from 'react-icons/fa6';

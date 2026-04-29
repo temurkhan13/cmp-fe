@@ -8,7 +8,7 @@ import {
   fetchTrashItemsAsync,
 } from '../../redux/slices/trashSlice';
 import { FaTrash } from 'react-icons/fa';
-import AnchoredMenu from '../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../common';
 
 const TrashItemCard = ({ name, type, dateDeleted, onRestore, onDelete }) => {
   const [isHovered, setIsHovered] = useState(false);

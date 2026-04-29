@@ -5,7 +5,7 @@ import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import NoDataAvailable from '../../common/NoDataAvailable';
-import AnchoredMenu from '../../dropdowns/AnchoredMenu';
+import { AnchoredMenu } from '../../common';
 import '../../chat/chat.scss';
 
 import {
