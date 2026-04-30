@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import 'boxicons/css/boxicons.min.css';
 import '../../scss/modules/dashboard/dashboardLayout.scss';
 import Sidebarlogo from '../assets/dashboard/sidebarLogo.png';
-import PlanAndBillingmodal from '../components/dashboard/PlanAndBillingmodal';
+import { PlanAndBillingModal } from '../components/modal';
 
 import { RiFeedbackFill } from 'react-icons/ri';
 import { FaTrash } from 'react-icons/fa';
@@ -217,7 +217,7 @@ const DashboardLayout = ({ children }) => {
       </section>
       <OnboardingTour />
       <SupportChat />
-      <PlanAndBillingmodal isOpen={isModalOpen} onClose={closeModal} />
+      <PlanAndBillingModal isOpen={isModalOpen} onClose={closeModal} />
 
     </>
   );

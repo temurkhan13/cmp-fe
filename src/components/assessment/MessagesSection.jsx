@@ -51,7 +51,7 @@ import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
 import useExplain from '../../hooks/AiFeatureHooks/useExplain';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
-import AssessmentModal from './AssessmentComponent/AssessmentModal.jsx';
+import { AssessmentModal } from '../modal';
 import Editor from './AssessmentComponent/Editor.jsx';
 import useAssessment from '../../hooks/useAssessment.js';
 import Button from '../common/Button';

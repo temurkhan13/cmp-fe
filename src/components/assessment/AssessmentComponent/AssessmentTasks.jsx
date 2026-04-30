@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Editor from './Editor';
-import AssessmentModal from './AssessmentModal';
+import { AssessmentModal } from '../../modal';
 import NoDataAvailable from '../../common/NoDataAvailable';
 import { useSelector, useDispatch } from 'react-redux';
 import {

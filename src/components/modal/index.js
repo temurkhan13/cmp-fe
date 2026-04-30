@@ -1,0 +1,12 @@
+export { default as Modal } from './Modal';
+export { default as ConfirmModal } from './ConfirmModal';
+export { default as InputModal } from './InputModal';
+export { default as SideBarModal } from './SideBarModal';
+export { default as CustomModal } from './CustomModal';
+export { default as MoveToModal } from './MoveToModal';
+export { default as ShareModal } from './ShareModal';
+export { default as NewChatSidebarModal } from './NewChatSidebarModal';
+export { default as PlanAndBillingModal } from './PlanAndBillingModal';
+export { default as PaymentModal } from './PaymentModal';
+export { default as AssessmentModal } from './AssessmentModal';
+export { default as EditModal } from './EditModal';

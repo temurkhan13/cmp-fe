@@ -7,7 +7,7 @@ import {
   useRegenerateReportMutation,
 } from '../../../redux/api/workspaceApi';
 import apiClient from '../../../api/axios';
-import ConfirmModal from '../../common/ConfirmModal';
+import { ConfirmModal } from '../../modal';
 import Button from '../../common/Button';
 import { AnchoredMenu } from '../../common';
 import { marked } from 'marked';

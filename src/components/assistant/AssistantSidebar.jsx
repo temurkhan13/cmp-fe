@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { SideBarModal } from '../common';
+import { SideBarModal } from '../modal';
 import PropTypes from 'prop-types';
 
 import Media from '../chat/Media';

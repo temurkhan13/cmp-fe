@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import assets from '../../assets';
 import { FaHistory } from 'react-icons/fa';
 import { IoIosChatboxes } from 'react-icons/io';
-import { SideBarModal } from '../../components/common';
+import { SideBarModal } from '../modal';
 import VersionHistory from '../assistant/assistantModal/VersionHistory';
 import Comments from '../assistant/assistantModal/Comments';
 import Loading from './Loading';

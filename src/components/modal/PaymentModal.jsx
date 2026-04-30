@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { SiVisa } from 'react-icons/si';
 import { AiOutlineClose } from 'react-icons/ai';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 
 const countries = [
   { code: 'US', name: 'United States 🇺🇸' },

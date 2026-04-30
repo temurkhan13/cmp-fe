@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BiSolidFolderOpen } from 'react-icons/bi';
 import { setSelectedFolder as setSelectedReduxFolder } from '../../redux/slices/workspacesSlice';
-import CustomModal from '../customModal/CustomModal';
+import { CustomModal, InputModal, ConfirmModal } from '../modal';
 import apiClient from '../../api/axios';
 import {
   useMoveToTrashMutation,
@@ -11,7 +11,7 @@ import {
 } from '../../redux/api/workspaceApi';
 import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
-import { IconCard, Button, InputModal, ConfirmModal, NotificationBar } from '../common';
+import { IconCard, Button, NotificationBar } from '../common';
 import "./dashboard-inline.scss";
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {

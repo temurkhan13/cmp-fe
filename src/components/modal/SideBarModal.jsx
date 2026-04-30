@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 import { RxCross2 } from 'react-icons/rx';
-import Button from './Button';
+import Button from '../common/Button';
 
 const SideBarModal = ({ title, bodyContent, onClose }) => {
   const closeModal = () => {

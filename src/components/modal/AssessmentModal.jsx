@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { RxCross2 } from 'react-icons/rx';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 
 const AssessmentModal = ({ content, onClose }) => {
   const handleClose = () => {

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import Modal from '../../components/common/Modal';
+import { Modal } from '../../components/modal';
 import Button from '../../components/common/Button';
 import { useDispatch } from 'react-redux';
 import { verify, resendVerification } from '../../redux/slices/authSlice.js';

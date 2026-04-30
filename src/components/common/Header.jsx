@@ -4,16 +4,14 @@ import PropTypes from 'prop-types';
 import { TbMenu2 } from 'react-icons/tb';
 import { FaSignOutAlt } from 'react-icons/fa';
 import Components from '@components';
-import ShareModal from '../customModal/Sharemodal';
-import Modal from '../../components/common/Modal';
+import { ShareModal, Modal } from '../modal';
 import AnchoredMenu from './AnchoredMenu';
 import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { logout } from '../../redux/slices/authSlice';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from './Button';
-// import UserProfilePic from '../../assets/chat/user.png';
 
 const Header = ({ onMenuToggle }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);

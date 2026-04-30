@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserAsync } from '../../../redux/slices/userSlice.js';
 import apiClient from '../../../api/axios';
-import ConfirmModal from '../../common/ConfirmModal';
+import { ConfirmModal } from '../../modal';
 import Button from '../../common/Button';
 import { BiTrash } from 'react-icons/bi';
 

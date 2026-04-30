@@ -2,11 +2,11 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import 'react-color-palette/css';
 import { ColorPicker, useColor } from 'react-color-palette';
-import '../assessment.scss';
+import '../assessment/assessment.scss';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { RxCross2 } from 'react-icons/rx';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 
 const EditModal = ({ isOpen, onClose }) => {
   const [logo, setLogo] = useState(null);
