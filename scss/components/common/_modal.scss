@@ -12,12 +12,13 @@
 }
 
 .common-modal-content {
-  background: white;
+  background: #ffffff;
   padding: 2rem;
   border-radius: 1rem;
   position: relative;
   max-width: 90vw;
   max-height: 98vh;
+  min-width: 500px;
 }
 
 .common-modal-header {
@@ -43,13 +44,20 @@
 }
 
 .common-modal-body {
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: #333;
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;
+}
+
+.common-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 @media (max-width: 600px) {

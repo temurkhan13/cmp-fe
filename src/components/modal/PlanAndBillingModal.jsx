@@ -1,27 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { BsFillStarFill } from 'react-icons/bs';
 import { AiOutlineArrowRight } from 'react-icons/ai';
-import { IoClose } from 'react-icons/io5';
 import { MdCheck } from 'react-icons/md';
 import Button from '../common/Button';
+import Modal from './Modal';
 
 const PlanAndBillingModal = ({ isOpen, onClose }) => {
   const [selectedTab, setSelectedTab] = useState('personal');
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
 
   const plansData = {
     personal: [
@@ -76,46 +62,37 @@ const PlanAndBillingModal = ({ isOpen, onClose }) => {
     setSelectedTab(tab);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="plan-billing-modal-overlay">
-      <div className="plan-billing-modal-content">
-        <Button
-          variant="icon"
-          ariaLabel="Close"
-          className="plan-billing-modal-close"
-          onClick={onClose}
-        >
-          <IoClose size={24} />
-        </Button>
-        <div className="plan-billing-pricing">
-          <div className="plan-billing-tabs">
-            <Button
-              variant="toggle"
-              active={selectedTab === 'personal'}
-              className={selectedTab === 'personal' ? 'active' : ''}
-              onClick={() => handleTabChange('personal')}
-            >
-              Personal
-            </Button>
-            <Button
-              variant="toggle"
-              active={selectedTab === 'business'}
-              className={selectedTab === 'business' ? 'active' : ''}
-              onClick={() => handleTabChange('business')}
-            >
-              Business
-            </Button>
-          </div>
-          <div className="plan-billing-cards">
-            {plansData[selectedTab].map((plan, index) => (
-              <Card key={index} plan={plan} />
-            ))}
-          </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      headerSlot={
+        <div className="plan-billing-tabs">
+          <Button
+            variant="toggle"
+            active={selectedTab === 'personal'}
+            className={selectedTab === 'personal' ? 'active' : ''}
+            onClick={() => handleTabChange('personal')}
+          >
+            Personal
+          </Button>
+          <Button
+            variant="toggle"
+            active={selectedTab === 'business'}
+            className={selectedTab === 'business' ? 'active' : ''}
+            onClick={() => handleTabChange('business')}
+          >
+            Business
+          </Button>
         </div>
+      }
+    >
+      <div className="plan-billing-cards">
+        {plansData[selectedTab].map((plan, index) => (
+          <Card key={index} plan={plan} />
+        ))}
       </div>
-    </div>
+    </Modal>
   );
 };
 

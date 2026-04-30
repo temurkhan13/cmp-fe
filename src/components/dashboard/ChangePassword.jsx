@@ -126,14 +126,16 @@ const ChangePassword = ({ onChangePassword }) => {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        variant="primary"
-        className="update-button"
-        loading={loading}
-      >
-        Update Password
-      </Button>
+      <div className='common-modal-footer'>
+        <Button
+          type="submit"
+          variant="primary"
+          className="update-button"
+          loading={loading}
+        >
+          Update Password
+        </Button>
+      </div>
       {successMessage && (
         <p className="change-password-success">{successMessage}</p>
       )}

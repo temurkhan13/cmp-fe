@@ -2,8 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { SiVisa } from 'react-icons/si';
-import { AiOutlineClose } from 'react-icons/ai';
 import Button from '../common/Button';
+import Modal from './Modal';
 
 const countries = [
   { code: 'US', name: 'United States 🇺🇸' },
@@ -58,143 +58,132 @@ const PaymentModal = ({ onClose, details }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateFields()) {
-      // Logic to add payment method
-      onClose(); // Close the modal after form submission
-    }
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   return (
-    <div className="payment-modal-overlay" onClick={handleOverlayClick}>
-      <div className="payment-modal-content">
-        <Button
-          variant="icon"
-          ariaLabel="Close"
-          className="payment-modal-close"
-          onClick={onClose}
-        >
-          <AiOutlineClose />
-        </Button>
-        <h2 className="payment-modal-title">Add Card Details</h2>
-        <form onSubmit={handleSubmit}>
+    <Modal
+      isOpen
+      onClose={onClose}
+      title="Add Card Details"
+      footer={
+        <>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="payment-modal-cancel-btn"
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="payment-modal-form"
+            variant="primary"
+            size="sm"
+            className="payment-modal-add-btn"
+          >
+            Add Card
+          </Button>
+        </>
+      }
+    >
+      <form id="payment-modal-form" onSubmit={handleSubmit}>
+        <div className="payment-modal-form-group">
+          <label>Card Holder Name</label>
+          <input
+            type="text"
+            name="cardHolderName"
+            value={formData.cardHolderName}
+            onChange={handleInputChange}
+            placeholder="Enter name"
+            required
+          />
+          {errors.cardHolderName && (
+            <span className="payment-modal-error">{errors.cardHolderName}</span>
+          )}
+        </div>
+        <div className="payment-modal-form-group card-number-group">
+          <label>Card Number</label>
+          <input
+            type="text"
+            name="cardNumber"
+            value={formData.cardNumber}
+            onChange={handleInputChange}
+            placeholder="XXXX - XXXX - XXXX - XXXX"
+            required
+          />
+          <SiVisa className="visa-icon" size={24} />
+          {errors.cardNumber && (
+            <span className="payment-modal-error">{errors.cardNumber}</span>
+          )}
+        </div>
+        <div className="payment-modal-form-row">
           <div className="payment-modal-form-group">
-            <label>Card Holder Name</label>
+            <label>Expiry Date</label>
             <input
               type="text"
-              name="cardHolderName"
-              value={formData.cardHolderName}
+              name="expiryDate"
+              value={formData.expiryDate}
               onChange={handleInputChange}
-              placeholder="Enter name"
+              placeholder="MM/YY"
               required
             />
-            {errors.cardHolderName && (
-              <span className="payment-modal-error">{errors.cardHolderName}</span>
+            {errors.expiryDate && (
+              <span className="payment-modal-error">{errors.expiryDate}</span>
             )}
           </div>
-          <div className="payment-modal-form-group card-number-group">
-            <label>Card Number</label>
+          <div className="payment-modal-form-group">
+            <label>CVC</label>
             <input
               type="text"
-              name="cardNumber"
-              value={formData.cardNumber}
+              name="cvc"
+              value={formData.cvc}
               onChange={handleInputChange}
-              placeholder="XXXX - XXXX - XXXX - XXXX"
+              placeholder="CVC"
               required
             />
-            <SiVisa className="visa-icon" size={24} />
-            {errors.cardNumber && (
-              <span className="payment-modal-error">{errors.cardNumber}</span>
+            {errors.cvc && <span className="payment-modal-error">{errors.cvc}</span>}
+          </div>
+        </div>
+        <div className="payment-modal-form-row">
+          <div className="payment-modal-form-group">
+            <label>Country</label>
+            <select
+              name="country"
+              value={formData.country}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select country</option>
+              {countries.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+            {errors.country && (
+              <span className="payment-modal-error">{errors.country}</span>
             )}
           </div>
-          <div className="payment-modal-form-row">
-            <div className="payment-modal-form-group">
-              <label>Expiry Date</label>
-              <input
-                type="text"
-                name="expiryDate"
-                value={formData.expiryDate}
-                onChange={handleInputChange}
-                placeholder="MM/YY"
-                required
-              />
-              {errors.expiryDate && (
-                <span className="payment-modal-error">{errors.expiryDate}</span>
-              )}
-            </div>
-            <div className="payment-modal-form-group">
-              <label>CVC</label>
-              <input
-                type="text"
-                name="cvc"
-                value={formData.cvc}
-                onChange={handleInputChange}
-                placeholder="CVC"
-                required
-              />
-              {errors.cvc && <span className="payment-modal-error">{errors.cvc}</span>}
-            </div>
+          <div className="payment-modal-form-group">
+            <label>Zip Code</label>
+            <input
+              type="text"
+              name="zipCode"
+              value={formData.zipCode}
+              onChange={handleInputChange}
+              placeholder="Zip Code"
+              required
+            />
+            {errors.zipCode && (
+              <span className="payment-modal-error">{errors.zipCode}</span>
+            )}
           </div>
-          <div className="payment-modal-form-row">
-            <div className="payment-modal-form-group">
-              <label>Country</label>
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select country</option>
-                {countries.map((country) => (
-                  <option key={country.code} value={country.code}>
-                    {country.name}
-                  </option>
-                ))}
-              </select>
-              {errors.country && (
-                <span className="payment-modal-error">{errors.country}</span>
-              )}
-            </div>
-            <div className="payment-modal-form-group">
-              <label>Zip Code</label>
-              <input
-                type="text"
-                name="zipCode"
-                value={formData.zipCode}
-                onChange={handleInputChange}
-                placeholder="Zip Code"
-                required
-              />
-              {errors.zipCode && (
-                <span className="payment-modal-error">{errors.zipCode}</span>
-              )}
-            </div>
-          </div>
-          <div className="payment-modal-button-group">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="payment-modal-cancel-btn"
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              className="payment-modal-add-btn"
-            >
-              Add Card
-            </Button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

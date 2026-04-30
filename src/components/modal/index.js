@@ -9,4 +9,3 @@ export { default as NewChatSidebarModal } from './NewChatSidebarModal';
 export { default as PlanAndBillingModal } from './PlanAndBillingModal';
 export { default as PaymentModal } from './PaymentModal';
 export { default as AssessmentModal } from './AssessmentModal';
-export { default as EditModal } from './EditModal';
