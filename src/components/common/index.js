@@ -1,6 +1,6 @@
 export { default as Header } from './Header';
 export { default as PageHeader } from './PageHeader';
-export { default as SubscriptionPlainsGrid } from './SubscriptionPlainsGrid';
+export { default as SubscriptionPlansGrid } from './SubscriptionPlansGrid';
 export { default as Button } from './Button';
 export { default as Card } from './Card';
 export { default as AnchoredMenu } from './AnchoredMenu';

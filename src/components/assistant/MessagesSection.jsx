@@ -15,7 +15,7 @@ import { IoAttach, IoSend } from 'react-icons/io5';
 import { FaBookmark } from 'react-icons/fa6';
 import InpireMeIcon from '../../assets/inspireBtn.svg';
 import AiPic from '@assets/dashboard/sidebarLogo.png';
-import { Example } from '@utils';
+import { Example } from '@data/chat';
 // import fileIcon from '@assets/dashboard/fileIcon.png';
 import TonePopup from '../../components/common/TonePopup';
 import CommentPopup from './CommentPopup';

@@ -1,4 +1,4 @@
-.plainCard {
+.planCard {
   padding: 3.2rem;
   border: 1px solid $border_color--tertiary;
   border-radius: 1.2rem;
@@ -42,8 +42,8 @@
   }
 }
 
-#plainCard-active {
-  background-color: $plainCard;
+#planCard-active {
+  background-color: $planCard;
   color: white;
   & > header {
     & > p {

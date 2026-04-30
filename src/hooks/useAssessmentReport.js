@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import apiClient from '../api/axios';
-import { addContent } from '../redux/reducers/editorReducer';
 
 const useAssessmentReport = ({
   assessmentId,
@@ -49,13 +48,10 @@ const useAssessmentReport = ({
       setAssessmentData(data);
       setSingleAssessmenChats(data);
 
-      const question = data.qa[data.qa.length - 1].question;
-
       if (data?.report?.isGenerated) {
         setIsReportGenerated(true);
         setReport(responseData);
       }
-      addContent(question);
 
       setError(null);
       return data;

@@ -4,11 +4,11 @@ import Button from '../common/Button';
 import { GoCheckCircle } from 'react-icons/go';
 import { Link } from 'react-router-dom';
 
-const PlainCard = (props) => {
+const PlanCard = (props) => {
   return (
     <div
-      className={`plainCard`}
-      id={props.name === 'Starter' ? 'plainCard-active' : ''}
+      className={`planCard`}
+      id={props.name === 'Starter' ? 'planCard-active' : ''}
     >
       <header>
         <Components.Feature.Text className="main--bold  mb_Primary">
@@ -18,7 +18,7 @@ const PlainCard = (props) => {
           {props.description}
         </Components.Feature.Text>
         <Components.Feature.Text className="secondry--light mb_1">
-          <span>${props.price}</span>/ {props.plainType ? 'yearly' : 'monthly'}
+          <span>${props.price}</span>/ {props.planType ? 'yearly' : 'monthly'}
         </Components.Feature.Text>
         <Link to="/check-out">
           <Button
@@ -46,17 +46,17 @@ const PlainCard = (props) => {
   );
 };
 
-PlainCard.propTypes = {
+PlanCard.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
-  plainType: PropTypes.bool.isRequired,
+  planType: PropTypes.bool.isRequired,
   features: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const Item = (props) => {
   return (
-    <div className="plainCard-item">
+    <div className="planCard-item">
       <div>
         <GoCheckCircle />
       </div>
@@ -73,4 +73,4 @@ Item.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default PlainCard;
+export default PlanCard;

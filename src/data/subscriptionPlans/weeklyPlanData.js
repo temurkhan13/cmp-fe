@@ -1,4 +1,4 @@
-const monthlyPlainData = [
+const weeklyPlanData = [
     {
       name: "Free",
       description: "Lorem ipsum dolor sit amet consectetur. ",
@@ -11,7 +11,7 @@ const monthlyPlainData = [
     {
       name: "Starter",
       description: "Lorem ipsum dolor sit amet consectetur. ",
-      price: 29.99,
+      price: 10.99,
       features: [
         "Lorem ipsum dolor sit amet consectetur.",
         "Lorem ipsum dolor sit amet consectetur.",
@@ -22,9 +22,8 @@ const monthlyPlainData = [
     {
       name: "Pro",
       description: "Lorem ipsum dolor sit amet consectetur. ",
-      price: 79.99,
+      price: 20.99,
       features: [
-        "Lorem ipsum dolor sit amet consectetur.",
         "Lorem ipsum dolor sit amet consectetur.",
         "Lorem ipsum dolor sit amet consectetur.",
         "Lorem ipsum dolor sit amet consectetur.",
@@ -32,4 +31,4 @@ const monthlyPlainData = [
     },
   ];
   
-  export default monthlyPlainData;
+  export default weeklyPlanData;

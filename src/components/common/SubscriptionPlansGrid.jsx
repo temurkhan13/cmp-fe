@@ -1,16 +1,16 @@
 import Components from '..';
 
-const SubscriptionPlainsGrid = (props) => {
+const SubscriptionPlansGrid = (props) => {
   return (
     <>
-      <div className="subscriptionPlainGrid">
+      <div className="subscriptionPlansGrid">
         {props.data.map((el) => (
-          <Components.Feature.PlainCard
+          <Components.Feature.PlanCard
             name={el.name}
             description={el.description}
             price={el.price}
             features={el.features}
-            plainType={props.active}
+            planType={props.active}
             key={el.name}
           />
         ))}
@@ -19,4 +19,4 @@ const SubscriptionPlainsGrid = (props) => {
   );
 };
 
-export default SubscriptionPlainsGrid;
+export default SubscriptionPlansGrid;
