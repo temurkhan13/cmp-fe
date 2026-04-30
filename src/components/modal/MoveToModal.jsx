@@ -10,7 +10,7 @@ import { MdKeyboardArrowRight, MdKeyboardArrowDown } from 'react-icons/md';
 import NoDataAvailable from '../../components/common/NoDataAvailable';
 import Button from '../common/Button';
 
-import './custom-modal.scss';
+import './modal.scss';
 
 const MoveToModal = ({ folders }) => {
   const [openFolders, setOpenFolders] = useState({});

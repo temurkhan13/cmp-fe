@@ -6,8 +6,7 @@ import { CgProfile } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import NotificationDropdown from './NotificationDropdown';
 import { AnchoredMenu } from '../common';
-import { Modal } from '../modal';
-import ChangePassword from '../../components/dashboard/ChangePassword';
+import { ChangePasswordModal } from '../modal';
 import { logout } from '../../redux/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import './dashboard-inline.scss';
@@ -120,15 +119,10 @@ const Header = () => {
           <div className="cmp-dropdown-overlay" onClick={closeNotifications}></div>
         )}
       </div>
-      {isChangePasswordModalOpen && (
-        <Modal
-          title="Change Password"
-          isOpen={isChangePasswordModalOpen}
-          onClose={handleCloseChangePasswordModal}
-        >
-          <ChangePassword />
-        </Modal>
-      )}
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={handleCloseChangePasswordModal}
+      />
 
     </header>
   );

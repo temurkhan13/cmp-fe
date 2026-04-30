@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BiSolidFolderOpen } from 'react-icons/bi';
@@ -9,15 +9,12 @@ import {
   useMoveToTrashMutation,
   useGetWorkspacesQuery,
 } from '../../redux/api/workspaceApi';
-import { RxCross2 } from 'react-icons/rx';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
-import { IconCard, Button, NotificationBar } from '../common';
+import { IconCard, NotificationBar } from '../common';
 import "./dashboard-inline.scss";
 
 const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const dispatch = useDispatch();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFolder, setSelectedFolder] = useState(null);
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const [moveToTrash] = useMoveToTrashMutation();
@@ -25,26 +22,6 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
   const folderId = useSelector(selectSelectedFolder);
   const [renameModal, setRenameModal] = useState({ open: false, folder: null });
   const [trashConfirm, setTrashConfirm] = useState({ open: false, folder: null });
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setSelectedFolder(null);
-  }, []);
-
-  // const handleProceedMoveToTrash = useCallback(async () => {
-  //   try {
-  //     await moveToTrash({
-  //       entityType: 'folder',
-  //       id: selectedFolder.id,
-  //     }).unwrap();
-  //     refetch();
-  //     onFolderUpdate();
-  //   } catch {
-  //     setError('Error moving to trash');
-  //   }
-  //   closeModal();
-  //   setIsTrashModalOpen(false);
-  // }, [moveToTrash, selectedFolder, refetch, onFolderUpdate, closeModal]);
 
   const handleProceedMoveToTrash = async (folder) => {
     try {
@@ -59,13 +36,7 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
     }
   };
 
-  const handleOpenFolder = useCallback(() => {
-    dispatch(setSelectedReduxFolder(selectedFolder));
-    onFolderSelect(selectedFolder);
-    closeModal();
-  }, [dispatch, onFolderSelect, selectedFolder, closeModal]);
-
-  const handleCloseError = useCallback(() => setError(null), []);
+  const handleCloseError = () => setError(null);
 
   return (
     <section className="folders-files">
@@ -117,15 +88,6 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
         ))}
       </div>
 
-      {isModalOpen && selectedFolder && (
-        <ModalContent
-          folder={selectedFolder}
-          onSelect={handleOpenFolder}
-          onDelete={() => setIsTrashModalOpen(true)}
-          onClose={closeModal}
-        />
-      )}
-
       {isTrashModalOpen && (
         <CustomModal
           isOpen={isTrashModalOpen}
@@ -171,47 +133,6 @@ const FileStructure = ({ workspace, onFolderSelect, onFolderUpdate }) => {
       />
     </section>
   );
-};
-
-const ModalContent = ({ folder, onSelect, onDelete, onClose }) => (
-  <div className="fs-modal">
-    <div className="modal-wrapper">
-      <h3 className="modal-heading">{folder.folderName}</h3>
-      <Button
-        variant="icon"
-        ariaLabel="Close"
-        className="modal-closebtn"
-        onClick={onClose}
-      >
-        <RxCross2 />
-      </Button>
-    </div>
-    <div className="modal-content">
-      <div className="modal-actions">
-        <Button
-          variant="primary"
-          className="folder-modal-button switch-btn"
-          onClick={onSelect}
-        >
-          Select Project
-        </Button>
-        <Button
-          variant="destructive"
-          className="folder-modal-button delete-btn"
-          onClick={onDelete}
-        >
-          Move to Trash
-        </Button>
-      </div>
-    </div>
-  </div>
-);
-
-ModalContent.propTypes = {
-  folder: PropTypes.object.isRequired,
-  onSelect: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
 FileStructure.propTypes = {

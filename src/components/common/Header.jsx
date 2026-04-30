@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import { TbMenu2 } from 'react-icons/tb';
 import { FaSignOutAlt } from 'react-icons/fa';
 import Components from '@components';
-import { ShareModal, Modal } from '../modal';
+import { ShareModal, QuestionnaireModal } from '../modal';
 import AnchoredMenu from './AnchoredMenu';
-import Questionnaire from '../../modules/assessment/Questionnaire';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice.js';
 import { logout } from '../../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
@@ -120,17 +119,10 @@ const Header = ({ onMenuToggle }) => {
         />
       </section>
       {isShareModalOpen && <ShareModal onClose={handleCloseShareModal} />}
-      {isImproveResponseModalOpen && (
-        <Modal
-          title="User Questionnaire"
-          isOpen={isImproveResponseModalOpen}
-          onClose={handleCloseImproveResponseModal}
-        >
-          <Questionnaire
-            handleCloseImproveResponseModal={handleCloseImproveResponseModal}
-          />
-        </Modal>
-      )}
+      <QuestionnaireModal
+        isOpen={isImproveResponseModalOpen}
+        onClose={handleCloseImproveResponseModal}
+      />
     </div>
   );
 };

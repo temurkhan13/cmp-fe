@@ -1678,71 +1678,6 @@
   background-color: lightgray;
 }
 
-.pm-delete-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 1rem;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: white;
-}
-
-.pm-delete-modal-header {
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.pm-delete-modal-header p {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.pm-delete-modal-content {
-  padding: 2rem;
-  text-align: center;
-  border-radius: 1rem;
-  font-size: 1.5rem;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
-}
-
-.pm-delete-modal-content p {
-  font-size: 1.5rem;
-}
-
-.pm-delete-modal-buttons {
-  display: flex;
-  justify-content: space-around;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.pm-delete-cancel-btn,
-.pm-delete-confirm-btn {
-  padding: 0.9rem;
-  width: 50%;
-  font-size: 1.4rem;
-  font-weight: 400;
-}
-
-.pm-delete-cancel-btn {
-  color: #333;
-  border: 0.2rem solid #ccc;
-  width: 15rem;
-}
-
-.pm-delete-confirm-btn {
-  color: black;
-}
-
 .settings-page {
   padding: 1rem 3rem;
 }
@@ -1847,42 +1782,6 @@
   font-size: 1.4rem;
 }
 
-.payment-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.payment-modal-content {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  position: relative;
-}
-
-.payment-modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  background-color: lightgray;
-  display: flex;
-  padding: 0.2rem;
-}
-
-.payment-modal-title {
-  margin: 0 0 1rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
 .payment-modal-form-group {
   margin-bottom: 1rem;
   position: relative;
@@ -1912,13 +1811,6 @@
 
 .payment-modal-form-row .payment-modal-form-group {
   width: 50%;
-}
-
-.payment-modal-button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-  gap: 1rem;
 }
 
 .payment-modal-cancel-btn {
@@ -2194,43 +2086,6 @@
   margin-left: 0.5rem;
 }
 
-.plan-billing-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.plan-billing-modal-content {
-  background-color: gray;
-  color: white;
-  padding: 30px;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.plan-billing-modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
-
-.plan-billing-pricing {
-  text-align: center;
-}
-
 .plan-billing-tabs {
   display: flex;
   justify-content: center;
@@ -2348,8 +2203,14 @@
   transition: transform 0.1s ease;
   z-index: 1001;
   width: 45rem;
-  height: 100vh;
+  height: 98dvh;
   overflow-y: auto;
+
+  @media (max-width: 600px) {
+    width: 35rem;
+    height: 95dvh;
+    right: 6rem;
+  }
 }
 
 .notifications-dropdown.open {
@@ -2641,83 +2502,12 @@
   position: relative;
 }
 
-.fs-modal {
-  position: fixed;
-  top: 50%;
-  left: 40%;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
-  border-radius: 1rem;
-  width: 400px;
-  z-index: 999;
-}
-
-.modal-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.modal-heading {
-  font-size: 2rem;
-  margin: 0;
-}
-
-.modal-closebtn {
-  border: none;
-  background-color: lightgray;
-  font-size: 2rem;
-  padding: 0.5rem;
-  display: flex;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.folder-modal-button {
-  font-weight: 600;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  border: none;
-  cursor: pointer;
-  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-}
-
-.switch-btn {
-  background-color: #c3e11d;
-  color: #0b1444;
-}
-
-.delete-btn {
-  background-color: red;
-  color: white;
-}
-
 @media (max-width: 1080px) {
   .folders-files {
     padding: 1.5rem;
   }
-  .fs-modal {
-    width: 90%;
-    max-width: 400px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 }
 
-@media (max-width: 600px) {
-  .fs-modal {
-    width: calc(100% - 2rem);
-    max-width: none;
-  }
-}
 
 .folders-files {
   padding: 2rem 3rem;
@@ -2741,81 +2531,8 @@
   position: relative;
 }
 
-.fs-modal {
-  position: fixed;
-  top: 50%;
-  left: 40%;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
-  border-radius: 1rem;
-  width: 400px;
-  z-index: 999;
-}
-
-.modal-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.modal-heading {
-  font-size: 2rem;
-  margin: 0;
-}
-
-.modal-closebtn {
-  border: none;
-  background-color: lightgray;
-  font-size: 2rem;
-  padding: 0.5rem;
-  display: flex;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.folder-modal-button {
-  font-weight: 600;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
-  border-radius: 1rem;
-  border: none;
-  cursor: pointer;
-  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
-}
-
-.switch-btn {
-  background-color: #c3e11d;
-  color: #0b1444;
-}
-
-.delete-btn {
-  background-color: red;
-  color: white;
-}
-
 @media (max-width: 1080px) {
   .folders-files {
     padding: 1.5rem;
   }
-  .fs-modal {
-    width: 90%;
-    max-width: 400px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 }
-
-@media (max-width: 600px) {
-  .fs-modal {
-    width: calc(100% - 2rem);
-    max-width: none;
-  }
-}
-

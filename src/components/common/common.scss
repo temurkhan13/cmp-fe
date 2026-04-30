@@ -185,54 +185,6 @@
   }
 }
 
-.confirm-modal-overlay {
-  @include modal-backdrop($blur: true);
-}
-
-.confirm-modal-dialog {
-  @include modal-dialog;
-}
-
-.input-modal-dialog {
-  @include modal-dialog;
-  min-width: 30rem;
-}
-
-.confirm-modal-header {
-  font-size: 1.125rem;
-  margin-bottom: 0.625rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.confirm-modal-heading {
-  color: black;
-  font-size: 2rem;
-  font-weight: 600;
-}
-
-.confirm-modal-cross-icon {
-  font-size: 2rem;
-  color: rgba(0, 0, 0, 0.6);
-  background-color: lightgray;
-  border-radius: 50%;
-  padding: 0.2rem;
-  margin-left: 0.3125rem;
-}
-
-.confirm-modal-straight-line {
-  border-top: 0.0625rem solid lightgray;
-}
-
-.confirm-modal-body {
-  font-size: 1.5rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: #0A0A0AAD;
-}
-
 .input-modal-body {
   font-size: 1.5rem;
   margin-top: 1.5rem;
@@ -255,14 +207,6 @@
 .confirm-modal-actions {
   display: flex;
   justify-content: space-between;
-}
-
-.confirm-modal-btn {
-  padding: 0.8rem 1.5rem;
-  width: 48%;
-  font-size: 1.5rem;
-  border-radius: 1rem;
-  cursor: pointer;
 }
 
 .error-boundary {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from '../../../scss/modules/assessment/questionnaire.module.scss';
+import styles from './Questionnaire.module.scss';
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import { IoMdClose } from 'react-icons/io';
 import { TbExclamationCircle } from 'react-icons/tb';

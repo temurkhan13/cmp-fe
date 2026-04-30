@@ -26,8 +26,7 @@ import {
   MessagesSection,
   NewChat,
 } from '../../components/assistant/index.js';
-import { Modal } from '../../components/modal';
-import Questionnaire from '../../modules/assessment/Questionnaire';
+import { QuestionnaireModal } from '../../components/modal';
 import Button from '../../components/common/Button';
 
 const AiAssistantChat = () => {
@@ -224,17 +223,10 @@ const AiAssistantChat = () => {
           onClose={() => setShowNotification(false)}
         />
       )}
-      {isSurveyOpen && (
-        <Modal
-          title="User Questionnaire"
-          isOpen={isSurveyOpen}
-          onClose={() => setIsSurveyOpen(false)}
-        >
-          <Questionnaire
-            handleCloseImproveResponseModal={() => setIsSurveyOpen(false)}
-          />
-        </Modal>
-      )}
+      <QuestionnaireModal
+        isOpen={isSurveyOpen}
+        onClose={() => setIsSurveyOpen(false)}
+      />
     </div>
   );
 };
