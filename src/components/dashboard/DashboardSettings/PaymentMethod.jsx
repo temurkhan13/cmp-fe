@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { PaymentModal } from '../../modal';
-import { RxCross2 } from 'react-icons/rx';
+import { PaymentModal, DeleteCardModal } from '../../modal';
 import Button from '../../common/Button';
 
 const PaymentMethod = () => {
@@ -75,56 +73,14 @@ const PaymentMethod = () => {
       {isModalOpen && (
         <PaymentModal onClose={handleCloseModal} details={paymentDetails} />
       )}
-      {isDeleteModalOpen && (
-        <DeleteModal
-          paymentDetails={paymentDetails}
-          onClose={handleCloseModal}
-        />
-      )}
+      <DeleteCardModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleCloseModal}
+        paymentDetails={paymentDetails}
+      />
     </div>
   );
-};
-
-// DeleteModal Component
-const DeleteModal = ({ paymentDetails, onClose }) => (
-  <div className="pm-delete-modal">
-    <div className="pm-delete-modal-content">
-      <div className="pm-delete-modal-header">
-        <p>Delete Card Details</p>
-        <Button variant="icon" ariaLabel="Close" onClick={onClose}>
-          <RxCross2 size={18} />
-        </Button>
-      </div>
-      <p>
-        You&apos;re about to delete{' '}
-        {paymentDetails
-          ? `Visa Card **** ${paymentDetails.cardNumber.slice(-4)}`
-          : 'Visa Card **** 5914'}
-        from <br />
-        your list. This can&apos;t be undone.
-      </p>
-      <div className="pm-delete-modal-buttons">
-        <Button
-          variant="secondary"
-          className="pm-delete-cancel-btn"
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
-        <Button variant="primary" className="pm-delete-confirm-btn">
-          Delete Permanently
-        </Button>
-      </div>
-    </div>
-  </div>
-);
-
-DeleteModal.propTypes = {
-  paymentDetails: PropTypes.shape({
-    cardNumber: PropTypes.string.isRequired,
-    expiryDate: PropTypes.string.isRequired,
-  }),
-  onClose: PropTypes.func.isRequired,
 };
 
 export default PaymentMethod;

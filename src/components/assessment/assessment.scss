@@ -374,19 +374,6 @@
   font-size: 1.5rem;
 }
 
-.edit-overlay {
-  @include modal-backdrop;
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.modalContainer {
-  @include modal-dialog;
-  width: 50%;
-  max-height: 98vh;
-  overflow-y: auto;
-  position: relative;
-}
-
 .saperator {
   margin-top: 1rem;
   color: #f1f1f1;
@@ -401,16 +388,6 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
-
-.edit-modal-close-icon {
-  font-size: 2rem;
-}
-
-.edit-modal-title {
-  font-size: 1.7rem;
-  font-weight: bold;
-}
-
 
 .label {
   display: block;

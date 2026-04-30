@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAddFeedbackMutation } from '../../redux/api/workspaceApi';
 import Button from '../common/Button';
+import { FeedbackSuccessModal } from '../modal';
 const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
@@ -164,16 +165,12 @@ const FeedbackComponent = ({ welcomeNote, radioOptions }) => {
           </Button>
         </div>
       </form>
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <p>{modalMessage}</p>
-            <Button variant="secondary" onClick={closeModal}>
-              Close
-            </Button>
-          </div>
-        </div>
-      )}
+      <FeedbackSuccessModal
+        isOpen={showModal}
+        onClose={closeModal}
+        message={modalMessage}
+      />
+
     </div>
   );
 };

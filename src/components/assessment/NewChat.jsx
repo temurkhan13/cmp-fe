@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Components from '@components';
-import { NewChatSidebarModal } from '../modal';
 import { HiOutlinePlusSm } from 'react-icons/hi';
-import { BsThreeDots } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
 import { RxDashboard } from 'react-icons/rx';
 import {
@@ -25,11 +23,8 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   const projects = useSelector(selectAllFolders);
 
   const [loading, setLoading] = useState(false);
-  const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
   const chatContainerRef = useRef(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
-  const [hoveredChatIndex, setHoveredChatIndex] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const chats = useSelector(selectAllAssessments);
@@ -39,23 +34,6 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   };
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-  };
-  const closeModal = () => {
-    setShowMenu({ index: null, chatId: null });
-    setIsModalOpen(false);
-  };
-
-  const openModal = (index, chatId, event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    setShowMenu({
-      index,
-      chatId,
-      position: {
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
-      },
-    });
-    setIsModalOpen(true);
   };
   const handleChatSelect = (chatId) => {
     const currentUrl = window.location.pathname;
@@ -180,12 +158,10 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
         <>
           {chats &&
             Array.isArray(chats) &&
-            chats.map((chat, index) => (
+            chats.map((chat) => (
               <section
                 key={chat._id}
                 onClick={() => handleChatSelect(chat._id)}
-                onMouseEnter={() => setHoveredChatIndex(index)} // Set the hovered index on mouse enter
-                onMouseLeave={() => setHoveredChatIndex(null)} // Reset the hovered index on mouse leave
                 className="chat-item-section newchat-chat-item"
               >
                 <Components.Feature.Text
@@ -193,25 +169,6 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
                 >
                   {chat.report[0].ReportTitle}
                 </Components.Feature.Text>
-                {hoveredChatIndex === index && (
-                  <BsThreeDots
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openModal(index, chat.chatId, e);
-                    }}
-                    className="newchat-dots-icon"
-                  />
-                )}
-
-                {showMenu.index === index &&
-                  showMenu.chatId === chat.chatId && (
-                    <NewChatSidebarModal
-                      isOpen={isModalOpen}
-                      closeModal={closeModal}
-                      chatId={chat.chatId}
-                      position={showMenu.position}
-                    />
-                  )}
               </section>
             ))}
           {loading && <LoadingSpinner />}

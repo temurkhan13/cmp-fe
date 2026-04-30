@@ -64,6 +64,7 @@
   .common-modal-content {
     padding: 1.5rem;
     max-width: calc(100vw - 2rem);
+    min-width: unset;
   }
 
   .common-modal-title {

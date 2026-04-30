@@ -10,7 +10,7 @@ import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 import Button from '../common/Button';
 import Modal from './Modal';
 
-import './custom-modal.scss';
+import './modal.scss';
 
 const ShareModal = ({ onClose }) => {
   const { users, currentChat } = useSelectedChat();

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Components from '@components';
-import { NewChatSidebarModal, InputModal, ConfirmModal } from '../modal';
+import { InputModal, ConfirmModal } from '../modal';
 import { useUpdateChatMutation, useRemoveChatMutation } from '../../redux/api/workspaceApi';
 import { truncateText } from '../../utils/helperFunction.js';
 import { HiOutlinePlusSm } from 'react-icons/hi';
@@ -12,9 +12,10 @@ import {
 } from 'react-icons/tb';
 import { BsThreeDots } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';
+import { FaPen, FaTrash } from 'react-icons/fa';
 import './assistant.scss';
 import { RxDashboard } from 'react-icons/rx';
-import { Spinner } from '../common';
+import { Spinner, AnchoredMenu } from '../common';
 
 import {
   selectAllChats,
@@ -39,10 +40,8 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
 
   const [loading, setLoading] = useState(false);
   const [chatsLoading, setChatsLoading] = useState(true);
-  const [showMenu, setShowMenu] = useState({ index: null, chatId: null });
   const [searchQuery, setSearchQuery] = useState('');
   const chatContainerRef = useRef(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [renameChat, setRenameChat] = useState({ open: false, chatId: null, chatTitle: '', folderId: null });
   const [trashConfirm, setTrashConfirm] = useState({ open: false, chatId: null, folderId: null });
   const [updateChatMutation] = useUpdateChatMutation();
@@ -113,24 +112,6 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const closeModal = () => {
-    setShowMenu({ index: null, chatId: null });
-    setIsModalOpen(false);
-  };
-
-  const openModal = (index, chatId, event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    setShowMenu({
-      index,
-      chatId,
-      position: {
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
-      },
-    });
-    setIsModalOpen(true);
-  };
-
   const handleChatSelect = (chatId) => {
     dispatch(setCurrentChatId(chatId));
     navigate(`/assistant/chat/${chatId}`, { replace: true });
@@ -326,42 +307,48 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
                       >
                         {truncateText(capitalizeFirstWord(chat.chatTitle || chat.chat_title || chat.title || 'Untitled'), 25)}
                       </Components.Feature.Text>
-                      {hoveredChatIndex === index && (
-                        <BsThreeDots
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openModal(index, chat._id || chat.id, e);
-                          }}
-                          className="asst-dots-icon"
-                        />
-                      )}
-
-                      {showMenu.index === index &&
-                        showMenu.chatId === (chat._id || chat.id) && (
-                          <NewChatSidebarModal
-                            isOpen={isModalOpen}
-                            closeModal={closeModal}
-                            chatId={chat._id || chat.id}
-                            workspaceId={currentWorkspace?.id}
-                            folderId={chat.folder_id || selectedFolder?._id || selectedFolder?.id}
-                            onRequestDelete={(requestedId) => {
-                              setTrashConfirm({
-                                open: true,
-                                chatId: requestedId,
-                                folderId: chat.folder_id || selectedFolder?._id || selectedFolder?.id,
-                              });
-                            }}
-                            onRename={() => {
+                      <AnchoredMenu
+                        align="right"
+                        trigger={({ onClick, isOpen }) =>
+                          (hoveredChatIndex === index || isOpen) ? (
+                            <BsThreeDots
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClick(e);
+                              }}
+                              className="asst-dots-icon"
+                            />
+                          ) : null
+                        }
+                        items={[
+                          {
+                            key: 'rename',
+                            label: 'Rename',
+                            icon: <FaPen />,
+                            onClick: () => {
                               setRenameChat({
                                 open: true,
                                 chatId: chat._id || chat.id,
                                 chatTitle: chat.chatTitle || chat.chat_title || '',
                                 folderId: chat.folder_id || selectedFolder?._id || selectedFolder?.id,
                               });
-                            }}
-                            position={showMenu.position}
-                          />
-                        )}
+                            },
+                          },
+                          {
+                            key: 'trash',
+                            label: 'Move to Trash',
+                            icon: <FaTrash />,
+                            variant: 'danger',
+                            onClick: () => {
+                              setTrashConfirm({
+                                open: true,
+                                chatId: chat._id || chat.id,
+                                folderId: chat.folder_id || selectedFolder?._id || selectedFolder?.id,
+                              });
+                            },
+                          },
+                        ]}
+                      />
                     </section>
                   ))}
             </div>
