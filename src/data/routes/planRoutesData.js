@@ -1,9 +1,9 @@
 import * as Auth from '../../modules/auth';
-const plainRoutesData = [
+const planRoutesData = [
   {
     title: '',
     path: 'choose-plan',
-    element: Auth.ChoosePlain,
+    element: Auth.ChoosePlan,
   },
   {
     title: '',
@@ -17,4 +17,4 @@ const plainRoutesData = [
   },
 ];
 
-export default plainRoutesData;
+export default planRoutesData;

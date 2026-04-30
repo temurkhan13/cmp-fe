@@ -10,7 +10,7 @@ export { default as ScrollToTop } from "./ScrollToTop";
 export { default as MessageItemText } from "./MessageItemText";
 export { default as MessageItemFile } from "./MessageItemFile";
 export { default as StartAssessmentPopup } from "./StartAssessmentPopup"
-export { default as PlainCard } from "./PlainCard";
+export { default as PlanCard } from "./PlanCard";
 
 // Header
 export { default as HeaderDropDown } from "./header/HeaderDropDown";

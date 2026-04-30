@@ -2,8 +2,8 @@ import Components from '../../components';
 const CheckOut = () => {
   return (
     <div className="checkout">
-      <Components.UI.PlainDetail />
-      <Components.UI.PayWithCard />
+      <Components.CheckOut.PlanDetail />
+      <Components.CheckOut.PayWithCard />
     </div>
   );
 };

@@ -2,14 +2,14 @@ import Components from '../../components';
 import Button from '../common/Button';
 import { IoMdArrowBack } from 'react-icons/io';
 
-const PlainDetail = () => {
+const PlanDetail = () => {
   const goBack = () => {
     window.history.back();
   };
 
   return (
     <>
-      <div className="plainDetail">
+      <div className="planDetail">
         <Button
           variant="ghost"
           className="mb_Tertiary"
@@ -56,4 +56,4 @@ const PlainDetail = () => {
   );
 };
 
-export default PlainDetail;
+export default PlanDetail;

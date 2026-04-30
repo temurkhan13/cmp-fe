@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthLayout, PlainsLayout } from './layout';
+import { AuthLayout, PlansLayout } from './layout';
 import LandingPage from './components/LandingPage/LandingPage';
 import Components from './components';
 import data from './data';
@@ -50,8 +50,8 @@ const Routess = () => {
               <Route path={el.path} element={<PageFade><el.element /></PageFade>} key={el.path} />
             ))}
           </Route>
-          <Route path="" element={<PlainsLayout />}>
-            {data.routes.plainRoutesData.map((el) => (
+          <Route path="" element={<PlansLayout />}>
+            {data.routes.planRoutesData.map((el) => (
               <Route path={el.path} element={<PageFade><el.element /></PageFade>} key={el.path} />
             ))}
           </Route>

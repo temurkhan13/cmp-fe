@@ -7,7 +7,7 @@ export { default as SetPassword } from './SetPassword';
 export { default as VerifyEmail } from './VerifyEmail';
 
 // stripe
-export { default as ChoosePlain } from './ChoosePlain';
+export { default as ChoosePlan } from './ChoosePlan';
 export { default as CheckOut } from './CheckOut';
 export { default as PaymentSuccess } from './PaymentSuccess';
 

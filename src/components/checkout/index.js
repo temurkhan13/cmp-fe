@@ -1,2 +1,2 @@
-export { default as Paywithcard } from './PayWithCard';
-export { default as PlainDetail } from './PlainDetail';
+export { default as PayWithCard } from './PayWithCard';
+export { default as PlanDetail } from './PlanDetail';

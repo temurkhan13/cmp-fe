@@ -4,7 +4,7 @@ import Components from '../../components';
 import Button from '../../components/common/Button';
 import data from '../../data';
 
-const ChoosePlain = () => {
+const ChoosePlan = () => {
   const [isActive, setIsActive] = useState(false);
 
   function toggleHandler() {
@@ -12,11 +12,11 @@ const ChoosePlain = () => {
   }
 
   const toggleData = isActive
-    ? data.subscriptionPlains.monthlyPlainData
-    : data.subscriptionPlains.weeklyPlainData;
+    ? data.subscriptionPlans.monthlyPlanData
+    : data.subscriptionPlans.weeklyPlanData;
 
   return (
-    <div className="choosePlain">
+    <div className="choosePlan">
       <center>
         <Components.Feature.Heading className="primary mb_Primary">
           Compare our plans and find yours
@@ -40,7 +40,7 @@ const ChoosePlain = () => {
           </Components.Feature.Button> */}
         </div>
       </center>
-      <Components.Common.SubscriptionPlainsGrid
+      <Components.Common.SubscriptionPlansGrid
         data={toggleData}
         active={isActive}
       />
@@ -48,4 +48,4 @@ const ChoosePlain = () => {
   );
 };
 
-export default ChoosePlain;
+export default ChoosePlan;
