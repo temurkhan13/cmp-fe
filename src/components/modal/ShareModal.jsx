@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { RxCross2 } from 'react-icons/rx';
 import { IoMdLink } from 'react-icons/io';
 import { FaUserCircle } from 'react-icons/fa';
 
@@ -9,6 +8,7 @@ import { FaUserCircle } from 'react-icons/fa';
 
 import { useSelectedChat } from '../../redux/selectors/useSelectedChat';
 import Button from '../common/Button';
+import Modal from './Modal';
 
 import './custom-modal.scss';
 
@@ -113,109 +113,110 @@ const ShareModal = ({ onClose }) => {
   };
 
   return (
-    <>
-      <div className="custom-modal-share-overlay" onClick={onClose}>
-        <div className="custom-modal-share-dialog" onClick={(e) => e.stopPropagation()}>
-          <div className="custom-modal-share-header">
-            <h3 className="custom-modal-share-heading">Share &quot;AI Assistant Test File&quot;</h3>
-            <div className="custom-modal-close-link-btn">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="custom-modal-copy-link-btn"
-                iconLeft={<IoMdLink size={18} />}
+    <Modal
+      isOpen
+      onClose={onClose}
+      headerSlot={
+        <div
+          style={{
+            display: 'flex',
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginRight: '1rem',
+          }}
+        >
+          <h3 className="custom-modal-share-heading">
+            Share &quot;AI Assistant Test File&quot;
+          </h3>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="custom-modal-copy-link-btn"
+            iconLeft={<IoMdLink size={18} />}
+          >
+            Copy Link
+          </Button>
+        </div>
+      }
+      footer={
+        <Button variant="primary" onClick={handleApplyChanges}>
+          Apply Changes
+        </Button>
+      }
+    >
+      <div className="custom-modal-input-container">
+        <div className="custom-modal-input-group">
+          <input
+            className="custom-modal-share-input"
+            type="text"
+            placeholder="Add people by email or name"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <select
+            className="custom-modal-select"
+            value={role}
+            onChange={handleRoleSelectChange}
+          >
+            <option value="edit" className="custom-modal-roles-option">
+              Can Edit
+            </option>
+            <option value="view" className="custom-modal-roles-option">
+              Can View
+            </option>
+          </select>
+        </div>
+        {suggestedUsers.length > 0 && (
+          <ul className="custom-modal-suggestion-list">
+            {suggestedUsers.map((user) => (
+              <li
+                key={user.userId}
+                className="custom-modal-suggestion-item"
+                onClick={() => handleUserSelect(user)}
               >
-                Copy Link
-              </Button>
-              <span className="custom-modal-share-close-button" onClick={onClose}>
-                <RxCross2 className="custom-modal-share-cross-icon" />
-              </span>
-            </div>
-          </div>
-          <hr className="custom-modal-straight-line" />
-          <div className="custom-modal-input-container">
-            <div className="custom-modal-input-group">
-              <input
-                className="custom-modal-share-input"
-                type="text"
-                placeholder="Add people by email or name"
-                value={inputValue}
-                onChange={handleInputChange}
-              />
-              <select
-                className="custom-modal-select"
-                value={role}
-                onChange={handleRoleSelectChange}
-              >
-                <option value="edit" className="custom-modal-roles-option">
-                  Can Edit
-                </option>
-                <option value="view" className="custom-modal-roles-option">
-                  Can View
-                </option>
-              </select>
-            </div>
-            {suggestedUsers.length > 0 && (
-              <ul className="custom-modal-suggestion-list">
-                {suggestedUsers.map((user) => (
-                  <li
-                    key={user.userId}
-                    className="custom-modal-suggestion-item"
-                    onClick={() => handleUserSelect(user)}
-                  >
-                    {user.name} ({user.email})
-                  </li>
-                ))}
-              </ul>
-            )}
-            <Button
-              variant="primary"
-              className="custom-modal-invite-btn"
-              disabled={isInviteButtonDisabled}
-              style={{
-                '--invite-btn-bg': isInviteButtonDisabled ? '#f1f1f1' : '#C3E11D',
-                '--invite-btn-color': isInviteButtonDisabled ? '#666' : '#0B1444',
-                '--invite-btn-cursor': isInviteButtonDisabled ? 'not-allowed' : 'pointer',
-              }}
-              onClick={handleSendInvite}
-            >
-              Send Invite
-            </Button>
-          </div>
-          <hr className="custom-modal-straight-line" />
-
-          <ul className="custom-modal-members">
-            {userRoles.map((user) => (
-              <li key={user.userId} className="custom-modal-member">
-                <div className="custom-modal-member-info">
-                  <FaUserCircle size={30} />
-                  <span className="custom-modal-member-name">{user.name}</span>
-                </div>
-                <select
-                  className="custom-modal-select"
-                  value={user.role}
-                  onChange={(e) =>
-                    handleRoleChange(user.userId, e.target.value)
-                  }
-                  disabled={user.role === 'owner'}
-                >
-                  {renderRoleOptions(user)}
-                </select>
+                {user.name} ({user.email})
               </li>
             ))}
           </ul>
-
-          {/* Add the new button here */}
-          <Button
-            variant="primary"
-            className="custom-modal-apply-btn"
-            onClick={handleApplyChanges}
-          >
-            Apply Changes
-          </Button>
-        </div>
+        )}
+        <Button
+          variant="primary"
+          className="custom-modal-invite-btn"
+          disabled={isInviteButtonDisabled}
+          style={{
+            '--invite-btn-bg': isInviteButtonDisabled ? '#f1f1f1' : '#C3E11D',
+            '--invite-btn-color': isInviteButtonDisabled ? '#666' : '#0B1444',
+            '--invite-btn-cursor': isInviteButtonDisabled ? 'not-allowed' : 'pointer',
+          }}
+          onClick={handleSendInvite}
+        >
+          Send Invite
+        </Button>
       </div>
-    </>
+      <hr className="custom-modal-straight-line" />
+
+      <ul className="custom-modal-members">
+        {userRoles.map((user) => (
+          <li key={user.userId} className="custom-modal-member">
+            <div className="custom-modal-member-info">
+              <FaUserCircle size={30} />
+              <span className="custom-modal-member-name">{user.name}</span>
+            </div>
+            <select
+              className="custom-modal-select"
+              value={user.role}
+              onChange={(e) =>
+                handleRoleChange(user.userId, e.target.value)
+              }
+              disabled={user.role === 'owner'}
+            >
+              {renderRoleOptions(user)}
+            </select>
+          </li>
+        ))}
+      </ul>
+    </Modal>
   );
 };
 

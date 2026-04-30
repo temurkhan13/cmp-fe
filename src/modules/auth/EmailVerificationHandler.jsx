@@ -182,7 +182,7 @@ const EmailVerificationHandler = () => {
           setShowVerificationModal(!showVerificationModal);
         }}
       >
-        <h1>Please check your email.</h1>
+        <strong>Please check your email.</strong>
         <p className="auth-verification-subtitle">
           We&apos;ve sent a code to your entered email.
         </p>
@@ -206,7 +206,7 @@ const EmailVerificationHandler = () => {
 
         <p className="auth-verification-subtitle--lg">
           <span> </span>
-          Didn&apos;t get a code?
+          Didn&apos;t get a code?{" "}
           <span
             className="auth-resend-action"
             onClick={handleResendCode}
@@ -216,14 +216,16 @@ const EmailVerificationHandler = () => {
           </span>
         </p>
 
-        <Button
-          variant="primary"
-          size="lg"
-          className="code-submit-btn"
-          onClick={handleCloseModal}
-        >
-          Submit
-        </Button>
+        <div className='common-modal-footer'>
+          <Button
+            variant="primary"
+            size="lg"
+            className="code-submit-btn"
+            onClick={handleCloseModal}
+          >
+            Submit
+          </Button>
+        </div>
       </Modal>
     </>
   );

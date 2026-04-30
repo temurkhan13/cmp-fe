@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
-import { RxCross2 } from 'react-icons/rx';
 import Button from '../common/Button';
-
-import './custom-modal.scss';
+import Modal from './Modal';
 
 const CustomModal = ({
   isOpen,
@@ -12,46 +10,25 @@ const CustomModal = ({
   bodyContent,
   cancelText,
   proceedText,
-}) => {
-  if (!isOpen) {
-    return null;
-  }
-
-  return (
-    <div className="custom-modal-overlay" onClick={onClose}>
-      <div className="custom-modal-dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="custom-modal-header">
-          <p className="custom-modal-heading">{heading}</p>
-          <Button
-            variant="icon"
-            ariaLabel="Close"
-            onClick={onClose}
-          >
-            <RxCross2 className="custom-modal-cross-icon" />
-          </Button>
-        </div>
-        <hr className="custom-modal-straight-line" />
-        <div className="custom-modal-body">{bodyContent}</div>
-        <div className="custom-modal-actions">
-          <Button
-            variant="secondary"
-            className="custom-modal-button"
-            onClick={onClose}
-          >
-            {cancelText}
-          </Button>
-          <Button
-            variant="primary"
-            className="custom-modal-button"
-            onClick={onProceed}
-          >
-            {proceedText}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
+}) => (
+  <Modal
+    isOpen={isOpen}
+    onClose={onClose}
+    title={heading}
+    footer={
+      <>
+        <Button variant="secondary" onClick={onClose}>
+          {cancelText}
+        </Button>
+        <Button variant="primary" onClick={onProceed}>
+          {proceedText}
+        </Button>
+      </>
+    }
+  >
+    {bodyContent}
+  </Modal>
+);
 
 CustomModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
