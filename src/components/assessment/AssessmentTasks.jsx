@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Editor from './Editor';
-import { AssessmentModal } from '../../modal';
-import NoDataAvailable from '../../common/NoDataAvailable';
+import { AssessmentModal } from '../modal';
+import NoDataAvailable from '../common/NoDataAvailable';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   selectWorkspace,
-} from '../../../redux/slices/workspacesSlice';
-import assessmentQnaData from '../../../data/chat/assessmentQnaData';
+} from '../../redux/slices/workspacesSlice';
+import assessmentQnaData from '../../data/chat/assessmentQnaData';
 import { CiEdit } from 'react-icons/ci';
-import useAssessment from '../../../hooks/useAssessment';
+import useAssessment from '../../hooks/useAssessment';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchWorkspaceAssessments } from '../../../redux/slices/folderSlice';
-import Button from '../../common/Button';
+import { fetchWorkspaceAssessments } from '../../redux/slices/folderSlice';
+import Button from '../common/Button';
 
 const AssessmentTasks = ({ handleAssessmentSelect, folderID, onTaskSelected }) => {
   const navigate = useNavigate();

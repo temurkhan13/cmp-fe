@@ -7,9 +7,9 @@ import { RxAvatar } from 'react-icons/rx';
 import { MdOutlineAttachFile, MdAlternateEmail } from 'react-icons/md';
 import { RiSendPlane2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
-import NoDataAvailable from '../../common/NoDataAvailable';
-import Button from '../../common/Button';
-import { AnchoredMenu } from '../../common';
+import NoDataAvailable from '../common/NoDataAvailable';
+import Button from '../common/Button';
+import { AnchoredMenu } from '../common';
 
 import {
   updateComment,
@@ -17,7 +17,7 @@ import {
   addReply,
   updateReply,
   deleteReply,
-} from '../../../redux/slices/chatSlice';
+} from '../../redux/slices/chatSlice';
 
 const AssessmentComments = ({ comments }) => {
   const dispatch = useDispatch();

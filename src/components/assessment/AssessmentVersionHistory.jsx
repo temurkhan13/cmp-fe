@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FiClock, FiRotateCcw, FiSave } from 'react-icons/fi';
-import apiClient from '../../../api/axios';
+import apiClient from '../../api/axios';
 import toast from 'react-hot-toast';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 
 const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
   const [versions, setVersions] = useState([]);

@@ -5,11 +5,11 @@ import { FiDownload } from 'react-icons/fi';
 import {
   useEditReportMutation,
   useRegenerateReportMutation,
-} from '../../../redux/api/workspaceApi';
-import apiClient from '../../../api/axios';
-import { ConfirmModal } from '../../modal';
-import Button from '../../common/Button';
-import { AnchoredMenu } from '../../common';
+} from '../../redux/api/workspaceApi';
+import apiClient from '../../api/axios';
+import { ConfirmModal } from '../modal';
+import Button from '../common/Button';
+import { AnchoredMenu } from '../common';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
 import { exportDocument } from '@utils/exportDocument';

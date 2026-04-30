@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom';
 
 import { SideBarModal } from '../modal';
 
-import AssessmentTasks from './AssessmentComponent/AssessmentTasks';
+import AssessmentTasks from './AssessmentTasks';
 import Media from '../chat/Media';
-import AssessmentComments from './AssessmentComponent/AssessmentComments';
+import AssessmentComments from './AssessmentComments';
 import ChatBookmark from '../assistant/assistantModal/ChatBookmark';
-import AssessmentVersionHistory from './AssessmentComponent/AssessmentVersionHistory';
+import AssessmentVersionHistory from './AssessmentVersionHistory';
 
 import { PiClockCounterClockwiseBold } from 'react-icons/pi';
 import {
