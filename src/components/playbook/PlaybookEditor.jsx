@@ -10,7 +10,7 @@ import { BsFilePlayFill } from 'react-icons/bs';
 import { BiArrowBack, BiPlus } from 'react-icons/bi';
 import { FiDownload } from 'react-icons/fi';
 import './playbook.scss';
-import ConfirmModal from '../common/ConfirmModal';
+import { ConfirmModal } from '../modal';
 import Button from '../common/Button';
 import { AnchoredMenu } from '../common';
 import { exportDocument } from '@utils/exportDocument';

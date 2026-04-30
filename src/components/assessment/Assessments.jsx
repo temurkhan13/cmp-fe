@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import SideBarModal from '../../components/common/SideBarModal';
+import { SideBarModal } from '../modal';
 
 import AssessmentTasks from './AssessmentComponent/AssessmentTasks';
 import Media from '../chat/Media';

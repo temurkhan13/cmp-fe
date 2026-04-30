@@ -10,7 +10,8 @@ import {
   useMoveToTrashMutation,
   useUpdateWorkspaceMutation,
 } from '../../../redux/api/workspaceApi';
-import { IconCard, Button, NotificationBar, InputModal, ConfirmModal } from '../../common';
+import { IconCard, Button, NotificationBar } from '../../common';
+import { InputModal, ConfirmModal } from '../../modal';
 
 const Workspaces = ({
   activeWorkspace,

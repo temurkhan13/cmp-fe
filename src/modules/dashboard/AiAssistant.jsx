@@ -12,7 +12,7 @@ import {
 } from '../../redux/slices/workspacesSlice';
 import { Card } from '../../components/common';
 import AvatarGroup from '../../components/common/AvatarGroup';
-import ConfirmModal from '../../components/common/ConfirmModal';
+import { ConfirmModal } from '../../components/modal';
 import NotificationBar from '../../components/common/NotificationBar';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import NoData from '../../components/common/NoDataAvailable.jsx';

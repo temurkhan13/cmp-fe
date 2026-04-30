@@ -26,7 +26,7 @@ import {
   MessagesSection,
   NewChat,
 } from '../../components/assistant/index.js';
-import Modal from '../../components/common/Modal';
+import { Modal } from '../../components/modal';
 import Questionnaire from '../../modules/assessment/Questionnaire';
 import Button from '../../components/common/Button';
 

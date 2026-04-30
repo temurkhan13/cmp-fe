@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import PaymentModal from './PaymentModal';
+import { PaymentModal } from '../../modal';
 import { RxCross2 } from 'react-icons/rx';
 import Button from '../../common/Button';
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Components from '@components';
-import NewChatSidebarModal from '../customModal/NewChatSidebarModal';
+import { NewChatSidebarModal } from '../modal';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import { BsThreeDots } from 'react-icons/bs';
 import { RxCross2 } from 'react-icons/rx';

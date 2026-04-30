@@ -22,7 +22,7 @@ import {
 import { useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
 import { Card } from '../../common';
 import AvatarGroup from '../../common/AvatarGroup';
-import ConfirmModal from '../../common/ConfirmModal';
+import { ConfirmModal } from '../../modal';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { GiWireframeGlobe } from 'react-icons/gi';

@@ -9,8 +9,7 @@ import {
   FaFolderPlus,
 } from 'react-icons/fa';
 import assets from '@assets';
-import CustomModal from '../customModal/CustomModal';
-import MoveToModal from '../customModal/MoveToModal';
+import { CustomModal, MoveToModal } from '../modal';
 import { AnchoredMenu } from '../common';
 import PropTypes from 'prop-types';
 import { downloadFolderAsZip } from '@utils/ExportAs';

@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState, useCallback } from 'react';
-import Modal from '../../common/Modal';
+import { Modal } from '../../modal';
 import FileStructure from '../../dashboard/FileStructure';
 import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
 import { AiOutlinePlus } from 'react-icons/ai';

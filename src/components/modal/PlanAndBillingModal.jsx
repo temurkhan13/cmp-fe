@@ -6,7 +6,7 @@ import { IoClose } from 'react-icons/io5';
 import { MdCheck } from 'react-icons/md';
 import Button from '../common/Button';
 
-const PlanAndBillingmodal = ({ isOpen, onClose }) => {
+const PlanAndBillingModal = ({ isOpen, onClose }) => {
   const [selectedTab, setSelectedTab] = useState('personal');
 
   useEffect(() => {
@@ -168,9 +168,9 @@ Card.propTypes = {
   }).isRequired,
 };
 
-PlanAndBillingmodal.propTypes = {
+PlanAndBillingModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
-export default PlanAndBillingmodal;
+export default PlanAndBillingModal;
