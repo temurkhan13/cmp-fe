@@ -14,6 +14,7 @@ import { ConfirmModal } from '../modal';
 import Button from '../common/Button';
 import { AnchoredMenu } from '../common';
 import { exportDocument } from '@utils/exportDocument';
+import { devError } from '@utils/devError';
 
 function PlaybookEditor() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ function PlaybookEditor() {
       if (data.accent_color) setAccentColor(data.accent_color);
       if (data.logo_url) setLogoUrl(data.logo_url);
     } catch (err) {
-      import.meta.env.DEV && console.error('Fetch playbook error:', err);
+      devError('fetch playbook failed', err);
     } finally {
       setLoading(false);
     }
@@ -50,7 +51,6 @@ function PlaybookEditor() {
     fetchPlaybook();
   }, [fetchPlaybook]);
 
-  // Update a nodeData description
   const updateNodeData = async (stageId, nodeId, nodeDataId, newDescription) => {
     setSaving(true);
     try {
@@ -59,13 +59,12 @@ function PlaybookEditor() {
         { description: newDescription },
       );
     } catch (err) {
-      import.meta.env.DEV && console.error('Save error:', err);
+      devError('save failed', err);
     } finally {
       setSaving(false);
     }
   };
 
-  // Inspire Me
   const inspireSection = async (heading, stageId, nodeId, nodeDataId) => {
     try {
       const res = await apiClient.post('/dpb/inspire', {
@@ -79,12 +78,11 @@ function PlaybookEditor() {
       const data = res.data;
       return data.content || data.message || '';
     } catch (err) {
-      import.meta.env.DEV && console.error('Inspire error:', err);
+      devError('inspire failed', err);
       return '';
     }
   };
 
-  // Add new stage
   const addStage = async () => {
     if (!newStageName.trim()) return;
     setAddingStage(true);
@@ -96,23 +94,21 @@ function PlaybookEditor() {
       setNewStageName('');
       await fetchPlaybook();
     } catch (err) {
-      import.meta.env.DEV && console.error('Add stage error:', err);
+      devError('add stage failed', err);
     } finally {
       setAddingStage(false);
     }
   };
 
-  // Delete stage
   const deleteStage = async (stageId) => {
     try {
       await apiClient.delete(`/dpb/${id}/stage/${stageId}`);
       await fetchPlaybook();
     } catch (err) {
-      import.meta.env.DEV && console.error('Delete stage error:', err);
+      devError('delete stage failed', err);
     }
   };
 
-  // Move stage up/down for reordering
   const moveStage = async (stageIndex, direction) => {
     const stages = playbook?.stages || [];
     const newIndex = stageIndex + direction;
@@ -122,30 +118,26 @@ function PlaybookEditor() {
     const [moved] = reordered.splice(stageIndex, 1);
     reordered.splice(newIndex, 0, moved);
 
-    // Optimistic UI update
     setPlaybook({ ...playbook, stages: reordered });
 
-    // Save order to backend
     try {
       const stageOrder = reordered.map((s) => s.id || s._id);
       await apiClient.patch(`/dpb/sitemap/simple-update/${id}`, { stageOrder });
     } catch (err) {
-      import.meta.env.DEV && console.error('Reorder error:', err);
+      devError('reorder failed', err);
       await fetchPlaybook();
     }
   };
 
-  // Save branding
   const saveBranding = async () => {
     try {
       await apiClient.patch(`/dpb/sitemap/simple-update/${id}`, { accent_color: accentColor, logo_url: logoUrl });
       setBrandingOpen(false);
     } catch (err) {
-      import.meta.env.DEV && console.error('Branding save error:', err);
+      devError('branding save failed', err);
     }
   };
 
-  // Handle logo file upload as base64
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -167,7 +159,7 @@ function PlaybookEditor() {
         },
       });
     } catch (err) {
-      import.meta.env.DEV && console.error(`${type} export error:`, err);
+      devError(`${type} export failed`, err);
       alert(`${type.toUpperCase()} export failed: ${err.message}`);
     }
   };

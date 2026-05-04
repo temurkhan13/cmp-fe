@@ -138,8 +138,8 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
         dispatch(setCurrentChatId(null));
         navigate('/assistant/chat', { replace: true });
       }
-    } catch (error) {
-      import.meta.env.DEV && console.error('Failed to move chat to trash:', error);
+    } catch (err) {
+      console.error('move chat to trash failed', err);
     }
     setTrashConfirm({ open: false, chatId: null, folderId: null });
   };
@@ -376,8 +376,8 @@ const NewChat = ({ isOverlay = false, isVisible = false, onClose }) => {
                 : c
             );
             dispatch(setChats(updated));
-          } catch (error) {
-            import.meta.env.DEV && console.error('Failed to rename chat:', error);
+          } catch (err) {
+            console.error('rename chat failed', err);
           }
           setRenameChat({ open: false, chatId: null, chatTitle: '', folderId: null });
         }}

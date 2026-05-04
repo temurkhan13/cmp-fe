@@ -13,6 +13,7 @@ import { AnchoredMenu } from '../common';
 import { marked } from 'marked';
 import TurndownService from 'turndown';
 import { exportDocument } from '@utils/exportDocument';
+import { devError } from '@utils/devError';
 
 const Editor = ({
   placeholder,
@@ -53,7 +54,7 @@ const Editor = ({
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
+      devError(error);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
@@ -64,22 +65,18 @@ const Editor = ({
       const response = await regenerateReport({ assessmentId: assessmentID }).unwrap();
       const newContent = response?.data?.report?.content;
       if (newContent) setContent(newContent);
-      setShowRegenConfirm(false);
-    } catch (error) {
-      if (import.meta.env.DEV) console.error('Regenerate report error:', error);
+    } catch (err) {
+      console.error('regenerate failed', err);
+    } finally {
       setShowRegenConfirm(false);
     }
   };
 
   const handleExport = async (type) => {
     try {
-      await exportDocument({
-        type,
-        source: 'assessment',
-        sourceId: assessmentID,
-      });
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(`${type} export error:`, error);
+      await exportDocument({ type, source: 'assessment', sourceId: assessmentID });
+    } catch (err) {
+      devError(`${type} export error:`, err);
     }
   };
 
@@ -141,9 +138,8 @@ const Editor = ({
       if (id) window.location.href = `/playbook/${id}`;
     }
     catch (e) {
-      import.meta.env.DEV && console.error('Create playbook error:', e);
-    }
-    finally {
+      console.error('create playbook failed', e);
+    } finally {
       setCreatePlaybookLoading(false);
     }
   }

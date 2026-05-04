@@ -26,7 +26,7 @@ const ButtonPlayground = () => {
     <div style={{ padding: '32px', background: '#f9f9f9', minHeight: '100vh', fontFamily: 'Poppins, sans-serif' }}>
       <h1 style={h1Style}>Button Playground</h1>
       <p style={{ color: '#6d7277', marginBottom: '24px', fontSize: '13px' }}>
-        Visual QA grid for the new <code>&lt;Button&gt;</code> — see <code>BUTTON_DISCOVERY.md § 8.1</code>.
+        Visual QA grid for <code>&lt;Button&gt;</code>. See <code>BUTTON_DISCOVERY.md § 8.1</code>.
       </p>
 
       <section style={sectionStyle}>

@@ -18,22 +18,16 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-// ASk-Ai
 import useGrammarFix from '../../hooks/AiFeatureHooks/useGrammarFix';
 import useSummarize from '../../hooks/AiFeatureHooks/useSummarize';
 import useImproveWriting from '../../hooks/AiFeatureHooks/useImproveWriting';
-
-// change Tone
 import useChangeTone from '../../hooks/AiFeatureHooks/useChangeTone';
-
-// response length
 import useAuto from '../../hooks/AiFeatureHooks/useAuto';
 import useLonger from '../../hooks/AiFeatureHooks/useLonger';
 import useShorter from '../../hooks/AiFeatureHooks/useShorter';
 import useComprehensive from '../../hooks/AiFeatureHooks/useComprehensive';
 import usestartAssessment from '../../hooks/usestartAssessment';
 import useAssessmentReport from '../../hooks/useAssessmentReport';
-// chat upload pdf & text
 import useChat from '../../hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import assessmentQnaData, { assessmentDescriptions, assessmentPhases } from '../../data/chat/assessmentQnaData';
@@ -60,20 +54,13 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const location = useLocation();
   const navigate = useNavigate();
   const [file, setFile] = useState([]);
-  const [, setText] = useState('');
   const [chat, setChat] = useState([]);
   const [generateSingleReport, setGenerateSingleReport] = useState(false);
-  const [, setFinalReport] = useState('');
-  const [, setReportTitle] = useState('');
   const [SubReportId, setSubReportId] = useState('');
-  const [, setFileUrl] = useState('');
   const [assessmentId, setAssessmentId] = useState();
   const [selectedText, setSelectedText] = useState('');
   const [editingQaId, setEditingQaId] = useState('');
-  const [, setSelectedTone] = useState('');
   const [popupVisible, setPopupVisible] = useState(false);
-  const [, setResponseLength] = useState('');
-  const [, setAskAI] = useState('');
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
@@ -104,7 +91,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   // When user clicks a different assessment type from sidebar, reset state
   useEffect(() => {
     if (selectedAssessment && typeof selectedAssessment === 'string') {
-      // A new assessment type was selected from the sidebar — reset to show Start Assessment
+      // sidebar picked a new assessment type, reset back to Start Assessment
       setChat([]);
       setAssessmentId(undefined);
       setShowInputField(false);
@@ -175,8 +162,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
           }
 
           setShowInputField(true);
-        } catch (error) {
-          if (import.meta.env.DEV) console.error('Failed to load assessment:', error);
+        } catch (err) {
+          console.error('failed to load assessment', err);
         }
       };
       getAssessmentAsync();
@@ -275,14 +262,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     }
   };
 
-  useEffect(() => {
-    if (assessmentQnaData.length > 0) {
-      setText(assessmentQnaData[0]);
-    } else {
-      setText('');
-    }
-  }, []);
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -367,12 +346,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     setLoading(true);
 
     try {
-      // File parsing is now handled server-side — just pass the file to the hook
+      // file parsing is server-side now
       const data = await AssessmentReport(firstPrompt, SubReportId, currentFile);
-      // Server is source of truth for Q&A — overwrite local chat with persisted qa
-      // so every item stays in backend shape ({ _id, question, answer?, status? })
-      // and the render branches for !item.role handle both the AI question and the
-      // user's answer consistently across all turns.
+      // overwrite local chat with persisted qa so items keep backend shape
       if (data?.qa) {
         setChat(data.qa);
       }
@@ -380,7 +356,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       setFile(null);
       const fileInput = document.getElementById('file-input');
       if (fileInput) fileInput.value = '';
-      setText('');
     } finally {
       setLoading(false);
     }
@@ -393,11 +368,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     setLoading(false);
   };
 
-  // Ask-Ai
   const HandleAskAi = async (value) => {
     try {
       setLoading(true);
-      setAskAI(value);
 
       if (value === 'Fix Spelling & Grammar') {
         const responseGrammar = await fixGrammar(selectedText);
@@ -419,9 +392,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     }
   };
 
-  // Replace the AI question with the transformed text and persist.
-  // Full-text replacement (same as assistant/MessagesSection) — substring replace
-  // is unreliable because getSelection().toString() and the raw markdown diverge.
+  // Full-text replacement: getSelection().toString() and raw markdown diverge,
+  // so substring replace isn't reliable here.
   const applyFixedText = async (newText) => {
     if (!editingQaId || !assessmentId || !newText) {
       setPopupVisible(false);
@@ -435,8 +407,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
       }).unwrap();
       const refreshed = await getAssessment(assessmentId);
       if (refreshed?.qa) setChat(refreshed.qa);
-    } catch (error) {
-      if (import.meta.env.DEV) console.error('Failed to update question:', error);
+    } catch (err) {
+      console.error('failed to update question', err);
     }
     setPopupVisible(false);
   };
@@ -466,10 +438,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     }
   };
 
-  // handle Tone change
   const handleToneChange = async (tone) => {
-    setSelectedTone(tone);
-    // if (selectedText && tone) {
     setLoading(true);
     try {
       const response = await ChangeToneFun(selectedText, tone);
@@ -477,14 +446,9 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     } finally {
       setLoading(false);
     }
-    // }
   };
 
-  // handle Response length
   const handleResponseLengthChange = async (value) => {
-    setResponseLength(value);
-
-    // if (value) {
     setLoading(true);
     try {
       if (value === 'Auto') {
@@ -507,7 +471,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     } finally {
       setLoading(false);
     }
-    // }
   };
 
   useEffect(() => {
@@ -520,10 +483,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
         filteredFolders[0].assessments.length > 0 &&
         filteredFolders[0].assessments[0].report.length > 0
       ) {
-        setFinalReport(filteredFolders[0].assessments[0].report[0].finalReport);
-        setReportTitle(filteredFolders[0].assessments[0].report[0].ReportTitle);
-        setFileUrl(filteredFolders[0].assessments[0].report[0].finalReportURL);
-
         setGenerateSingleReport(false);
       }
     }
@@ -793,7 +752,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                     </div>
                   </div>
                 )}
-                {/* Q&A format from backend (no role field) — AI question on left */}
+                {/* backend Q&A shape: AI question on left */}
                 {!item.role && item.question && (
                   <div className="chat-container-assistant left">
                     <div className="card chat-card assistant-card">
@@ -849,7 +808,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                     </div>
                   </div>
                 )}
-                {/* Q&A format — user answer on right */}
+                {/* user answer on right */}
                 {!item.role && item.status === 'answered' && (
                   <div className="chat-container-assistant right">
                     <div className="card chat-card user-card">
@@ -914,7 +873,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
           {error}
         </div>
       )}
-      {/* Progress indicator — rendered just above input */}
+      {/* progress indicator above input */}
       {showInputField && (
         <>
           <div className="msg-report-wrapper">

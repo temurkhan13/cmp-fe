@@ -26,6 +26,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';
 import Button from '../common/Button';
+import { devError } from '../../utils/devError';
 
 const nodeTypes = {
   custom: Node,
@@ -55,7 +56,6 @@ const SitemapLayoutFlow = ({ id }) => {
   const selectedWorkspace = useSelector(selectWorkspace);
   const navigate = useNavigate();
 
-  // Redirect invalid sitemap URLs to list page
   useEffect(() => {
     if (id === 'undefined' || id === 'null') {
       navigate('/sitemap/list', { replace: true });
@@ -66,6 +66,21 @@ const SitemapLayoutFlow = ({ id }) => {
     setIsVersionHistoryModalOpen(false);
     setIsCommentsModalOpen(false);
   };
+
+  const handleConvert = async () => {
+    try {
+      setConvertingPlaybook(true);
+      const res = await apiClient.post(`/dpb/convert/${id}`);
+      const newId = res.data._id || res.data.id;
+      if (newId) navigate(`/playbook/${newId}`);
+    } catch (err) {
+      devError('Convert error:', err);
+      alert('Failed to convert: ' + err.message);
+    } finally {
+      setConvertingPlaybook(false);
+    }
+  };
+
   const onConnect = useCallback(
     (connection) => {
       const edge = { ...connection, type: 'custom-edge' };
@@ -75,15 +90,11 @@ const SitemapLayoutFlow = ({ id }) => {
   );
 
   const estimateNodeSize = (node) => {
-    // Use measured dimensions if available (after React Flow renders)
     if (node.measured?.width && node.measured?.height) {
       return { width: node.measured.width + 20, height: node.measured.height + 20 };
     }
-    // Estimate based on content — node width is 250px (from Node.jsx)
     const nodeWidth = 280;
     const itemCount = node.data?.nodeData?.length || 0;
-    // Each item: heading (~20px) + description (~40-60px) + padding (~15px) = ~80px
-    // Header: 40px, "Add" button: 50px, padding: 30px
     const estimatedHeight = Math.max(200, 120 + itemCount * 100);
     return { width: nodeWidth, height: estimatedHeight };
   };
@@ -92,8 +103,8 @@ const SitemapLayoutFlow = ({ id }) => {
     const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
     g.setGraph({
       rankdir: options.direction,
-      nodesep: 80,   // horizontal spacing between nodes
-      ranksep: 120,  // vertical spacing between ranks (parent-child)
+      nodesep: 80,
+      ranksep: 120,
       marginx: 40,
       marginy: 40,
     });
@@ -121,7 +132,6 @@ const SitemapLayoutFlow = ({ id }) => {
   };
   const onLayout = (direction) => {
     if (!nodes.length) return;
-    // Measure actual rendered node sizes from the DOM
     const measuredNodes = nodes.map((node) => {
       const el = document.querySelector(`[data-id="${node.id}"]`);
       const width = el?.offsetWidth || node.measured?.width || 280;
@@ -221,18 +231,6 @@ const SitemapLayoutFlow = ({ id }) => {
       },
     ]);
   };
-  async function postData(url = '', data = {}) {
-    const response = await apiClient.post(url, data);
-    return response.data;
-  }
-  async function patchData(url = '', data = {}) {
-    const response = await apiClient.patch(url, data);
-    return response.data;
-  }
-  async function getData(url = '') {
-    const response = await apiClient.get(url);
-    return response.data;
-  }
   async function updateNodeOrNodeData(sitemapId, stageId, type, typeId, data) {
     const response = await apiClient.patch(
       `/dpb/${sitemapId}/stage/${stageId}/${type}/${typeId}`,
@@ -242,7 +240,7 @@ const SitemapLayoutFlow = ({ id }) => {
   }
   const getSitemap = async () => {
     if (!id || id === 'undefined') return;
-    const res = await getData(`/dpb/sitemap/${id}`);
+    const res = (await apiClient.get(`/dpb/sitemap/${id}`)).data;
 
     if (res) {
       let siteMapId = res.id;
@@ -384,8 +382,8 @@ const SitemapLayoutFlow = ({ id }) => {
 
     let res =
       stage === 'Playbook Introduction'
-        ? await postData(`/dpb/sitemap`, payload)
-        : await patchData(`/dpb/sitemap/${sitemapId}`, payload);
+        ? (await apiClient.post(`/dpb/sitemap`, payload)).data
+        : (await apiClient.patch(`/dpb/sitemap/${sitemapId}`, payload)).data;
 
     if (stage === 'Playbook Introduction' && res) {
       await linkWorkSpaceAndSiteMap(res?.id);
@@ -394,7 +392,7 @@ const SitemapLayoutFlow = ({ id }) => {
     setPromptVisible(false);
 
     if (!res || !res.id || !res.stages) {
-      import.meta.env.DEV && console.error('Sitemap creation failed — invalid response:', res);
+      devError('Sitemap creation failed - invalid response:', res);
       return;
     }
 
@@ -456,8 +454,8 @@ const SitemapLayoutFlow = ({ id }) => {
 
     let res =
       stageLabel === 'Playbook Introduction'
-        ? await postData(`/dpb/sitemap`, payload)
-        : await patchData(`/dpb/sitemap/${sitemapId}`, payload);
+        ? (await apiClient.post(`/dpb/sitemap`, payload)).data
+        : (await apiClient.patch(`/dpb/sitemap/${sitemapId}`, payload)).data;
 
     setIsLoading(false);
     setPromptVisible(false);
@@ -553,9 +551,8 @@ const SitemapLayoutFlow = ({ id }) => {
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       proOptions={{ hideAttribution: true }}
-      minZoom={0.1} // Set a low minZoom for deeper zoom-out
-      maxZoom={10} // Set a high maxZoom for more zoom-in levels
-      // defaultzoom={0.2} // Default initial zoom level
+      minZoom={0.1}
+      maxZoom={10}
       panOnDrag
       panOnScroll={false}
       zoomOnPinch
@@ -579,19 +576,7 @@ const SitemapLayoutFlow = ({ id }) => {
               variant="primary"
               className={`flow-convert-btn ${convertingPlaybook ? 'flow-convert-btn--loading' : ''}`}
               loading={convertingPlaybook}
-              onClick={async () => {
-                try {
-                  setConvertingPlaybook(true);
-                  const res = await apiClient.post(`/dpb/convert/${id}`);
-                  const newId = res.data._id || res.data.id;
-                  if (newId) navigate(`/playbook/${newId}`);
-                } catch (err) {
-                  import.meta.env.DEV && console.error('Convert error:', err);
-                  alert('Failed to convert: ' + err.message);
-                } finally {
-                  setConvertingPlaybook(false);
-                }
-              }}
+              onClick={handleConvert}
             >
               Convert to Playbook
             </Button>
@@ -637,7 +622,7 @@ const SitemapLayoutFlow = ({ id }) => {
                   </div>
                   <textarea
                     className="flow-prompt-textarea"
-                    placeholder="Describe the change management process — key phases, objectives, stakeholders, and outcomes."
+                    placeholder="Describe the change management process - key phases, objectives, stakeholders, and outcomes."
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={(e) =>
                       e.key === 'Enter' && onInit('Playbook Introduction')
@@ -674,31 +659,17 @@ const SitemapLayoutFlow = ({ id }) => {
                 />
               </div>
               <div>
-                <span
-                  // className={`iconButton ${
-                  //   // isVersionHistoryModalOpen ? 'active' : ''
-                  // }`}
-                  onClick={() => setIsVersionHistoryModalOpen(true)}
-                >
+                <span onClick={() => setIsVersionHistoryModalOpen(true)}>
                   <FaHistory className="icon" size={25} />
-                  {/* <span className="tooltip">Version History</span> */}
                 </span>
               </div>
               <div>
-                <span
-                  // className={`iconButton ${
-                  //   isCommentsModalOpen ? 'active' : ''
-                  // }`}
-                  onClick={() => setIsCommentsModalOpen(true)}
-                >
+                <span onClick={() => setIsCommentsModalOpen(true)}>
                   <IoIosChatboxes className="icon" size={28} />
-                  {/* <span className="tooltip">Comments</span> */}
                 </span>
               </div>
             </div>
           </div>
-
-          {/* <button onClick={() => onLayout('LR')}>horizontal layout</button> */}
 
           {isVersionHistoryModalOpen && (
             <SideBarModal

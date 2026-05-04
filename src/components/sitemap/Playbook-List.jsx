@@ -13,6 +13,7 @@ import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import Button from '../common/Button';
 import { Card } from '../common';
 import { timeAgo } from '../../utils/helperFunction.js';
+import { devError } from '../../utils/devError.js';
 import './sitemap.scss';
 import '../dashboard/dashboard-home.scss';
 import '../dashboard/folder.scss';
@@ -64,7 +65,7 @@ function PlaybookList() {
         setTotalResults(data.length);
       }
     } catch (err) {
-      import.meta.env.DEV && console.error('Fetch playbooks error:', err);
+      devError('Fetch playbooks error:', err);
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ function PlaybookList() {
         }
       }
     } catch (err) {
-      import.meta.env.DEV && console.error('Create playbook error:', err);
+      devError('Create playbook error:', err);
     } finally {
       setCreating(false);
     }
@@ -119,7 +120,7 @@ function PlaybookList() {
         return pid === id ? { ...p, name: newName } : p;
       }));
     } catch (err) {
-      import.meta.env.DEV && console.error('Rename error:', err);
+      devError('Rename error:', err);
     } finally {
       setRenameModal({ open: false, id: null, name: '' });
     }
@@ -132,7 +133,7 @@ function PlaybookList() {
       const targetPage = remaining === 0 && page > 1 ? page - 1 : page;
       await fetchPlaybooks(targetPage);
     } catch (err) {
-      import.meta.env.DEV && console.error('Move to trash error:', err);
+      devError('Move to trash error:', err);
     }
   };
 
@@ -197,7 +198,7 @@ function PlaybookList() {
               className="playbook-create-input"
             />
             <textarea
-              placeholder="Describe what this playbook covers (optional — AI will generate content based on this)"
+              placeholder="Describe what this playbook covers (optional - AI will generate content based on this)"
               value={createMessage}
               onChange={(e) => setCreateMessage(e.target.value)}
               rows={3}

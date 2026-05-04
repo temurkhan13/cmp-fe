@@ -62,7 +62,7 @@ const DashboardLayout = ({ children }) => {
         if (userId) {
           await dispatch(getUser(userId));
         }
-      } catch (error) { if (import.meta.env.DEV) console.error(error); }
+      } catch (err) { console.error(err); }
     };
     fetchUserData();
   }, [dispatch]);

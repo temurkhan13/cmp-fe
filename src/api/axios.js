@@ -44,7 +44,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       const refreshToken = localStorage.getItem('refreshToken');
 
-      // No refresh token — go to login
+      // no refresh token: go to login
       if (!refreshToken) {
         forceLogout();
         return Promise.reject(error);
