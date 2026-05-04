@@ -9,7 +9,7 @@ import {
 import { MdDelete } from 'react-icons/md';
 import { useMemo } from 'react';
 
-import './edge.scss';
+import './sitemap.scss';
 
 function Edge({ id, sourceX, sourceY, targetX, targetY }) {
   const { setEdges, getNodes } = useReactFlow();

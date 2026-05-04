@@ -7,7 +7,7 @@ import NodeItem from './NodeItem';
 import { v4 as uuidv4 } from 'uuid';
 import { useReorder } from '../../hooks/useReorder';
 import Button from '../common/Button';
-import './node.scss';
+import './sitemap.scss';
 const Node = ({ data }) => {
   const [nodeData, setNodeData] = useState(data.nodeData);
   const [hideLabelInput, setHideLabelInput] = useState(data.label.length !== 0);
