@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/axios';
-import '../assessment/chat-message.scss';
 import './assistant.scss';
 import '../assessment/assessment.scss';
 import {
