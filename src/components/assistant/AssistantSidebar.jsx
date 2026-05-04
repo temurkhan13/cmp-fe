@@ -4,9 +4,9 @@ import { SideBarModal } from '../modal';
 import PropTypes from 'prop-types';
 
 import Media from '../chat/Media';
-import Comments from './assistantModal/Comments';
-import ChatBookmark from './assistantModal/ChatBookmark';
-import VersionHistory from './assistantModal/VersionHistory';
+import Comments from './Comments';
+import ChatBookmark from './ChatBookmark';
+import VersionHistory from './VersionHistory';
 import { IoIosChatboxes } from 'react-icons/io';
 import { FaBookmark, FaImages } from 'react-icons/fa';
 import { selectWorkspace } from '../../redux/slices/workspacesSlice';

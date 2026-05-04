@@ -13,8 +13,8 @@ import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
 import Button from '../common/Button';
 import { Card } from '../common';
 import './sitemap.scss';
-import '../dashboard/dashboardHomeComponents/styles/dashboard-home.scss';
-import '../dashboard/dashboardHomeComponents/styles/folder.scss';
+import '../dashboard/dashboard-home.scss';
+import '../dashboard/folder.scss';
 import '../../modules/dashboard/ai-assistant.scss';
 
 function List() {

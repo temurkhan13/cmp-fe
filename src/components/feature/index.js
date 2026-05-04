@@ -7,5 +7,4 @@ export { default as FormInputWithDropDown } from "./FormInputWithDropDown";
 export { default as ScrollToTop } from "./ScrollToTop";
 export { default as PlanCard } from "./PlanCard";
 
-// Header
-export { default as HeaderDropDown } from "./header/HeaderDropDown";
+export { default as HeaderDropDown } from "./HeaderDropDown";

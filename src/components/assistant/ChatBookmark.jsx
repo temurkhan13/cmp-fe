@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FaBookmark } from 'react-icons/fa';
-import NoDataAvailable from '../../common/NoDataAvailable';
-import { truncateText } from '../../../utils/helperFunction';
-import Button from '../../common/Button';
+import NoDataAvailable from '../common/NoDataAvailable';
+import { truncateText } from '../../utils/helperFunction';
+import Button from '../common/Button';
 
 const ChatBookmark = ({ messages }) => {
   const [expandedIndex, setExpandedIndex] = useState(null);

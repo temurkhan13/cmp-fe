@@ -1,5 +1,5 @@
-import '../dashboard-inline.scss';
-import Button from '../../common/Button';
+import './dashboard-inline.scss';
+import Button from '../common/Button';
 
 const Account = () => {
   return (
