@@ -175,15 +175,17 @@ const DashboardHomeComp = () => {
           setActiveWorkspace(activeWorkspace);
           handleWorkspaceChange(activeWorkspace);
         } else {
-          // Refresh local state with already-selected workspace from Redux
           const currentWs = dashboardStats.workspaces.find(
             (ws) => ws.id === selectedWorkspace.id
           ) || activeWorkspace;
           setActiveWorkspace(currentWs);
           handleWorkspaceChange(currentWs);
         }
-      } catch (err) { if (import.meta.env.DEV) console.error(err); }
-      finally { setIsFetching(false); }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsFetching(false);
+      }
     };
     fetchStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps

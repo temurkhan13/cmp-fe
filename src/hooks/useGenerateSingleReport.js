@@ -8,7 +8,9 @@ const useGenerateSingleReport = ({ assessmentId }) => {
     try {
       const response = await apiClient.get(`/workspace-assessment/${assessmentId}`);
       return response.data.report;
-    } catch (error) { if (import.meta.env.DEV) console.error(error); }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return { error, GenerateSingleReport };

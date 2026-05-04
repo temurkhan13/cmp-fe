@@ -24,10 +24,6 @@ const Button = forwardRef(function Button(
   },
   ref,
 ) {
-  if (variant === 'icon' && !ariaLabel && import.meta.env.DEV) {
-    console.warn('[Button] variant="icon" requires an ariaLabel for accessibility.');
-  }
-
   const classes = [
     'cmp-btn',
     `cmp-btn--${variant}`,
@@ -83,13 +79,12 @@ Button.propTypes = {
 };
 
 function requireAriaLabelForIcon(props, propName, componentName) {
-  if (props.variant === 'icon' && (props[propName] === undefined || props[propName] === '')) {
-    return new Error(
-      `${componentName}: \`ariaLabel\` is required when variant="icon" (icon-only buttons must be accessible).`,
-    );
+  const value = props[propName];
+  if (props.variant === 'icon' && (value === undefined || value === '')) {
+    return new Error(`${componentName}: icon buttons need an ariaLabel.`);
   }
-  if (props[propName] !== undefined && typeof props[propName] !== 'string') {
-    return new Error(`${componentName}: \`ariaLabel\` must be a string.`);
+  if (value !== undefined && typeof value !== 'string') {
+    return new Error(`${componentName}: ariaLabel must be a string.`);
   }
   return null;
 }

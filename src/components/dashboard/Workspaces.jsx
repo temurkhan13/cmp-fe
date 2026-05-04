@@ -49,8 +49,9 @@ const Workspaces = ({
       setIsNewWorkspaceModalOpen(false);
       onWorkspaceUpdated();
       showSuccess('Workspace created successfully!');
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
+    } catch (err) {
+      console.error(err);
+      showError('Failed to create workspace.');
     }
   };
 
@@ -88,8 +89,8 @@ const Workspaces = ({
       onWorkspaceUpdated();
       showSuccess('Workspace renamed successfully!');
       setRenameModal({ open: false, workspace: null });
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
+    } catch (err) {
+      console.error(err);
       showError('Failed to rename workspace.');
     }
   };
@@ -102,8 +103,9 @@ const Workspaces = ({
       }).unwrap();
       onWorkspaceUpdated();
       showSuccess('Workspace moved to trash successfully!');
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
+    } catch (err) {
+      console.error(err);
+      showError('Failed to move workspace to trash.');
     }
   };
 

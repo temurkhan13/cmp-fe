@@ -7,15 +7,11 @@ const NotificationBar = ({ message, type, duration = 5000, onClose }) => {
   const [enterAnimation, setEnterAnimation] = useState(false);
 
   useEffect(() => {
-    // Slide in animation
-    setTimeout(() => {
-      setEnterAnimation(true);
-    }, 100);
-    //
-    // Set a timer to auto-close the notification
+    setTimeout(() => setEnterAnimation(true), 100);
+
     const timer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onClose, 300); // Delay to allow exit animation
+      setTimeout(onClose, 300);
     }, duration);
 
     return () => clearTimeout(timer);
@@ -23,7 +19,7 @@ const NotificationBar = ({ message, type, duration = 5000, onClose }) => {
 
   const handleClose = () => {
     setVisible(false);
-    setTimeout(onClose, 300); // Delay for smooth closing transition
+    setTimeout(onClose, 300);
   };
 
   if (!visible) return null;

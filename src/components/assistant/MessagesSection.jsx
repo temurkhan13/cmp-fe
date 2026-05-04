@@ -65,36 +65,11 @@ import UserAvatar from '../common/UserAvatar';
 const MessagesSection = ({ setCurrentChat }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const state = useSelector((state) => state.workspace);
-  // const selectedWorkspaceId = useSelector(
-  //   (state) => state.workspace.selectedWorkspaceId
-  // );
-  // const selectedFolderId = useSelector(
-  //   (state) => state.workspace.selectedFolderId
-  // );
-  // const chats = useSelector(
-  //   (state) =>
-  //     state.workspace.workspaces
-  //       .find((workspace) => workspace.workspaceId === selectedWorkspaceId)
-  //       ?.folders.find((folder) => folder.folderId === selectedFolderId)
-  //       ?.chats || []
-  // );
-  // const selectedChatId = useSelector((state) => state.workspace.selectedChatId);
-  // const currentChat = chats.find((chat) => chat.chatId === selectedChatId);
 
-  // const selectedWorkspace = state.workspaces.find(
-  //   (workspace) => workspace.workspaceId === selectedWorkspaceId
-  // );
-  // const selectedFolder = selectedWorkspace?.folders.find(
-  //   (folder) => folder.folderId === selectedFolderId
-  // );
-
-  //api Integration
   const [addMessage] = useAddMessageMutation();
   const [updateMessage] = useUpdateMessageMutation();
   const [addBookmark] = useAddBookmarkMutation();
   const [removeBookmark] = useRemoveBookmarkMutation();
-  // const [likeChatMessage,dislikeChatMessage] = useLikeDislikeChatMutation()
   const [likeChatMessage] = useLikeChatMessageMutation();
   const [dislikeChatMessage] = useDislikeChatMessageMutation();
   const userId = useSelector(
@@ -107,16 +82,11 @@ const MessagesSection = ({ setCurrentChat }) => {
   const chatId = useSelector((state) => state.workspaces.currentChatId);
   const [messageId, setMessageId] = useState();
 
-  // Ensure folderId belongs to the current workspace — fall back to active/first folder if stale
-  const folderId = (() => {
-    const selId = selectedFolder?._id || selectedFolder?.id;
-    const belongsToWorkspace = currentWorkspace?.folders?.some(
-      (f) => (f._id || f.id) === selId
-    );
-    if (selId && belongsToWorkspace) return selectedFolder;
-    const fallback = currentWorkspace?.folders?.find((f) => f.isActive) || currentWorkspace?.folders?.[0];
-    return fallback || selectedFolder;
-  })();
+  const selId = selectedFolder?._id || selectedFolder?.id;
+  const belongsToWorkspace = currentWorkspace?.folders?.some((f) => (f._id || f.id) === selId);
+  const folderId = (selId && belongsToWorkspace)
+    ? selectedFolder
+    : (currentWorkspace?.folders?.find((f) => f.isActive) || currentWorkspace?.folders?.[0] || selectedFolder);
   const currentChat = useSelector(selectCurrentChat);
 
 
@@ -148,11 +118,14 @@ const MessagesSection = ({ setCurrentChat }) => {
     chatId,
   }, { skip: !workspaceId || !resolvedFolderId || !chatId });
 
-  // Safe refetch that doesn't throw when query is skipped
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const refetch = async () => {
-    try { if (chatId) await rawRefetch(); } catch (e) { /* query not active */ }
-  };
+  const refetch = useCallback(async () => {
+    if (!chatId) return;
+    try {
+      await rawRefetch();
+    } catch {
+      // refetch may throw if the underlying query has been skipped
+    }
+  }, [chatId, rawRefetch]);
 
   useEffect(() => {
     if (chat && (chat?._id || chat?.id)) {
@@ -161,9 +134,6 @@ const MessagesSection = ({ setCurrentChat }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat]);
 
-  // const [chat, setChat] = useState(
-  //   currentChat ? currentChat.generalMessages : []
-  // );
 
   const messagesEndRef = useRef(null);
 
@@ -193,7 +163,7 @@ const MessagesSection = ({ setCurrentChat }) => {
   const { LongText } = useLonger();
   const { error } = useChat();
   const { handleInspire } = useInspire();
-  // Translation removed — feature not needed
+  // translation removed; feature not needed
   const { Explain } = useExplain();
   const [, setFirstPrompt] = useState('');
 
@@ -236,8 +206,8 @@ const MessagesSection = ({ setCurrentChat }) => {
         }
         // Refetch the chat to get the latest data from the server
         await refetch();
-      } catch (error) {
-        import.meta.env.DEV && console.error('Failed to update message:', error);
+      } catch (err) {
+        console.error('updateMessage failed', err);
       }
 
       setPopupVisible(false);
@@ -263,31 +233,28 @@ const MessagesSection = ({ setCurrentChat }) => {
     const selection = window.getSelection();
     const selectedText = selection.toString().trim();
 
-    // Check if the selected text is within an element with class '.msg'
     const messageElements = document.querySelectorAll('.msg');
     let isValidSelection = false;
     let selectedMessageId = null;
 
     messageElements.forEach((msgElement) => {
-      // Check if the selected text starts from within the msgElement
       if (
         msgElement.contains(selection.anchorNode) &&
         msgElement.contains(selection.focusNode)
       ) {
         isValidSelection = true;
-        selectedMessageId = msgElement.getAttribute('data-message-id'); // Get the messageId
+        selectedMessageId = msgElement.getAttribute('data-message-id');
       }
     });
 
-    // Set the popup visibility and selection state based on isValidSelection
     if (isValidSelection) {
       setSelectedText(selectedText);
-      setPopupVisible(!!selectedText); // Show popup if there's a valid selection
+      setPopupVisible(!!selectedText);
       if (selectedMessageId) {
         setMessageId(selectedMessageId);
       }
     } else {
-      setPopupVisible(false); // Hide popup if selection is invalid
+      setPopupVisible(false);
     }
   };
 
@@ -314,8 +281,8 @@ const MessagesSection = ({ setCurrentChat }) => {
         await applyFixedText(response);
         refetch();
       }
-    } catch (error) {
-      import.meta.env.DEV && console.error('HandleAskAi error:', error);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -329,7 +296,8 @@ const MessagesSection = ({ setCurrentChat }) => {
       if (response) {
         applyFixedText(response);
       }
-    } catch { /* ignored */
+    } catch (e) {
+      console.error("error", e.message);
     } finally {
       setLoading(false);
     }
@@ -353,7 +321,8 @@ const MessagesSection = ({ setCurrentChat }) => {
       if (response) {
         await applyFixedText(response);
       }
-    } catch { /* ignored */
+    } catch (e) {
+      console.error("error", e.message);
     } finally {
       setLoading(false);
     }
@@ -391,11 +360,9 @@ const MessagesSection = ({ setCurrentChat }) => {
       }).unwrap();
     }
 
-    // Dispatch action to add bookmark
-    refetch(); // Trigger the chat query to refetch
+    refetch();
   };
 
-  // Auto-send when suggestion card is clicked
   useEffect(() => {
     if (pendingSuggestionSend && text.trim()) {
       setPendingSuggestionSend(false);
@@ -425,7 +392,6 @@ const MessagesSection = ({ setCurrentChat }) => {
         );
         data = response.data;
       } else {
-        // No file — use RTK Query as normal
         data = await addMessage({
           workspaceId: workspaceId,
           folderId: currentFolderId,
@@ -455,54 +421,34 @@ const MessagesSection = ({ setCurrentChat }) => {
       setText('');
       setFile(null);
       await refetch();
-    } catch (error) {
-      import.meta.env.DEV && console.error('Send message error:', error);
+    } catch (err) {
+      console.error('send failed:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // const handleInspireClick = async () => {
-  //   //Todo: will implement Inspire
-  //   // const currentQuestionKey = `question-${data.questionnaire.Questions[activeStep - 1].id}`;
-  //   // const inspiredText = await handleInspire(answers[currentQuestionKey]);
-  //   // setAnswers({
-  //   //   ...answers,
-  //   //   [currentQuestionKey]: inspiredText,
-  //   // });
-  // };
-
   const handleInspireClick = async () => {
     try {
       setLoading(true);
-      // Check if chat and generalMessages are defined and not empty
       const lastChat = chat.generalMessages.filter(
         (message) => message.from == 'user'
       );
       const lastMessage = lastChat?.[lastChat.length - 1]?.text;
 
       if (lastMessage) {
-        // Use the last message for inspiration
         const inspiredText = await handleInspire(lastMessage);
-
         setFirstPrompt(inspiredText);
         setText(inspiredText);
         handleSendMessage();
-      } else {
-        // intentionally empty
       }
-    } catch { /* ignored */
+    } catch (e) {
+      console.error("error", e.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // useEffect(() => {
-  //   document.addEventListener('mouseup', handleTextSelect);
-  //   return () => {
-  //     document.removeEventListener('mouseup', handleTextSelect);
-  //   };
-  // }, []);
   useEffect(() => {
     scrollToBottom();
   }, [chat]);
@@ -658,18 +604,6 @@ const MessagesSection = ({ setCurrentChat }) => {
                             />
                             <span className="tooltip-assessment">Dislike</span>
                           </div>
-                          {/*<div className="message-icon-wrapper" title="Comment">*/}
-                          {/*  <FaCommentAlt*/}
-                          {/*    data-message-id={message._id}*/}
-                          {/*    onClick={handleCommentClick}*/}
-                          {/*    style={{ cursor: 'pointer' }}*/}
-                          {/*  />*/}
-                          {/*  <span className="tooltip-assessment">Comment</span>*/}
-                          {/*</div>*/}
-                          {/*<div className="message-icon-wrapper" title="Regenerate">*/}
-                          {/*  <FaSync />*/}
-                          {/*  <span className="tooltip-assessment">Regenerate</span>*/}
-                          {/*</div>*/}
                           <div
                             className="message-icon-wrapper"
                             title="Bookmark"
@@ -1019,14 +953,12 @@ const MessagesSection = ({ setCurrentChat }) => {
   );
 };
 
-// Define prop types for validation
 MessagesSection.propTypes = {
-  setCurrentChat: PropTypes.func.isRequired, // Validate that it's a required function
+  setCurrentChat: PropTypes.func,
 };
 
-// Optionally, define defaultProps if needed
 MessagesSection.defaultProps = {
-  setCurrentChat: () => { }, // Default no-op function if none is passed
+  setCurrentChat: () => {},
 };
 
 export default MessagesSection;

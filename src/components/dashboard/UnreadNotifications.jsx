@@ -2,8 +2,8 @@ const UnreadNotifications = () => {
   return (
     <div className="notification-list">
       {/* TODO: Parked styles live in dashboard-inline.scss under "UnreadNotifications".
-          When reviving, uncomment the block below — the class names here already
-          match the parked rules. */}
+          When reviving, uncomment the block below; class names already match
+          the parked rules. */}
       {/*{unreadNotifications.map((notification) => (*/}
       {/*  <div className="unread-notifications-item" key={notification.id}>*/}
       {/*    <div className="unread-notifications-avatar">*/}

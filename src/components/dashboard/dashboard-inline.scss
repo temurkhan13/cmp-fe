@@ -2075,7 +2075,7 @@
   justify-content: space-between;
 }
 
-// Layout-only — visual handled by cmp-btn variants (PR 10b passthrough cleanup)
+// layout only; visual comes from cmp-btn variants
 .delete-modal-cancel-btn {
   flex: 1;
   margin-right: 0.5rem;

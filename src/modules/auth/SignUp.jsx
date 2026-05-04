@@ -34,16 +34,14 @@ const SignUp = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    // setIsLoading(true);
     try {
       await dispatch(register({ registrationData: values }));
-      //navigate('/dashboard');
-    } catch (error) { if (import.meta.env.DEV) console.error(error); }
-
+    } catch (err) {
+      console.error(err);
+    }
     setSubmitting(false);
   };
 
-  // Automatically navigate to dashboard after successful registration
   useEffect(() => {
     if (user) {
       dispatch(resetLoading());

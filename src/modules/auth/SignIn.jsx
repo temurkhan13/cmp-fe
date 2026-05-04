@@ -13,14 +13,11 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Destructure the relevant state from the auth slice
   const { user, isLoading } = useSelector((state) => state.auth);
 
-  // Local state for handling error display and password visibility
   const [apiError, setApiError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect user to dashboard if authenticated
   useEffect(() => {
     if (user) {
       navigate('/dashboard');
@@ -32,7 +29,6 @@ const SignIn = () => {
     password: '',
   };
 
-  // Handle form submission
   const handleLoginSubmit = async (email, password) => {
     try {
       const response = await dispatch(login({ email, password }));
@@ -47,33 +43,29 @@ const SignIn = () => {
     }
   };
 
-  // Handle authentication response from Google
   const handleAuthResponse = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get('accessToken');
     const refreshToken = urlParams.get('refreshToken');
 
-    if (accessToken) {
-      // Save tokens to localStorage
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+    if (!accessToken) return;
 
-      try {
-        await dispatch(googleLogin({ accessToken, navigate, refreshToken }));
-      } catch (error) { if (import.meta.env.DEV) console.error(error); }
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
+    try {
+      await dispatch(googleLogin({ accessToken, navigate, refreshToken }));
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  // Handle authentication response on component mount
   useEffect(() => {
     handleAuthResponse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
     <Components.Feature.Container className="auth signIn">

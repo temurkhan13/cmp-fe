@@ -53,10 +53,11 @@ const AssessmentTasks = ({ handleAssessmentSelect, folderID, onTaskSelected }) =
         const singleAssessment = await getAssessment(id);
         setAssessmentData(singleAssessment);
       }
-    } catch (error) { if (import.meta.env.DEV) console.error(error); }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  // Fetch fresh data whenever component mounts, folder changes, or assessment id changes
   useEffect(() => {
     fetchAssessments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,11 +120,8 @@ const AssessmentTasks = ({ handleAssessmentSelect, folderID, onTaskSelected }) =
     return map[status] || map['pending'];
   };
 
-  const generateAllReports = () => {
-    // Logic to generate all reports goes here
-  };
+  const generateAllReports = () => {};
 
-  // Calculate assessment completion stats
   const totalAssessments = assessmentQnaData?.length || 0;
   const completedCount = assessmentsData?.filter(d => d.status === 'completed').length || 0;
   const inProgressCount = assessmentsData?.filter(d => d.status === 'in_progress' || d.status === 'in-progress').length || 0;

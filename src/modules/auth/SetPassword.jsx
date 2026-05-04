@@ -27,17 +27,12 @@ const SetPassword = () => {
     const registrationData = { ...detailsBusinessInfo, ...values };
 
     try {
-      // Dispatch async action to register email and get verification code
-      const password = values.password;
-      dispatch(register({ registrationData, password }));
-
+      dispatch(register({ registrationData, password: values.password }));
       navigate('/verify-email', { state: { email: registrationData.email } });
-      // Store the token in localStorage
-      //   localStorage.setItem('token', response.data.tokens.access.token);
-      //   navigate('/verify-email', { state: { email: registrationData.email } });
-    } catch (error) { if (import.meta.env.DEV) console.error(error); }
+    } catch (err) {
+      console.error(err);
+    }
 
-    // await register(allDetails, values.password);
     setSubmitting(false);
   };
 

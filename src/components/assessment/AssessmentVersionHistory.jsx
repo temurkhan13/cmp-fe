@@ -32,7 +32,7 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
       const assessment = assessmentRes?.data?.data || assessmentRes?.data;
       setHasReport(!!(assessment?.report && assessment.report.isGenerated));
     } catch (err) {
-      if (import.meta.env.DEV) console.error(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -67,26 +67,26 @@ const AssessmentVersionHistory = ({ assessmentId, onClose, onRestore }) => {
     }
   };
 
-  const formatDate = (dateStr) => {
+  function formatDate(dateStr) {
     if (!dateStr) return 'N/A';
     return new Date(dateStr).toLocaleString('en-GB', {
-      day: 'numeric', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
-  };
+  }
 
-  const getRelativeTime = (dateStr) => {
+  function getRelativeTime(dateStr) {
     if (!dateStr) return '';
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
+    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
     if (mins < 1) return 'Just now';
     if (mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    const days = Math.floor(hrs / 24);
-    if (days < 7) return `${days}d ago`;
-    return '';
-  };
+    if (mins < 1440) return `${Math.floor(mins / 60)}h ago`;
+    const days = Math.floor(mins / 1440);
+    return days < 7 ? `${days}d ago` : '';
+  }
 
   if (loading) {
     return (

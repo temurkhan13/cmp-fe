@@ -60,7 +60,7 @@ const PlanAndBilling = () => {
         setCurrentPlan(subsRes.value.data || 'Free');
       }
     } catch (err) {
-      if (import.meta.env.DEV) console.error(err);
+      console.error(err);
       setCurrentPlan('Free');
     } finally {
       setLoading(false);

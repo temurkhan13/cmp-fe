@@ -140,10 +140,8 @@ const workspacesSlice = createSlice({
     builder.addMatcher(
       workspaceApi.endpoints.getWorkspaces.matchFulfilled,
       (state, { payload }) => {
-        // The getWorkspaces endpoint returns workspace metadata but does NOT
-        // populate `folders` — folders come from fetchDashboardStats. When
-        // merging the fresh list, preserve existing folders for each workspace
-        // so we don't wipe out previously-hydrated folder data.
+        // getWorkspaces returns metadata only; folders come from
+        // fetchDashboardStats. Preserve any folders we already hydrated.
         const previousWorkspaces = state.workspaces || [];
         const mergeFolders = (incoming) => {
           if (Array.isArray(incoming.folders) && incoming.folders.length > 0) {
@@ -158,10 +156,9 @@ const workspacesSlice = createSlice({
 
         state.workspaces = payload.results.map(mergeFolders);
 
-        // Only set workspace/folder selection if none is currently selected
-        // (e.g., first visit or after logout). On page reload, redux-persist
-        // rehydrates the previous selection — we must not overwrite it with
-        // the backend's isActive flag, which may point to a different workspace.
+        // only pick a default selection on first load. On reload, redux-persist
+        // already rehydrated the user's selection; backend isActive may point
+        // somewhere else and would clobber it.
         if (!state.selectedWorkspace) {
           const activeWorkspace =
             state.workspaces.find((workspace) => workspace.isActive) ||
@@ -178,9 +175,8 @@ const workspacesSlice = createSlice({
             }
           }
         } else {
-          // Workspace already selected (persisted) — refresh its data from
-          // the API response, preserving existing folders if the response
-          // doesn't include them.
+          // refresh the persisted selection from the API response,
+          // keeping existing folders if the response doesn't include them.
           const refreshed = state.workspaces.find(
             (ws) => ws.id === state.currentWorkspaceId
           );

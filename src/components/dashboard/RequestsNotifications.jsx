@@ -2,7 +2,7 @@ const RequestsNotifications = () => {
   return (
     <div className="notification-list">
       {/* TODO: Parked styles live in dashboard-inline.scss under "RequestsNotifications".
-          When reviving, uncomment the block below — class names already match.
+          When reviving, uncomment the block below; class names already match.
           To apply card-style bg/border/color on the wrapper, also add
           `requests-notifications-list` to the className above. */}
       {/*{requestsNotifications.map((notification) => (*/}
