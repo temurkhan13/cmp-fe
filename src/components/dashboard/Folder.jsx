@@ -1,14 +1,14 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { CreateProjectModal } from '../../modal';
-import FileStructure from '../../dashboard/FileStructure';
-import { useAddFolderMutation } from '../../../redux/api/workspaceApi';
+import { CreateProjectModal } from '../modal';
+import FileStructure from '../dashboard/FileStructure';
+import { useAddFolderMutation } from '../../redux/api/workspaceApi';
 import { AiOutlinePlus } from 'react-icons/ai';
-import NotificationBar from '../../common/NotificationBar';
-import Button from '../../common/Button';
+import NotificationBar from '../common/NotificationBar';
+import Button from '../common/Button';
 import { BiSolidFolderOpen } from 'react-icons/bi';
 
-import './styles/folder.scss';
+import './folder.scss';
 
 const Folder = ({ activeWorkspace, onFolderSelect, onFolderUpdate }) => {
   const [addFolder] = useAddFolderMutation();

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { PaymentModal, DeleteCardModal } from '../../modal';
-import Button from '../../common/Button';
+import { PaymentModal, DeleteCardModal } from '../modal';
+import Button from '../common/Button';
 
 const PaymentMethod = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

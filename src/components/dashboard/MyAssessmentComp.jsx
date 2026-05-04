@@ -17,7 +17,7 @@ import AvatarGroup from '../../components/common/AvatarGroup';
 import { ConfirmModal } from '../modal';
 import NotificationBar from '../../components/common/NotificationBar';
 import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
-import Folder from './dashboardHomeComponents/Folder';
+import Folder from './Folder';
 import {
   fetchFolderData,
   resetFolderState,

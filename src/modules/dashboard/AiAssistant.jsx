@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import Component from '@components';
 import DashboardLayout from '@layout/DashboardLayout';
-import Folder from '../../components/dashboard/dashboardHomeComponents/Folder';
+import Folder from '../../components/dashboard/Folder';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDashboardStats,

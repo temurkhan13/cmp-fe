@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { FaUserCircle } from 'react-icons/fa';
-import NoDataAvailable from '../../common/NoDataAvailable';
-import Button from '../../common/Button';
+import NoDataAvailable from '../common/NoDataAvailable';
+import Button from '../common/Button';
 
 const VersionHistory = ({ versions, onClose }) => {
   const closeModal = () => {

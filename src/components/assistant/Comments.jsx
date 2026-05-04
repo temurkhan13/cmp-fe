@@ -4,9 +4,9 @@ import { FaEllipsisV } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { IoFilter, IoSend } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
-import NoDataAvailable from '../../common/NoDataAvailable';
-import { AnchoredMenu } from '../../common';
-import '../../chat/chat.scss';
+import NoDataAvailable from '../common/NoDataAvailable';
+import { AnchoredMenu } from '../common';
+import '../chat/chat.scss';
 
 import {
   useRemoveCommentMutation,
@@ -14,9 +14,9 @@ import {
   useUpdateCommentMutation,
   useUpdateReplyMutation,
   useRemoveReplyMutation,
-} from '../../../redux/api/workspaceApi';
-import { selectSelectedFolder } from '../../../redux/slices/folderSlice';
-import Button from '../../common/Button';
+} from '../../redux/api/workspaceApi';
+import { selectSelectedFolder } from '../../redux/slices/folderSlice';
+import Button from '../common/Button';
 
 const Comments = ({ comments }) => {
   const workspaceId = useSelector(

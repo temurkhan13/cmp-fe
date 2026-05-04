@@ -6,7 +6,7 @@ import { SideBarModal } from '../modal';
 import AssessmentTasks from './AssessmentTasks';
 import Media from '../chat/Media';
 import AssessmentComments from './AssessmentComments';
-import ChatBookmark from '../assistant/assistantModal/ChatBookmark';
+import ChatBookmark from '../assistant/ChatBookmark';
 import AssessmentVersionHistory from './AssessmentVersionHistory';
 
 import { PiClockCounterClockwiseBold } from 'react-icons/pi';

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Workspaces from './Workspaces';
 import CountingCards from './CountingCards';
 import Folder from './Folder';
-import NotificationBar from '../../common/NotificationBar.jsx';
+import NotificationBar from '../common/NotificationBar.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchDashboardStats,
@@ -11,18 +11,18 @@ import {
   setCurrentChatId,
   setSelectedWorkspace,
   updateWorkspaceStatus,
-} from '../../../redux/slices/workspacesSlice';
+} from '../../redux/slices/workspacesSlice';
 import {
   fetchFolderData,
   resetFolderState,
   selectFolderData,
   setSelectedFolder,
   toggleFolderActivation,
-} from '../../../redux/slices/folderSlice';
-import { useMoveToTrashMutation } from '../../../redux/api/workspaceApi';
-import { Card } from '../../common';
-import AvatarGroup from '../../common/AvatarGroup';
-import { ConfirmModal } from '../../modal';
+} from '../../redux/slices/folderSlice';
+import { useMoveToTrashMutation } from '../../redux/api/workspaceApi';
+import { Card } from '../common';
+import AvatarGroup from '../common/AvatarGroup';
+import { ConfirmModal } from '../modal';
 import { FaFolderTree } from 'react-icons/fa6';
 import { RiNewspaperLine } from 'react-icons/ri';
 import { GiWireframeGlobe } from 'react-icons/gi';
@@ -30,8 +30,8 @@ import { IoIosChatboxes } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { BsFilePlayFill } from 'react-icons/bs';
 
-import './styles/dashboard-home.scss';
-import { SkeletonCard, SkeletonStatCards } from '../../common/Skeleton';
+import './dashboard-home.scss';
+import { SkeletonCard, SkeletonStatCards } from '../common/Skeleton';
 
 const cardIconFor = (type) => {
   if (type === 'chats') return <IoIosChatboxes size={20} color="grey" />;

@@ -1,5 +1,5 @@
 import DashboardLayout from '../../layout/DashboardLayout';
-import SettingsTabs from '../../components/dashboard/DashboardSettings/index';
+import SettingsTabs from '../../components/dashboard/SettingsTabs';
 import Header from '../../components/dashboard/Header';
 import PageHeader from '../../components/common/PageHeader';
 

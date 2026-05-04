@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import assets from '../../../assets';
+import assets from '../../assets';
 import { useNavigate } from 'react-router-dom';
 
 import { RiArrowUpSLine, RiArrowDownSLine } from 'react-icons/ri';
 import { BsArrowReturnLeft } from 'react-icons/bs';
-import { AnchoredMenu } from '../../common';
-import Button from '../../common/Button';
+import { AnchoredMenu } from '../common';
+import Button from '../common/Button';
 
 const HeaderDropDown = () => {
   const navigate = useNavigate();

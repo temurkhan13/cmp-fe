@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FiCheckCircle } from 'react-icons/fi';
-import Button from '../../common/Button';
+import Button from '../common/Button';
 
 const Notifications = ({ initialSettings }) => {
   const defaultSettings = {

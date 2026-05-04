@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsWindowStack } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
-import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../../redux/slices/workspacesSlice';
+import { setSelectedWorkspace as setReduxSelectedWorkspace } from '../../redux/slices/workspacesSlice';
 import {
   useAddWorkspaceMutation,
   useMoveToTrashMutation,
   useUpdateWorkspaceMutation,
-} from '../../../redux/api/workspaceApi';
-import { IconCard, Button, NotificationBar } from '../../common';
-import { InputModal, ConfirmModal, NewWorkspaceModal } from '../../modal';
+} from '../../redux/api/workspaceApi';
+import { IconCard, Button, NotificationBar } from '../common';
+import { InputModal, ConfirmModal, NewWorkspaceModal } from '../modal';
 
 const Workspaces = ({
   activeWorkspace,
