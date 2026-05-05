@@ -4,32 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/axios';
 import './assistant.scss';
 import '../assessment/assessment.scss';
-import {
-  FaCopy,
-  FaThumbsUp,
-  FaThumbsDown,
-  FaCommentAlt,
-} from 'react-icons/fa';
-import { IoAttach, IoSend } from 'react-icons/io5';
-import { FaBookmark } from 'react-icons/fa6';
-import InpireMeIcon from '../../assets/inspireBtn.svg';
-import AiPic from '@assets/dashboard/sidebarLogo.png';
 import { Example } from '@data/chat';
-// import fileIcon from '@assets/dashboard/fileIcon.png';
 import TonePopup from '../../components/common/TonePopup';
 import CommentPopup from './CommentPopup';
-import Button from '../common/Button';
+import CommentsThread from './CommentsThread';
 import { ScaleLoader } from 'react-spinners';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import useGrammarFix from '@hooks/AiFeatureHooks/useGrammarFix';
-import useSummarize from '@hooks/AiFeatureHooks/useSummarize';
-import useImproveWriting from '@hooks/AiFeatureHooks/useImproveWriting';
-import useChangeTone from '@hooks/AiFeatureHooks/useChangeTone';
-import useComprehensive from '@hooks/AiFeatureHooks/useComprehensive';
-import useAuto from '@hooks/AiFeatureHooks/useAuto';
-import useShorter from '@hooks/AiFeatureHooks/useShorter';
-import useLonger from '@hooks/AiFeatureHooks/useLonger';
+import useAiTextActions from '@hooks/useAiTextActions';
 import useChat from '@hooks/useChat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
@@ -59,8 +39,12 @@ import {
 } from '../../redux/slices/workspacesSlice';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire.js';
-import useExplain from '../../hooks/AiFeatureHooks/useExplain.js';
-import UserAvatar from '../common/UserAvatar';
+import useLocalStorageUser from '../../hooks/useLocalStorageUser';
+import useTextSelectionPopup from '../../hooks/useTextSelectionPopup';
+import FilePreviewChip from '../chat/FilePreviewChip';
+import MessageInput from '../chat/MessageInput';
+import UserMessageBubble from '../chat/UserMessageBubble';
+import AiMessageBubble from '../chat/AiMessageBubble';
 
 const MessagesSection = ({ setCurrentChat }) => {
   const dispatch = useDispatch();
@@ -93,23 +77,7 @@ const MessagesSection = ({ setCurrentChat }) => {
   const [file, setFile] = useState([]);
   const [text, setText] = useState('');
   const [pendingSuggestionSend, setPendingSuggestionSend] = useState(false);
-  const [userProfilePhoto, setUserProfilePhoto] = useState(null);
-  const [userName, setUserName] = useState('');
-
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem('user');
-      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-      setUserProfilePhoto(parsedUser?.photoPath || null);
-      setUserName(
-        [parsedUser?.firstName || parsedUser?.first_name, parsedUser?.lastName || parsedUser?.last_name]
-          .filter(Boolean).join(' ') || parsedUser?.name || parsedUser?.email || ''
-      );
-    } catch {
-      setUserProfilePhoto(null);
-      setUserName('');
-    }
-  }, []);
+  const { userProfilePhoto, userName } = useLocalStorageUser();
 
   const resolvedFolderId = folderId?._id || folderId?.id;
   const { data: chat, refetch: rawRefetch, isLoading: isChatLoading, isFetching: isChatFetching } = useGetChatQuery({
@@ -143,28 +111,24 @@ const MessagesSection = ({ setCurrentChat }) => {
     }
   };
 
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [selectedText, setSelectedText] = useState('');
-  const [, setSelectedTone] = useState('');
-  const [, setResponseLength] = useState('');
-  const [, setAskAI] = useState('');
+  const {
+    selectedText,
+    selectedId,
+    popupVisible,
+    setPopupVisible,
+  } = useTextSelectionPopup({
+    selector: '.msg',
+    idAttribute: 'data-message-id',
+    ignoreSelector: '.PopupBox',
+  });
   const [loading, setLoading] = useState(false);
   const [showCommentPopup, setShowCommentPopup] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [replyingCommentId, setReplyingCommentId] = useState(null);
 
-  const { fixGrammar } = useGrammarFix();
-  const { improveWriting } = useImproveWriting();
-  const { summarize } = useSummarize();
-  const { ChangeToneFun } = useChangeTone();
-  const { comprehensiveWriting } = useComprehensive();
-  const { autoWritingFnc } = useAuto();
-  const { shortText } = useShorter();
-  const { LongText } = useLonger();
+  const { askAi, changeTone, changeLength } = useAiTextActions();
   const { error } = useChat();
   const { handleInspire } = useInspire();
-  // translation removed; feature not needed
-  const { Explain } = useExplain();
   const [, setFirstPrompt] = useState('');
 
   const renderIcon = (iconName, style = {}) => {
@@ -188,7 +152,6 @@ const MessagesSection = ({ setCurrentChat }) => {
     const messageId = event.currentTarget.getAttribute('data-message-id');
     setMessageId(messageId);
     setShowCommentPopup((prev) => !prev);
-    setAskAI(false);
     setPopupVisible(false);
   };
   const applyFixedText = useCallback(
@@ -216,67 +179,15 @@ const MessagesSection = ({ setCurrentChat }) => {
   );
 
   useEffect(() => {
-    const handleMouseUp = (e) => {
-      // Don't close popup when clicking inside TonePopup
-      const popup = document.querySelector('.PopupBox');
-      if (popup && popup.contains(e.target)) return;
-      handleTextSelect();
-    };
-
-    document.addEventListener('mouseup', handleMouseUp);
-    return () => {
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, []);
-
-  const handleTextSelect = () => {
-    const selection = window.getSelection();
-    const selectedText = selection.toString().trim();
-
-    const messageElements = document.querySelectorAll('.msg');
-    let isValidSelection = false;
-    let selectedMessageId = null;
-
-    messageElements.forEach((msgElement) => {
-      if (
-        msgElement.contains(selection.anchorNode) &&
-        msgElement.contains(selection.focusNode)
-      ) {
-        isValidSelection = true;
-        selectedMessageId = msgElement.getAttribute('data-message-id');
-      }
-    });
-
-    if (isValidSelection) {
-      setSelectedText(selectedText);
-      setPopupVisible(!!selectedText);
-      if (selectedMessageId) {
-        setMessageId(selectedMessageId);
-      }
-    } else {
-      setPopupVisible(false);
-    }
-  };
+    if (selectedId) setMessageId(selectedId);
+  }, [selectedId]);
 
   const HandleAskAi = async (value) => {
-    const textToProcess = selectedText;
-    if (!textToProcess) return;
+    if (!selectedText) return;
     try {
       setLoading(true);
-      setAskAI(value);
       setPopupVisible(false);
-
-      let response;
-      if (value === 'Fix Spelling & Grammar') {
-        response = await fixGrammar(textToProcess);
-      } else if (value === 'Improve Writing') {
-        response = await improveWriting(textToProcess);
-      } else if (value === 'Summarize') {
-        response = await summarize(textToProcess);
-      } else if (value === 'Explain This') {
-        response = await Explain(textToProcess);
-      }
-
+      const response = await askAi(value, selectedText);
       if (response) {
         await applyFixedText(response);
         refetch();
@@ -289,10 +200,9 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleToneChange = async (tone) => {
-    setSelectedTone(tone);
     setLoading(true);
     try {
-      const response = await ChangeToneFun(selectedText, tone);
+      const response = await changeTone(tone, selectedText);
       if (response) {
         applyFixedText(response);
       }
@@ -304,20 +214,9 @@ const MessagesSection = ({ setCurrentChat }) => {
   };
 
   const handleResponseLengthChange = async (value) => {
-    setResponseLength(value);
     setLoading(true);
     try {
-      let response;
-      if (value === 'Auto') {
-        response = await autoWritingFnc(selectedText);
-      } else if (value === 'Small') {
-        response = await shortText(selectedText);
-      } else if (value === 'Medium') {
-        response = await LongText(selectedText);
-      } else if (value === 'Comprehensive') {
-        response = await comprehensiveWriting(selectedText);
-      }
-
+      const response = await changeLength(value, selectedText);
       if (response) {
         await applyFixedText(response);
       }
@@ -507,340 +406,76 @@ const MessagesSection = ({ setCurrentChat }) => {
             )}
 
             {chat &&
-              chat.generalMessages.map((message, index) => (
-                <div
-                  key={index}
-                  ref={
-                    index === chat.generalMessages.length - 1
-                      ? messagesEndRef
-                      : null
-                  }
-                >
-                  <div
-                    className={
-                      message && (message.sender || message.from) === 'user'
-                        ? 'chat-container-assistant right'
-                        : 'chat-container-assistant left'
-                    }
-                  >
-                    {message && (message.sender || message.from) === 'user' ? (
-                      <div className="card chat-card user-card">
-                        <div className="user-avatar">
-                          <UserAvatar
-                            src={userProfilePhoto}
-                            name={userName}
-                            size={50}
-                            imgClassName="avatar"
-                            style={{ backgroundColor: '#C3E11D' }}
-                            initialsStyle={{ color: '#0B1444' }}
-                          />
-                        </div>
-                        <div className="user-message">
-                          {/*<p className="heading">You</p>*/}
-                          {message.text && (
-                            <div className="msg" data-message-id={message._id}>
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
-                            </div>
-                          )}
-                          {message.file && (
-                            <div className="file-preview">
-                              <a
-                                href={message.file}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {message.fileName}
-                              </a>
-                            </div>
-                          )}
-                          {/*<div className="edit-icon">*/}
-                          {/*  <LuPencil />*/}
-                          {/*</div>*/}
-                        </div>
-                        <div className="message-action-icons">
-                          <div
-                            className="message-icon-wrapper"
-                            title="Copy"
-                            onClick={() => handleCopyMessage(message.text)}
-                          >
-                            <FaCopy className="cursor-pointer" />
-                            <span className="tooltip-assessment">Copy</span>
-                          </div>
-                          <div
-                            className="message-icon-wrapper"
-                            title="Like"
-                            onClick={() => handleLikeClick(message)}
-                          >
-                            <FaThumbsUp
-                              style={
-                                message?.reactions?.some(
-                                  (react) =>
-                                    react.user ==
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id && react.type == 'like'
-                                )
-                                  ? { color: '#c1de1c' }
-                                  : {}
-                              }
-                            />
-                            <span className="tooltip-assessment">Like</span>
-                          </div>
-                          <div
-                            className="message-icon-wrapper"
-                            title="Dislike"
-                            onClick={() => handleDislikeMessage(message)}
-                          >
-                            <FaThumbsDown
-                              style={
-                                message?.reactions?.some(
-                                  (react) =>
-                                    react.user ==
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id && react.type == 'dislike'
-                                )
-                                  ? { color: '#c1de1c' }
-                                  : {}
-                              }
-                            />
-                            <span className="tooltip-assessment">Dislike</span>
-                          </div>
-                          <div
-                            className="message-icon-wrapper"
-                            title="Bookmark"
-                          >
-                            <FaBookmark
-                              onClick={() => handleAddBookmark(message)}
-                              style={
-                                chat.bookmarks?.some(
-                                  (bookmark) =>
-                                    bookmark.messageId === message._id &&
-                                    bookmark.userId ===
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id
-                                )
-                                  ? { color: '#c1de1c' }
-                                  : {}
-                              }
-                            />
-                            <span className="tooltip-assessment">Bookmark</span>
-                          </div>
-                        </div>
-                      </div>
+              chat.generalMessages.map((message, index) => {
+                const isUser = (message.sender || message.from) === 'user';
+                const isLast = index === chat.generalMessages.length - 1;
+                const liked = !!message?.reactions?.some(
+                  (r) => r.user == userId && r.type == 'like'
+                );
+                const disliked = !!message?.reactions?.some(
+                  (r) => r.user == userId && r.type == 'dislike'
+                );
+                const bookmarked = !!chat.bookmarks?.some(
+                  (b) => b.messageId === message._id && b.userId === userId
+                );
+                const baseActions = {
+                  onCopy: () => handleCopyMessage(message.text),
+                  onLike: () => handleLikeClick(message),
+                  liked,
+                  onDislike: () => handleDislikeMessage(message),
+                  disliked,
+                  onBookmark: () => handleAddBookmark(message),
+                  bookmarked,
+                };
+
+                return (
+                  <div key={index} ref={isLast ? messagesEndRef : null}>
+                    {isUser ? (
+                      <UserMessageBubble
+                        text={message.text}
+                        attachedFile={
+                          message.file
+                            ? { url: message.file, name: message.fileName }
+                            : undefined
+                        }
+                        userProfilePhoto={userProfilePhoto}
+                        userName={userName}
+                        dataAttributes={{ 'data-message-id': message._id }}
+                        bodyClassName="user-message"
+                        actions={baseActions}
+                      />
                     ) : (
-                      <div className="card chat-card ai-card">
-                        <div className="ai-avatar">
-                          <UserAvatar
-                            src={AiPic}
-                            name="AI Assistant"
-                            size={50}
-                            imgClassName="avatar"
-                          />
-                        </div>
-                        <div className="ai-message">
-                          {message && (
-                            <div className="msg" data-message-id={message._id}>
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
-                            </div>
-                          )}
-                          {message.comments && message.comments.length > 0 && (
-                            <div className="asst-comment-section">
-                              {message.comments.map((c, ci) => (
-                                <div key={ci} className="asst-comment-item">
-                                  <FaCommentAlt className="asst-comment-icon" />
-                                  {editingCommentId === (c._id || c.id) ? (
-                                    <input
-                                      autoFocus
-                                      defaultValue={c.text}
-                                      onKeyDown={async (e) => {
-                                        if (e.key === 'Enter') {
-                                          const msgId = c.messageId || c.message_id || message._id;
-                                          await apiClient.patch(`/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`, { text: e.target.value });
-                                          setEditingCommentId(null);
-                                          refetch();
-                                        }
-                                        if (e.key === 'Escape') setEditingCommentId(null);
-                                      }}
-                                      onBlur={() => setEditingCommentId(null)}
-                                      className="asst-comment-input"
-                                    />
-                                  ) : (
-                                    <>
-                                      <span className="asst-comment-user">{c.userName || c.user_name || 'You'}:</span>
-                                      <span className="asst-comment-text">{c.text}</span>
-                                      <span
-                                        className="asst-comment-action asst-comment-action--edit"
-                                        onClick={() => setEditingCommentId(c._id || c.id)}
-                                      >Edit</span>
-                                      <span
-                                        className="asst-comment-action asst-comment-action--delete"
-                                        onClick={async () => {
-                                          const msgId = c.messageId || c.message_id || message._id;
-                                          await apiClient.delete(`/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}`);
-                                          refetch();
-                                        }}
-                                      >Delete</span>
-                                      <span
-                                        className="asst-comment-action asst-comment-action--save"
-                                        onClick={() => setReplyingCommentId(c._id || c.id)}
-                                      >Reply</span>
-                                    </>
-                                  )}
-                                  {c.replies && c.replies.length > 0 && (
-                                    <div className="asst-reply-section">
-                                      {c.replies.map((r, ri) => (
-                                        <div key={ri} className="asst-reply-item">
-                                          <span className="asst-comment-user">{r.userName || r.user_name || 'User'}:</span>{' '}
-                                          <span>{r.text}</span>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-                                  {replyingCommentId === (c._id || c.id) && (
-                                    <div className="asst-reply-input-row">
-                                      <input
-                                        autoFocus
-                                        placeholder="Write a reply... (Enter to send)"
-                                        onKeyDown={async (e) => {
-                                          if (e.key === 'Enter' && e.target.value.trim()) {
-                                            const val = e.target.value;
-                                            e.target.disabled = true;
-                                            try {
-                                              const msgId = c.messageId || c.message_id || message._id;
-                                              await apiClient.post(`/workspace/${workspaceId}/folder/${resolvedFolderId}/chat/${chatId}/message/${msgId}/comment/${c._id || c.id}/reply`, { text: val });
-                                              setReplyingCommentId(null);
-                                              refetch();
-                                            } catch (err) {
-                                              e.target.disabled = false;
-                                            }
-                                          }
-                                          if (e.key === 'Escape') setReplyingCommentId(null);
-                                        }}
-                                        className="asst-reply-input"
-                                      />
-                                      <span
-                                        className="asst-reply-cancel"
-                                        onClick={() => setReplyingCommentId(null)}
-                                      >Cancel</span>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <div className="message-action-icons">
-                          <div
-                            className="message-icon-wrapper"
-                            title="Copy"
-                            onClick={() => handleCopyMessage(message.text)}
-                          >
-                            <FaCopy className="cursor-pointer" />
-                            <span className="tooltip-assessment">Copy</span>
-                          </div>
-                          <div
-                            className="message-icon-wrapper"
-                            title="Like"
-                            onClick={() => handleLikeClick(message)}
-                          >
-                            <FaThumbsUp
-                              style={
-                                message?.reactions?.some(
-                                  (react) =>
-                                    react.user ==
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id && react.type == 'like'
-                                )
-                                  ? { color: '#c1de1c' }
-                                  : {}
-                              }
-                            />
-                            <span className="tooltip-assessment">Like</span>
-                          </div>
-                          <div
-                            className="message-icon-wrapper"
-                            title="Dislike"
-                            onClick={() => handleDislikeMessage(message)}
-                          >
-                            <FaThumbsDown
-                              style={
-                                message?.reactions?.some(
-                                  (react) =>
-                                    react.user ==
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id && react.type == 'dislike'
-                                )
-                                  ? { color: '#c1de1c' }
-                                  : {}
-                              }
-                            />
-                            <span className="tooltip-assessment">Dislike</span>
-                          </div>
-                          <div className="message-icon-wrapper" title="Comment">
-                            <FaCommentAlt
-                              data-message-id={message._id}
-                              onClick={handleCommentClick}
-                              className="cursor-pointer"
-                            />
-                            <span className="tooltip-assessment">Comment</span>
-                          </div>
-                          {/* <div
-                            className="message-icon-wrapper"
-                            title="Regenerate"
-                          >
-                            <FaSync />
-                            <span className="tooltip-assessment">
-                              Regenerate
-                            </span>
-                          </div> */}
-                          <div
-                            className="message-icon-wrapper"
-                            title="Bookmark"
-                          >
-                            <FaBookmark
-                              onClick={() => handleAddBookmark(message)}
-                              style={
-                                chat.bookmarks?.some(
-                                  (bookmark) =>
-                                    bookmark.messageId === message._id &&
-                                    bookmark.userId ===
-                                    JSON.parse(localStorage.getItem('user'))
-                                      .id
-                                )
-                                  ? { color: '#c1de1c' }
-                                  : {}
-                              }
-                            />
-                            <span className="tooltip-assessment">Bookmark</span>
-                          </div>
-                        </div>
-                      </div>
+                      <AiMessageBubble
+                        text={message.text}
+                        cardClassName="ai-card"
+                        bodyClassName="ai-message"
+                        dataAttributes={{ 'data-message-id': message._id }}
+                        actions={{
+                          ...baseActions,
+                          onComment: handleCommentClick,
+                          commentMessageId: message._id,
+                        }}
+                      >
+                        <CommentsThread
+                          comments={message.comments}
+                          messageId={message._id}
+                          workspaceId={workspaceId}
+                          folderId={resolvedFolderId}
+                          chatId={chatId}
+                          editingCommentId={editingCommentId}
+                          setEditingCommentId={setEditingCommentId}
+                          replyingCommentId={replyingCommentId}
+                          setReplyingCommentId={setReplyingCommentId}
+                          refetch={refetch}
+                        />
+                      </AiMessageBubble>
                     )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         ) : (
           <div className="defaultPage">
-            {/* <div
-                className="file-upload"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-              >
-                <div className="file-upload-icon">
-                  <FaFile className="asst-file-icon" />
-                </div>
-
-                <div className="file-upload-text">Upload Your File</div>
-                <div className="file-upload-info">
-                  <label htmlFor="file-input">
-                    <span className="asst-comment-action--edit">
-                      Click to upload
-                    </span>{' '}
-                    or drag and drop
-                  </label>
-                </div>
-                <div className="file-upload-info">(Max. File size: 25MB)</div>
-              </div> */}
             <div className="chat-screen-logo">
               <img src={logo} alt="Change ai Logo" />
             </div>
@@ -867,75 +502,14 @@ const MessagesSection = ({ setCurrentChat }) => {
       )}
       {/* input */}
       <div className="Message_container">
-        {file && file.name && (
-          <div className="file-preview-chip">
-            <div className="file-preview-chip__icon">
-              {file.type?.includes('pdf') ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-              ) : file.type?.includes('image') ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
-              )}
-            </div>
-            <div className="file-preview-chip__info">
-              <span className="file-preview-chip__name">{file.name.length > 30 ? file.name.slice(0, 27) + '...' : file.name}</span>
-              <span className="file-preview-chip__size">{(file.size / 1024).toFixed(0)} KB</span>
-            </div>
-            <Button
-              variant="icon"
-              ariaLabel="Remove file"
-              className="file-preview-chip__remove"
-              title="Remove file"
-              onClick={() => setFile(null)}
-            >
-              &times;
-            </Button>
-          </div>
-        )}
-        <div className="input-container msg-input-relative">
-          <div className="msg-inspire-wrapper">
-            {!loading ? (
-              <img
-                src={InpireMeIcon}
-                alt="Inspire Me"
-                onClick={handleInspireClick}
-                className="msg-inspire-icon"
-              />
-            ) : (
-              <div className="msg-inspire-spinner" />
-            )}
-          </div>
-
-          <textarea
-            placeholder="Enter text here.."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
-            onInput={(e) => {
-              e.target.style.height = 'auto';
-              e.target.style.height = `${e.target.scrollHeight}px`;
-            }}
-            className="msg-textarea"
-            rows={1}
-          />
-          <div className="icons msg-icons-row">
-            <label htmlFor="file-input" className="msg-attach-label">
-              <IoAttach size={32} color="#888" title="Attach file" />
-            </label>
-            <IoSend
-              onClick={handleSendMessage}
-              className="send-icon"
-              color="#c3e11d"
-              size={32}
-            />
-          </div>
-        </div>
+        <FilePreviewChip file={file} onRemove={() => setFile(null)} />
+        <MessageInput
+          value={text}
+          onChange={setText}
+          onSend={handleSendMessage}
+          onInspire={handleInspireClick}
+          loading={loading}
+        />
       </div>
       {showCommentPopup && (
         <CommentPopup
@@ -958,7 +532,7 @@ MessagesSection.propTypes = {
 };
 
 MessagesSection.defaultProps = {
-  setCurrentChat: () => {},
+  setCurrentChat: () => { },
 };
 
 export default MessagesSection;

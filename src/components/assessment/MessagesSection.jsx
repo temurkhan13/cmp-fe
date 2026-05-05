@@ -2,30 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import './assessment.scss';
-import {
-  FaCopy,
-  FaThumbsUp,
-  FaThumbsDown,
-  FaBookmark,
-} from 'react-icons/fa';
-import { IoAttach, IoSend } from 'react-icons/io5';
-import AiPic from '../../assets/dashboard/sidebarLogo.png';
-import UserAvatar from '../common/UserAvatar';
-import InpireMeIcon from '../../assets/inspireBtn.svg';
 import TonePopup from '../../components/common/TonePopup';
 import { ScaleLoader } from 'react-spinners';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
-import useGrammarFix from '../../hooks/AiFeatureHooks/useGrammarFix';
-import useSummarize from '../../hooks/AiFeatureHooks/useSummarize';
-import useImproveWriting from '../../hooks/AiFeatureHooks/useImproveWriting';
-import useChangeTone from '../../hooks/AiFeatureHooks/useChangeTone';
-import useAuto from '../../hooks/AiFeatureHooks/useAuto';
-import useLonger from '../../hooks/AiFeatureHooks/useLonger';
-import useShorter from '../../hooks/AiFeatureHooks/useShorter';
-import useComprehensive from '../../hooks/AiFeatureHooks/useComprehensive';
+import useAiTextActions from '../../hooks/useAiTextActions';
 import usestartAssessment from '../../hooks/usestartAssessment';
 import useAssessmentReport from '../../hooks/useAssessmentReport';
 import useChat from '../../hooks/useChat';
@@ -42,12 +23,17 @@ import {
 import { selectWorkspace, setCurrentSelectedTitle } from '../../redux/slices/workspacesSlice';
 import useGenerateSingleReport from '../../hooks/useGenerateSingleReport';
 import useInspire from '../../hooks/AiFeatureHooks/useInspire';
-import useExplain from '../../hooks/AiFeatureHooks/useExplain';
 import { selectSelectedFolder } from '../../redux/slices/folderSlice.js';
 import { AssessmentModal } from '../modal';
 import Editor from './Editor.jsx';
 import useAssessment from '../../hooks/useAssessment.js';
+import useLocalStorageUser from '../../hooks/useLocalStorageUser';
+import useTextSelectionPopup from '../../hooks/useTextSelectionPopup';
 import Button from '../common/Button';
+import FilePreviewChip from '../chat/FilePreviewChip';
+import MessageInput from '../chat/MessageInput';
+import UserMessageBubble from '../chat/UserMessageBubble';
+import AiMessageBubble from '../chat/AiMessageBubble';
 
 const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUpdate, onBookmarksUpdate }) => {
   const dispatch = useDispatch();
@@ -58,9 +44,12 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const [generateSingleReport, setGenerateSingleReport] = useState(false);
   const [SubReportId, setSubReportId] = useState('');
   const [assessmentId, setAssessmentId] = useState();
-  const [selectedText, setSelectedText] = useState('');
-  const [editingQaId, setEditingQaId] = useState('');
-  const [popupVisible, setPopupVisible] = useState(false);
+  const {
+    selectedText,
+    selectedId: editingQaId,
+    popupVisible,
+    setPopupVisible,
+  } = useTextSelectionPopup({ selector: '.msg[data-qa-id]', idAttribute: 'data-qa-id' });
   const [loading, setLoading] = useState(false);
   const [assessmentLoading, setAssessmentLoading] = useState(false);
   const [showInputField, setShowInputField] = useState(false);
@@ -215,14 +204,7 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     }
   }, [isReportGenerated, isStartReportGenerated]);
 
-  const { fixGrammar } = useGrammarFix();
-  const { improveWriting } = useImproveWriting();
-  const { summarize } = useSummarize();
-  const { ChangeToneFun } = useChangeTone();
-  const { comprehensiveWriting } = useComprehensive();
-  const { autoWritingFnc } = useAuto();
-  const { shortText } = useShorter();
-  const { LongText } = useLonger();
+  const { askAi, changeTone, changeLength } = useAiTextActions();
   const [addBookmark] = useAddBookmarkMutation();
   const [removeBookmark] = useRemoveBookmarkMutation();
   const [likeChatMessage] = useLikeChatMessageMutation();
@@ -232,27 +214,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const { refetch } = useGetWorkspacesQuery(userId);
   const [firstPrompt, setFirstPrompt] = useState('');
   const { handleInspire } = useInspire();
-  const { Explain } = useExplain();
   const [updateAssessmentQuestion] = useUpdateAssessmentQuestionMutation();
 
   const { error } = useChat();
-  const [userProfilePhoto, setUserProfilePhoto] = useState(null);
-  const [userName, setUserName] = useState('');
-
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem('user');
-      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-      setUserProfilePhoto(parsedUser?.photoPath || null);
-      setUserName(
-        [parsedUser?.firstName || parsedUser?.first_name, parsedUser?.lastName || parsedUser?.last_name]
-          .filter(Boolean).join(' ') || parsedUser?.name || parsedUser?.email || ''
-      );
-    } catch {
-      setUserProfilePhoto(null);
-      setUserName('');
-    }
-  }, []);
+  const { userProfilePhoto, userName } = useLocalStorageUser();
 
   const messagesEndRef = useRef(null);
 
@@ -369,24 +334,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   };
 
   const HandleAskAi = async (value) => {
+    setLoading(true);
     try {
-      setLoading(true);
-
-      if (value === 'Fix Spelling & Grammar') {
-        const responseGrammar = await fixGrammar(selectedText);
-        applyFixedText(responseGrammar);
-        //
-      } else if (value === 'Improve Writing') {
-        const responseWriting = await improveWriting(selectedText);
-        applyFixedText(responseWriting);
-        //
-      } else if (value === 'Summarize') {
-        const responseSummary = await summarize(selectedText);
-        applyFixedText(responseSummary);
-      } else if (value === 'Explain This') {
-        const responseExplain = await Explain(selectedText);
-        applyFixedText(responseExplain);
-      }
+      const response = await askAi(value, selectedText);
+      applyFixedText(response);
     } finally {
       setLoading(false);
     }
@@ -413,35 +364,10 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     setPopupVisible(false);
   };
 
-  const handleTextSelect = () => {
-    const selection = window.getSelection();
-    const text = selection.toString().trim();
-
-    // Only allow selection inside AI-question .msg divs (tagged with data-qa-id).
-    // Answer divs are untagged because users can't edit their own answers.
-    const messageElements = document.querySelectorAll('.msg[data-qa-id]');
-    let isValidSelection = false;
-    let qaId = null;
-    messageElements.forEach((el) => {
-      if (el.contains(selection.anchorNode) && el.contains(selection.focusNode)) {
-        isValidSelection = true;
-        qaId = el.getAttribute('data-qa-id');
-      }
-    });
-
-    if (isValidSelection && text) {
-      setSelectedText(text);
-      setEditingQaId(qaId);
-      setPopupVisible(true);
-    } else {
-      setPopupVisible(false);
-    }
-  };
-
   const handleToneChange = async (tone) => {
     setLoading(true);
     try {
-      const response = await ChangeToneFun(selectedText, tone);
+      const response = await changeTone(tone, selectedText);
       applyFixedText(response);
     } finally {
       setLoading(false);
@@ -451,23 +377,8 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
   const handleResponseLengthChange = async (value) => {
     setLoading(true);
     try {
-      if (value === 'Auto') {
-        const responseAuto = await autoWritingFnc(selectedText);
-        applyFixedText(responseAuto);
-        //
-      } else if (value === 'Small') {
-        const responseSmall = await shortText(selectedText);
-        applyFixedText(responseSmall);
-        //
-      } else if (value === 'Medium') {
-        const responseMedium = await LongText(selectedText);
-        applyFixedText(responseMedium);
-        //
-      } else if (value === 'Comprehensive') {
-        const responseComp = await comprehensiveWriting(selectedText);
-        applyFixedText(responseComp);
-        //
-      }
+      const response = await changeLength(value, selectedText);
+      applyFixedText(response);
     } finally {
       setLoading(false);
     }
@@ -538,13 +449,6 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
     refetch();
     setGenerateSingleReport(false);
   };
-
-  useEffect(() => {
-    document.addEventListener('mouseup', handleTextSelect);
-    return () => {
-      document.removeEventListener('mouseup', handleTextSelect);
-    };
-  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -663,173 +567,65 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 onClose={handleClosePopup}
               />
             )}
-            {chat.map((item, index) => (
-              <div
-                key={index}
-                ref={index === chat.length - 1 ? messagesEndRef : null}
-              >
-                {/* User-uploaded file or standalone user message */}
-                {item.role === 'user' && (
-                  <div className="chat-container-assistant right">
-                    <div className="card chat-card user-card">
-                      <div className="user-avatar">
-                        <UserAvatar
-                          src={userProfilePhoto}
-                          name={userName}
-                          size={50}
-                          imgClassName="avatar"
-                          style={{ backgroundColor: '#C3E11D' }}
-                          initialsStyle={{ color: '#0B1444' }}
-                        />
-                      </div>
-                      <div className="msg">
-                        {item.file && (
-                          <div className="msg-file-link">
-                            <a href={item.file} target="_blank" rel="noopener noreferrer">
-                              {item.fileName || 'Attached file'}
-                            </a>
-                          </div>
-                        )}
-                        {item.question && <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>}
-                        {item.answer && <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.answer}</ReactMarkdown>}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {/* AI message */}
-                {item.role === 'ai' && (
-                  <div className="chat-container-assistant left">
-                    <div className="card chat-card assistant-card">
-                      <div className="ai-avatar">
-                        <UserAvatar
-                          src={AiPic}
-                          name="AI Assistant"
-                          size={50}
-                          imgClassName="avatar"
-                        />
-                      </div>
-                      <div className="msg" data-qa-id={item._id || item.id}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
-                      </div>
-                      <div className="message-action-icons">
-                        <div
-                          className="message-icon-wrapper"
-                          title="Copy"
-                          onClick={() => { handleCopyMessage(item.question); setCopy((prev) => ({ ...prev, [item._id || item.id || index]: true })); }}
-                        >
-                          <FaCopy
-                            className={copy[item._id || item.id || index] ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Copy</span>
-                        </div>
-                        <div
-                          className="message-icon-wrapper"
-                          title="Like"
-                          onClick={() => handleLikeClick(item)}
-                        >
-                          <FaThumbsUp
-                            className={reactions[item._id || item.id || index] === 'like' ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Like</span>
-                        </div>
-                        <div
-                          className="message-icon-wrapper"
-                          title="Dislike"
-                          onClick={() => handleDislikeMessage(item)}
-                        >
-                          <FaThumbsDown
-                            className={reactions[item._id || item.id || index] === 'dislike' ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Dislike</span>
-                        </div>
-                        <div className="message-icon-wrapper" title="Bookmark" onClick={() => handleAddBookmark(item)}>
-                          <FaBookmark
-                            className={bookmark[item._id || item.id || index] ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Bookmark</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {/* backend Q&A shape: AI question on left */}
-                {!item.role && item.question && (
-                  <div className="chat-container-assistant left">
-                    <div className="card chat-card assistant-card">
-                      <div className="ai-avatar">
-                        <UserAvatar
-                          src={AiPic}
-                          name="AI Assistant"
-                          size={50}
-                          imgClassName="avatar"
-                        />
-                      </div>
-                      <div className="msg" data-qa-id={item._id || item.id}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.question}</ReactMarkdown>
-                      </div>
-                      <div className="message-action-icons">
-                        <div
-                          className="message-icon-wrapper"
-                          title="Copy"
-                          onClick={() => { handleCopyMessage(item.question); setCopy((prev) => ({ ...prev, [item._id || item.id || index]: true })); }}
-                        >
-                          <FaCopy
-                            className={copy[item._id || item.id || index] ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Copy</span>
-                        </div>
-                        <div
-                          className="message-icon-wrapper"
-                          title="Like"
-                          onClick={() => handleLikeClick(item)}
-                        >
-                          <FaThumbsUp
-                            className={reactions[item._id || item.id || index] === 'like' ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Like</span>
-                        </div>
-                        <div
-                          className="message-icon-wrapper"
-                          title="Dislike"
-                          onClick={() => handleDislikeMessage(item)}
-                        >
-                          <FaThumbsDown
-                            className={reactions[item._id || item.id || index] === 'dislike' ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Dislike</span>
-                        </div>
-                        <div className="message-icon-wrapper" title="Bookmark" onClick={() => handleAddBookmark(item)}>
-                          <FaBookmark
-                            className={bookmark[item._id || item.id || index] ? 'msg-icon-active' : ''}
-                          />
-                          <span className="tooltip-assessment">Bookmark</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {/* user answer on right */}
-                {!item.role && item.status === 'answered' && (
-                  <div className="chat-container-assistant right">
-                    <div className="card chat-card user-card">
-                      <div className="user-avatar">
-                        <UserAvatar
-                          src={userProfilePhoto}
-                          name={userName}
-                          size={50}
-                          imgClassName="avatar"
-                          style={{ backgroundColor: '#C3E11D' }}
-                          initialsStyle={{ color: '#0B1444' }}
-                        />
-                      </div>
-                      <div className="msg">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.answer}</ReactMarkdown>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+            {chat.map((item, index) => {
+              const msgKey = item._id || item.id || index;
+              const isLast = index === chat.length - 1;
+              const aiActions = {
+                onCopy: () => {
+                  handleCopyMessage(item.question);
+                  setCopy((prev) => ({ ...prev, [msgKey]: true }));
+                },
+                copied: !!copy[msgKey],
+                onLike: () => handleLikeClick(item),
+                liked: reactions[msgKey] === 'like',
+                onDislike: () => handleDislikeMessage(item),
+                disliked: reactions[msgKey] === 'dislike',
+                onBookmark: () => handleAddBookmark(item),
+                bookmarked: !!bookmark[msgKey],
+              };
+
+              return (
+                <div key={index} ref={isLast ? messagesEndRef : null}>
+                  {/* User-uploaded file or standalone user message */}
+                  {item.role === 'user' && (
+                    <UserMessageBubble
+                      text={item.question || item.answer}
+                      attachedFile={
+                        item.file
+                          ? { url: item.file, name: item.fileName }
+                          : undefined
+                      }
+                      userProfilePhoto={userProfilePhoto}
+                      userName={userName}
+                    />
+                  )}
+                  {/* AI message */}
+                  {item.role === 'ai' && (
+                    <AiMessageBubble
+                      text={item.question}
+                      dataAttributes={{ 'data-qa-id': item._id || item.id }}
+                      actions={aiActions}
+                    />
+                  )}
+                  {/* backend Q&A shape: AI question on left */}
+                  {!item.role && item.question && (
+                    <AiMessageBubble
+                      text={item.question}
+                      dataAttributes={{ 'data-qa-id': item._id || item.id }}
+                      actions={aiActions}
+                    />
+                  )}
+                  {/* user answer on right */}
+                  {!item.role && item.status === 'answered' && (
+                    <UserMessageBubble
+                      text={item.answer}
+                      userProfilePhoto={userProfilePhoto}
+                      userName={userName}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="defaultPage">
@@ -918,74 +714,14 @@ const MessagesSection = ({ handleAssessmentSelect, selectedAssessment, onMediaUp
                 ))}
               </div>
             )}
-            {file && file instanceof File && (
-              <div className="file-preview-chip">
-                <div className="file-preview-chip__icon">
-                  {file.type?.includes('pdf') ? (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  ) : file.type?.includes('image') ? (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                  )}
-                </div>
-                <div className="file-preview-chip__info">
-                  <span className="file-preview-chip__name">{file.name.length > 30 ? file.name.slice(0, 27) + '...' : file.name}</span>
-                  <span className="file-preview-chip__size">{(file.size / 1024).toFixed(0)} KB</span>
-                </div>
-                <Button
-                  variant="icon"
-                  ariaLabel="Remove file"
-                  className="file-preview-chip__remove"
-                  title="Remove file"
-                  onClick={() => setFile(null)}
-                >
-                  &times;
-                </Button>
-              </div>
-            )}
-            <div className="input-container msg-input-relative">
-              <div className="msg-inspire-wrapper">
-                {!loading ? (
-                  <img
-                    src={InpireMeIcon}
-                    alt="Inspire Me"
-                    onClick={handleInspireClick}
-                    className="msg-inspire-icon"
-                  />
-                ) : (
-                  <div className="msg-inspire-spinner" />
-                )}
-              </div>
-              <textarea
-                placeholder="Enter text here.."
-                value={firstPrompt}
-                onChange={(e) => setFirstPrompt(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                onInput={(e) => {
-                  e.target.style.height = 'auto';
-                  e.target.style.height = `${e.target.scrollHeight}px`;
-                }}
-                className="msg-textarea"
-                rows={1}
-              />
-              <div className="icons msg-icons-row">
-                <label htmlFor="file-input" className="msg-attach-label">
-                  <IoAttach size={32} color="#888" title="Attach file" />
-                </label>
-                <IoSend
-                  color="#c3e11d"
-                  onClick={handleSendMessage}
-                  className="send-icon"
-                  size={32}
-                />
-              </div>
-            </div>
+            <FilePreviewChip file={file} onRemove={() => setFile(null)} />
+            <MessageInput
+              value={firstPrompt}
+              onChange={setFirstPrompt}
+              onSend={handleSendMessage}
+              onInspire={handleInspireClick}
+              loading={loading}
+            />
           </div>
         </>
       )}
